@@ -7,7 +7,7 @@ import { ListingActions } from "./listings/listing-actions";
 import { StatusBadge } from "./listings/status-badge";
 
 export default async function DashboardPage() {
-  const { user } = await requireSeller();
+  const { user, profile } = await requireSeller();
   const listings = await getSellerListings(user.id);
 
   return (
@@ -21,6 +21,13 @@ export default async function DashboardPage() {
           New listing
         </Link>
       </div>
+
+      {profile.suspended_at && (
+        <p className="mt-6 rounded-md bg-red-50 px-4 py-3 text-sm text-red-900 dark:bg-red-950 dark:text-red-200">
+          Your account is suspended. Your listings are hidden from buyers and you can&apos;t
+          publish new ones.
+        </p>
+      )}
 
       {listings.length === 0 ? (
         <p className="mt-8 text-zinc-600 dark:text-zinc-400">
@@ -56,6 +63,11 @@ export default async function DashboardPage() {
                     {formatSAR(listing.price)} · {formatKm(listing.mileage)} ·{" "}
                     {listing.city}
                   </p>
+                  {listing.status === "removed" && listing.removed_reason && (
+                    <p className="mt-1 text-sm text-red-700 dark:text-red-400">
+                      Removed by moderators: {listing.removed_reason}
+                    </p>
+                  )}
                 </div>
                 <ListingActions listingId={listing.id} status={listing.status} showEdit />
               </li>

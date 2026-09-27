@@ -1,6 +1,6 @@
 import "server-only";
 import { cache } from "react";
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import type { Database } from "@/lib/supabase/database.types";
 
@@ -37,6 +37,13 @@ export async function requireSeller(next = "/dashboard") {
   if (current.profile.role !== "seller") {
     redirect("/account/become-seller");
   }
+  return current;
+}
+
+// 404 rather than a redirect so the admin area isn't advertised.
+export async function requireAdmin() {
+  const current = await requireUser("/admin");
+  if (!current.profile.is_admin) notFound();
   return current;
 }
 

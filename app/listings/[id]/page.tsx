@@ -4,6 +4,7 @@ import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 import { cache } from "react";
 import { FavoriteButton } from "@/components/favorite-button";
+import { ReportListingButton } from "@/components/report-listing-button";
 import { getCurrentUser } from "@/lib/auth";
 import { getFavoriteIds } from "@/lib/favorites";
 import { formatKm, formatMonthYear, formatSAR, whatsappUrl } from "@/lib/format";
@@ -52,8 +53,9 @@ export default async function ListingPage({ params }: PageProps<"/listings/[id]"
       {isOwner && listing.status !== "active" && (
         <div className="mb-6 flex flex-wrap items-center justify-between gap-2 rounded-md bg-amber-50 px-4 py-3 text-sm text-amber-900 dark:bg-amber-950 dark:text-amber-200">
           <span>
-            This listing is {listing.status === "draft" ? "a draft" : "marked as sold"} and is
-            not visible to buyers.
+            {listing.status === "removed"
+              ? `This listing was removed by moderators${listing.removed_reason ? `: ${listing.removed_reason}` : ""}.`
+              : `This listing is ${listing.status === "draft" ? "a draft" : "marked as sold"} and is not visible to buyers.`}
           </span>
           <Link href={`/dashboard/listings/${listing.id}/edit`} className="font-medium underline">
             Edit listing
@@ -123,6 +125,10 @@ export default async function ListingPage({ params }: PageProps<"/listings/[id]"
               ))}
             </tbody>
           </table>
+
+          {!isOwner && listing.status === "active" && (
+            <ReportListingButton listingId={listing.id} signedIn={!!current} />
+          )}
         </div>
       </div>
     </main>

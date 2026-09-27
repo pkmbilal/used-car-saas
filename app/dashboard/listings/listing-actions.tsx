@@ -39,7 +39,7 @@ export function ListingActions({ listingId, status, showEdit = false }: Props) {
             Edit
           </Link>
         )}
-        {status !== "active" && (
+        {(status === "draft" || status === "sold") && (
           <button
             type="button"
             disabled={pending}

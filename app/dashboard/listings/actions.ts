@@ -20,6 +20,8 @@ export type ListingFormState = {
 
 export type ActionResult = { error?: string };
 
+const SUSPENDED_ERROR = "Your account is suspended, so you can't publish listings.";
+
 function revalidateDashboard() {
   revalidatePath("/dashboard", "layout");
 }
@@ -28,7 +30,8 @@ export async function createListing(
   _prev: ListingFormState,
   formData: FormData,
 ): Promise<ListingFormState> {
-  const { user } = await requireSeller("/dashboard/listings/new");
+  const { user, profile } = await requireSeller("/dashboard/listings/new");
+  if (profile.suspended_at) return { error: SUSPENDED_ERROR };
 
   const parsed = parseListing(formData);
   if ("error" in parsed) return { error: parsed.error };
@@ -72,10 +75,14 @@ export async function setListingStatus(
   listingId: string,
   status: ListingStatus,
 ): Promise<ActionResult> {
-  const { user } = await requireSeller();
+  const { user, profile } = await requireSeller();
 
   const listing = await getSellerListing(user.id, listingId);
   if (!listing) return { error: "Listing not found." };
+  if (status === "removed" || listing.status === "removed") {
+    return { error: "This listing was removed by moderators." };
+  }
+  if (status === "active" && profile.suspended_at) return { error: SUSPENDED_ERROR };
   if (status === "active" && listing.images.length === 0) {
     return { error: "Add at least one photo before publishing." };
   }
