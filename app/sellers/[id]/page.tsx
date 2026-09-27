@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { cache } from "react";
 import { ListingGrid } from "@/components/listing-card";
+import { getViewerFavoriteIds } from "@/lib/favorites";
 import { formatMonthYear } from "@/lib/format";
 import { getSellerProfile } from "@/lib/listings";
 
@@ -21,7 +22,7 @@ export async function generateMetadata({
 
 export default async function SellerPage({ params }: PageProps<"/sellers/[id]">) {
   const { id } = await params;
-  const seller = await getSeller(id);
+  const [seller, favoriteIds] = await Promise.all([getSeller(id), getViewerFavoriteIds()]);
   if (!seller) notFound();
 
   const { profile, listings } = seller;
@@ -37,7 +38,11 @@ export default async function SellerPage({ params }: PageProps<"/sellers/[id]">)
       <h2 className="mt-10 mb-4 text-lg font-medium">
         {listings.length === 1 ? "1 car for sale" : `${listings.length} cars for sale`}
       </h2>
-      <ListingGrid listings={listings} empty="No cars for sale right now." />
+      <ListingGrid
+        listings={listings}
+        empty="No cars for sale right now."
+        favoriteIds={favoriteIds}
+      />
     </main>
   );
 }

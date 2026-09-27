@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ListingGrid } from "@/components/listing-card";
+import { getViewerFavoriteIds } from "@/lib/favorites";
 import { PAGE_SIZE, parseListingFilters, searchListings } from "@/lib/listings";
 import { Filters } from "./filters";
 
@@ -11,7 +12,10 @@ export const metadata: Metadata = {
 export default async function ListingsPage({ searchParams }: PageProps<"/listings">) {
   const params = await searchParams;
   const filters = parseListingFilters(params);
-  const { listings, total } = await searchListings(filters);
+  const [{ listings, total }, favoriteIds] = await Promise.all([
+    searchListings(filters),
+    getViewerFavoriteIds(),
+  ]);
   const pageCount = Math.max(1, Math.ceil(total / PAGE_SIZE));
 
   // Keep the current filters when paging.
@@ -37,7 +41,7 @@ export default async function ListingsPage({ searchParams }: PageProps<"/listing
           <Filters filters={filters} />
         </aside>
         <section>
-          <ListingGrid listings={listings} />
+          <ListingGrid listings={listings} favoriteIds={favoriteIds} />
           {pageCount > 1 && (
             <nav className="mt-10 flex items-center justify-center gap-6 text-sm">
               {filters.page > 1 ? (

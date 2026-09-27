@@ -1,9 +1,13 @@
 import Link from "next/link";
 import { ListingGrid } from "@/components/listing-card";
+import { getViewerFavoriteIds } from "@/lib/favorites";
 import { getLatestListings } from "@/lib/listings";
 
 export default async function Home() {
-  const listings = await getLatestListings(8);
+  const [listings, favoriteIds] = await Promise.all([
+    getLatestListings(8),
+    getViewerFavoriteIds(),
+  ]);
 
   return (
     <main className="mx-auto w-full max-w-6xl px-4 py-12">
@@ -27,7 +31,7 @@ export default async function Home() {
             See all →
           </Link>
         </div>
-        <ListingGrid listings={listings} empty="No cars listed yet." />
+        <ListingGrid listings={listings} empty="No cars listed yet." favoriteIds={favoriteIds} />
       </section>
     </main>
   );

@@ -13,6 +13,11 @@ export function formatKm(km: number): string {
   return `${numberFormatter.format(km)} km`;
 }
 
+// Phones are stored as +9665XXXXXXXX; wa.me wants digits only.
+export function whatsappUrl(phone: string, text: string): string {
+  return `https://wa.me/${phone.replace(/\D/g, "")}?text=${encodeURIComponent(text)}`;
+}
+
 const monthYearFormatter = new Intl.DateTimeFormat("en-GB", {
   month: "long",
   year: "numeric",
