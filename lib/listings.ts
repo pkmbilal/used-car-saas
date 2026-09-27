@@ -59,7 +59,7 @@ export type ListingWithImages = Listing & {
   images: (ListingImage & { url: string })[];
 };
 
-function withImageUrls<T extends Listing & { listing_images: ListingImage[] }>(
+export function withImageUrls<T extends Listing & { listing_images: ListingImage[] }>(
   listing: T,
 ): Omit<T, "listing_images"> & Pick<ListingWithImages, "images"> {
   const { listing_images, ...rest } = listing;
