@@ -33,9 +33,17 @@ export async function SiteHeader() {
               </form>
             </>
           ) : (
-            <Link href="/login" className="font-medium">
-              Sign in
-            </Link>
+            <>
+              <Link href="/login" className="font-medium">
+                Sign in
+              </Link>
+              <Link
+                href="/signup"
+                className="rounded-md bg-zinc-900 px-3 py-1.5 font-medium text-white dark:bg-zinc-100 dark:text-zinc-900"
+              >
+                Sign up
+              </Link>
+            </>
           )}
         </div>
       </nav>
