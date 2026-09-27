@@ -74,7 +74,7 @@ R2_PUBLIC_URL=
 
 ## Project Plan (Phase by Phase)
 
-We are currently building **Phase 1**. Do not implement features from a
+We are currently building **Phase 2**. Do not implement features from a
 later phase unless explicitly asked — keep scope tight to the active phase.
 Update the "Current Phase" marker below as phases are completed.
 
