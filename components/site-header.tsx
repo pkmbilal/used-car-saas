@@ -12,6 +12,9 @@ export async function SiteHeader() {
           Used Car Marketplace
         </Link>
         <div className="flex items-center gap-4 text-sm">
+          <Link href="/listings" className="font-medium">
+            Browse cars
+          </Link>
           <Link
             href={isSeller ? "/dashboard" : "/account/become-seller"}
             className="font-medium"

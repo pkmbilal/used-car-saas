@@ -59,7 +59,9 @@ export type ListingWithImages = Listing & {
   images: (ListingImage & { url: string })[];
 };
 
-function withImageUrls(listing: Listing & { listing_images: ListingImage[] }): ListingWithImages {
+function withImageUrls<T extends Listing & { listing_images: ListingImage[] }>(
+  listing: T,
+): Omit<T, "listing_images"> & Pick<ListingWithImages, "images"> {
   const { listing_images, ...rest } = listing;
   return {
     ...rest,
@@ -94,4 +96,135 @@ export async function getSellerListing(
     .eq("seller_id", sellerId)
     .maybeSingle();
   return data ? withImageUrls(data) : null;
+}
+
+// ---------------------------------------------------------------------------
+// Public browse / detail. RLS limits anonymous reads to active listings; the
+// explicit status filters keep a signed-in seller's drafts out of results.
+// ---------------------------------------------------------------------------
+
+export const PAGE_SIZE = 24;
+export const SORTS = ["newest", "price_asc", "price_desc"] as const;
+export type Sort = (typeof SORTS)[number];
+
+export type ListingFilters = {
+  make?: string;
+  city?: string;
+  fuelType?: Listing["fuel_type"];
+  minPrice?: number;
+  maxPrice?: number;
+  minYear?: number;
+  maxYear?: number;
+  sort: Sort;
+  page: number;
+};
+
+type SearchParams = Record<string, string | string[] | undefined>;
+
+function param(searchParams: SearchParams, key: string): string | undefined {
+  const value = searchParams[key];
+  return typeof value === "string" && value !== "" ? value : undefined;
+}
+
+function numberParam(searchParams: SearchParams, key: string): number | undefined {
+  const value = param(searchParams, key);
+  if (value === undefined) return undefined;
+  const number = parseWholeNumber(value);
+  return number === null ? undefined : number;
+}
+
+// Invalid values are dropped rather than erroring: these come from the URL.
+export function parseListingFilters(searchParams: SearchParams): ListingFilters {
+  const make = param(searchParams, "make");
+  const city = param(searchParams, "city");
+  const fuelType = param(searchParams, "fuel_type");
+  const sort = param(searchParams, "sort");
+  const page = numberParam(searchParams, "page");
+
+  return {
+    make: isMake(make) ? make : undefined,
+    city: isCity(city) ? city : undefined,
+    fuelType: includes(FUEL_TYPES, fuelType) ? fuelType : undefined,
+    minPrice: numberParam(searchParams, "min_price"),
+    maxPrice: numberParam(searchParams, "max_price"),
+    minYear: numberParam(searchParams, "min_year"),
+    maxYear: numberParam(searchParams, "max_year"),
+    sort: includes(SORTS, sort) ? sort : "newest",
+    page: page && page > 0 ? page : 1,
+  };
+}
+
+export async function searchListings(
+  filters: ListingFilters,
+): Promise<{ listings: ListingWithImages[]; total: number }> {
+  const supabase = await createClient();
+  let query = supabase
+    .from("listings")
+    .select("*, listing_images(*)", { count: "exact" })
+    .eq("status", "active");
+
+  if (filters.make) query = query.eq("make", filters.make);
+  if (filters.city) query = query.eq("city", filters.city);
+  if (filters.fuelType) query = query.eq("fuel_type", filters.fuelType);
+  if (filters.minPrice !== undefined) query = query.gte("price", filters.minPrice);
+  if (filters.maxPrice !== undefined) query = query.lte("price", filters.maxPrice);
+  if (filters.minYear !== undefined) query = query.gte("year", filters.minYear);
+  if (filters.maxYear !== undefined) query = query.lte("year", filters.maxYear);
+
+  query =
+    filters.sort === "newest"
+      ? query.order("created_at", { ascending: false })
+      : query
+          .order("price", { ascending: filters.sort === "price_asc" })
+          .order("created_at", { ascending: false });
+
+  const from = (filters.page - 1) * PAGE_SIZE;
+  const { data, count, error } = await query.range(from, from + PAGE_SIZE - 1);
+  // Out-of-range pages error in PostgREST; treat them as empty.
+  if (error) return { listings: [], total: count ?? 0 };
+  return { listings: data.map(withImageUrls), total: count ?? 0 };
+}
+
+export async function getLatestListings(limit: number): Promise<ListingWithImages[]> {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("listings")
+    .select("*, listing_images(*)")
+    .eq("status", "active")
+    .order("created_at", { ascending: false })
+    .limit(limit);
+  if (error) throw error;
+  return data.map(withImageUrls);
+}
+
+// Active listings for everyone; drafts/sold only for their owner (via RLS).
+export async function getPublicListing(listingId: string) {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("listings")
+    .select("*, listing_images(*), seller:profiles(id, full_name, phone, city, created_at)")
+    .eq("id", listingId)
+    .maybeSingle();
+  return data ? withImageUrls(data) : null;
+}
+
+export async function getSellerProfile(sellerId: string) {
+  const supabase = await createClient();
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("id, full_name, city, created_at")
+    .eq("id", sellerId)
+    .eq("role", "seller")
+    .maybeSingle();
+  if (!profile) return null;
+
+  const { data: listings, error } = await supabase
+    .from("listings")
+    .select("*, listing_images(*)")
+    .eq("seller_id", sellerId)
+    .eq("status", "active")
+    .order("created_at", { ascending: false });
+  if (error) throw error;
+
+  return { profile, listings: listings.map(withImageUrls) };
 }

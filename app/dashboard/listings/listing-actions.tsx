@@ -31,6 +31,9 @@ export function ListingActions({ listingId, status, showEdit = false }: Props) {
   return (
     <div className="flex flex-col items-end gap-1">
       <div className="flex flex-wrap items-center justify-end gap-3">
+        <Link href={`/listings/${listingId}`} className={buttonClass}>
+          View
+        </Link>
         {showEdit && (
           <Link href={`/dashboard/listings/${listingId}/edit`} className={buttonClass}>
             Edit

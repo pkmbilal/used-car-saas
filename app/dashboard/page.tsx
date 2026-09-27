@@ -1,12 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import { requireSeller } from "@/lib/auth";
-import { formatSAR } from "@/lib/format";
+import { formatKm, formatSAR } from "@/lib/format";
 import { getSellerListings } from "@/lib/listings";
 import { ListingActions } from "./listings/listing-actions";
 import { StatusBadge } from "./listings/status-badge";
-
-const numberFormatter = new Intl.NumberFormat("en-US");
 
 export default async function DashboardPage() {
   const { user } = await requireSeller();
@@ -55,7 +53,7 @@ export default async function DashboardPage() {
                     <StatusBadge status={listing.status} />
                   </div>
                   <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-                    {formatSAR(listing.price)} · {numberFormatter.format(listing.mileage)} km ·{" "}
+                    {formatSAR(listing.price)} · {formatKm(listing.mileage)} ·{" "}
                     {listing.city}
                   </p>
                 </div>
