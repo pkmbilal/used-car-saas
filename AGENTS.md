@@ -78,7 +78,7 @@ We are currently building **Phase 1**. Do not implement features from a
 later phase unless explicitly asked — keep scope tight to the active phase.
 Update the "Current Phase" marker below as phases are completed.
 
-**Current Phase: 1**
+**Current Phase: 2**
 
 ### Phase 1 — Core Marketplace (MVP)
 Goal: get listings live and searchable.
