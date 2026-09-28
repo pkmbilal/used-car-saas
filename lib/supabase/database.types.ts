@@ -230,12 +230,38 @@ export type Database = {
           },
         ];
       };
+      listing_view_counts: {
+        Row: {
+          listing_id: string;
+          views: number;
+        };
+        Insert: {
+          listing_id: string;
+          views?: number;
+        };
+        Update: {
+          listing_id?: string;
+          views?: number;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "listing_view_counts_listing_id_fkey";
+            columns: ["listing_id"];
+            isOneToOne: true;
+            referencedRelation: "listings";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
     };
     Views: {
       [_ in never]: never;
     };
     Functions: {
-      [_ in never]: never;
+      increment_listing_view: {
+        Args: { p_listing_id: string };
+        Returns: undefined;
+      };
     };
     Enums: {
       [_ in never]: never;

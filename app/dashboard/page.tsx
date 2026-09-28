@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { requireSeller } from "@/lib/auth";
-import { formatKm, formatSAR } from "@/lib/format";
+import { formatKm, formatSAR, formatViews } from "@/lib/format";
 import { getSellerListings } from "@/lib/listings";
 import { ListingActions } from "./listings/listing-actions";
 import { StatusBadge } from "./listings/status-badge";
@@ -61,7 +61,7 @@ export default async function DashboardPage() {
                   </div>
                   <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
                     {formatSAR(listing.price)} · {formatKm(listing.mileage)} ·{" "}
-                    {listing.city}
+                    {listing.city} · {formatViews(listing.views)}
                   </p>
                   {listing.status === "removed" && listing.removed_reason && (
                     <p className="mt-1 text-sm text-red-700 dark:text-red-400">

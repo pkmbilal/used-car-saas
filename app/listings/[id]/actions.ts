@@ -1,6 +1,7 @@
 "use server";
 
 import { getCurrentUser } from "@/lib/auth";
+import { recordListingView } from "@/lib/listings";
 import { parseReport } from "@/lib/moderation";
 import { createClient } from "@/lib/supabase/server";
 
@@ -27,4 +28,12 @@ export async function reportListing(
   if (error) return { error: "Could not send the report. Try again." };
 
   return { sent: true };
+}
+
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+// The RPC only counts active listings and skips the seller's own views.
+export async function recordView(listingId: string): Promise<void> {
+  if (!UUID.test(listingId)) return;
+  await recordListingView(listingId);
 }
