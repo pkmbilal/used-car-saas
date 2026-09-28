@@ -2,7 +2,9 @@ import "server-only";
 import { requireAdmin } from "@/lib/auth";
 import { withImageUrls, type ListingStatus } from "@/lib/listings";
 import { SUSPENSION_REMOVAL_REASON } from "@/lib/moderation";
+import { deleteObjects, presignGet, PRIVATE_BUCKET } from "@/lib/r2";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { MAX_REJECT_REASON } from "@/lib/verification-options";
 
 // Moderation data access. Uses the service-role client (bypasses RLS), so
 // every function checks for an admin itself rather than trusting its caller.
@@ -206,5 +208,115 @@ export async function unsuspendUser(userId: string): Promise<AdminResult> {
     .eq("status", "removed")
     .eq("removed_reason", SUSPENSION_REMOVAL_REASON);
   if (listingError) return { error: "User unsuspended, but their listings could not be restored." };
+  return {};
+}
+
+// ---------------------------------------------------------------------------
+// ID verification
+// ---------------------------------------------------------------------------
+
+export type PendingIdVerification = Awaited<ReturnType<typeof getPendingIdVerifications>>[number];
+
+// Oldest first, with short-lived links to the private documents.
+export async function getPendingIdVerifications() {
+  await requireAdmin();
+  const supabase = createAdminClient();
+  const { data, error } = await supabase
+    .from("id_verification_requests")
+    .select(
+      "id, doc_keys, created_at, user:profiles!id_verification_requests_user_id_fkey(id, full_name, phone, city, created_at, suspended_at)",
+    )
+    .eq("status", "pending")
+    .order("created_at", { ascending: true });
+  if (error) throw error;
+
+  return Promise.all(
+    data.map(async ({ doc_keys, ...request }) => ({
+      ...request,
+      docs: await Promise.all(
+        doc_keys.map(async (key) => ({
+          url: await presignGet(key),
+          isPdf: key.endsWith(".pdf"),
+        })),
+      ),
+    })),
+  );
+}
+
+// Closes a pending request and deletes its documents: we don't keep ID copies
+// once a decision is made.
+async function reviewIdVerification(
+  requestId: string,
+  decision: { status: "approved" } | { status: "rejected"; reject_reason: string },
+): Promise<{ userId: string } | { error: string }> {
+  const { user } = await requireAdmin();
+  const supabase = createAdminClient();
+
+  const { data: request } = await supabase
+    .from("id_verification_requests")
+    .select("user_id, doc_keys")
+    .eq("id", requestId)
+    .eq("status", "pending")
+    .maybeSingle();
+  if (!request) return { error: "Request is no longer pending." };
+
+  const { data, error } = await supabase
+    .from("id_verification_requests")
+    .update({
+      ...decision,
+      doc_keys: [],
+      reviewed_at: new Date().toISOString(),
+      reviewed_by: user.id,
+    })
+    .eq("id", requestId)
+    .eq("status", "pending")
+    .select("id");
+  if (error) return { error: "Could not update the request. Try again." };
+  if (data.length === 0) return { error: "Request is no longer pending." };
+
+  await deleteObjects(request.doc_keys, PRIVATE_BUCKET).catch((err) =>
+    console.error("Failed to delete ID documents", request.doc_keys, err),
+  );
+  return { userId: request.user_id };
+}
+
+export async function approveIdVerification(requestId: string): Promise<AdminResult> {
+  const reviewed = await reviewIdVerification(requestId, { status: "approved" });
+  if ("error" in reviewed) return reviewed;
+
+  const supabase = createAdminClient();
+  const { error } = await supabase
+    .from("profiles")
+    .update({ id_verified_at: new Date().toISOString() })
+    .eq("id", reviewed.userId);
+  if (error) return { error: "Request approved, but the badge could not be granted." };
+  return {};
+}
+
+export async function rejectIdVerification(
+  requestId: string,
+  reason: string,
+): Promise<AdminResult> {
+  const rejectReason = reason.trim();
+  if (!rejectReason) return { error: "Give a reason the seller will see." };
+  if (rejectReason.length > MAX_REJECT_REASON) {
+    return { error: `Keep the reason under ${MAX_REJECT_REASON} characters.` };
+  }
+
+  const reviewed = await reviewIdVerification(requestId, {
+    status: "rejected",
+    reject_reason: rejectReason,
+  });
+  return "error" in reviewed ? reviewed : {};
+}
+
+export async function revokeIdVerification(userId: string): Promise<AdminResult> {
+  await requireAdmin();
+  const supabase = createAdminClient();
+  const { error } = await supabase
+    .from("profiles")
+    .update({ id_verified_at: null })
+    .eq("id", userId);
+  if (error) return { error: "Could not revoke the badge. Try again." };
   return {};
 }

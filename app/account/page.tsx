@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { VerificationBadges } from "@/components/verification-badges";
 import { requireUser } from "@/lib/auth";
 import { formatMonthYear } from "@/lib/format";
 import { updateProfile } from "./actions";
@@ -14,6 +15,9 @@ export default async function AccountPage({ searchParams }: PageProps<"/account"
       <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
         {user.email} · Member since {formatMonthYear(profile.created_at)}
       </p>
+      <div className="mt-3">
+        <VerificationBadges profile={profile} />
+      </div>
 
       {welcome && (
         <p className="mt-6 rounded-md bg-green-50 px-4 py-3 text-sm text-green-900 dark:bg-green-950 dark:text-green-200">
@@ -24,6 +28,15 @@ export default async function AccountPage({ searchParams }: PageProps<"/account"
       <div className="mt-8">
         <ProfileForm profile={profile} action={updateProfile} submitLabel="Save" />
       </div>
+
+      {profile.role === "seller" && !profile.id_verified_at && (
+        <p className="mt-8 text-sm">
+          Build buyer trust with an ID-verified badge.{" "}
+          <Link href="/account/verification" className="font-medium underline">
+            Get verified
+          </Link>
+        </p>
+      )}
 
       {profile.role !== "seller" && (
         <p className="mt-8 text-sm">

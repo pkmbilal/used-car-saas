@@ -24,6 +24,8 @@ export type Database = {
           role: "buyer" | "seller";
           is_admin: boolean;
           suspended_at: string | null;
+          email_verified_at: string | null;
+          id_verified_at: string | null;
           created_at: string;
         };
         Insert: {
@@ -34,6 +36,8 @@ export type Database = {
           role?: "buyer" | "seller";
           is_admin?: boolean;
           suspended_at?: string | null;
+          email_verified_at?: string | null;
+          id_verified_at?: string | null;
           created_at?: string;
         };
         Update: {
@@ -44,6 +48,8 @@ export type Database = {
           role?: "buyer" | "seller";
           is_admin?: boolean;
           suspended_at?: string | null;
+          email_verified_at?: string | null;
+          id_verified_at?: string | null;
           created_at?: string;
         };
         Relationships: [];
@@ -252,6 +258,54 @@ export type Database = {
             columns: ["listing_id"];
             isOneToOne: true;
             referencedRelation: "listings";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      id_verification_requests: {
+        Row: {
+          id: string;
+          user_id: string;
+          doc_keys: string[];
+          status: "pending" | "approved" | "rejected";
+          reject_reason: string | null;
+          created_at: string;
+          reviewed_at: string | null;
+          reviewed_by: string | null;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          doc_keys: string[];
+          status?: "pending" | "approved" | "rejected";
+          reject_reason?: string | null;
+          created_at?: string;
+          reviewed_at?: string | null;
+          reviewed_by?: string | null;
+        };
+        Update: {
+          id?: string;
+          user_id?: string;
+          doc_keys?: string[];
+          status?: "pending" | "approved" | "rejected";
+          reject_reason?: string | null;
+          created_at?: string;
+          reviewed_at?: string | null;
+          reviewed_by?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "id_verification_requests_user_id_fkey";
+            columns: ["user_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "id_verification_requests_reviewed_by_fkey";
+            columns: ["reviewed_by"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
             referencedColumns: ["id"];
           },
         ];

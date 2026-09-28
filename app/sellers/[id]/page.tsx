@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { cache } from "react";
 import { ListingGrid } from "@/components/listing-card";
+import { VerificationBadges } from "@/components/verification-badges";
 import { getViewerFavoriteIds } from "@/lib/favorites";
 import { formatMonthYear } from "@/lib/format";
 import { getSellerProfile } from "@/lib/listings";
@@ -29,7 +30,10 @@ export default async function SellerPage({ params }: PageProps<"/sellers/[id]">)
 
   return (
     <main className="mx-auto w-full max-w-6xl px-4 py-12">
-      <h1 className="text-2xl font-semibold tracking-tight">{profile.full_name ?? "Seller"}</h1>
+      <div className="flex flex-wrap items-center gap-3">
+        <h1 className="text-2xl font-semibold tracking-tight">{profile.full_name ?? "Seller"}</h1>
+        <VerificationBadges profile={profile} />
+      </div>
       <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
         {profile.city ? `${profile.city} · ` : ""}Member since{" "}
         {formatMonthYear(profile.created_at)}
