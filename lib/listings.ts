@@ -6,7 +6,8 @@ import { publicUrl } from "@/lib/r2";
 import { createClient } from "@/lib/supabase/server";
 import type { Database } from "@/lib/supabase/database.types";
 
-export type Listing = Database["public"]["Tables"]["listings"]["Row"];
+// search_vector is a DB-only search column; it is stripped before rows leave lib/.
+export type Listing = Omit<Database["public"]["Tables"]["listings"]["Row"], "search_vector">;
 export type ListingImage = Database["public"]["Tables"]["listing_images"]["Row"];
 export type ListingStatus = Listing["status"];
 
@@ -59,10 +60,11 @@ export type ListingWithImages = Listing & {
   images: (ListingImage & { url: string })[];
 };
 
-export function withImageUrls<T extends Listing & { listing_images: ListingImage[] }>(
-  listing: T,
-): Omit<T, "listing_images"> & Pick<ListingWithImages, "images"> {
-  const { listing_images, ...rest } = listing;
+export function withImageUrls<
+  T extends Listing & { listing_images: ListingImage[]; search_vector?: unknown },
+>(listing: T): Omit<T, "listing_images" | "search_vector"> & Pick<ListingWithImages, "images"> {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- dropped so it isn't sent to the client
+  const { listing_images, search_vector, ...rest } = listing;
   return {
     ...rest,
     images: [...listing_images]
@@ -130,6 +132,7 @@ export const SORTS = ["newest", "price_asc", "price_desc"] as const;
 export type Sort = (typeof SORTS)[number];
 
 export type ListingFilters = {
+  q?: string;
   make?: string;
   city?: string;
   fuelType?: Listing["fuel_type"];
@@ -164,6 +167,7 @@ export function parseListingFilters(searchParams: SearchParams): ListingFilters 
   const page = numberParam(searchParams, "page");
 
   return {
+    q: param(searchParams, "q")?.trim().slice(0, 100) || undefined,
     make: isMake(make) ? make : undefined,
     city: isCity(city) ? city : undefined,
     fuelType: includes(FUEL_TYPES, fuelType) ? fuelType : undefined,
@@ -176,6 +180,17 @@ export function parseListingFilters(searchParams: SearchParams): ListingFilters 
   };
 }
 
+// "cam 2020" -> "cam:* & 2020:*". Only letters and digits survive, so user
+// input can never produce a tsquery syntax error.
+export function toPrefixTsQuery(q: string): string | null {
+  const tokens = q
+    .toLowerCase()
+    .split(/[^\p{L}\p{N}]+/u)
+    .filter(Boolean)
+    .slice(0, 8);
+  return tokens.length ? tokens.map((token) => `${token}:*`).join(" & ") : null;
+}
+
 export async function searchListings(
   filters: ListingFilters,
 ): Promise<{ listings: ListingWithImages[]; total: number }> {
@@ -185,6 +200,8 @@ export async function searchListings(
     .select("*, listing_images(*)", { count: "exact" })
     .eq("status", "active");
 
+  const tsQuery = filters.q ? toPrefixTsQuery(filters.q) : null;
+  if (tsQuery) query = query.textSearch("search_vector", tsQuery, { config: "simple" });
   if (filters.make) query = query.eq("make", filters.make);
   if (filters.city) query = query.eq("city", filters.city);
   if (filters.fuelType) query = query.eq("fuel_type", filters.fuelType);

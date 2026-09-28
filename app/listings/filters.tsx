@@ -85,6 +85,17 @@ function Range({
 export function Filters({ filters }: { filters: ListingFilters }) {
   return (
     <form method="get" action="/listings" className="flex flex-col gap-4">
+      <label className="flex flex-col gap-1 text-sm font-medium">
+        Search
+        <input
+          name="q"
+          type="search"
+          maxLength={100}
+          placeholder="e.g. Camry 2020 Riyadh"
+          defaultValue={filters.q}
+          className={inputClass}
+        />
+      </label>
       <Select name="make" label="Make" options={MAKES} value={filters.make} />
       <Select name="city" label="City" options={CITIES} value={filters.city} />
       <Select
