@@ -1,8 +1,21 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ListingGrid } from "@/components/listing-card";
+import { SaveSearchButton } from "@/components/save-search-button";
+import { getCurrentUser } from "@/lib/auth";
 import { getViewerFavoriteIds } from "@/lib/favorites";
-import { PAGE_SIZE, parseListingFilters, searchListings } from "@/lib/listings";
+import {
+  listingFiltersToParams,
+  PAGE_SIZE,
+  parseListingFilters,
+  searchListings,
+} from "@/lib/listings";
+import {
+  defaultSearchName,
+  hasActiveFilters,
+  listingsHref,
+  MAX_SAVED_SEARCH_NAME,
+} from "@/lib/saved-searches";
 import { Filters } from "./filters";
 
 export const metadata: Metadata = {
@@ -12,11 +25,14 @@ export const metadata: Metadata = {
 export default async function ListingsPage({ searchParams }: PageProps<"/listings">) {
   const params = await searchParams;
   const filters = parseListingFilters(params);
-  const [{ listings, total }, favoriteIds] = await Promise.all([
+  const [{ listings, total }, favoriteIds, current] = await Promise.all([
     searchListings(filters),
     getViewerFavoriteIds(),
+    getCurrentUser(),
   ]);
   const pageCount = Math.max(1, Math.ceil(total / PAGE_SIZE));
+  const searchParamsForSave = listingFiltersToParams(filters);
+  const searchHref = listingsHref(filters);
 
   // Keep the current filters when paging.
   function pageHref(page: number) {
@@ -31,11 +47,25 @@ export default async function ListingsPage({ searchParams }: PageProps<"/listing
 
   return (
     <main className="mx-auto w-full max-w-6xl px-4 py-12">
-      <h1 className="text-2xl font-semibold tracking-tight">Used cars for sale</h1>
-      <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-        {total === 1 ? "1 car" : `${total} cars`}
-        {filters.q && ` matching “${filters.q}”`}
-      </p>
+      <div className="flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-semibold tracking-tight">Used cars for sale</h1>
+          <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
+            {total === 1 ? "1 car" : `${total} cars`}
+            {filters.q && ` matching “${filters.q}”`}
+          </p>
+        </div>
+        {hasActiveFilters(filters) && (
+          <SaveSearchButton
+            key={searchHref}
+            params={searchParamsForSave}
+            defaultName={defaultSearchName(filters)}
+            maxNameLength={MAX_SAVED_SEARCH_NAME}
+            signedIn={current !== null}
+            loginHref={`/login?next=${encodeURIComponent(searchHref)}`}
+          />
+        )}
+      </div>
 
       <div className="mt-8 grid gap-8 lg:grid-cols-[16rem_1fr]">
         <aside>
