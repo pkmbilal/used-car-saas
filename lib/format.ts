@@ -26,3 +26,7 @@ const monthYearFormatter = new Intl.DateTimeFormat("en-GB", {
 export function formatMonthYear(date: string): string {
   return monthYearFormatter.format(new Date(date));
 }
+
+export function formatViews(views: number): string {
+  return `${numberFormatter.format(views)} ${views === 1 ? "view" : "views"}`;
+}

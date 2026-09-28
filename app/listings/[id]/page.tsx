@@ -7,10 +7,11 @@ import { FavoriteButton } from "@/components/favorite-button";
 import { ReportListingButton } from "@/components/report-listing-button";
 import { getCurrentUser } from "@/lib/auth";
 import { getFavoriteIds } from "@/lib/favorites";
-import { formatKm, formatMonthYear, formatSAR, whatsappUrl } from "@/lib/format";
+import { formatKm, formatMonthYear, formatSAR, formatViews, whatsappUrl } from "@/lib/format";
 import { capitalize } from "@/lib/listing-options";
-import { getPublicListing } from "@/lib/listings";
+import { getListingViews, getPublicListing } from "@/lib/listings";
 import { Gallery } from "./gallery";
+import { ViewTracker } from "./view-tracker";
 
 // Shared by generateMetadata and the page within one request.
 const getListing = cache(getPublicListing);
@@ -34,6 +35,7 @@ export default async function ListingPage({ params }: PageProps<"/listings/[id]"
   const title = `${listing.year} ${listing.make} ${listing.model}`;
   const isOwner = current?.user.id === listing.seller_id;
   const seller = listing.seller;
+  const views = isOwner ? await getListingViews(listing.id) : null;
   const favorited = current ? (await getFavoriteIds(current.user.id)).has(listing.id) : false;
   const whatsappText = `Hi, I'm interested in your ${title} listed for ${formatSAR(listing.price)}: ${await listingUrl(listing.id)}`;
 
@@ -50,6 +52,7 @@ export default async function ListingPage({ params }: PageProps<"/listings/[id]"
 
   return (
     <main className="mx-auto w-full max-w-6xl px-4 py-12">
+      {!isOwner && listing.status === "active" && <ViewTracker listingId={listing.id} />}
       {isOwner && listing.status !== "active" && (
         <div className="mb-6 flex flex-wrap items-center justify-between gap-2 rounded-md bg-amber-50 px-4 py-3 text-sm text-amber-900 dark:bg-amber-950 dark:text-amber-200">
           <span>
@@ -78,6 +81,9 @@ export default async function ListingPage({ params }: PageProps<"/listings/[id]"
             <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
               {formatKm(listing.mileage)} · {listing.city}
             </p>
+            {views !== null && (
+              <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">{formatViews(views)}</p>
+            )}
           </div>
 
           {seller && (

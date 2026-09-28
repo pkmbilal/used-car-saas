@@ -72,15 +72,37 @@ export function withImageUrls<T extends Listing & { listing_images: ListingImage
 }
 
 // RLS-scoped: returns only the signed-in seller's listings.
-export async function getSellerListings(sellerId: string): Promise<ListingWithImages[]> {
+export async function getSellerListings(
+  sellerId: string,
+): Promise<(ListingWithImages & { views: number })[]> {
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("listings")
-    .select("*, listing_images(*)")
+    .select("*, listing_images(*), listing_view_counts(views)")
     .eq("seller_id", sellerId)
     .order("created_at", { ascending: false });
   if (error) throw error;
-  return data.map(withImageUrls);
+  return data.map(({ listing_view_counts, ...listing }) => ({
+    ...withImageUrls(listing),
+    views: listing_view_counts?.views ?? 0,
+  }));
+}
+
+// RLS-scoped: 0 unless the signed-in user owns the listing.
+export async function getListingViews(listingId: string): Promise<number> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("listing_view_counts")
+    .select("views")
+    .eq("listing_id", listingId)
+    .maybeSingle();
+  return data?.views ?? 0;
+}
+
+// Best effort: a failed count must never break the listing page.
+export async function recordListingView(listingId: string): Promise<void> {
+  const supabase = await createClient();
+  await supabase.rpc("increment_listing_view", { p_listing_id: listingId });
 }
 
 // Returns null unless the listing exists and belongs to the seller.
