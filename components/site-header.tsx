@@ -26,6 +26,9 @@ export async function SiteHeader() {
               <Link href="/favorites" className="font-medium">
                 Saved
               </Link>
+              <Link href="/saved-searches" className="font-medium">
+                Searches
+              </Link>
               {current.profile.is_admin && (
                 <Link href="/admin" className="font-medium">
                   Admin

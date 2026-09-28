@@ -191,15 +191,39 @@ export function toPrefixTsQuery(q: string): string | null {
   return tokens.length ? tokens.map((token) => `${token}:*`).join(" & ") : null;
 }
 
-export async function searchListings(
-  filters: ListingFilters,
-): Promise<{ listings: ListingWithImages[]; total: number }> {
-  const supabase = await createClient();
-  let query = supabase
-    .from("listings")
-    .select("*, listing_images(*)", { count: "exact" })
-    .eq("status", "active");
+// The query-param form of the search filters (sort and page excluded), as
+// read back by parseListingFilters.
+export function listingFiltersToParams(filters: ListingFilters): Record<string, string> {
+  const entries: [string, string | number | undefined][] = [
+    ["q", filters.q],
+    ["make", filters.make],
+    ["city", filters.city],
+    ["fuel_type", filters.fuelType],
+    ["min_price", filters.minPrice],
+    ["max_price", filters.maxPrice],
+    ["min_year", filters.minYear],
+    ["max_year", filters.maxYear],
+  ];
+  return Object.fromEntries(
+    entries.flatMap(([key, value]) => (value === undefined ? [] : [[key, String(value)]])),
+  );
+}
 
+// The subset of the PostgREST filter builder used below, so any select on
+// listings (full rows or a head-only count) can share the same filters.
+interface ListingFilterQuery {
+  eq(column: "status" | "make" | "city" | "fuel_type", value: string): this;
+  gte(column: "price" | "year", value: number): this;
+  lte(column: "price" | "year", value: number): this;
+  textSearch(column: "search_vector", query: string, options: { config: string }): this;
+}
+
+// Active listings matching the filters (sort and page are applied by callers).
+export function applyListingFilters<Q extends ListingFilterQuery>(
+  query: Q,
+  filters: ListingFilters,
+): Q {
+  query = query.eq("status", "active");
   const tsQuery = filters.q ? toPrefixTsQuery(filters.q) : null;
   if (tsQuery) query = query.textSearch("search_vector", tsQuery, { config: "simple" });
   if (filters.make) query = query.eq("make", filters.make);
@@ -209,6 +233,17 @@ export async function searchListings(
   if (filters.maxPrice !== undefined) query = query.lte("price", filters.maxPrice);
   if (filters.minYear !== undefined) query = query.gte("year", filters.minYear);
   if (filters.maxYear !== undefined) query = query.lte("year", filters.maxYear);
+  return query;
+}
+
+export async function searchListings(
+  filters: ListingFilters,
+): Promise<{ listings: ListingWithImages[]; total: number }> {
+  const supabase = await createClient();
+  let query = applyListingFilters(
+    supabase.from("listings").select("*, listing_images(*)", { count: "exact" }),
+    filters,
+  );
 
   query =
     filters.sort === "newest"
