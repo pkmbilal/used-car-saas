@@ -1,8 +1,9 @@
 import Link from "next/link";
+import { VerificationBadges } from "@/components/verification-badges";
 import { getUsers } from "@/lib/admin";
 import { getCurrentUser } from "@/lib/auth";
 import { formatMonthYear } from "@/lib/format";
-import { suspendUserAction, unsuspendUserAction } from "../actions";
+import { revokeIdVerificationAction, suspendUserAction, unsuspendUserAction } from "../actions";
 import { AdminActionButton } from "../admin-buttons";
 import { pageParam, Pager, textParam } from "../pager";
 
@@ -49,6 +50,7 @@ export default async function AdminUsersPage({ searchParams }: PageProps<"/admin
                     Suspended
                   </span>
                 )}
+                <VerificationBadges profile={user} />
               </div>
               <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
                 {[user.phone, user.city, `Joined ${formatMonthYear(user.created_at)}`]
@@ -64,6 +66,13 @@ export default async function AdminUsersPage({ searchParams }: PageProps<"/admin
                 )}
               </p>
             </div>
+            {user.id_verified_at && (
+              <AdminActionButton
+                label="Revoke ID badge"
+                tone="danger"
+                action={revokeIdVerificationAction.bind(null, user.id)}
+              />
+            )}
             {user.id !== current?.user.id &&
               (user.suspended_at ? (
                 <AdminActionButton label="Unsuspend" action={unsuspendUserAction.bind(null, user.id)} />

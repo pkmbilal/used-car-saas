@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { cache } from "react";
 import { FavoriteButton } from "@/components/favorite-button";
 import { ReportListingButton } from "@/components/report-listing-button";
+import { VerificationBadges } from "@/components/verification-badges";
 import { getCurrentUser } from "@/lib/auth";
 import { getFavoriteIds } from "@/lib/favorites";
 import { formatKm, formatMonthYear, formatSAR, formatViews, whatsappUrl } from "@/lib/format";
@@ -88,7 +89,10 @@ export default async function ListingPage({ params }: PageProps<"/listings/[id]"
 
           {seller && (
             <div className="rounded-lg border border-zinc-200 p-4 dark:border-zinc-800">
-              <p className="font-medium">{seller.full_name ?? "Seller"}</p>
+              <div className="flex flex-wrap items-center gap-2">
+                <p className="font-medium">{seller.full_name ?? "Seller"}</p>
+                <VerificationBadges profile={seller} />
+              </div>
               <p className="text-sm text-zinc-600 dark:text-zinc-400">
                 {seller.city ? `${seller.city} · ` : ""}Member since{" "}
                 {formatMonthYear(seller.created_at)}

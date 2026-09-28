@@ -48,8 +48,15 @@ export function AdminActionButton({
   );
 }
 
-// Asks for the reason the seller will see before taking a listing down.
-export function RemoveListingButton({ listingId }: { listingId: string }) {
+// Asks for the reason the seller will see before running a negative action
+// (remove a listing, reject an ID). `action` is bound to its target id.
+export function ReasonActionButton({
+  label,
+  action,
+}: {
+  label: string;
+  action: (reason: string) => Promise<AdminResult>;
+}) {
   const { pending, error, run } = useAdminAction();
   const [open, setOpen] = useState(false);
   const [reason, setReason] = useState("");
@@ -57,7 +64,7 @@ export function RemoveListingButton({ listingId }: { listingId: string }) {
   if (!open) {
     return (
       <button type="button" onClick={() => setOpen(true)} className={`${buttonClass} text-red-600`}>
-        Remove
+        {label}
       </button>
     );
   }
@@ -67,7 +74,7 @@ export function RemoveListingButton({ listingId }: { listingId: string }) {
       className="flex flex-col items-end gap-1"
       onSubmit={(event) => {
         event.preventDefault();
-        run(() => removeListingAction(listingId, reason), () => setOpen(false));
+        run(() => action(reason), () => setOpen(false));
       }}
     >
       <div className="flex items-center gap-2">
@@ -91,4 +98,8 @@ export function RemoveListingButton({ listingId }: { listingId: string }) {
       {error && <span className="text-sm text-red-600">{error}</span>}
     </form>
   );
+}
+
+export function RemoveListingButton({ listingId }: { listingId: string }) {
+  return <ReasonActionButton label="Remove" action={removeListingAction.bind(null, listingId)} />;
 }

@@ -2,9 +2,12 @@
 
 import { revalidatePath } from "next/cache";
 import {
+  approveIdVerification,
   dismissReports,
+  rejectIdVerification,
   removeListing,
   restoreListing,
+  revokeIdVerification,
   suspendUser,
   unsuspendUser,
   type AdminResult,
@@ -35,4 +38,16 @@ export async function suspendUserAction(userId: string) {
 
 export async function unsuspendUserAction(userId: string) {
   return revalidating(unsuspendUser(userId));
+}
+
+export async function approveIdVerificationAction(requestId: string) {
+  return revalidating(approveIdVerification(requestId));
+}
+
+export async function rejectIdVerificationAction(requestId: string, reason: string) {
+  return revalidating(rejectIdVerification(requestId, reason));
+}
+
+export async function revokeIdVerificationAction(userId: string) {
+  return revalidating(revokeIdVerification(userId));
 }
