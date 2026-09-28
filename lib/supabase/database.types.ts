@@ -64,6 +64,7 @@ export type Database = {
           removed_reason: string | null;
           created_at: string;
           updated_at: string;
+          search_vector: unknown;
         };
         Insert: {
           id?: string;
@@ -80,6 +81,7 @@ export type Database = {
           removed_reason?: string | null;
           created_at?: string;
           updated_at?: string;
+          search_vector?: unknown;
         };
         Update: {
           id?: string;
@@ -96,6 +98,7 @@ export type Database = {
           removed_reason?: string | null;
           created_at?: string;
           updated_at?: string;
+          search_vector?: unknown;
         };
         Relationships: [
           {

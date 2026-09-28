@@ -34,6 +34,7 @@ export default async function ListingsPage({ searchParams }: PageProps<"/listing
       <h1 className="text-2xl font-semibold tracking-tight">Used cars for sale</h1>
       <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
         {total === 1 ? "1 car" : `${total} cars`}
+        {filters.q && ` matching “${filters.q}”`}
       </p>
 
       <div className="mt-8 grid gap-8 lg:grid-cols-[16rem_1fr]">
