@@ -22,6 +22,8 @@ export type Database = {
           phone: string | null;
           city: string | null;
           role: "buyer" | "seller";
+          is_admin: boolean;
+          suspended_at: string | null;
           created_at: string;
         };
         Insert: {
@@ -30,6 +32,8 @@ export type Database = {
           phone?: string | null;
           city?: string | null;
           role?: "buyer" | "seller";
+          is_admin?: boolean;
+          suspended_at?: string | null;
           created_at?: string;
         };
         Update: {
@@ -38,6 +42,8 @@ export type Database = {
           phone?: string | null;
           city?: string | null;
           role?: "buyer" | "seller";
+          is_admin?: boolean;
+          suspended_at?: string | null;
           created_at?: string;
         };
         Relationships: [];
@@ -54,7 +60,8 @@ export type Database = {
           condition: "excellent" | "good" | "fair";
           city: string;
           fuel_type: "petrol" | "diesel" | "hybrid" | "electric";
-          status: "draft" | "active" | "sold";
+          status: "draft" | "active" | "sold" | "removed";
+          removed_reason: string | null;
           created_at: string;
           updated_at: string;
         };
@@ -69,7 +76,8 @@ export type Database = {
           condition: "excellent" | "good" | "fair";
           city: string;
           fuel_type: "petrol" | "diesel" | "hybrid" | "electric";
-          status?: "draft" | "active" | "sold";
+          status?: "draft" | "active" | "sold" | "removed";
+          removed_reason?: string | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -84,7 +92,8 @@ export type Database = {
           condition?: "excellent" | "good" | "fair";
           city?: string;
           fuel_type?: "petrol" | "diesel" | "hybrid" | "electric";
-          status?: "draft" | "active" | "sold";
+          status?: "draft" | "active" | "sold" | "removed";
+          removed_reason?: string | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -159,6 +168,64 @@ export type Database = {
             columns: ["listing_id"];
             isOneToOne: false;
             referencedRelation: "listings";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      listing_reports: {
+        Row: {
+          id: string;
+          listing_id: string;
+          reporter_id: string;
+          reason: "scam" | "spam" | "wrong_info" | "already_sold" | "offensive" | "other";
+          details: string | null;
+          status: "open" | "resolved" | "dismissed";
+          created_at: string;
+          resolved_at: string | null;
+          resolved_by: string | null;
+        };
+        Insert: {
+          id?: string;
+          listing_id: string;
+          reporter_id: string;
+          reason: "scam" | "spam" | "wrong_info" | "already_sold" | "offensive" | "other";
+          details?: string | null;
+          status?: "open" | "resolved" | "dismissed";
+          created_at?: string;
+          resolved_at?: string | null;
+          resolved_by?: string | null;
+        };
+        Update: {
+          id?: string;
+          listing_id?: string;
+          reporter_id?: string;
+          reason?: "scam" | "spam" | "wrong_info" | "already_sold" | "offensive" | "other";
+          details?: string | null;
+          status?: "open" | "resolved" | "dismissed";
+          created_at?: string;
+          resolved_at?: string | null;
+          resolved_by?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "listing_reports_listing_id_fkey";
+            columns: ["listing_id"];
+            isOneToOne: false;
+            referencedRelation: "listings";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "listing_reports_reporter_id_fkey";
+            columns: ["reporter_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "listing_reports_resolved_by_fkey";
+            columns: ["resolved_by"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
             referencedColumns: ["id"];
           },
         ];
