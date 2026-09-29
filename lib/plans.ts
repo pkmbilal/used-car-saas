@@ -19,6 +19,11 @@ export function isPlan(value: unknown): value is Plan {
   return typeof value === "string" && value in PLAN_LABELS;
 }
 
+// Dealer plans get a branded storefront on /sellers/[id].
+export function isDealerPlan(plan: Plan): boolean {
+  return plan === "dealer" || plan === "dealer_pro";
+}
+
 export type ListingQuota = {
   plan: Plan;
   used: number;

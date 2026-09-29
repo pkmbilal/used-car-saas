@@ -3,6 +3,7 @@ import Link from "next/link";
 import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 import { cache } from "react";
+import { DealerBadge, DealerLogo } from "@/components/dealer-logo";
 import { FavoriteButton } from "@/components/favorite-button";
 import { ReportListingButton } from "@/components/report-listing-button";
 import { VerificationBadges } from "@/components/verification-badges";
@@ -11,6 +12,7 @@ import { getFavoriteIds } from "@/lib/favorites";
 import { formatKm, formatMonthYear, formatSAR, formatViews, whatsappUrl } from "@/lib/format";
 import { capitalize } from "@/lib/listing-options";
 import { getListingViews, getPublicListing } from "@/lib/listings";
+import { getStorefront } from "@/lib/storefront";
 import { Gallery } from "./gallery";
 import { ViewTracker } from "./view-tracker";
 
@@ -36,6 +38,7 @@ export default async function ListingPage({ params }: PageProps<"/listings/[id]"
   const title = `${listing.year} ${listing.make} ${listing.model}`;
   const isOwner = current?.user.id === listing.seller_id;
   const seller = listing.seller;
+  const storefront = seller ? getStorefront(seller) : null;
   const views = isOwner ? await getListingViews(listing.id) : null;
   const favorited = current ? (await getFavoriteIds(current.user.id)).has(listing.id) : false;
   const whatsappText = `Hi, I'm interested in your ${title} listed for ${formatSAR(listing.price)}: ${await listingUrl(listing.id)}`;
@@ -89,14 +92,22 @@ export default async function ListingPage({ params }: PageProps<"/listings/[id]"
 
           {seller && (
             <div className="rounded-lg border border-zinc-200 p-4 dark:border-zinc-800">
-              <div className="flex flex-wrap items-center gap-2">
-                <p className="font-medium">{seller.full_name ?? "Seller"}</p>
-                <VerificationBadges profile={seller} />
+              <div className="flex items-center gap-3">
+                {storefront && (
+                  <DealerLogo name={storefront.name} logoUrl={storefront.logoUrl} size="sm" />
+                )}
+                <div>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <p className="font-medium">{storefront?.name ?? seller.full_name ?? "Seller"}</p>
+                    {storefront && <DealerBadge />}
+                    <VerificationBadges profile={seller} />
+                  </div>
+                  <p className="text-sm text-zinc-600 dark:text-zinc-400">
+                    {seller.city ? `${seller.city} · ` : ""}Member since{" "}
+                    {formatMonthYear(seller.created_at)}
+                  </p>
+                </div>
               </div>
-              <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                {seller.city ? `${seller.city} · ` : ""}Member since{" "}
-                {formatMonthYear(seller.created_at)}
-              </p>
               <div className="mt-4 flex flex-wrap items-center gap-4">
                 {seller.phone && !isOwner && (
                   <>
@@ -117,7 +128,7 @@ export default async function ListingPage({ params }: PageProps<"/listings/[id]"
                   </>
                 )}
                 <Link href={`/sellers/${seller.id}`} className="text-sm font-medium">
-                  View seller&apos;s listings
+                  {storefront ? "Visit dealer storefront" : <>View seller&apos;s listings</>}
                 </Link>
               </div>
             </div>

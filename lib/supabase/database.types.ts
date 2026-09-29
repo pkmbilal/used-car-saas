@@ -27,6 +27,10 @@ export type Database = {
           email_verified_at: string | null;
           id_verified_at: string | null;
           plan: "free" | "dealer" | "dealer_pro";
+          business_name: string | null;
+          about: string | null;
+          logo_key: string | null;
+          showroom_address: string | null;
           created_at: string;
         };
         Insert: {
@@ -40,6 +44,10 @@ export type Database = {
           email_verified_at?: string | null;
           id_verified_at?: string | null;
           plan?: "free" | "dealer" | "dealer_pro";
+          business_name?: string | null;
+          about?: string | null;
+          logo_key?: string | null;
+          showroom_address?: string | null;
           created_at?: string;
         };
         Update: {
@@ -53,6 +61,10 @@ export type Database = {
           email_verified_at?: string | null;
           id_verified_at?: string | null;
           plan?: "free" | "dealer" | "dealer_pro";
+          business_name?: string | null;
+          about?: string | null;
+          logo_key?: string | null;
+          showroom_address?: string | null;
           created_at?: string;
         };
         Relationships: [];
