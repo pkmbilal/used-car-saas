@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { FavoriteButton } from "@/components/favorite-button";
 import { formatKm, formatSAR } from "@/lib/format";
-import type { ListingWithImages } from "@/lib/listings";
+import { isFeatured, type ListingWithImages } from "@/lib/listings";
 
 type CardProps = {
   listing: ListingWithImages;
@@ -25,6 +25,11 @@ export function ListingCard({ listing, favorited }: CardProps) {
               sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
               className="object-cover transition-transform group-hover:scale-105"
             />
+          )}
+          {isFeatured(listing) && (
+            <span className="absolute top-2 left-2 rounded-full bg-amber-400 px-2 py-0.5 text-xs font-semibold text-amber-950">
+              Featured
+            </span>
           )}
         </div>
         <div>

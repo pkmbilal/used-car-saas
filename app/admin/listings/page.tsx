@@ -1,9 +1,9 @@
 import Link from "next/link";
 import { StatusBadge } from "@/app/dashboard/listings/status-badge";
-import { getAllListings } from "@/lib/admin";
-import { formatMonthYear, formatSAR } from "@/lib/format";
-import type { ListingStatus } from "@/lib/listings";
-import { restoreListingAction } from "../actions";
+import { FEATURE_DAYS, getAllListings } from "@/lib/admin";
+import { formatDay, formatMonthYear, formatSAR } from "@/lib/format";
+import { isFeatured, type ListingStatus } from "@/lib/listings";
+import { featureListingAction, restoreListingAction, unfeatureListingAction } from "../actions";
 import { AdminActionButton, RemoveListingButton } from "../admin-buttons";
 import { pageParam, Pager, textParam } from "../pager";
 
@@ -67,13 +67,35 @@ export default async function AdminListingsPage({ searchParams }: PageProps<"/ad
                 {formatSAR(listing.price)} · {listing.city} · {listing.seller?.full_name ?? "Unnamed"} ·
                 Listed {formatMonthYear(listing.created_at)}
               </p>
+              {listing.featured_until && isFeatured(listing) && (
+                <p className="mt-1 text-sm text-amber-700 dark:text-amber-400">
+                  Featured until {formatDay(listing.featured_until)}
+                </p>
+              )}
               {listing.removed_reason && (
                 <p className="mt-1 text-sm text-red-700 dark:text-red-400">
                   Removed: {listing.removed_reason}
                 </p>
               )}
             </div>
-            {listing.status === "active" && <RemoveListingButton listingId={listing.id} />}
+            {listing.status === "active" && (
+              <>
+                {FEATURE_DAYS.map((days) => (
+                  <AdminActionButton
+                    key={days}
+                    label={`Feature ${days}d`}
+                    action={featureListingAction.bind(null, listing.id, days)}
+                  />
+                ))}
+                {isFeatured(listing) && (
+                  <AdminActionButton
+                    label="Unfeature"
+                    action={unfeatureListingAction.bind(null, listing.id)}
+                  />
+                )}
+                <RemoveListingButton listingId={listing.id} />
+              </>
+            )}
             {listing.status === "removed" && (
               <AdminActionButton label="Restore" action={restoreListingAction.bind(null, listing.id)} />
             )}

@@ -5,6 +5,7 @@ import { SaveSearchButton } from "@/components/save-search-button";
 import { getCurrentUser } from "@/lib/auth";
 import { getViewerFavoriteIds } from "@/lib/favorites";
 import {
+  getFeaturedListings,
   listingFiltersToParams,
   PAGE_SIZE,
   parseListingFilters,
@@ -25,8 +26,9 @@ export const metadata: Metadata = {
 export default async function ListingsPage({ searchParams }: PageProps<"/listings">) {
   const params = await searchParams;
   const filters = parseListingFilters(params);
-  const [{ listings, total }, favoriteIds, current] = await Promise.all([
+  const [{ listings, total }, featured, favoriteIds, current] = await Promise.all([
     searchListings(filters),
+    filters.page === 1 ? getFeaturedListings(filters) : [],
     getViewerFavoriteIds(),
     getCurrentUser(),
   ]);
@@ -72,6 +74,12 @@ export default async function ListingsPage({ searchParams }: PageProps<"/listing
           <Filters filters={filters} />
         </aside>
         <section>
+          {featured.length > 0 && (
+            <div className="mb-10 border-b border-zinc-200 pb-10 dark:border-zinc-800">
+              <h2 className="mb-4 text-lg font-medium">Featured</h2>
+              <ListingGrid listings={featured} favoriteIds={favoriteIds} />
+            </div>
+          )}
           <ListingGrid listings={listings} favoriteIds={favoriteIds} />
           {pageCount > 1 && (
             <nav className="mt-10 flex items-center justify-center gap-6 text-sm">

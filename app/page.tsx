@@ -1,10 +1,11 @@
 import Link from "next/link";
 import { ListingGrid } from "@/components/listing-card";
 import { getViewerFavoriteIds } from "@/lib/favorites";
-import { getLatestListings } from "@/lib/listings";
+import { getFeaturedListings, getLatestListings, parseListingFilters } from "@/lib/listings";
 
 export default async function Home() {
-  const [listings, favoriteIds] = await Promise.all([
+  const [featured, listings, favoriteIds] = await Promise.all([
+    getFeaturedListings(parseListingFilters({})),
     getLatestListings(8),
     getViewerFavoriteIds(),
   ]);
@@ -23,6 +24,13 @@ export default async function Home() {
           Browse all cars
         </Link>
       </section>
+
+      {featured.length > 0 && (
+        <section className="mt-8">
+          <h2 className="mb-4 text-lg font-medium">Featured</h2>
+          <ListingGrid listings={featured} favoriteIds={favoriteIds} />
+        </section>
+      )}
 
       <section className="mt-8">
         <div className="mb-4 flex items-center justify-between">

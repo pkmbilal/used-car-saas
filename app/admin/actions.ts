@@ -4,12 +4,14 @@ import { revalidatePath } from "next/cache";
 import {
   approveIdVerification,
   dismissReports,
+  featureListing,
   rejectIdVerification,
   removeListing,
   restoreListing,
   revokeIdVerification,
   setUserPlan,
   suspendUser,
+  unfeatureListing,
   unsuspendUser,
   type AdminResult,
 } from "@/lib/admin";
@@ -31,6 +33,14 @@ export async function restoreListingAction(listingId: string) {
 
 export async function dismissReportsAction(listingId: string) {
   return revalidating(dismissReports(listingId));
+}
+
+export async function featureListingAction(listingId: string, days: number) {
+  return revalidating(featureListing(listingId, days));
+}
+
+export async function unfeatureListingAction(listingId: string) {
+  return revalidating(unfeatureListing(listingId));
 }
 
 export async function suspendUserAction(userId: string) {

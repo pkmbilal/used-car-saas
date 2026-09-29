@@ -1,8 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { requireSeller } from "@/lib/auth";
-import { formatKm, formatSAR, formatViews } from "@/lib/format";
-import { getSellerListings } from "@/lib/listings";
+import { formatDay, formatKm, formatSAR, formatViews } from "@/lib/format";
+import { getSellerListings, isFeatured } from "@/lib/listings";
 import { getListingQuota, quotaSummary } from "@/lib/plans";
 import { ListingActions } from "./listings/listing-actions";
 import { StatusBadge } from "./listings/status-badge";
@@ -78,6 +78,11 @@ export default async function DashboardPage() {
                     {formatSAR(listing.price)} · {formatKm(listing.mileage)} ·{" "}
                     {listing.city} · {formatViews(listing.views)}
                   </p>
+                  {listing.status === "active" && listing.featured_until && isFeatured(listing) && (
+                    <p className="mt-1 text-sm text-amber-700 dark:text-amber-400">
+                      Featured until {formatDay(listing.featured_until)}
+                    </p>
+                  )}
                   {listing.status === "removed" && listing.removed_reason && (
                     <p className="mt-1 text-sm text-red-700 dark:text-red-400">
                       Removed by moderators: {listing.removed_reason}

@@ -259,6 +259,28 @@ export async function searchListings(
   return { listings: data.map(withImageUrls), total: count ?? 0 };
 }
 
+export function isFeatured(listing: Pick<Listing, "featured_until">): boolean {
+  return listing.featured_until !== null && new Date(listing.featured_until).getTime() > Date.now();
+}
+
+// Currently featured active listings matching the filters, most recently
+// boosted first. Shown above the regular results, which keep their own sort.
+export async function getFeaturedListings(
+  filters: ListingFilters,
+  limit = 4,
+): Promise<ListingWithImages[]> {
+  const supabase = await createClient();
+  const { data, error } = await applyListingFilters(
+    supabase.from("listings").select("*, listing_images(*)"),
+    filters,
+  )
+    .gt("featured_until", new Date().toISOString())
+    .order("featured_until", { ascending: false })
+    .limit(limit);
+  if (error) return [];
+  return data.map(withImageUrls);
+}
+
 export async function getLatestListings(limit: number): Promise<ListingWithImages[]> {
   const supabase = await createClient();
   const { data, error } = await supabase

@@ -71,6 +71,7 @@ export type Database = {
           fuel_type: "petrol" | "diesel" | "hybrid" | "electric";
           status: "draft" | "active" | "sold" | "removed";
           removed_reason: string | null;
+          featured_until: string | null;
           created_at: string;
           updated_at: string;
           search_vector: unknown;
@@ -88,6 +89,7 @@ export type Database = {
           fuel_type: "petrol" | "diesel" | "hybrid" | "electric";
           status?: "draft" | "active" | "sold" | "removed";
           removed_reason?: string | null;
+          featured_until?: string | null;
           created_at?: string;
           updated_at?: string;
           search_vector?: unknown;
@@ -105,6 +107,7 @@ export type Database = {
           fuel_type?: "petrol" | "diesel" | "hybrid" | "electric";
           status?: "draft" | "active" | "sold" | "removed";
           removed_reason?: string | null;
+          featured_until?: string | null;
           created_at?: string;
           updated_at?: string;
           search_vector?: unknown;

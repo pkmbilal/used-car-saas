@@ -165,6 +165,45 @@ export async function dismissReports(listingId: string): Promise<AdminResult> {
   return {};
 }
 
+// Featured placement is granted by hand until payments land. Re-featuring a
+// listing that is still featured extends it rather than resetting it.
+export const FEATURE_DAYS = [7, 30] as const;
+
+export async function featureListing(listingId: string, days: number): Promise<AdminResult> {
+  await requireAdmin();
+  if (!(FEATURE_DAYS as readonly number[]).includes(days)) return { error: "Unknown duration." };
+
+  const supabase = createAdminClient();
+  const { data: listing } = await supabase
+    .from("listings")
+    .select("status, featured_until")
+    .eq("id", listingId)
+    .maybeSingle();
+  if (!listing || listing.status !== "active") return { error: "Only live listings can be featured." };
+
+  const now = Date.now();
+  const current = listing.featured_until ? new Date(listing.featured_until).getTime() : 0;
+  const featuredUntil = new Date(Math.max(now, current) + days * 24 * 60 * 60 * 1000);
+
+  const { error } = await supabase
+    .from("listings")
+    .update({ featured_until: featuredUntil.toISOString() })
+    .eq("id", listingId);
+  if (error) return { error: "Could not feature the listing. Try again." };
+  return {};
+}
+
+export async function unfeatureListing(listingId: string): Promise<AdminResult> {
+  await requireAdmin();
+  const supabase = createAdminClient();
+  const { error } = await supabase
+    .from("listings")
+    .update({ featured_until: null })
+    .eq("id", listingId);
+  if (error) return { error: "Could not unfeature the listing. Try again." };
+  return {};
+}
+
 // ---------------------------------------------------------------------------
 // User moderation
 // ---------------------------------------------------------------------------
