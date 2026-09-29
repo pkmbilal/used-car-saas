@@ -1,7 +1,7 @@
 import "server-only";
-import { isCity } from "@/lib/cities";
+import { CITIES, isCity } from "@/lib/cities";
 import { CONDITIONS, FUEL_TYPES } from "@/lib/listing-options";
-import { isMake } from "@/lib/makes";
+import { isMake, MAKES } from "@/lib/makes";
 import { publicUrl } from "@/lib/r2";
 import { createClient } from "@/lib/supabase/server";
 import type { Database } from "@/lib/supabase/database.types";
@@ -25,35 +25,70 @@ function parseWholeNumber(value: FormDataEntryValue | null): number | null {
   return /^\d+$/.test(text) ? Number(text) : null;
 }
 
-export function parseListing(
-  formData: FormData,
-): { data: ListingInput } | { error: string } {
-  const make = formData.get("make");
-  const model = String(formData.get("model") ?? "").trim();
-  const year = parseWholeNumber(formData.get("year"));
-  const mileage = parseWholeNumber(formData.get("mileage"));
-  const price = parseWholeNumber(formData.get("price"));
-  const condition = formData.get("condition");
-  const city = formData.get("city");
-  const fuelType = formData.get("fuel_type");
-  const maxYear = new Date().getFullYear() + 1;
+// Case- and whitespace-insensitive, returning the canonical spelling, so CSV
+// values like "toyota" or " RIYADH " are accepted.
+function matchOption<T extends string>(list: readonly T[], value: string | null): T | null {
+  const key = value?.trim().toLowerCase();
+  return (key && list.find((option) => option.toLowerCase() === key)) || null;
+}
 
-  if (!isMake(make)) return { error: "Choose a make." };
-  if (model.length < 1 || model.length > 60) return { error: "Enter the model." };
-  if (year === null || year < 1950 || year > maxYear) {
-    return { error: `Enter a year between 1950 and ${maxYear}.` };
+export const LISTING_BOUNDS = {
+  minYear: 1950,
+  maxModelLength: 60,
+  maxMileage: 2_000_000,
+  maxPrice: 100_000_000,
+} as const;
+
+export function maxListingYear(): number {
+  return new Date().getFullYear() + 1;
+}
+
+export type ListingFieldError = { error: string; field: keyof ListingInput };
+
+// Shared by the listing form and CSV import; `get` reads one raw field value.
+export function parseListingFields(
+  get: (field: keyof ListingInput) => string | null,
+): { data: ListingInput } | ListingFieldError {
+  const make = matchOption(MAKES, get("make"));
+  const model = (get("model") ?? "").trim();
+  const year = parseWholeNumber(get("year"));
+  const mileage = parseWholeNumber(get("mileage"));
+  const price = parseWholeNumber(get("price"));
+  const condition = matchOption(CONDITIONS, get("condition"));
+  const city = matchOption(CITIES, get("city"));
+  const fuelType = matchOption(FUEL_TYPES, get("fuel_type"));
+  const maxYear = maxListingYear();
+  const { minYear, maxModelLength, maxMileage, maxPrice } = LISTING_BOUNDS;
+
+  if (!make) return { error: "Choose a make.", field: "make" };
+  if (model.length < 1 || model.length > maxModelLength) {
+    return { error: "Enter the model.", field: "model" };
   }
-  if (mileage === null || mileage > 2_000_000) return { error: "Enter the mileage in km." };
-  if (price === null || price <= 0 || price > 100_000_000) {
-    return { error: "Enter the price in SAR." };
+  if (year === null || year < minYear || year > maxYear) {
+    return { error: `Enter a year between ${minYear} and ${maxYear}.`, field: "year" };
   }
-  if (!includes(CONDITIONS, condition)) return { error: "Choose the condition." };
-  if (!isCity(city)) return { error: "Choose a city." };
-  if (!includes(FUEL_TYPES, fuelType)) return { error: "Choose the fuel type." };
+  if (mileage === null || mileage > maxMileage) {
+    return { error: "Enter the mileage in km.", field: "mileage" };
+  }
+  if (price === null || price <= 0 || price > maxPrice) {
+    return { error: "Enter the price in SAR.", field: "price" };
+  }
+  if (!condition) return { error: "Choose the condition.", field: "condition" };
+  if (!city) return { error: "Choose a city.", field: "city" };
+  if (!fuelType) return { error: "Choose the fuel type.", field: "fuel_type" };
 
   return {
     data: { make, model, year, mileage, price, condition, city, fuel_type: fuelType },
   };
+}
+
+export function parseListing(
+  formData: FormData,
+): { data: ListingInput } | { error: string } {
+  return parseListingFields((field) => {
+    const value = formData.get(field);
+    return typeof value === "string" ? value : null;
+  });
 }
 
 export type ListingWithImages = Listing & {
