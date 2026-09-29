@@ -26,6 +26,7 @@ export type Database = {
           suspended_at: string | null;
           email_verified_at: string | null;
           id_verified_at: string | null;
+          plan: "free" | "dealer" | "dealer_pro";
           created_at: string;
         };
         Insert: {
@@ -38,6 +39,7 @@ export type Database = {
           suspended_at?: string | null;
           email_verified_at?: string | null;
           id_verified_at?: string | null;
+          plan?: "free" | "dealer" | "dealer_pro";
           created_at?: string;
         };
         Update: {
@@ -50,6 +52,7 @@ export type Database = {
           suspended_at?: string | null;
           email_verified_at?: string | null;
           id_verified_at?: string | null;
+          plan?: "free" | "dealer" | "dealer_pro";
           created_at?: string;
         };
         Relationships: [];
@@ -180,6 +183,24 @@ export type Database = {
             referencedColumns: ["id"];
           },
         ];
+      };
+      listing_quota_usage: {
+        Row: {
+          seller_id: string;
+          month: string;
+          used: number;
+        };
+        Insert: {
+          seller_id: string;
+          month: string;
+          used?: number;
+        };
+        Update: {
+          seller_id?: string;
+          month?: string;
+          used?: number;
+        };
+        Relationships: [];
       };
       listing_reports: {
         Row: {
@@ -353,6 +374,14 @@ export type Database = {
       increment_listing_view: {
         Args: { p_listing_id: string };
         Returns: undefined;
+      };
+      listing_quota_status: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          plan: "free" | "dealer" | "dealer_pro";
+          used: number;
+          monthly_limit: number | null;
+        }[];
       };
     };
     Enums: {

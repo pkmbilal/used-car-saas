@@ -2,6 +2,7 @@ import "server-only";
 import { requireAdmin } from "@/lib/auth";
 import { withImageUrls, type ListingStatus } from "@/lib/listings";
 import { SUSPENSION_REMOVAL_REASON } from "@/lib/moderation";
+import { isPlan } from "@/lib/plans";
 import { deleteObjects, presignGet, PRIVATE_BUCKET } from "@/lib/r2";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { MAX_REJECT_REASON } from "@/lib/verification-options";
@@ -208,6 +209,17 @@ export async function unsuspendUser(userId: string): Promise<AdminResult> {
     .eq("status", "removed")
     .eq("removed_reason", SUSPENSION_REMOVAL_REASON);
   if (listingError) return { error: "User unsuspended, but their listings could not be restored." };
+  return {};
+}
+
+// Plans are granted by hand until billing lands.
+export async function setUserPlan(userId: string, plan: string): Promise<AdminResult> {
+  await requireAdmin();
+  if (!isPlan(plan)) return { error: "Unknown plan." };
+
+  const supabase = createAdminClient();
+  const { error } = await supabase.from("profiles").update({ plan }).eq("id", userId);
+  if (error) return { error: "Could not change the plan. Try again." };
   return {};
 }
 

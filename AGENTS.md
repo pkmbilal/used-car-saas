@@ -74,11 +74,11 @@ R2_PUBLIC_URL=
 
 ## Project Plan (Phase by Phase)
 
-We are currently building **Phase 2**. Do not implement features from a
+We are currently building **Phase 3**. Do not implement features from a
 later phase unless explicitly asked — keep scope tight to the active phase.
 Update the "Current Phase" marker below as phases are completed.
 
-**Current Phase: 2**
+**Current Phase: 3**
 
 ### Phase 1 — Core Marketplace (MVP)
 Goal: get listings live and searchable.

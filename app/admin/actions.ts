@@ -8,6 +8,7 @@ import {
   removeListing,
   restoreListing,
   revokeIdVerification,
+  setUserPlan,
   suspendUser,
   unsuspendUser,
   type AdminResult,
@@ -34,6 +35,10 @@ export async function dismissReportsAction(listingId: string) {
 
 export async function suspendUserAction(userId: string) {
   return revalidating(suspendUser(userId));
+}
+
+export async function setUserPlanAction(userId: string, plan: string) {
+  return revalidating(setUserPlan(userId, plan));
 }
 
 export async function unsuspendUserAction(userId: string) {
