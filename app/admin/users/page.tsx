@@ -3,8 +3,16 @@ import { VerificationBadges } from "@/components/verification-badges";
 import { getUsers } from "@/lib/admin";
 import { getCurrentUser } from "@/lib/auth";
 import { formatMonthYear } from "@/lib/format";
-import { revokeIdVerificationAction, suspendUserAction, unsuspendUserAction } from "../actions";
-import { AdminActionButton } from "../admin-buttons";
+import { PLAN_LABELS, PLANS } from "@/lib/plans";
+import {
+  revokeIdVerificationAction,
+  setUserPlanAction,
+  suspendUserAction,
+  unsuspendUserAction,
+} from "../actions";
+import { AdminActionButton, PlanSelect } from "../admin-buttons";
+
+const planOptions = PLANS.map((plan) => ({ value: plan, label: PLAN_LABELS[plan] }));
 import { pageParam, Pager, textParam } from "../pager";
 
 export default async function AdminUsersPage({ searchParams }: PageProps<"/admin/users">) {
@@ -66,6 +74,13 @@ export default async function AdminUsersPage({ searchParams }: PageProps<"/admin
                 )}
               </p>
             </div>
+            {user.role === "seller" && (
+              <PlanSelect
+                plan={user.plan}
+                plans={planOptions}
+                action={setUserPlanAction.bind(null, user.id)}
+              />
+            )}
             {user.id_verified_at && (
               <AdminActionButton
                 label="Revoke ID badge"

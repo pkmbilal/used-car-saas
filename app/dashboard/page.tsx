@@ -3,23 +3,38 @@ import Link from "next/link";
 import { requireSeller } from "@/lib/auth";
 import { formatKm, formatSAR, formatViews } from "@/lib/format";
 import { getSellerListings } from "@/lib/listings";
+import { getListingQuota, quotaSummary } from "@/lib/plans";
 import { ListingActions } from "./listings/listing-actions";
 import { StatusBadge } from "./listings/status-badge";
 
 export default async function DashboardPage() {
   const { user, profile } = await requireSeller();
-  const listings = await getSellerListings(user.id);
+  const [listings, quota] = await Promise.all([getSellerListings(user.id), getListingQuota()]);
+  const newListingClass =
+    "rounded-md bg-zinc-900 px-4 py-2 text-sm text-white dark:bg-zinc-100 dark:text-zinc-900";
 
   return (
     <main className="mx-auto w-full max-w-5xl px-4 py-12">
       <div className="flex items-center justify-between gap-4">
-        <h1 className="text-2xl font-semibold tracking-tight">Your listings</h1>
-        <Link
-          href="/dashboard/listings/new"
-          className="rounded-md bg-zinc-900 px-4 py-2 text-sm text-white dark:bg-zinc-100 dark:text-zinc-900"
-        >
-          New listing
-        </Link>
+        <div>
+          <h1 className="text-2xl font-semibold tracking-tight">Your listings</h1>
+          {quota && (
+            <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">{quotaSummary(quota)}</p>
+          )}
+        </div>
+        {quota?.remaining === 0 ? (
+          <span
+            aria-disabled="true"
+            title="You've reached this month's listing limit"
+            className={`${newListingClass} cursor-not-allowed opacity-50`}
+          >
+            New listing
+          </span>
+        ) : (
+          <Link href="/dashboard/listings/new" className={newListingClass}>
+            New listing
+          </Link>
+        )}
       </div>
 
       {profile.suspended_at && (

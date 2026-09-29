@@ -10,6 +10,7 @@ import {
   MAX_IMAGES_PER_LISTING,
 } from "@/lib/listing-options";
 import { getSellerListing, parseListing, type ListingStatus } from "@/lib/listings";
+import { getListingQuota, QUOTA_EXCEEDED_DB_MESSAGE, quotaExceededMessage } from "@/lib/plans";
 import { deleteObjects, presignPut } from "@/lib/r2";
 import { createClient } from "@/lib/supabase/server";
 
@@ -36,6 +37,10 @@ export async function createListing(
   const parsed = parseListing(formData);
   if ("error" in parsed) return { error: parsed.error };
 
+  // Friendly early check; the database trigger is what actually enforces it.
+  const quota = await getListingQuota();
+  if (quota?.remaining === 0) return { error: quotaExceededMessage(quota) };
+
   // Starts as a draft: photos need the listing id before it can go live.
   const supabase = await createClient();
   const { data, error } = await supabase
@@ -43,6 +48,9 @@ export async function createListing(
     .insert({ ...parsed.data, seller_id: user.id, status: "draft" })
     .select("id")
     .single();
+  if (error?.message === QUOTA_EXCEEDED_DB_MESSAGE && quota) {
+    return { error: quotaExceededMessage(quota) };
+  }
   if (error) return { error: "Could not create the listing. Try again." };
 
   revalidateDashboard();
