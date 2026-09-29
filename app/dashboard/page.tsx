@@ -3,7 +3,7 @@ import Link from "next/link";
 import { requireSeller } from "@/lib/auth";
 import { formatDay, formatKm, formatSAR, formatViews } from "@/lib/format";
 import { getSellerListings, isFeatured } from "@/lib/listings";
-import { getListingQuota, quotaSummary } from "@/lib/plans";
+import { getListingQuota, isDealerPlan, quotaSummary } from "@/lib/plans";
 import { ListingActions } from "./listings/listing-actions";
 import { StatusBadge } from "./listings/status-badge";
 
@@ -19,7 +19,17 @@ export default async function DashboardPage() {
         <div>
           <h1 className="text-2xl font-semibold tracking-tight">Your listings</h1>
           {quota && (
-            <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">{quotaSummary(quota)}</p>
+            <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
+              {quotaSummary(quota)}
+              {isDealerPlan(quota.plan) && (
+                <>
+                  {" · "}
+                  <Link href="/account/storefront" className="underline">
+                    Edit storefront
+                  </Link>
+                </>
+              )}
+            </p>
           )}
         </div>
         {quota?.remaining === 0 ? (

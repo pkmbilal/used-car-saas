@@ -2,6 +2,7 @@ import Link from "next/link";
 import { VerificationBadges } from "@/components/verification-badges";
 import { requireUser } from "@/lib/auth";
 import { formatMonthYear } from "@/lib/format";
+import { isDealerPlan } from "@/lib/plans";
 import { updateProfile } from "./actions";
 import { ProfileForm } from "./profile-form";
 
@@ -28,6 +29,15 @@ export default async function AccountPage({ searchParams }: PageProps<"/account"
       <div className="mt-8">
         <ProfileForm profile={profile} action={updateProfile} submitLabel="Save" />
       </div>
+
+      {profile.role === "seller" && isDealerPlan(profile.plan) && (
+        <p className="mt-8 text-sm">
+          Add your business name, logo and showroom details.{" "}
+          <Link href="/account/storefront" className="font-medium underline">
+            Edit storefront
+          </Link>
+        </p>
+      )}
 
       {profile.role === "seller" && !profile.id_verified_at && (
         <p className="mt-8 text-sm">
