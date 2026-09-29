@@ -41,9 +41,19 @@ export default async function DashboardPage() {
             New listing
           </span>
         ) : (
-          <Link href="/dashboard/listings/new" className={newListingClass}>
-            New listing
-          </Link>
+          <div className="flex shrink-0 items-center gap-2">
+            {isDealerPlan(profile.plan) && (
+              <Link
+                href="/dashboard/listings/import"
+                className="rounded-md border border-zinc-300 px-4 py-2 text-sm dark:border-zinc-700"
+              >
+                Import CSV
+              </Link>
+            )}
+            <Link href="/dashboard/listings/new" className={newListingClass}>
+              New listing
+            </Link>
+          </div>
         )}
       </div>
 
