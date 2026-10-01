@@ -12,13 +12,13 @@ export function VerificationBadges({ profile }: Props) {
       {profile.id_verified_at && (
         <span
           title="Identity checked by our team"
-          className={`${badgeClass} bg-green-100 text-green-800 dark:bg-green-950 dark:text-green-300`}
+          className={`${badgeClass} bg-mint text-brand`}
         >
           ✓ ID verified
         </span>
       )}
       {profile.email_verified_at && (
-        <span className={`${badgeClass} bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300`}>
+        <span className={`${badgeClass} bg-canvas text-muted ring-1 ring-line`}>
           Email verified
         </span>
       )}

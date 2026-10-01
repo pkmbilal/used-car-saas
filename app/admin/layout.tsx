@@ -3,7 +3,7 @@ import Link from "next/link";
 import { requireAdmin } from "@/lib/auth";
 
 export const metadata: Metadata = {
-  title: "Admin | Used Car Marketplace",
+  title: "Admin | DriveLoop",
   robots: { index: false },
 };
 

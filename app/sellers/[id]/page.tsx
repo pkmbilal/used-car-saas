@@ -21,7 +21,7 @@ export async function generateMetadata({
   const storefront = getStorefront(seller.profile);
   const name = storefront?.name ?? seller.profile.full_name ?? "Seller";
   return {
-    title: `${name} | Used Car Marketplace`,
+    title: `${name} | DriveLoop`,
     description: storefront?.about?.slice(0, 160),
   };
 }
@@ -40,74 +40,76 @@ export default async function SellerPage({ params }: PageProps<"/sellers/[id]">)
   const others = storefront ? listings.filter((listing) => !isFeatured(listing)) : listings;
 
   return (
-    <main className="mx-auto w-full max-w-6xl px-4 py-12">
-      {storefront ? (
-        <div className="flex flex-col gap-6 rounded-lg border border-zinc-200 p-6 dark:border-zinc-800 sm:flex-row">
-          <DealerLogo name={storefront.name} logoUrl={storefront.logoUrl} size="lg" />
-          <div className="min-w-0 flex-1">
+    <main className="bg-canvas text-ink">
+      <div className="mx-auto w-full max-w-6xl px-4 py-12 sm:px-6">
+        {storefront ? (
+          <div className="flex flex-col gap-6 rounded-xl bg-white p-6 shadow-[0_2px_12px_rgba(20,30,25,.06)] sm:flex-row">
+            <DealerLogo name={storefront.name} logoUrl={storefront.logoUrl} size="lg" />
+            <div className="min-w-0 flex-1">
+              <div className="flex flex-wrap items-center gap-3">
+                <h1 className="text-2xl font-semibold tracking-tight">{storefront.name}</h1>
+                <DealerBadge />
+                <VerificationBadges profile={profile} />
+              </div>
+              <p className="mt-1 text-sm text-muted">{memberSince}</p>
+              {storefront.showroomAddress && (
+                <p className="mt-1 text-sm text-muted">
+                  Showroom: {storefront.showroomAddress}
+                </p>
+              )}
+              {storefront.about && (
+                <p className="mt-4 max-w-2xl whitespace-pre-line text-sm">{storefront.about}</p>
+              )}
+              {profile.phone && (
+                <div className="mt-4 flex flex-wrap gap-3">
+                  <a
+                    href={whatsappUrl(profile.phone, `Hi ${storefront.name}, I found you on DriveLoop.`)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="rounded-md bg-brand px-4 py-2 text-sm font-semibold text-white hover:bg-brand-dark hover:text-white"
+                  >
+                    WhatsApp dealer
+                  </a>
+                  <a
+                    href={`tel:${profile.phone}`}
+                    className="rounded-md border border-brand bg-white px-4 py-2 text-sm font-semibold text-ink hover:bg-mint"
+                  >
+                    Call dealer
+                  </a>
+                </div>
+              )}
+            </div>
+          </div>
+        ) : (
+          <>
             <div className="flex flex-wrap items-center gap-3">
-              <h1 className="text-2xl font-semibold tracking-tight">{storefront.name}</h1>
-              <DealerBadge />
+              <h1 className="text-2xl font-semibold tracking-tight">{profile.full_name ?? "Seller"}</h1>
               <VerificationBadges profile={profile} />
             </div>
-            <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">{memberSince}</p>
-            {storefront.showroomAddress && (
-              <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-                Showroom: {storefront.showroomAddress}
-              </p>
-            )}
-            {storefront.about && (
-              <p className="mt-4 max-w-2xl whitespace-pre-line text-sm">{storefront.about}</p>
-            )}
-            {profile.phone && (
-              <div className="mt-4 flex flex-wrap gap-3">
-                <a
-                  href={whatsappUrl(profile.phone, `Hi ${storefront.name}, I found you on Used Car Marketplace.`)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="rounded-md bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700"
-                >
-                  WhatsApp dealer
-                </a>
-                <a
-                  href={`tel:${profile.phone}`}
-                  className="rounded-md border border-zinc-300 px-4 py-2 text-sm dark:border-zinc-700"
-                >
-                  Call dealer
-                </a>
-              </div>
-            )}
-          </div>
-        </div>
-      ) : (
-        <>
-          <div className="flex flex-wrap items-center gap-3">
-            <h1 className="text-2xl font-semibold tracking-tight">{profile.full_name ?? "Seller"}</h1>
-            <VerificationBadges profile={profile} />
-          </div>
-          <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">{memberSince}</p>
-        </>
-      )}
+            <p className="mt-1 text-sm text-muted">{memberSince}</p>
+          </>
+        )}
 
-      {featured.length > 0 && (
-        <>
-          <h2 className="mt-10 mb-4 text-lg font-medium">Featured</h2>
-          <ListingGrid listings={featured} empty="" favoriteIds={favoriteIds} />
-        </>
-      )}
+        {featured.length > 0 && (
+          <>
+            <h2 className="mt-10 mb-4 text-lg font-semibold">Featured</h2>
+            <ListingGrid listings={featured} empty="" favoriteIds={favoriteIds} />
+          </>
+        )}
 
-      <h2 className="mt-10 mb-4 text-lg font-medium">
-        {featured.length > 0
-          ? "More cars for sale"
-          : listings.length === 1
-            ? "1 car for sale"
-            : `${listings.length} cars for sale`}
-      </h2>
-      <ListingGrid
-        listings={others}
-        empty={featured.length > 0 ? "No other cars for sale right now." : "No cars for sale right now."}
-        favoriteIds={favoriteIds}
-      />
+        <h2 className="mt-10 mb-4 text-lg font-semibold">
+          {featured.length > 0
+            ? "More cars for sale"
+            : listings.length === 1
+              ? "1 car for sale"
+              : `${listings.length} cars for sale`}
+        </h2>
+        <ListingGrid
+          listings={others}
+          empty={featured.length > 0 ? "No other cars for sale right now." : "No cars for sale right now."}
+          favoriteIds={favoriteIds}
+        />
+      </div>
     </main>
   );
 }

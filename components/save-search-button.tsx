@@ -37,7 +37,7 @@ export function SaveSearchButton({
 
   if (state.saved) {
     return (
-      <p className="text-sm text-zinc-600 dark:text-zinc-400">
+      <p className="text-sm text-muted">
         Search saved.{" "}
         <Link href="/saved-searches" className="font-medium underline">
           View saved searches
@@ -51,7 +51,7 @@ export function SaveSearchButton({
       <button
         type="button"
         onClick={() => (signedIn ? setOpen(true) : router.push(loginHref))}
-        className="rounded-md border border-zinc-300 px-3 py-1.5 text-sm font-medium dark:border-zinc-700"
+        className="rounded-md border border-brand bg-white px-3 py-1.5 text-xs font-semibold text-brand hover:bg-mint"
       >
         Save this search
       </button>
@@ -69,16 +69,16 @@ export function SaveSearchButton({
         maxLength={maxNameLength}
         defaultValue={defaultName}
         aria-label="Search name"
-        className="min-w-0 flex-1 rounded-md border border-zinc-300 px-3 py-1.5 dark:border-zinc-700 dark:bg-zinc-900"
+        className="min-w-0 flex-1 rounded-md border border-line bg-white px-3 py-1.5"
       />
       <button
         type="submit"
         disabled={pending}
-        className="rounded-md bg-zinc-900 px-3 py-1.5 font-medium text-white disabled:opacity-50 dark:bg-zinc-100 dark:text-zinc-900"
+        className="rounded-md bg-brand px-3 py-1.5 font-medium text-white hover:bg-brand-dark disabled:opacity-50"
       >
         {pending ? "Saving…" : "Save"}
       </button>
-      <button type="button" onClick={() => setOpen(false)} className="text-zinc-600 dark:text-zinc-400">
+      <button type="button" onClick={() => setOpen(false)} className="text-muted">
         Cancel
       </button>
       {state.error && state.error !== "signin" && (

@@ -7,7 +7,7 @@ import { LogoUploader } from "./logo-uploader";
 import { StorefrontForm } from "./storefront-form";
 
 export const metadata: Metadata = {
-  title: "Storefront | Used Car Marketplace",
+  title: "Storefront | DriveLoop",
 };
 
 export default async function StorefrontPage() {

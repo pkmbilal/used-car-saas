@@ -1,15 +1,32 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f5f6f3;
+  --foreground: #15201a;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-figtree);
+}
+
+/* DriveLoop palette. */
+@theme {
+  --color-ink: #15201a;
+  --color-canvas: #f5f6f3;
+  --color-charcoal: #1b2125;
+  --color-brand: #1f7d3c;
+  --color-brand-dark: #1a6c34;
+  --color-brand-600: #2f8f46;
+  --color-accent: #6fe07c;
+  --color-accent-light: #82e88d;
+  --color-on-accent: #0f2a16;
+  --color-forest: #163a2d;
+  --color-forest-dark: #0f2219;
+  --color-mint: #eaf0ea;
+  --color-muted: #5c635e;
+  --color-line: #e3e6e1;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -22,5 +39,4 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
 }

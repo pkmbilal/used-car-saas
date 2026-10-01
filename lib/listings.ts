@@ -1,4 +1,5 @@
 import "server-only";
+import { cache } from "react";
 import { CITIES, isCity } from "@/lib/cities";
 import { CONDITIONS, FUEL_TYPES } from "@/lib/listing-options";
 import { isMake, MAKES } from "@/lib/makes";
@@ -326,6 +327,91 @@ export async function getLatestListings(limit: number): Promise<ListingWithImage
     .limit(limit);
   if (error) throw error;
   return data.map(withImageUrls);
+}
+
+export type FacetCounts = {
+  total: number;
+  makes: Map<string, number>;
+  cities: Map<string, number>;
+  fuelTypes: Map<Listing["fuel_type"], number>;
+};
+
+function tally<T>(values: T[]): Map<T, number> {
+  const counts = new Map<T, number>();
+  for (const value of values) counts.set(value, (counts.get(value) ?? 0) + 1);
+  // Most common first.
+  return new Map([...counts].sort((a, b) => b[1] - a[1]));
+}
+
+// Active-listing counts per make, city and fuel type for browse UI. Tallied in
+// JS from one narrow select, which is fine at current volume; move this to a
+// grouped RPC once the listings table gets large (PostgREST's max-rows setting,
+// 1000 by default, would otherwise cap the counts).
+export const getActiveFacetCounts = cache(async (): Promise<FacetCounts> => {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("listings")
+    .select("make, city, fuel_type")
+    .eq("status", "active");
+  if (error) throw error;
+  return {
+    total: data.length,
+    makes: tally(data.map((row) => row.make)),
+    cities: tally(data.map((row) => row.city)),
+    fuelTypes: tally(data.map((row) => row.fuel_type)),
+  };
+});
+
+// The newest active listings in each of the given cities, up to perCity each.
+export async function getLatestByCities(
+  cities: string[],
+  perCity = 3,
+): Promise<Record<string, ListingWithImages[]>> {
+  const result: Record<string, ListingWithImages[]> = Object.fromEntries(cities.map((city) => [city, []]));
+  if (cities.length === 0) return result;
+
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("listings")
+    .select("*, listing_images(*)")
+    .eq("status", "active")
+    .in("city", cities)
+    .order("created_at", { ascending: false })
+    .limit(cities.length * perCity * 4);
+  if (error) throw error;
+
+  for (const listing of data) {
+    const bucket = result[listing.city];
+    if (bucket && bucket.length < perCity) bucket.push(withImageUrls(listing));
+  }
+  return result;
+}
+
+// Same make first, then cars in a similar price band, excluding the listing itself.
+export async function getSimilarListings(
+  listing: Pick<Listing, "id" | "make" | "price">,
+  limit = 4,
+): Promise<ListingWithImages[]> {
+  const supabase = await createClient();
+  const base = () =>
+    supabase
+      .from("listings")
+      .select("*, listing_images(*)")
+      .eq("status", "active")
+      .neq("id", listing.id)
+      .order("created_at", { ascending: false })
+      .limit(limit);
+
+  const { data: sameMake, error } = await base().eq("make", listing.make);
+  if (error) return [];
+  const similar = sameMake.map(withImageUrls);
+  if (similar.length >= limit) return similar;
+
+  const { data: samePrice } = await base()
+    .neq("make", listing.make)
+    .gte("price", Math.floor(listing.price * 0.75))
+    .lte("price", Math.ceil(listing.price * 1.25));
+  return [...similar, ...(samePrice ?? []).map(withImageUrls)].slice(0, limit);
 }
 
 // Active listings for everyone; drafts/sold only for their owner (via RLS).

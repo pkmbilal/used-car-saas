@@ -41,7 +41,7 @@ export function FavoriteButton({ listingId, favorited, variant = "icon", classNa
     <svg
       viewBox="0 0 24 24"
       aria-hidden="true"
-      className={`h-5 w-5 ${optimistic ? "fill-red-500 stroke-red-500" : "fill-none stroke-current"}`}
+      className={`h-5 w-5 ${optimistic ? "fill-brand stroke-brand" : "fill-none stroke-current"}`}
       strokeWidth={2}
     >
       <path
@@ -60,7 +60,7 @@ export function FavoriteButton({ listingId, favorited, variant = "icon", classNa
           onClick={toggle}
           disabled={pending}
           aria-pressed={optimistic}
-          className="inline-flex items-center gap-2 rounded-md border border-zinc-300 px-3 py-1.5 text-sm font-medium dark:border-zinc-700"
+          className="inline-flex h-10 w-full items-center justify-center gap-2 rounded-md border border-line bg-white px-3 text-xs font-medium text-ink hover:border-brand"
         >
           {heart}
           {optimistic ? "Saved" : "Save"}
@@ -78,7 +78,7 @@ export function FavoriteButton({ listingId, favorited, variant = "icon", classNa
       aria-pressed={optimistic}
       aria-label={label}
       title={error ?? label}
-      className={`rounded-full bg-white/90 p-2 text-zinc-700 shadow-sm backdrop-blur hover:bg-white dark:bg-zinc-900/90 dark:text-zinc-200 ${className}`}
+      className={`rounded-full bg-white/90 p-2 text-ink shadow-sm backdrop-blur hover:bg-white ${className}`}
     >
       {heart}
     </button>
