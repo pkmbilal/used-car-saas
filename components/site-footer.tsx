@@ -33,7 +33,7 @@ const columns: { title: string; links: [string, string][] }[] = [
 
 export function SiteFooter() {
   return (
-    <footer className="mt-20 bg-gradient-to-br from-forest to-forest-dark text-white">
+    <footer className="light mt-20 bg-gradient-to-br from-forest to-forest-dark text-white">
       <div className="mx-auto grid w-full max-w-6xl gap-10 px-4 py-12 sm:px-6 md:grid-cols-[1.6fr_repeat(4,minmax(0,1fr))]">
         <div className="flex flex-col gap-4">
           <BrandLink />
@@ -43,9 +43,9 @@ export function SiteFooter() {
         </div>
         {columns.map((column) => (
           <div key={column.title} className="flex flex-col gap-3">
-            <p className="mb-1 text-[11px] font-bold tracking-[0.15em] text-accent">{column.title}</p>
+            <p className="mb-1 text-[11px] font-bold tracking-[0.15em] text-lime">{column.title}</p>
             {column.links.map(([label, href]) => (
-              <Link key={href} href={href} className="text-xs text-white/70 hover:text-accent">
+              <Link key={href} href={href} className="text-xs text-white/70 hover:text-lime">
                 {label}
               </Link>
             ))}

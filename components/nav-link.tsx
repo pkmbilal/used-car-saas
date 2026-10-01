@@ -20,11 +20,11 @@ export function NavLink({
     <Link
       href={href}
       aria-current={active ? "page" : undefined}
-      className={`relative py-2 hover:text-accent ${active ? "text-accent" : ""}`}
+      className={`relative py-2 hover:text-lime ${active ? "text-lime" : ""}`}
     >
       {children}
       {active && (
-        <span className="absolute inset-x-0.5 -bottom-1 h-0.5 rounded-full bg-accent max-md:hidden" />
+        <span className="absolute inset-x-0.5 -bottom-1 h-0.5 rounded-full bg-lime max-md:hidden" />
       )}
     </Link>
   );

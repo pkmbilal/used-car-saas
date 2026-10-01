@@ -19,7 +19,7 @@ export function SpecGrid({ specs }: { specs: Spec[] }) {
               {spec.icon}
             </span>
             <div className="min-w-0">
-              <dt className="text-[11.5px] text-muted">{spec.label}</dt>
+              <dt className="text-[11.5px] text-muted-foreground">{spec.label}</dt>
               <dd className="mt-0.5 truncate text-[13px] font-semibold">{spec.value}</dd>
             </div>
           </div>

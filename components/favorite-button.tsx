@@ -2,7 +2,10 @@
 
 import { useOptimistic, useState, useTransition } from "react";
 import { usePathname, useRouter } from "next/navigation";
+import { Heart } from "lucide-react";
 import { toggleFavorite } from "@/app/favorites/actions";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 type Props = {
   listingId: string;
@@ -37,50 +40,40 @@ export function FavoriteButton({ listingId, favorited, variant = "icon", classNa
   }
 
   const label = optimistic ? "Remove from saved cars" : "Save this car";
-  const heart = (
-    <svg
-      viewBox="0 0 24 24"
-      aria-hidden="true"
-      className={`h-5 w-5 ${optimistic ? "fill-brand stroke-brand" : "fill-none stroke-current"}`}
-      strokeWidth={2}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M12 21s-7.5-4.6-9.5-9.2C1.2 8.6 3.2 5 6.8 5c2 0 3.4 1.1 4.2 2.4h2C13.8 6.1 15.2 5 17.2 5c3.6 0 5.6 3.6 4.3 6.8C19.5 16.4 12 21 12 21z"
-      />
-    </svg>
-  );
+  const heart = <Heart className={optimistic ? "size-4 fill-brand stroke-brand" : "size-4"} />;
 
   if (variant === "label") {
     return (
       <div className={className}>
-        <button
+        <Button
           type="button"
+          variant="outline"
           onClick={toggle}
           disabled={pending}
           aria-pressed={optimistic}
-          className="inline-flex h-10 w-full items-center justify-center gap-2 rounded-md border border-line bg-white px-3 text-xs font-medium text-ink hover:border-brand"
+          className="h-10 w-full bg-white text-xs font-medium"
         >
           {heart}
           {optimistic ? "Saved" : "Save"}
-        </button>
-        {error && <p className="mt-1 text-sm text-red-600">{error}</p>}
+        </Button>
+        {error && <p className="mt-1 text-sm text-destructive">{error}</p>}
       </div>
     );
   }
 
   return (
-    <button
+    <Button
       type="button"
+      size="icon"
+      variant="secondary"
       onClick={toggle}
       disabled={pending}
       aria-pressed={optimistic}
       aria-label={label}
       title={error ?? label}
-      className={`rounded-full bg-white/90 p-2 text-ink shadow-sm backdrop-blur hover:bg-white ${className}`}
+      className={cn("size-9 rounded-full bg-white/90 text-ink shadow-sm backdrop-blur hover:bg-white", className)}
     >
       {heart}
-    </button>
+    </Button>
   );
 }

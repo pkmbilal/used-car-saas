@@ -1,9 +1,12 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { MessageCircle, Phone } from "lucide-react";
 import { cache } from "react";
 import { DealerBadge, DealerLogo } from "@/components/dealer-logo";
 import { ListingGrid } from "@/components/listing-card";
 import { VerificationBadges } from "@/components/verification-badges";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { getViewerFavoriteIds } from "@/lib/favorites";
 import { formatMonthYear, whatsappUrl } from "@/lib/format";
 import { getSellerProfile, isFeatured } from "@/lib/listings";
@@ -40,10 +43,10 @@ export default async function SellerPage({ params }: PageProps<"/sellers/[id]">)
   const others = storefront ? listings.filter((listing) => !isFeatured(listing)) : listings;
 
   return (
-    <main className="bg-canvas text-ink">
+    <main className="light bg-canvas text-ink">
       <div className="mx-auto w-full max-w-6xl px-4 py-12 sm:px-6">
         {storefront ? (
-          <div className="flex flex-col gap-6 rounded-xl bg-white p-6 shadow-[0_2px_12px_rgba(20,30,25,.06)] sm:flex-row">
+          <Card className="flex-col gap-6 rounded-xl p-6 shadow-[0_2px_12px_rgba(20,30,25,.06)] ring-0 sm:flex-row">
             <DealerLogo name={storefront.name} logoUrl={storefront.logoUrl} size="lg" />
             <div className="min-w-0 flex-1">
               <div className="flex flex-wrap items-center gap-3">
@@ -51,9 +54,9 @@ export default async function SellerPage({ params }: PageProps<"/sellers/[id]">)
                 <DealerBadge />
                 <VerificationBadges profile={profile} />
               </div>
-              <p className="mt-1 text-sm text-muted">{memberSince}</p>
+              <p className="mt-1 text-sm text-muted-foreground">{memberSince}</p>
               {storefront.showroomAddress && (
-                <p className="mt-1 text-sm text-muted">
+                <p className="mt-1 text-sm text-muted-foreground">
                   Showroom: {storefront.showroomAddress}
                 </p>
               )}
@@ -62,31 +65,29 @@ export default async function SellerPage({ params }: PageProps<"/sellers/[id]">)
               )}
               {profile.phone && (
                 <div className="mt-4 flex flex-wrap gap-3">
-                  <a
-                    href={whatsappUrl(profile.phone, `Hi ${storefront.name}, I found you on DriveLoop.`)}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="rounded-md bg-brand px-4 py-2 text-sm font-semibold text-white hover:bg-brand-dark hover:text-white"
-                  >
-                    WhatsApp dealer
-                  </a>
-                  <a
-                    href={`tel:${profile.phone}`}
-                    className="rounded-md border border-brand bg-white px-4 py-2 text-sm font-semibold text-ink hover:bg-mint"
-                  >
-                    Call dealer
-                  </a>
+                  <Button asChild className="hover:bg-brand-dark hover:text-white">
+                    <a href={whatsappUrl(profile.phone, `Hi ${storefront.name}, I found you on DriveLoop.`)} target="_blank" rel="noopener noreferrer">
+                      <MessageCircle className="size-4" />
+                      WhatsApp dealer
+                    </a>
+                  </Button>
+                  <Button asChild variant="outline" className="border-brand text-ink hover:bg-mint">
+                    <a href={`tel:${profile.phone}`}>
+                      <Phone className="size-4" />
+                      Call dealer
+                    </a>
+                  </Button>
                 </div>
               )}
             </div>
-          </div>
+          </Card>
         ) : (
           <>
             <div className="flex flex-wrap items-center gap-3">
               <h1 className="text-2xl font-semibold tracking-tight">{profile.full_name ?? "Seller"}</h1>
               <VerificationBadges profile={profile} />
             </div>
-            <p className="mt-1 text-sm text-muted">{memberSince}</p>
+            <p className="mt-1 text-sm text-muted-foreground">{memberSince}</p>
           </>
         )}
 

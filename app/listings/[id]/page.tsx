@@ -7,23 +7,27 @@ import { cache } from "react";
 import { DealerBadge, DealerLogo } from "@/components/dealer-logo";
 import { FavoriteButton } from "@/components/favorite-button";
 import {
-  ArrowLeftIcon,
-  BadgeIcon,
-  CalendarIcon,
-  CarIcon,
-  ClockIcon,
-  FuelIcon,
-  GaugeIcon,
-  PhoneIcon,
-  PinIcon,
-  ShieldIcon,
-  SparkleIcon,
-  TagIcon,
-  WhatsAppIcon,
-} from "@/components/icons";
+  ArrowLeft,
+  BadgeCheck,
+  CalendarDays,
+  Car,
+  Clock,
+  Fuel,
+  Gauge,
+  MapPin,
+  MessageCircle,
+  Palette,
+  Phone,
+  ShieldCheck,
+  Sparkles,
+} from "lucide-react";
 import { ListingGrid } from "@/components/listing-card";
 import { ReportListingButton } from "@/components/report-listing-button";
 import { VerificationBadges } from "@/components/verification-badges";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 import { getCurrentUser } from "@/lib/auth";
 import { getFavoriteIds } from "@/lib/favorites";
 import { formatKm, formatMonthYear, formatSAR, formatViews, whatsappUrl } from "@/lib/format";
@@ -82,23 +86,23 @@ export default async function ListingPage({ params }: PageProps<"/listings/[id]"
   const cover = listing.images[0];
   const transmission = optionalText(listing, "transmission");
 
-  const specIcon = { size: 16, strokeWidth: 1.8 };
+  const specIcon = { className: "size-4", strokeWidth: 1.8 };
   const specs = [
-    { label: "Make", value: listing.make, icon: <BadgeIcon {...specIcon} /> },
-    { label: "Model", value: listing.model, icon: <CarIcon {...specIcon} /> },
-    { label: "Year", value: String(listing.year), icon: <CalendarIcon {...specIcon} /> },
-    { label: "Mileage", value: formatKm(listing.mileage), icon: <GaugeIcon {...specIcon} /> },
-    { label: "Fuel Type", value: capitalize(listing.fuel_type), icon: <FuelIcon {...specIcon} /> },
-    { label: "Condition", value: capitalize(listing.condition), icon: <SparkleIcon {...specIcon} /> },
-    { label: "Transmission", value: transmission, icon: <GaugeIcon {...specIcon} /> },
-    { label: "Body Style", value: optionalText(listing, "body_type"), icon: <CarIcon {...specIcon} /> },
-    { label: "Color", value: optionalText(listing, "color"), icon: <TagIcon {...specIcon} /> },
-    { label: "City", value: listing.city, icon: <PinIcon {...specIcon} /> },
-    { label: "Listed", value: formatMonthYear(listing.created_at), icon: <ClockIcon {...specIcon} /> },
+    { label: "Make", value: listing.make, icon: <BadgeCheck {...specIcon} /> },
+    { label: "Model", value: listing.model, icon: <Car {...specIcon} /> },
+    { label: "Year", value: String(listing.year), icon: <CalendarDays {...specIcon} /> },
+    { label: "Mileage", value: formatKm(listing.mileage), icon: <Gauge {...specIcon} /> },
+    { label: "Fuel Type", value: capitalize(listing.fuel_type), icon: <Fuel {...specIcon} /> },
+    { label: "Condition", value: capitalize(listing.condition), icon: <Sparkles {...specIcon} /> },
+    { label: "Transmission", value: transmission, icon: <Gauge {...specIcon} /> },
+    { label: "Body Style", value: optionalText(listing, "body_type"), icon: <Car {...specIcon} /> },
+    { label: "Color", value: optionalText(listing, "color"), icon: <Palette {...specIcon} /> },
+    { label: "City", value: listing.city, icon: <MapPin {...specIcon} /> },
+    { label: "Listed", value: formatMonthYear(listing.created_at), icon: <Clock {...specIcon} /> },
   ];
 
   return (
-    <main className="bg-canvas text-ink">
+    <main className="light bg-canvas text-ink">
       {!isOwner && listing.status === "active" && <ViewTracker listingId={listing.id} />}
       {isOwner && listing.status !== "active" && (
         <div className="bg-amber-50 text-sm text-amber-900">
@@ -124,14 +128,14 @@ export default async function ListingPage({ params }: PageProps<"/listings/[id]"
         )}
         <div className="absolute inset-0 bg-[linear-gradient(90deg,#1b2125_0%,#1b2125_36%,rgba(27,33,37,.55)_48%,rgba(27,33,37,0)_62%)]" />
         <div className="relative mx-auto w-full max-w-6xl px-4 pt-7 pb-9 sm:px-6">
-          <Link href="/listings" className="inline-flex items-center gap-2 text-xs font-medium text-white hover:text-accent">
-            <ArrowLeftIcon size={12} strokeWidth={2.4} />
+          <Link href="/listings" className="inline-flex items-center gap-2 text-xs font-medium text-white hover:text-lime">
+            <ArrowLeft className="size-3" strokeWidth={2.4} />
             Back to Search
           </Link>
           <div className="mt-4 flex flex-wrap items-center gap-3.5">
             <h1 className="text-3xl font-semibold tracking-tight">{name}</h1>
             {featured && (
-              <span className="rounded-full bg-[#4fc35f] px-3 py-1 text-[11px] font-semibold">Featured</span>
+              <Badge className="h-6 bg-[#4fc35f] px-3 text-[11px] font-semibold">Featured</Badge>
             )}
           </div>
           <p className="mt-2.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[15px]">
@@ -142,11 +146,11 @@ export default async function ListingPage({ params }: PageProps<"/listings/[id]"
             <span>{transmission ?? capitalize(listing.fuel_type)}</span>
             <span className="opacity-60">·</span>
             <span className="flex items-center gap-1.5">
-              <PinIcon size={14} />
+              <MapPin className="size-3.5" />
               {listing.city}
             </span>
           </p>
-          <p className="mt-4 text-3xl font-bold text-accent">{formatSAR(listing.price)}</p>
+          <p className="mt-4 text-3xl font-bold text-lime">{formatSAR(listing.price)}</p>
         </div>
       </section>
 
@@ -163,28 +167,24 @@ export default async function ListingPage({ params }: PageProps<"/listings/[id]"
         </div>
 
         <aside className="flex flex-col gap-5">
-          <div className="rounded-lg bg-white px-5 pt-4 pb-5 shadow-[0_2px_12px_rgba(20,30,25,.06)]">
+          <Card className="gap-0 rounded-lg px-5 pt-4 pb-5 shadow-[0_2px_12px_rgba(20,30,25,.06)] ring-0">
             <p className="text-[27px] font-bold text-brand">{formatSAR(listing.price)}</p>
-            {views !== null && <p className="mt-1 text-xs text-muted">{formatViews(views)}</p>}
+            {views !== null && <p className="mt-1 text-xs text-muted-foreground">{formatViews(views)}</p>}
 
             {seller?.phone && !isOwner && (
               <div className="mt-4 flex flex-col gap-2.5">
-                <a
-                  href={`tel:${seller.phone}`}
-                  className="flex h-11 items-center justify-center gap-2.5 rounded-md bg-brand text-[13px] font-semibold text-white hover:bg-brand-dark hover:text-white"
-                >
-                  <PhoneIcon size={16} />
-                  Call Seller
-                </a>
-                <a
-                  href={whatsappUrl(seller.phone, whatsappText)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex h-11 items-center justify-center gap-2.5 rounded-md border border-brand bg-white text-[13px] font-semibold text-ink hover:bg-mint hover:text-ink"
-                >
-                  <WhatsAppIcon size={17} className="text-brand" />
-                  WhatsApp
-                </a>
+                <Button asChild className="h-11 text-[13px] font-semibold hover:bg-brand-dark hover:text-white">
+                  <a href={`tel:${seller.phone}`}>
+                    <Phone className="size-4" />
+                    Call Seller
+                  </a>
+                </Button>
+                <Button asChild variant="outline" className="h-11 border-brand text-[13px] font-semibold text-ink hover:bg-mint">
+                  <a href={whatsappUrl(seller.phone, whatsappText)} target="_blank" rel="noopener noreferrer">
+                    <MessageCircle className="size-4 text-brand" />
+                    WhatsApp
+                  </a>
+                </Button>
               </div>
             )}
             <div className={`grid gap-2.5 ${isOwner ? "mt-4 grid-cols-1" : "mt-3 grid-cols-2"}`}>
@@ -194,12 +194,13 @@ export default async function ListingPage({ params }: PageProps<"/listings/[id]"
 
             {seller && (
               <>
-                <div className="mt-5 flex items-center gap-3 border-t border-line pt-5">
+                <Separator className="mt-5" />
+                <div className="flex items-center gap-3 pt-5">
                   {storefront ? (
                     <DealerLogo name={storefront.name} logoUrl={storefront.logoUrl} size="sm" />
                   ) : (
-                    <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-charcoal text-accent">
-                      <ShieldIcon size={20} strokeWidth={1.8} />
+                    <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-charcoal text-lime">
+                      <ShieldCheck className="size-5" strokeWidth={1.8} />
                     </span>
                   )}
                   <div className="min-w-0">
@@ -212,9 +213,10 @@ export default async function ListingPage({ params }: PageProps<"/listings/[id]"
                     </div>
                   </div>
                 </div>
-                <div className="mt-4 flex flex-col gap-3.5 border-t border-line pt-4 text-[11.5px] leading-relaxed text-ink/75">
+                <Separator className="mt-4" />
+                <div className="flex flex-col gap-3.5 pt-4 text-[11.5px] leading-relaxed text-ink/75">
                   <p className="flex items-start gap-3.5">
-                    <PinIcon size={16} className="mt-0.5 shrink-0 text-brand" />
+                    <MapPin className="mt-0.5 size-4 shrink-0 text-brand" />
                     <span>
                       Location
                       <br />
@@ -222,7 +224,7 @@ export default async function ListingPage({ params }: PageProps<"/listings/[id]"
                     </span>
                   </p>
                   <p className="flex items-start gap-3.5">
-                    <CalendarIcon size={16} className="mt-0.5 shrink-0 text-brand" />
+                    <CalendarDays className="mt-0.5 size-4 shrink-0 text-brand" />
                     <span>
                       Member since
                       <br />
@@ -230,15 +232,14 @@ export default async function ListingPage({ params }: PageProps<"/listings/[id]"
                     </span>
                   </p>
                 </div>
-                <Link
-                  href={`/sellers/${seller.id}`}
-                  className="mt-4 block text-xs font-semibold text-brand hover:underline"
-                >
-                  {storefront ? "Visit dealer storefront →" : "View seller’s listings →"}
-                </Link>
+                <Button asChild variant="link" className="mt-3 h-auto justify-start px-0 text-xs font-semibold text-brand">
+                  <Link href={`/sellers/${seller.id}`}>
+                    {storefront ? "Visit dealer storefront →" : "View seller’s listings →"}
+                  </Link>
+                </Button>
               </>
             )}
-          </div>
+          </Card>
 
           {!isOwner && listing.status === "active" && (
             <div className="px-1">

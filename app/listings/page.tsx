@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import { FilterIcon } from "@/components/icons";
 import { ListingGrid } from "@/components/listing-card";
 import { Pagination } from "@/components/pagination";
 import { SaveSearchButton } from "@/components/save-search-button";
 import { SearchBar } from "@/components/search-bar";
+import { Card } from "@/components/ui/card";
 import { getCurrentUser } from "@/lib/auth";
 import { getViewerFavoriteIds } from "@/lib/favorites";
 import {
@@ -21,6 +21,7 @@ import {
   MAX_SAVED_SEARCH_NAME,
 } from "@/lib/saved-searches";
 import { Filters } from "./filters";
+import { MobileFilters } from "./mobile-filters";
 import { SortSelect } from "./sort-select";
 
 export const metadata: Metadata = {
@@ -54,16 +55,16 @@ export default async function ListingsPage({ searchParams }: PageProps<"/listing
     return search ? `/listings?${search}` : "/listings";
   }
 
-  const filtersCard = <Filters filters={filters} fuelCounts={facets.fuelTypes} />;
+  const fuelCounts = Object.fromEntries(facets.fuelTypes);
 
   return (
-    <main className="bg-canvas text-ink">
+    <main className="light bg-canvas text-ink">
       <section className="relative overflow-hidden bg-charcoal">
         <div className="absolute inset-y-0 right-0 w-2/3 bg-[radial-gradient(ellipse_at_70%_60%,rgba(111,224,124,.16),transparent_60%)]" />
         <div className="relative mx-auto w-full max-w-6xl px-4 pt-10 pb-20 sm:px-6">
           <p className="text-[10.5px] font-bold tracking-[0.24em] text-[#5fd06e]">USED CARS FOR SALE</p>
           <h1 className="mt-2.5 max-w-md text-3xl leading-tight font-medium tracking-tight text-white md:text-4xl">
-            Find Your <span className="text-accent">Perfect Car</span> With Easy Filters
+            Find Your <span className="text-lime">Perfect Car</span> With Easy Filters
           </h1>
           <p className="mt-3.5 max-w-sm text-[12.5px] leading-relaxed text-white/85">
             Set your preferences, find the right match, and contact the seller directly.
@@ -76,22 +77,18 @@ export default async function ListingsPage({ searchParams }: PageProps<"/listing
       </div>
 
       <div className="mx-auto mt-6 grid w-full max-w-6xl items-start gap-6 px-4 sm:px-6 lg:grid-cols-[257px_minmax(0,1fr)]">
-        <aside className="rounded-lg bg-white p-4 shadow-[0_2px_10px_rgba(20,30,25,.05)] max-lg:hidden">
-          {filtersCard}
-        </aside>
-        <details className="rounded-lg bg-white shadow-[0_2px_10px_rgba(20,30,25,.05)] lg:hidden">
-          <summary className="flex cursor-pointer list-none items-center gap-2 p-4 text-sm font-bold [&::-webkit-details-marker]:hidden">
-            <FilterIcon size={16} className="text-brand-600" />
-            Filters
-          </summary>
-          <div className="px-4 pb-4">{filtersCard}</div>
-        </details>
+        <Card className="gap-0 rounded-lg p-4 shadow-[0_2px_10px_rgba(20,30,25,.05)] ring-0 max-lg:hidden">
+          <Filters filters={filters} fuelCounts={fuelCounts} idPrefix="sidebar" />
+        </Card>
+        <MobileFilters>
+          <Filters filters={filters} fuelCounts={fuelCounts} idPrefix="sheet" />
+        </MobileFilters>
 
         <section>
           <div className="flex flex-wrap items-center justify-between gap-3">
             <p className="text-[13px] font-semibold">
               {numberFormatter.format(total)} {total === 1 ? "Car" : "Cars"} Found
-              {filters.q && <span className="font-normal text-muted"> matching “{filters.q}”</span>}
+              {filters.q && <span className="font-normal text-muted-foreground"> matching “{filters.q}”</span>}
             </p>
             <div className="flex flex-wrap items-center gap-3">
               {hasActiveFilters(filters) && (

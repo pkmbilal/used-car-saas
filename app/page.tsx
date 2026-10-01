@@ -2,20 +2,23 @@ import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import {
-  ArrowRightIcon,
-  CarIcon,
-  ChatIcon,
-  CompareIcon,
-  DocIcon,
-  PlusIcon,
-  SearchIcon,
-  ShieldIcon,
-  TagIcon,
-  UsersIcon,
-  WhatsAppIcon,
-} from "@/components/icons";
+  ArrowLeftRight,
+  ArrowRight,
+  Car,
+  FileText,
+  MessageCircle,
+  MessagesSquare,
+  Plus,
+  Search,
+  ShieldCheck,
+  Tag,
+  UserPlus,
+} from "lucide-react";
 import { ListingGrid } from "@/components/listing-card";
 import { SearchBar } from "@/components/search-bar";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { CITIES } from "@/lib/cities";
 import { getViewerFavoriteIds } from "@/lib/favorites";
 import { capitalize, FUEL_TYPES } from "@/lib/listing-options";
@@ -57,7 +60,7 @@ function SectionHeading({
       {link && (
         <Link href={link.href} className="mb-1 flex shrink-0 items-center gap-2 text-[11px] font-semibold text-brand">
           {link.label}
-          <ArrowRightIcon size={12} strokeWidth={2.4} />
+          <ArrowRight className="size-3" strokeWidth={2.4} />
         </Link>
       )}
     </div>
@@ -79,7 +82,7 @@ export default async function Home() {
   const byCity = await getLatestByCities(cityNames, 3);
 
   return (
-    <main className="bg-canvas text-ink">
+    <main className="light bg-canvas text-ink">
       {/* Hero */}
       <section className="relative overflow-hidden bg-charcoal">
         {heroImage && (
@@ -91,18 +94,18 @@ export default async function Home() {
         <div className="relative mx-auto w-full max-w-6xl px-4 pt-14 pb-32 sm:px-6 md:pt-20 md:pb-36">
           <p className="text-[11px] font-bold tracking-[0.25em] text-[#5fd06e]">USED CARS IN SAUDI ARABIA</p>
           <h1 className="mt-3 max-w-lg text-4xl leading-[1.08] font-medium tracking-tight text-white md:text-[47px]">
-            Find Your Next Ride with <span className="font-semibold text-accent">Confidence</span>
+            Find Your Next Ride with <span className="font-semibold text-lime">Confidence</span>
           </h1>
           <p className="mt-5 max-w-md text-[15px] leading-relaxed text-white/80">
             Browse used cars from private sellers and dealers across the Kingdom, and talk to them directly.
           </p>
           <div className="mt-7 flex flex-wrap gap-x-8 gap-y-3 text-xs text-white">
             <span className="flex items-center gap-2.5">
-              <ShieldIcon size={20} strokeWidth={1.8} className="text-[#5fd06e]" />
+              <ShieldCheck className="size-5 text-[#5fd06e]" strokeWidth={1.8} />
               Verified seller badges
             </span>
             <span className="flex items-center gap-2.5">
-              <WhatsAppIcon size={20} strokeWidth={1.8} className="text-[#5fd06e]" />
+              <MessageCircle className="size-5 text-[#5fd06e]" strokeWidth={1.8} />
               Contact sellers on WhatsApp
             </span>
           </div>
@@ -127,14 +130,14 @@ export default async function Home() {
               <Link
                 key={make}
                 href={`/listings?make=${encodeURIComponent(make)}`}
-                className="flex flex-col items-center gap-3 rounded-lg border border-line bg-white px-2.5 pt-5 pb-3.5 text-ink transition hover:-translate-y-0.5 hover:border-accent hover:text-ink hover:shadow-[0_8px_20px_rgba(20,30,25,.08)]"
+                className="flex flex-col items-center gap-3 rounded-lg border border-line bg-white px-2.5 pt-5 pb-3.5 text-ink transition hover:-translate-y-0.5 hover:border-lime hover:text-ink hover:shadow-[0_8px_20px_rgba(20,30,25,.08)]"
               >
                 <span className="flex h-12 items-center">
                   <BrandLogo make={make} />
                 </span>
                 <span className="text-center">
                   <span className="block text-xs font-semibold">{make}</span>
-                  <span className="mt-0.5 block text-[10px] text-muted">
+                  <span className="mt-0.5 block text-[10px] text-muted-foreground">
                     {count} {count === 1 ? "car" : "cars"}
                   </span>
                 </span>
@@ -145,14 +148,17 @@ export default async function Home() {
         <div className="mt-5 flex flex-wrap items-center gap-2.5">
           <span className="mr-1.5 text-[11px] font-semibold text-ink/70">Fuel Type</span>
           {FUEL_TYPES.map((fuel) => (
-            <Link
+            <Badge
               key={fuel}
-              href={`/listings?fuel_type=${fuel}`}
-              className="flex h-8 items-center gap-1.5 rounded-full border border-line bg-white px-3.5 text-[11px] font-medium text-ink hover:border-brand hover:bg-brand hover:text-white"
+              asChild
+              variant="outline"
+              className="h-8 gap-1.5 bg-white px-3.5 text-[11px] font-medium text-ink hover:border-brand hover:bg-brand hover:text-white"
             >
-              {capitalize(fuel)}
-              <span className="text-[10px] opacity-60">{facets.fuelTypes.get(fuel) ?? 0}</span>
-            </Link>
+              <Link href={`/listings?fuel_type=${fuel}`}>
+                {capitalize(fuel)}
+                <span className="text-[10px] opacity-60">{facets.fuelTypes.get(fuel) ?? 0}</span>
+              </Link>
+            </Badge>
           ))}
         </div>
       </section>
@@ -201,10 +207,10 @@ export default async function Home() {
             note={`${facets.total} ${facets.total === 1 ? "car" : "cars"} available now`}
             cta={{ href: "/listings", label: "Browse Cars" }}
             steps={[
-              [<SearchIcon key="i" size={22} strokeWidth={1.8} />, "Search", "Filter listings by make, price, year, fuel type and city."],
-              [<CompareIcon key="i" size={22} strokeWidth={1.8} />, "Compare", "Save cars you like and compare their specs, mileage and price."],
-              [<ChatIcon key="i" size={22} strokeWidth={1.8} />, "Contact Seller", "Message the seller on WhatsApp or call them to arrange a viewing."],
-              [<CarIcon key="i" size={22} strokeWidth={1.8} />, "Buy Your Car", "Inspect the car, agree on a price and drive away."],
+              [<Search key="i" className="size-[22px]" strokeWidth={1.8} />, "Search", "Filter listings by make, price, year, fuel type and city."],
+              [<ArrowLeftRight key="i" className="size-[22px]" strokeWidth={1.8} />, "Compare", "Save cars you like and compare their specs, mileage and price."],
+              [<MessagesSquare key="i" className="size-[22px]" strokeWidth={1.8} />, "Contact Seller", "Message the seller on WhatsApp or call them to arrange a viewing."],
+              [<Car key="i" className="size-[22px]" strokeWidth={1.8} />, "Buy Your Car", "Inspect the car, agree on a price and drive away."],
             ]}
           />
           <HowItWorksCard
@@ -215,10 +221,10 @@ export default async function Home() {
             note="Free plan available. Dealer plans for bigger inventories."
             cta={{ href: "/account/become-seller", label: "Start Listing" }}
             steps={[
-              [<PlusIcon key="i" size={22} strokeWidth={1.8} />, "Create Listing", "Sign up as a seller and start a listing."],
-              [<DocIcon key="i" size={22} strokeWidth={1.8} />, "Add Details", "Upload photos and add mileage, condition and your asking price."],
-              [<UsersIcon key="i" size={22} strokeWidth={1.8} />, "Get Buyer Leads", "Buyers contact you directly by WhatsApp or phone."],
-              [<TagIcon key="i" size={22} strokeWidth={1.8} />, "Sell Your Car", "Agree on a price, hand over the keys and mark it as sold."],
+              [<Plus key="i" className="size-[22px]" strokeWidth={1.8} />, "Create Listing", "Sign up as a seller and start a listing."],
+              [<FileText key="i" className="size-[22px]" strokeWidth={1.8} />, "Add Details", "Upload photos and add mileage, condition and your asking price."],
+              [<UserPlus key="i" className="size-[22px]" strokeWidth={1.8} />, "Get Buyer Leads", "Buyers contact you directly by WhatsApp or phone."],
+              [<Tag key="i" className="size-[22px]" strokeWidth={1.8} />, "Sell Your Car", "Agree on a price, hand over the keys and mark it as sold."],
             ]}
           />
         </div>
@@ -228,19 +234,18 @@ export default async function Home() {
       <section className="mx-auto mt-12 w-full max-w-6xl px-4 sm:px-6">
         <div className="flex flex-col items-start justify-between gap-6 rounded-xl bg-gradient-to-r from-forest to-[#1f5a3f] px-8 py-9 text-white sm:flex-row sm:items-center">
           <div>
-            <p className="text-[10px] font-bold tracking-[0.15em] text-accent">READY TO SELL?</p>
+            <p className="text-[10px] font-bold tracking-[0.15em] text-lime">READY TO SELL?</p>
             <p className="mt-2 text-2xl font-semibold">Turn Your Car into Cash</p>
             <p className="mt-2 max-w-md text-xs leading-relaxed text-white/80">
               List your car in minutes and reach buyers in {cityNames.slice(0, 3).join(", ")} and beyond.
             </p>
           </div>
-          <Link
-            href="/account/become-seller"
-            className="flex h-10 shrink-0 items-center gap-2 rounded-full bg-accent px-6 text-xs font-semibold text-on-accent hover:bg-accent-light hover:text-on-accent"
-          >
-            Sell Your Car
-            <ArrowRightIcon size={12} strokeWidth={2.6} />
-          </Link>
+          <Button asChild className="h-10 shrink-0 rounded-full bg-lime px-6 text-xs font-semibold text-on-lime hover:bg-lime-light hover:text-on-lime">
+            <Link href="/account/become-seller">
+              Sell Your Car
+              <ArrowRight className="size-3" strokeWidth={2.6} />
+            </Link>
+          </Button>
         </div>
       </section>
     </main>
@@ -267,13 +272,13 @@ function HowItWorksCard({
   const dark = tone === "dark";
 
   return (
-    <div
-      className={`overflow-hidden rounded-xl shadow-[0_4px_18px_rgba(20,30,25,.06)] ${
-        dark ? "bg-gradient-to-br from-forest to-[#11261d] text-white" : "border border-line bg-white text-ink"
+    <Card
+      className={`gap-0 rounded-xl py-0 shadow-[0_4px_18px_rgba(20,30,25,.06)] ${
+        dark ? "bg-gradient-to-br from-forest to-[#11261d] text-white ring-0" : "bg-white text-ink ring-line"
       }`}
     >
       <div className={`px-7 pt-7 pb-6 ${dark ? "" : "bg-charcoal text-white"}`}>
-        <span className="inline-flex h-6 items-center rounded-full bg-accent/20 px-3 text-[9.5px] font-bold tracking-[0.15em] text-accent">
+        <span className="inline-flex h-6 items-center rounded-full bg-lime/20 px-3 text-[9.5px] font-bold tracking-[0.15em] text-lime">
           {tag}
         </span>
         <p className="mt-3 text-[22px] font-semibold tracking-tight">{title}</p>
@@ -289,10 +294,10 @@ function HowItWorksCard({
                   className={`flex size-11 shrink-0 items-center justify-center rounded-xl ${
                     last
                       ? dark
-                        ? "bg-accent text-on-accent"
+                        ? "bg-lime text-on-lime"
                         : "bg-brand text-white shadow-[0_8px_18px_rgba(31,125,60,.28)]"
                       : dark
-                        ? "bg-white/10 text-accent"
+                        ? "bg-white/10 text-lime"
                         : "bg-mint text-brand"
                   }`}
                 >
@@ -300,12 +305,12 @@ function HowItWorksCard({
                 </span>
                 <div className="min-w-0">
                   <p className="flex items-center gap-2">
-                    <span className={`text-[10px] font-bold ${dark ? "text-accent" : "text-brand-600"}`}>
+                    <span className={`text-[10px] font-bold ${dark ? "text-lime" : "text-brand-600"}`}>
                       0{i + 1}
                     </span>
                     <span className="text-[13px] font-semibold">{label}</span>
                   </p>
-                  <p className={`mt-1 text-[11px] leading-relaxed ${dark ? "text-white/70" : "text-muted"}`}>{desc}</p>
+                  <p className={`mt-1 text-[11px] leading-relaxed ${dark ? "text-white/70" : "text-muted-foreground"}`}>{desc}</p>
                 </div>
               </li>
             );
@@ -314,20 +319,22 @@ function HowItWorksCard({
         <div
           className={`mt-6 flex flex-wrap items-center justify-between gap-3 border-t pt-4 ${dark ? "border-white/10" : "border-line"}`}
         >
-          <span className={`text-[11px] ${dark ? "text-white/70" : "text-muted"}`}>{note}</span>
-          <Link
-            href={cta.href}
-            className={`flex h-9 items-center gap-2 rounded-full px-5 text-[11px] font-semibold ${
+          <span className={`text-[11px] ${dark ? "text-white/70" : "text-muted-foreground"}`}>{note}</span>
+          <Button
+            asChild
+            className={`h-9 rounded-full px-5 text-[11px] font-semibold ${
               dark
-                ? "bg-accent text-on-accent hover:bg-accent-light hover:text-on-accent"
-                : "bg-brand text-white hover:bg-brand-dark hover:text-white"
+                ? "bg-lime text-on-lime hover:bg-lime-light hover:text-on-lime"
+                : "hover:bg-brand-dark hover:text-white"
             }`}
           >
-            {cta.label}
-            <ArrowRightIcon size={11} strokeWidth={2.6} />
-          </Link>
+            <Link href={cta.href}>
+              {cta.label}
+              <ArrowRight className="size-3" strokeWidth={2.6} />
+            </Link>
+          </Button>
         </div>
       </div>
-    </div>
+    </Card>
   );
 }

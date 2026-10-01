@@ -2,10 +2,12 @@ import type { Metadata } from "next";
 import { Figtree } from "next/font/google";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
+import { Toaster } from "@/components/ui/sonner";
+import { cn } from "@/lib/utils";
 import "./globals.css";
 
 const figtree = Figtree({
-  variable: "--font-figtree",
+  variable: "--font-sans",
   subsets: ["latin"],
 });
 
@@ -16,11 +18,12 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${figtree.variable} h-full antialiased`}>
+    <html lang="en" className={cn("h-full font-sans antialiased", figtree.variable)}>
       <body className="min-h-full flex flex-col">
         <SiteHeader />
         <div className="flex flex-1 flex-col">{children}</div>
         <SiteFooter />
+        <Toaster theme="light" />
       </body>
     </html>
   );

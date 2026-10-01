@@ -2,7 +2,21 @@
 
 import { useActionState, useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
+import { Flag } from "lucide-react";
 import { reportListing, type ReportState } from "@/app/listings/[id]/actions";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Textarea } from "@/components/ui/textarea";
 import { MAX_REPORT_DETAILS, REPORT_REASONS } from "@/lib/moderation";
 
 type Props = {
@@ -26,63 +40,56 @@ export function ReportListingButton({ listingId, signedIn }: Props) {
   }, [state.error, router, loginHref]);
 
   if (state.sent) {
-    return (
-      <p className="text-sm text-muted">
-        Thanks — our team will review this listing.
-      </p>
-    );
-  }
-
-  if (!open) {
-    return (
-      <button
-        type="button"
-        onClick={() => (signedIn ? setOpen(true) : router.push(loginHref))}
-        className="self-start text-sm text-muted underline-offset-4 hover:underline"
-      >
-        Report this listing
-      </button>
-    );
+    return <p className="text-sm text-muted-foreground">Thanks — our team will review this listing.</p>;
   }
 
   return (
-    <form
-      action={formAction}
-      className="flex flex-col gap-3 rounded-lg border border-line bg-white p-4 text-sm"
-    >
-      <fieldset className="flex flex-col gap-2">
-        <legend className="mb-1 font-medium">What&apos;s wrong with this listing?</legend>
-        {Object.entries(REPORT_REASONS).map(([value, label]) => (
-          <label key={value} className="flex items-center gap-2">
-            <input type="radio" name="reason" value={value} required className="accent-brand" />
-            {label}
-          </label>
-        ))}
-      </fieldset>
-      <label className="flex flex-col gap-1">
-        <span className="font-medium">Details (optional)</span>
-        <textarea
-          name="details"
-          rows={3}
-          maxLength={MAX_REPORT_DETAILS}
-          className="rounded-md border border-line bg-white px-3 py-2"
-        />
-      </label>
-      {state.error && state.error !== "signin" && (
-        <p className="text-red-600">{state.error}</p>
-      )}
-      <div className="flex items-center gap-3">
-        <button
-          type="submit"
-          disabled={pending}
-          className="rounded-md bg-brand px-3 py-1.5 font-medium text-white hover:bg-brand-dark disabled:opacity-50"
-        >
-          {pending ? "Sending…" : "Send report"}
-        </button>
-        <button type="button" onClick={() => setOpen(false)} className="text-muted">
-          Cancel
-        </button>
-      </div>
-    </form>
+    <Dialog open={open} onOpenChange={setOpen}>
+      <Button
+        type="button"
+        variant="link"
+        onClick={() => (signedIn ? setOpen(true) : router.push(loginHref))}
+        className="h-auto self-start px-0 text-sm font-normal text-muted-foreground"
+      >
+        <Flag className="size-3.5" />
+        Report this listing
+      </Button>
+      <DialogContent className="light sm:max-w-md">
+        <form action={formAction} className="flex flex-col gap-5">
+          <DialogHeader>
+            <DialogTitle>Report this listing</DialogTitle>
+            <DialogDescription>Our moderators review every report.</DialogDescription>
+          </DialogHeader>
+          <fieldset className="flex flex-col gap-2">
+            <legend className="mb-2 text-sm font-medium">What&apos;s wrong with this listing?</legend>
+            <RadioGroup name="reason" required>
+              {Object.entries(REPORT_REASONS).map(([value, label]) => (
+                <div key={value} className="flex items-center gap-2">
+                  <RadioGroupItem value={value} id={`reason-${value}`} />
+                  <Label htmlFor={`reason-${value}`} className="font-normal">
+                    {label}
+                  </Label>
+                </div>
+              ))}
+            </RadioGroup>
+          </fieldset>
+          <div className="flex flex-col gap-2">
+            <Label htmlFor="report-details">Details (optional)</Label>
+            <Textarea id="report-details" name="details" rows={3} maxLength={MAX_REPORT_DETAILS} />
+          </div>
+          {state.error && state.error !== "signin" && <p className="text-sm text-destructive">{state.error}</p>}
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button type="button" variant="outline">
+                Cancel
+              </Button>
+            </DialogClose>
+            <Button type="submit" disabled={pending}>
+              {pending ? "Sending…" : "Send report"}
+            </Button>
+          </DialogFooter>
+        </form>
+      </DialogContent>
+    </Dialog>
   );
 }

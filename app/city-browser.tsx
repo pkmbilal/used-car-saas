@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState, type ReactNode } from "react";
-import { ArrowRightIcon, ChevronRightIcon, PinIcon } from "@/components/icons";
+import { ArrowRight, ChevronRight, MapPin } from "lucide-react";
 
 type City = { name: string; count: number; listings: ReactNode };
 
@@ -25,7 +25,7 @@ export function CityBrowser({ cities }: { cities: City[] }) {
           className="mb-1 flex shrink-0 items-center gap-2 text-[11px] font-semibold text-brand"
         >
           View All in {current.name}
-          <ArrowRightIcon size={12} strokeWidth={2.4} />
+          <ArrowRight className="size-3" strokeWidth={2.4} />
         </Link>
       </div>
       <div className="mt-6 grid gap-5 lg:grid-cols-[260px_minmax(0,1fr)]">
@@ -44,13 +44,13 @@ export function CityBrowser({ cities }: { cities: City[] }) {
                 aria-selected={active}
                 onClick={() => setSelected(city.name)}
                 className={`flex shrink-0 items-center gap-3 rounded-lg px-3.5 py-2 text-left transition lg:flex-1 ${
-                  active ? "bg-accent text-on-accent" : "text-white hover:bg-white/5"
+                  active ? "bg-lime text-on-lime" : "text-white hover:bg-white/5"
                 }`}
               >
                 <span
-                  className={`flex size-8 shrink-0 items-center justify-center rounded-lg ${active ? "bg-on-accent/10" : "bg-white/10"}`}
+                  className={`flex size-8 shrink-0 items-center justify-center rounded-lg ${active ? "bg-on-lime/10" : "bg-white/10"}`}
                 >
-                  <PinIcon size={14} />
+                  <MapPin className="size-3.5" />
                 </span>
                 <span className="flex flex-1 flex-col gap-0.5">
                   <span className="text-[13px] font-semibold">{city.name}</span>
@@ -58,7 +58,7 @@ export function CityBrowser({ cities }: { cities: City[] }) {
                     {city.count} {city.count === 1 ? "car" : "cars"}
                   </span>
                 </span>
-                <ChevronRightIcon size={12} strokeWidth={2.4} className={active ? "max-lg:hidden" : "invisible"} />
+                <ChevronRight className={`size-3 ${active ? "max-lg:hidden" : "invisible"}`} strokeWidth={2.4} />
               </button>
             );
           })}

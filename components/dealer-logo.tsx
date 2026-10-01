@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { Badge } from "@/components/ui/badge";
 
 type Props = {
   name: string;
@@ -43,8 +44,6 @@ export function DealerLogo({ name, logoUrl, size }: Props) {
 
 export function DealerBadge() {
   return (
-    <span className="rounded-full bg-charcoal px-2 py-0.5 text-xs font-medium text-accent">
-      Dealer
-    </span>
+    <Badge className="bg-charcoal text-lime">Dealer</Badge>
   );
 }

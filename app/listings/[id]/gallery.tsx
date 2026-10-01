@@ -2,7 +2,9 @@
 
 import Image from "next/image";
 import { useState } from "react";
-import { ChevronLeftIcon, ChevronRightIcon } from "@/components/icons";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 
 type Props = {
   title: string;
@@ -11,7 +13,7 @@ type Props = {
 };
 
 const arrowClass =
-  "absolute top-1/2 flex size-9 -translate-y-1/2 items-center justify-center rounded-full bg-white text-brand shadow-[0_2px_8px_rgba(0,0,0,.2)] hover:bg-mint";
+  "absolute top-[calc(50%-18px)] size-9 rounded-full bg-white text-brand shadow-[0_2px_8px_rgba(0,0,0,.2)] hover:bg-mint";
 
 export function Gallery({ title, photos, featured = false }: Props) {
   const [index, setIndex] = useState(0);
@@ -45,18 +47,16 @@ export function Gallery({ title, photos, featured = false }: Props) {
           className="object-cover"
         />
         {featured && (
-          <span className="absolute top-3.5 left-3.5 rounded-full bg-[#3fb85a] px-3 py-1 text-[11.5px] font-semibold text-white">
-            Featured
-          </span>
+          <Badge className="absolute top-3.5 left-3.5 h-6 bg-[#3fb85a] px-3 text-[11.5px] font-semibold">Featured</Badge>
         )}
         {count > 1 && (
           <>
-            <button type="button" aria-label="Previous photo" onClick={() => go(-1)} className={`${arrowClass} left-3.5`}>
-              <ChevronLeftIcon size={14} strokeWidth={2.6} />
-            </button>
-            <button type="button" aria-label="Next photo" onClick={() => go(1)} className={`${arrowClass} right-3.5`}>
-              <ChevronRightIcon size={14} strokeWidth={2.6} />
-            </button>
+            <Button size="icon" variant="secondary" aria-label="Previous photo" onClick={() => go(-1)} className={`${arrowClass} left-3.5`}>
+              <ChevronLeft strokeWidth={2.6} />
+            </Button>
+            <Button size="icon" variant="secondary" aria-label="Next photo" onClick={() => go(1)} className={`${arrowClass} right-3.5`}>
+              <ChevronRight strokeWidth={2.6} />
+            </Button>
           </>
         )}
         <span className="absolute bottom-3.5 left-3.5 rounded-md bg-black/60 px-2.5 py-1 text-[11.5px] font-medium text-white">

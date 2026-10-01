@@ -1,5 +1,12 @@
-import Link from "next/link";
-import { ChevronLeftIcon, ChevronRightIcon } from "@/components/icons";
+import {
+  Pagination as PaginationRoot,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 
 // Page numbers to show: first, last, and a window around the current page.
 function pageItems(page: number, pageCount: number): (number | "gap")[] {
@@ -11,8 +18,7 @@ function pageItems(page: number, pageCount: number): (number | "gap")[] {
   return sorted.flatMap((p, i) => (i > 0 && p - sorted[i - 1] > 1 ? ["gap" as const, p] : [p]));
 }
 
-const itemClass =
-  "flex h-8 min-w-8 items-center justify-center rounded-md px-2 text-xs font-semibold shadow-[0_1px_3px_rgba(0,0,0,.06)]";
+const disabled = "pointer-events-none opacity-40";
 
 export function Pagination({
   page,
@@ -26,41 +32,44 @@ export function Pagination({
   if (pageCount <= 1) return null;
 
   return (
-    <nav aria-label="Pagination" className="mt-8 flex flex-wrap justify-center gap-2">
-      {page > 1 ? (
-        <Link href={hrefFor(page - 1)} aria-label="Previous page" className={`${itemClass} bg-white text-ink`}>
-          <ChevronLeftIcon size={14} />
-        </Link>
-      ) : (
-        <span className={`${itemClass} bg-white text-ink/30`} aria-hidden>
-          <ChevronLeftIcon size={14} />
-        </span>
-      )}
-      {pageItems(page, pageCount).map((item, i) =>
-        item === "gap" ? (
-          <span key={`gap-${i}`} className={`${itemClass} text-muted shadow-none`}>
-            …
-          </span>
-        ) : (
-          <Link
-            key={item}
-            href={hrefFor(item)}
-            aria-current={item === page ? "page" : undefined}
-            className={`${itemClass} ${item === page ? "bg-brand text-white hover:text-white" : "bg-white text-ink"}`}
-          >
-            {item}
-          </Link>
-        ),
-      )}
-      {page < pageCount ? (
-        <Link href={hrefFor(page + 1)} aria-label="Next page" className={`${itemClass} bg-white text-ink`}>
-          <ChevronRightIcon size={14} />
-        </Link>
-      ) : (
-        <span className={`${itemClass} bg-white text-ink/30`} aria-hidden>
-          <ChevronRightIcon size={14} />
-        </span>
-      )}
-    </nav>
+    <PaginationRoot className="mt-8">
+      <PaginationContent className="flex-wrap justify-center">
+        <PaginationItem>
+          <PaginationPrevious
+            href={hrefFor(Math.max(1, page - 1))}
+            aria-disabled={page === 1}
+            tabIndex={page === 1 ? -1 : undefined}
+            className={page === 1 ? disabled : undefined}
+          />
+        </PaginationItem>
+        {pageItems(page, pageCount).map((item, i) => (
+          <PaginationItem key={item === "gap" ? `gap-${i}` : item}>
+            {item === "gap" ? (
+              <PaginationEllipsis />
+            ) : (
+              <PaginationLink
+                href={hrefFor(item)}
+                isActive={item === page}
+                className={
+                  item === page
+                    ? "border-brand bg-brand text-white hover:bg-brand-dark hover:text-white"
+                    : "bg-white"
+                }
+              >
+                {item}
+              </PaginationLink>
+            )}
+          </PaginationItem>
+        ))}
+        <PaginationItem>
+          <PaginationNext
+            href={hrefFor(Math.min(pageCount, page + 1))}
+            aria-disabled={page === pageCount}
+            tabIndex={page === pageCount ? -1 : undefined}
+            className={page === pageCount ? disabled : undefined}
+          />
+        </PaginationItem>
+      </PaginationContent>
+    </PaginationRoot>
   );
 }

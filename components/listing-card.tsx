@@ -1,7 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import { FavoriteButton } from "@/components/favorite-button";
-import { ArrowRightIcon, FuelIcon, PinIcon } from "@/components/icons";
+import { ArrowRight, Fuel, MapPin } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Card } from "@/components/ui/card";
 import { formatKm, formatSAR } from "@/lib/format";
 import { capitalize } from "@/lib/listing-options";
 import { isFeatured, type ListingWithImages } from "@/lib/listings";
@@ -18,51 +20,58 @@ export function ListingCard({ listing, favorited, sizes }: CardProps) {
 
   return (
     <div className="group relative h-full">
-      <Link
-        href={`/listings/${listing.id}`}
-        className="flex h-full flex-col overflow-hidden rounded-lg bg-white text-ink shadow-[0_2px_10px_rgba(20,30,25,.05)] transition hover:-translate-y-0.5 hover:text-ink hover:shadow-[0_10px_24px_rgba(20,30,25,.1)]"
-      >
-        <div className="relative aspect-[3/2] bg-mint">
-          {cover && (
-            <Image
-              src={cover.url}
-              alt={`${listing.year} ${listing.make} ${listing.model}`}
-              fill
-              sizes={sizes ?? "(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"}
-              className="object-cover"
-            />
-          )}
-          {isFeatured(listing) && (
-            <span className="absolute top-3 left-3 rounded-full bg-accent px-2.5 py-0.5 text-[11px] font-semibold text-on-accent">
-              Featured
-            </span>
-          )}
-        </div>
-        <div className="flex flex-1 flex-col px-4 pt-3.5 pb-4">
-          <p className="truncate text-sm font-semibold">
-            {listing.make} {listing.model}
-          </p>
-          <p className="mt-2 flex flex-wrap gap-x-2 text-[11px] text-muted">
-            <span>{listing.year}</span>
-            <span aria-hidden>·</span>
-            <span>{formatKm(listing.mileage)}</span>
-          </p>
-          <p className="mt-3 text-[15px] font-bold text-brand">{formatSAR(listing.price)}</p>
-          <div className="mt-auto flex items-center gap-4 pt-3 text-[11px] text-muted">
-            <span className="flex items-center gap-1.5">
-              <FuelIcon size={12} strokeWidth={1.8} />
-              {capitalize(listing.fuel_type)}
-            </span>
-            <span className="flex items-center gap-1.5">
-              <PinIcon size={12} strokeWidth={1.8} />
-              {listing.city}
-            </span>
-            <span className="ml-auto flex size-5 items-center justify-center rounded-full border border-ink/80 transition group-hover:border-brand group-hover:bg-brand group-hover:text-white">
-              <ArrowRightIcon size={10} strokeWidth={2.6} />
-            </span>
+      <Card className="h-full gap-0 rounded-lg py-0 text-ink shadow-[0_2px_10px_rgba(20,30,25,.05)] ring-0 transition group-hover:-translate-y-0.5 group-hover:shadow-[0_10px_24px_rgba(20,30,25,.1)]">
+        <Link
+          href={`/listings/${listing.id}`}
+          className="flex h-full flex-col hover:text-ink"
+        >
+          <div className="relative aspect-[3/2] bg-mint">
+            {cover && (
+              <Image
+                src={cover.url}
+                alt={`${listing.year} ${listing.make} ${listing.model}`}
+                fill
+                sizes={
+                  sizes ??
+                  "(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
+                }
+                className="object-cover"
+              />
+            )}
+            {isFeatured(listing) && (
+              <Badge className="absolute top-3 left-3 bg-lime text-[11px] font-semibold text-on-lime">
+                Featured
+              </Badge>
+            )}
           </div>
-        </div>
-      </Link>
+          <div className="flex flex-1 flex-col px-4 pt-3.5 pb-4">
+            <p className="truncate text-sm font-semibold">
+              {listing.make} {listing.model}
+            </p>
+            <p className="mt-2 flex flex-wrap gap-x-2 text-[11px] text-muted-foreground">
+              <span>{listing.year}</span>
+              <span aria-hidden>·</span>
+              <span>{formatKm(listing.mileage)}</span>
+            </p>
+            <p className="mt-3 text-[15px] font-bold text-brand">
+              {formatSAR(listing.price)}
+            </p>
+            <div className="mt-auto flex items-center gap-4 pt-3 text-[11px] text-muted-foreground">
+              <span className="flex items-center gap-1.5">
+                <Fuel className="size-3" />
+                {capitalize(listing.fuel_type)}
+              </span>
+              <span className="flex items-center gap-1.5">
+                <MapPin className="size-3" />
+                {listing.city}
+              </span>
+              <span className="ml-auto flex size-5 items-center justify-center rounded-full border border-ink/80 transition group-hover:border-brand group-hover:bg-brand group-hover:text-white">
+                <ArrowRight className="size-2.5" strokeWidth={2.6} />
+              </span>
+            </div>
+          </div>
+        </Link>
+      </Card>
       {favorited !== undefined && (
         <FavoriteButton
           listingId={listing.id}
@@ -97,7 +106,9 @@ export function ListingGrid({
   columns?: keyof typeof gridColumns;
 }) {
   if (listings.length === 0) {
-    return empty ? <p className="py-12 text-center text-muted">{empty}</p> : null;
+    return empty ? (
+      <p className="py-12 text-center text-muted-foreground">{empty}</p>
+    ) : null;
   }
 
   return (

@@ -1,7 +1,8 @@
 "use client";
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { ChevronDownIcon } from "@/components/icons";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const sortLabels = {
   newest: "Newest First",
@@ -25,22 +26,22 @@ export function SortSelect({ value }: { value: keyof typeof sortLabels }) {
   }
 
   return (
-    <label className="flex items-center gap-3 text-[11px] text-ink/70">
-      Sort by
-      <span className="relative flex items-center">
-        <select
-          value={value}
-          onChange={(event) => change(event.target.value)}
-          className="h-8 appearance-none rounded-md border border-line bg-white pr-8 pl-2.5 text-xs text-ink outline-none focus:border-brand"
-        >
+    <div className="flex items-center gap-3">
+      <Label htmlFor="sort" className="text-[11px] font-normal text-ink/70">
+        Sort by
+      </Label>
+      <Select value={value} onValueChange={change}>
+        <SelectTrigger id="sort" className="h-8 min-w-40 bg-white text-xs">
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent align="end" className="light">
           {Object.entries(sortLabels).map(([sort, label]) => (
-            <option key={sort} value={sort}>
+            <SelectItem key={sort} value={sort}>
               {label}
-            </option>
+            </SelectItem>
           ))}
-        </select>
-        <ChevronDownIcon size={11} strokeWidth={2.4} className="pointer-events-none absolute right-2.5" />
-      </span>
-    </label>
+        </SelectContent>
+      </Select>
+    </div>
   );
 }
