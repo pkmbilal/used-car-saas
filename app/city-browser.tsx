@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState, type ReactNode } from "react";
 import { ArrowRight, ChevronRight, MapPin } from "lucide-react";
+import { cityHref, isCity } from "@/lib/cities";
 
 type City = { name: string; count: number; listings: ReactNode };
 
@@ -21,7 +22,7 @@ export function CityBrowser({ cities }: { cities: City[] }) {
           <h2 className="mt-2 text-2xl font-semibold tracking-tight">Cars Near You</h2>
         </div>
         <Link
-          href={`/listings?city=${encodeURIComponent(current.name)}`}
+          href={isCity(current.name) ? cityHref(current.name) : `/listings?city=${encodeURIComponent(current.name)}`}
           className="mb-1 flex shrink-0 items-center gap-2 text-[0.6875rem] font-semibold text-brand"
         >
           View All in {current.name}

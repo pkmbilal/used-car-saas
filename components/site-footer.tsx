@@ -1,8 +1,9 @@
 import Link from "next/link";
 import { BrandLink } from "@/components/brand";
+import { cityHref, type City } from "@/lib/cities";
 
 const TOP_MAKES = ["Toyota", "Hyundai", "Nissan", "Lexus"];
-const TOP_CITIES = ["Riyadh", "Jeddah", "Dammam", "Khobar"];
+const TOP_CITIES: City[] = ["Riyadh", "Jeddah", "Dammam", "Khobar"];
 
 const columns: { title: string; links: [string, string][] }[] = [
   {
@@ -19,7 +20,7 @@ const columns: { title: string; links: [string, string][] }[] = [
   },
   {
     title: "CITIES",
-    links: TOP_CITIES.map((city) => [city, `/listings?city=${encodeURIComponent(city)}`]),
+    links: [...TOP_CITIES.map((city): [string, string] => [city, cityHref(city)]), ["All Cities", "/locations"]],
   },
   {
     title: "SELL",

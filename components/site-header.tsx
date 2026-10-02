@@ -14,6 +14,7 @@ export async function SiteHeader() {
     { href: "/", label: "Home" },
     { href: "/listings", label: "Buy Cars" },
     { href: "/dealers", label: "Dealers" },
+    { href: "/locations", label: "Locations" },
     isSeller
       ? { href: "/dashboard", label: "My Listings" }
       : { href: "/account/become-seller", label: "Sell Your Car" },
