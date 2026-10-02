@@ -77,15 +77,15 @@ export default async function ListingsPage({ searchParams }: PageProps<"/listing
       </section>
 
       <div className="relative mx-auto -mt-10 w-full max-w-6xl px-4 sm:px-6">
-        <SearchBar filters={filters} />
+        <SearchBar key={searchHref} filters={filters} />
       </div>
 
       <div className="mx-auto mt-6 grid w-full max-w-6xl items-start gap-6 px-4 sm:px-6 lg:grid-cols-[16.0625rem_minmax(0,1fr)]">
         <Card className="gap-0 rounded-lg p-4 shadow-[0_2px_10px_rgba(20,30,25,.05)] ring-0 max-lg:hidden">
-          <Filters filters={filters} counts={counts} idPrefix="sidebar" />
+          <Filters key={searchHref} filters={filters} counts={counts} idPrefix="sidebar" />
         </Card>
         <MobileFilters>
-          <Filters filters={filters} counts={counts} idPrefix="sheet" />
+          <Filters key={searchHref} filters={filters} counts={counts} idPrefix="sheet" />
         </MobileFilters>
 
         <section>
