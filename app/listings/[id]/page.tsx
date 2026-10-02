@@ -129,10 +129,10 @@ export default async function ListingPage({ params }: PageProps<"/listings/[id]"
           <div className="mt-4 flex flex-wrap items-center gap-3.5">
             <h1 className="text-3xl font-semibold tracking-tight">{name}</h1>
             {featured && (
-              <Badge className="h-6 bg-[#4fc35f] px-3 text-[11px] font-semibold">Featured</Badge>
+              <Badge className="h-6 bg-[#4fc35f] px-3 text-[0.6875rem] font-semibold">Featured</Badge>
             )}
           </div>
-          <p className="mt-2.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[15px]">
+          <p className="mt-2.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[0.9375rem]">
             <span>{listing.year}</span>
             <span className="opacity-60">·</span>
             <span>{formatKm(listing.mileage)}</span>
@@ -148,7 +148,7 @@ export default async function ListingPage({ params }: PageProps<"/listings/[id]"
         </div>
       </section>
 
-      <div className="mx-auto grid w-full max-w-6xl items-start gap-8 px-4 pt-7 sm:px-6 lg:grid-cols-[minmax(0,1fr)_362px]">
+      <div className="mx-auto grid w-full max-w-6xl items-start gap-8 px-4 pt-7 sm:px-6 lg:grid-cols-[minmax(0,1fr)_22.625rem]">
         <div className="flex min-w-0 flex-col gap-10">
           <Gallery
             title={title}
@@ -162,18 +162,18 @@ export default async function ListingPage({ params }: PageProps<"/listings/[id]"
 
         <aside className="flex flex-col gap-5">
           <Card className="gap-0 rounded-lg px-5 pt-4 pb-5 shadow-[0_2px_12px_rgba(20,30,25,.06)] ring-0">
-            <p className="text-[27px] font-bold text-brand">{formatSAR(listing.price)}</p>
+            <p className="text-[1.6875rem] font-bold text-brand">{formatSAR(listing.price)}</p>
             {views !== null && <p className="mt-1 text-xs text-muted-foreground">{formatViews(views)}</p>}
 
             {seller?.phone && !isOwner && (
               <div className="mt-4 flex flex-col gap-2.5">
-                <Button asChild className="h-11 text-[13px] font-semibold hover:bg-brand-dark hover:text-white">
+                <Button asChild className="h-11 text-[0.8125rem] font-semibold hover:bg-brand-dark hover:text-white">
                   <a href={`tel:${seller.phone}`}>
                     <Phone className="size-4" />
                     Call Seller
                   </a>
                 </Button>
-                <Button asChild variant="outline" className="h-11 border-brand text-[13px] font-semibold text-ink hover:bg-mint">
+                <Button asChild variant="outline" className="h-11 border-brand text-[0.8125rem] font-semibold text-ink hover:bg-mint">
                   <a href={whatsappUrl(seller.phone, whatsappText)} target="_blank" rel="noopener noreferrer">
                     <MessageCircle className="size-4 text-brand" />
                     WhatsApp
@@ -198,7 +198,7 @@ export default async function ListingPage({ params }: PageProps<"/listings/[id]"
                     </span>
                   )}
                   <div className="min-w-0">
-                    <p className="truncate text-[15px] font-semibold">
+                    <p className="truncate text-[0.9375rem] font-semibold">
                       {storefront?.name ?? seller.full_name ?? "Seller"}
                     </p>
                     <div className="mt-1 flex flex-wrap items-center gap-1.5">
@@ -208,7 +208,7 @@ export default async function ListingPage({ params }: PageProps<"/listings/[id]"
                   </div>
                 </div>
                 <Separator className="mt-4" />
-                <div className="flex flex-col gap-3.5 pt-4 text-[11.5px] leading-relaxed text-ink/75">
+                <div className="flex flex-col gap-3.5 pt-4 text-[0.71875rem] leading-relaxed text-ink/75">
                   <p className="flex items-start gap-3.5">
                     <MapPin className="mt-0.5 size-4 shrink-0 text-brand" />
                     <span>
@@ -249,7 +249,7 @@ export default async function ListingPage({ params }: PageProps<"/listings/[id]"
             <h2 className="text-lg font-semibold">Similar Cars You May Like</h2>
             <Link
               href={`/listings?make=${encodeURIComponent(listing.make)}`}
-              className="text-[11px] font-semibold text-brand"
+              className="text-[0.6875rem] font-semibold text-brand"
             >
               View All →
             </Link>

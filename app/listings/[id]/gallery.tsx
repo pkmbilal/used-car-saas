@@ -47,7 +47,7 @@ export function Gallery({ title, photos, featured = false }: Props) {
           className="object-cover"
         />
         {featured && (
-          <Badge className="absolute top-3.5 left-3.5 h-6 bg-[#3fb85a] px-3 text-[11.5px] font-semibold">Featured</Badge>
+          <Badge className="absolute top-3.5 left-3.5 h-6 bg-[#3fb85a] px-3 text-[0.71875rem] font-semibold">Featured</Badge>
         )}
         {count > 1 && (
           <>
@@ -59,7 +59,7 @@ export function Gallery({ title, photos, featured = false }: Props) {
             </Button>
           </>
         )}
-        <span className="absolute bottom-3.5 left-3.5 rounded-md bg-black/60 px-2.5 py-1 text-[11.5px] font-medium text-white">
+        <span className="absolute bottom-3.5 left-3.5 rounded-md bg-black/60 px-2.5 py-1 text-[0.71875rem] font-medium text-white">
           {index + 1} / {count}
         </span>
       </div>

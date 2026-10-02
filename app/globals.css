@@ -107,7 +107,12 @@
   [role="button"]:not(:disabled) {
     cursor: pointer;
   }
+  /* Slightly larger UI (17px base) on screens 1280px and up. Everything sized
+     in rem scales with it; a percentage keeps the user's browser font setting. */
   html {
     @apply font-sans;
+    @media (width >= 80rem) {
+      font-size: 106.25%;
+    }
   }
 }

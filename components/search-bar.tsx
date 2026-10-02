@@ -23,7 +23,7 @@ function withCurrent(options: FormSelectOption[], value: number | undefined, lab
 }
 
 const fieldClass = "flex min-w-0 flex-col gap-2 lg:border-r lg:border-line lg:pr-3";
-const labelClass = "text-[11px] font-semibold text-ink";
+const labelClass = "text-[0.6875rem] font-semibold text-ink";
 
 function Field({ id, label, children }: { id: string; label: string; children: React.ReactNode }) {
   return (

@@ -28,9 +28,9 @@ export async function SiteHeader() {
 
   return (
     <header className="light relative z-20 bg-charcoal text-white">
-      <nav className="mx-auto flex h-[72px] w-full max-w-6xl items-center gap-10 px-4 sm:px-6">
+      <nav className="mx-auto flex h-[4.5rem] w-full max-w-6xl items-center gap-10 px-4 sm:px-6">
         <BrandLink />
-        <div className="hidden items-center gap-8 text-[13px] font-medium md:flex">
+        <div className="hidden items-center gap-8 text-[0.8125rem] font-medium md:flex">
           {mainLinks.map((link) => (
             <NavLink key={link.href} href={link.href} exact={link.href === "/"}>
               {link.label}

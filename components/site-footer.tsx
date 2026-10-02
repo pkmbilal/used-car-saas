@@ -43,7 +43,7 @@ export function SiteFooter() {
         </div>
         {columns.map((column) => (
           <div key={column.title} className="flex flex-col gap-3">
-            <p className="mb-1 text-[11px] font-bold tracking-[0.15em] text-lime">{column.title}</p>
+            <p className="mb-1 text-[0.6875rem] font-bold tracking-[0.15em] text-lime">{column.title}</p>
             {column.links.map(([label, href]) => (
               <Link key={href} href={href} className="text-xs text-white/70 hover:text-lime">
                 {label}
@@ -53,7 +53,7 @@ export function SiteFooter() {
         ))}
       </div>
       <div className="border-t border-white/10">
-        <p className="mx-auto w-full max-w-6xl px-4 py-5 text-[11px] text-white/55 sm:px-6">
+        <p className="mx-auto w-full max-w-6xl px-4 py-5 text-[0.6875rem] text-white/55 sm:px-6">
           © {new Date().getFullYear()} DriveLoop. All rights reserved.
         </p>
       </div>

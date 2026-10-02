@@ -35,8 +35,8 @@ export function SpecGrid({ specs }: { specs: Spec[] }) {
               {spec.icon}
             </span>
             <div className="min-w-0">
-              <dt className="text-[11.5px] text-muted-foreground">{spec.label}</dt>
-              <dd className="mt-0.5 truncate text-[13px] font-semibold">{spec.value}</dd>
+              <dt className="text-[0.71875rem] text-muted-foreground">{spec.label}</dt>
+              <dd className="mt-0.5 truncate text-[0.8125rem] font-semibold">{spec.value}</dd>
             </div>
           </div>
         ))}
@@ -94,7 +94,7 @@ export function ListingDescription({ text }: { text?: string | null }) {
   return (
     <section>
       <h2 className="text-lg font-semibold">Description</h2>
-      <p className="mt-3 max-w-xl text-[13px] leading-relaxed whitespace-pre-line text-ink/75">{text}</p>
+      <p className="mt-3 max-w-xl text-[0.8125rem] leading-relaxed whitespace-pre-line text-ink/75">{text}</p>
     </section>
   );
 }

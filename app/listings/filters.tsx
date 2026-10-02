@@ -14,7 +14,7 @@ import { BODY_TYPES, bodyTypeLabel, capitalize, FEATURES, FUEL_TYPES, TRANSMISSI
 import type { ListingFilters } from "@/lib/listings";
 
 const inputClass = "h-9 bg-white text-xs";
-const labelClass = "text-[11px] font-semibold text-ink";
+const labelClass = "text-[0.6875rem] font-semibold text-ink";
 
 function Range({
   label,
@@ -35,7 +35,7 @@ function Range({
     <fieldset className="flex flex-col gap-1.5">
       <legend className="mb-1.5 flex w-full items-center justify-between">
         <span className={labelClass}>{label}</span>
-        {hint && <span className="text-[10px] text-muted-foreground">{hint}</span>}
+        {hint && <span className="text-[0.625rem] text-muted-foreground">{hint}</span>}
       </legend>
       <div className="flex items-center gap-2">
         <Input name={minName} type="number" min={0} placeholder="Min" aria-label={`${label} min`} defaultValue={min} className={inputClass} />
@@ -82,7 +82,7 @@ export function Filters({
       <div className="flex items-center gap-2 border-b border-line pb-3">
         <SlidersHorizontal className="size-4 text-brand-600" />
         <span className="text-sm font-bold">Filters</span>
-        <Button asChild variant="link" size="sm" className="ml-auto h-auto p-0 text-[11px] font-semibold text-brand">
+        <Button asChild variant="link" size="sm" className="ml-auto h-auto p-0 text-[0.6875rem] font-semibold text-brand">
           <Link href="/listings">Clear All</Link>
         </Button>
       </div>

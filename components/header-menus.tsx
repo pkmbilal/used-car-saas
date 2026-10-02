@@ -32,7 +32,7 @@ export function UserMenu({ name, links }: { name: string; links: HeaderLink[] })
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="h-9 max-w-48 gap-1.5 px-3 text-[13px] text-white hover:bg-white/10 hover:text-white aria-expanded:bg-white/10 aria-expanded:text-white">
+        <Button variant="ghost" className="h-9 max-w-48 gap-1.5 px-3 text-[0.8125rem] text-white hover:bg-white/10 hover:text-white aria-expanded:bg-white/10 aria-expanded:text-white">
           <span className="truncate">{name}</span>
           <ChevronDown className="size-3.5" />
         </Button>

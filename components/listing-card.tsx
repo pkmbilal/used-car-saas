@@ -39,7 +39,7 @@ export function ListingCard({ listing, favorited, sizes }: CardProps) {
               />
             )}
             {isFeatured(listing) && (
-              <Badge className="absolute top-3 left-3 bg-lime text-[11px] font-semibold text-on-lime">
+              <Badge className="absolute top-3 left-3 bg-lime text-[0.6875rem] font-semibold text-on-lime">
                 Featured
               </Badge>
             )}
@@ -48,7 +48,7 @@ export function ListingCard({ listing, favorited, sizes }: CardProps) {
             <p className="truncate text-sm font-semibold">
               {listing.make} {listing.model}
             </p>
-            <p className="mt-2 flex flex-wrap gap-x-2 text-[11px] text-muted-foreground">
+            <p className="mt-2 flex flex-wrap gap-x-2 text-[0.6875rem] text-muted-foreground">
               <span>{listing.year}</span>
               <span aria-hidden>·</span>
               <span>{formatKm(listing.mileage)}</span>
@@ -59,10 +59,10 @@ export function ListingCard({ listing, favorited, sizes }: CardProps) {
                 </>
               )}
             </p>
-            <p className="mt-3 text-[15px] font-bold text-brand">
+            <p className="mt-3 text-[0.9375rem] font-bold text-brand">
               {formatSAR(listing.price)}
             </p>
-            <div className="mt-auto flex items-center gap-4 pt-3 text-[11px] text-muted-foreground">
+            <div className="mt-auto flex items-center gap-4 pt-3 text-[0.6875rem] text-muted-foreground">
               {listing.body_type && (
                 <span className="flex items-center gap-1.5">
                   <Car className="size-3" />
