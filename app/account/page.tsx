@@ -39,6 +39,15 @@ export default async function AccountPage({ searchParams }: PageProps<"/account"
         </p>
       )}
 
+      {profile.role === "seller" && profile.plan === "free" && (
+        <p className="mt-8 text-sm">
+          Selling as a business?{" "}
+          <Link href="/account/dealer-application" className="font-medium underline">
+            Apply for a dealer account
+          </Link>
+        </p>
+      )}
+
       {profile.role === "seller" && !profile.id_verified_at && (
         <p className="mt-8 text-sm">
           Build buyer trust with an ID-verified badge.{" "}

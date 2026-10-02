@@ -12,6 +12,7 @@ const sections = [
   { href: "/admin/listings", label: "Listings" },
   { href: "/admin/users", label: "Users" },
   { href: "/admin/verifications", label: "Verifications" },
+  { href: "/admin/dealers", label: "Dealers" },
 ];
 
 export default async function AdminLayout({ children }: LayoutProps<"/admin">) {

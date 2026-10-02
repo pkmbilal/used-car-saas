@@ -140,3 +140,46 @@ export function PlanSelect({
     </span>
   );
 }
+
+// Approves a dealer application on the chosen plan (defaults to the one asked for).
+export function ApproveDealerButton({
+  plan,
+  plans,
+  action,
+}: {
+  plan: string;
+  plans: { value: string; label: string }[];
+  action: (plan: string) => Promise<AdminResult>;
+}) {
+  const { pending, error, run } = useAdminAction();
+  const [value, setValue] = useState(plan);
+
+  return (
+    <span className="inline-flex flex-col items-end gap-1">
+      <span className="flex items-center gap-2">
+        <select
+          value={value}
+          disabled={pending}
+          aria-label="Plan to grant"
+          onChange={(event) => setValue(event.target.value)}
+          className="rounded-md border border-zinc-300 px-2 py-1 text-sm disabled:opacity-50 dark:border-zinc-700 dark:bg-zinc-900"
+        >
+          {plans.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </select>
+        <button
+          type="button"
+          disabled={pending}
+          onClick={() => run(() => action(value))}
+          className={buttonClass}
+        >
+          Approve
+        </button>
+      </span>
+      {error && <span className="text-sm text-red-600">{error}</span>}
+    </span>
+  );
+}

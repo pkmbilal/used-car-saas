@@ -2,9 +2,11 @@
 
 import { revalidatePath } from "next/cache";
 import {
+  approveDealerApplication,
   approveIdVerification,
   dismissReports,
   featureListing,
+  rejectDealerApplication,
   rejectIdVerification,
   removeListing,
   restoreListing,
@@ -65,4 +67,12 @@ export async function rejectIdVerificationAction(requestId: string, reason: stri
 
 export async function revokeIdVerificationAction(userId: string) {
   return revalidating(revokeIdVerification(userId));
+}
+
+export async function approveDealerApplicationAction(applicationId: string, plan: string) {
+  return revalidating(approveDealerApplication(applicationId, plan));
+}
+
+export async function rejectDealerApplicationAction(applicationId: string, reason: string) {
+  return revalidating(rejectDealerApplication(applicationId, reason));
 }

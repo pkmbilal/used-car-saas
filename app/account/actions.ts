@@ -4,6 +4,12 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/auth";
 import { isCity } from "@/lib/cities";
+import {
+  parseDealerApplication,
+  requestDealerDocUpload,
+  submitDealerApplication,
+  type DealerDocKeys,
+} from "@/lib/dealer-application";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 
@@ -76,4 +82,47 @@ export async function becomeSeller(
 
   revalidatePath("/", "layout");
   redirect("/dashboard");
+}
+
+// ---------------------------------------------------------------------------
+// Dealer applications: the browser asks for presigned URLs, PUTs documents
+// straight to the private bucket, then submits the form with their keys.
+// ---------------------------------------------------------------------------
+
+export async function requestDealerDocUploadAction(contentType: string, size: number) {
+  const current = await getCurrentUser();
+  if (!current) return { error: "Sign in again to upload documents." };
+  if (current.profile.plan !== "free") return { error: "You're already on a dealer plan." };
+  return requestDealerDocUpload(current.user.id, contentType, size);
+}
+
+// Works for new sellers (from /account/become-seller) and existing ones: it
+// saves the contact details, makes the user a seller, then files the application.
+export async function submitDealerApplicationAction(
+  formData: FormData,
+  docKeys: DealerDocKeys,
+): Promise<ProfileFormState> {
+  const current = await getCurrentUser();
+  if (!current) redirect("/login?next=/account/dealer-application");
+  if (current.profile.suspended_at) return { error: "Your account is suspended." };
+  if (current.profile.plan !== "free") return { error: "You're already on a dealer plan." };
+
+  const profile = parseProfile(formData);
+  if ("error" in profile) return { error: profile.error };
+  const application = parseDealerApplication(formData);
+  if ("error" in application) return { error: application.error };
+
+  // Same role flip as becomeSeller: users can't change their own role under RLS.
+  const admin = createAdminClient();
+  const { error } = await admin
+    .from("profiles")
+    .update({ ...profile.data, role: "seller" })
+    .eq("id", current.user.id);
+  if (error) return { error: "Could not save your details. Try again." };
+
+  const submitError = await submitDealerApplication(current.user.id, application.data, docKeys);
+  revalidatePath("/", "layout");
+  if (submitError) return { error: submitError };
+
+  redirect("/account/dealer-application");
 }

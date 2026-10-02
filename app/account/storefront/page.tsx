@@ -31,8 +31,10 @@ export default async function StorefrontPage() {
       ) : (
         <p className="mt-8 rounded-md bg-zinc-100 px-4 py-3 text-sm dark:bg-zinc-800">
           Storefronts with your business name, logo and showroom details are part of the{" "}
-          {PLAN_LABELS.dealer} plans. You&apos;re on the {PLAN_LABELS[profile.plan]} plan. Contact
-          us to upgrade.
+          {PLAN_LABELS.dealer} plans. You&apos;re on the {PLAN_LABELS[profile.plan]} plan.{" "}
+          <Link href="/account/dealer-application" className="font-medium underline">
+            Apply for a dealer account
+          </Link>
         </p>
       )}
     </main>

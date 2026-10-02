@@ -355,6 +355,78 @@ export type Database = {
           },
         ];
       };
+      dealer_applications: {
+        Row: {
+          id: string;
+          user_id: string;
+          business_name: string;
+          showroom_address: string | null;
+          cr_number: string | null;
+          vat_number: string | null;
+          muroor_number: string | null;
+          requested_plan: "dealer" | "dealer_pro";
+          cr_doc_key: string | null;
+          vat_doc_key: string | null;
+          muroor_doc_key: string | null;
+          status: "pending" | "approved" | "rejected";
+          reject_reason: string | null;
+          created_at: string;
+          reviewed_at: string | null;
+          reviewed_by: string | null;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          business_name: string;
+          showroom_address?: string | null;
+          cr_number?: string | null;
+          vat_number?: string | null;
+          muroor_number?: string | null;
+          requested_plan: "dealer" | "dealer_pro";
+          cr_doc_key?: string | null;
+          vat_doc_key?: string | null;
+          muroor_doc_key?: string | null;
+          status?: "pending" | "approved" | "rejected";
+          reject_reason?: string | null;
+          created_at?: string;
+          reviewed_at?: string | null;
+          reviewed_by?: string | null;
+        };
+        Update: {
+          id?: string;
+          user_id?: string;
+          business_name?: string;
+          showroom_address?: string | null;
+          cr_number?: string | null;
+          vat_number?: string | null;
+          muroor_number?: string | null;
+          requested_plan?: "dealer" | "dealer_pro";
+          cr_doc_key?: string | null;
+          vat_doc_key?: string | null;
+          muroor_doc_key?: string | null;
+          status?: "pending" | "approved" | "rejected";
+          reject_reason?: string | null;
+          created_at?: string;
+          reviewed_at?: string | null;
+          reviewed_by?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "dealer_applications_user_id_fkey";
+            columns: ["user_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "dealer_applications_reviewed_by_fkey";
+            columns: ["reviewed_by"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       saved_searches: {
         Row: {
           id: string;
