@@ -31,7 +31,7 @@ import { Separator } from "@/components/ui/separator";
 import { getCurrentUser } from "@/lib/auth";
 import { getFavoriteIds } from "@/lib/favorites";
 import { formatKm, formatMonthYear, formatSAR, formatViews, whatsappUrl } from "@/lib/format";
-import { bodyTypeLabel, capitalize, featureLabel } from "@/lib/listing-options";
+import { bodyTypeLabel, capitalize } from "@/lib/listing-options";
 import { getListingViews, getPublicListing, getSimilarListings, isFeatured } from "@/lib/listings";
 import { getStorefront } from "@/lib/storefront";
 import { Gallery } from "./gallery";
@@ -156,7 +156,7 @@ export default async function ListingPage({ params }: PageProps<"/listings/[id]"
             featured={featured}
           />
           <SpecGrid specs={specs} />
-          <ListingFeatures features={listing.features.map(featureLabel)} />
+          <ListingFeatures features={listing.features} />
           <ListingDescription text={optionalText(listing, "description")} />
         </div>
 

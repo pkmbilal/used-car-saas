@@ -1,4 +1,21 @@
 import type { ReactNode } from "react";
+import {
+  Armchair,
+  Bluetooth,
+  Camera,
+  Check,
+  Disc3,
+  Gauge,
+  KeyRound,
+  MonitorSmartphone,
+  Navigation,
+  Radar,
+  Smartphone,
+  Snowflake,
+  Sun,
+  type LucideIcon,
+} from "lucide-react";
+import { featureLabel, type Feature } from "@/lib/listing-options";
 
 // Spec tiles, a features list and a free-text description for the listing
 // page. Features and description render nothing when the listing has none.
@@ -28,19 +45,44 @@ export function SpecGrid({ specs }: { specs: Spec[] }) {
   );
 }
 
-export function ListingFeatures({ features }: { features?: string[] | null }) {
-  if (!features?.length) return null;
+// Typed by Feature so a new feature without an icon fails typecheck.
+const FEATURE_ICONS: Record<Feature, LucideIcon> = {
+  sunroof: Sun,
+  leather_seats: Armchair,
+  navigation: Navigation,
+  rear_camera: Camera,
+  bluetooth: Bluetooth,
+  parking_sensors: Radar,
+  cruise_control: Gauge,
+  apple_carplay: Smartphone,
+  android_auto: MonitorSmartphone,
+  keyless_entry: KeyRound,
+  climate_control: Snowflake,
+  alloy_wheels: Disc3,
+};
+
+function featureIcon(value: string): LucideIcon {
+  return FEATURE_ICONS[value as Feature] ?? Check;
+}
+
+export function ListingFeatures({ features }: { features: readonly string[] }) {
+  if (!features.length) return null;
 
   return (
     <section>
       <h2 className="text-lg font-semibold">Features</h2>
       <ul className="mt-4 grid gap-x-5 gap-y-3 sm:grid-cols-3">
-        {features.map((feature) => (
-          <li key={feature} className="flex items-center gap-3 text-xs text-ink/85">
-            <span className="flex size-6 shrink-0 items-center justify-center rounded-md bg-mint text-brand-600">✓</span>
-            {feature}
-          </li>
-        ))}
+        {features.map((feature) => {
+          const Icon = featureIcon(feature);
+          return (
+            <li key={feature} className="flex items-center gap-3 text-xs text-ink/85">
+              <span className="flex size-6 shrink-0 items-center justify-center rounded-md bg-mint text-brand-600">
+                <Icon className="size-3.5" strokeWidth={1.8} />
+              </span>
+              {featureLabel(feature)}
+            </li>
+          );
+        })}
       </ul>
     </section>
   );
