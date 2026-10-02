@@ -114,3 +114,31 @@ export function cityHref(city: City): string {
 export function citiesByCount(counts: Map<string, number>): City[] {
   return [...CITIES].sort((a, b) => (counts.get(b) ?? 0) - (counts.get(a) ?? 0));
 }
+
+export const CITY_SORTS = {
+  most: "Most Cars",
+  fewest: "Fewest Cars",
+  name_asc: "Name: A to Z",
+  name_desc: "Name: Z to A",
+} as const;
+
+export type CitySort = keyof typeof CITY_SORTS;
+
+export function isCitySort(value: unknown): value is CitySort {
+  return typeof value === "string" && Object.hasOwn(CITY_SORTS, value);
+}
+
+// Every city in the given order; count ties keep the CITIES order.
+export function sortCities(counts: Map<string, number>, sort: CitySort): City[] {
+  const count = (city: City) => counts.get(city) ?? 0;
+  switch (sort) {
+    case "most":
+      return citiesByCount(counts);
+    case "fewest":
+      return [...CITIES].sort((a, b) => count(a) - count(b));
+    case "name_asc":
+      return [...CITIES].sort((a, b) => a.localeCompare(b, "en"));
+    case "name_desc":
+      return [...CITIES].sort((a, b) => b.localeCompare(a, "en"));
+  }
+}
