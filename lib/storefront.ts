@@ -1,6 +1,7 @@
 import "server-only";
 import { isDealerPlan, type Plan } from "@/lib/plans";
 import { publicUrl } from "@/lib/r2";
+import { createClient } from "@/lib/supabase/server";
 import {
   ABOUT_MAX,
   BUSINESS_NAME_MAX,
@@ -39,6 +40,30 @@ export function getStorefront(profile: StorefrontProfile): Storefront | null {
     showroomAddress: profile.showroom_address,
     logoUrl: profile.logo_key ? publicUrl(profile.logo_key) : null,
   };
+}
+
+export type DealerSummary = Awaited<ReturnType<typeof getDealerStorefronts>>[number];
+
+// Public dealer directory: every non-suspended seller on a dealer plan.
+export async function getDealerStorefronts() {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("profiles")
+    .select(
+      "id, full_name, city, created_at, email_verified_at, id_verified_at, plan, business_name, about, logo_key, showroom_address, listings!listings_seller_id_fkey(count)",
+    )
+    .eq("role", "seller")
+    .in("plan", ["dealer", "dealer_pro"])
+    .is("suspended_at", null)
+    .eq("listings.status", "active")
+    .order("business_name", { ascending: true });
+  if (error) throw error;
+
+  return data.flatMap(({ listings, ...profile }) => {
+    const storefront = getStorefront(profile);
+    if (!storefront) return [];
+    return [{ id: profile.id, storefront, profile, activeListings: listings[0]?.count ?? 0 }];
+  });
 }
 
 export function parseStorefront(

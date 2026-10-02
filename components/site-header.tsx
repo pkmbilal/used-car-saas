@@ -13,6 +13,7 @@ export async function SiteHeader() {
   const mainLinks: HeaderLink[] = [
     { href: "/", label: "Home" },
     { href: "/listings", label: "Buy Cars" },
+    { href: "/dealers", label: "Dealers" },
     isSeller
       ? { href: "/dashboard", label: "My Listings" }
       : { href: "/account/become-seller", label: "Sell Your Car" },
