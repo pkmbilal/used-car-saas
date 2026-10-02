@@ -19,6 +19,7 @@ export function FormSelect({
   options,
   icon,
   className,
+  onValueChange,
 }: {
   id?: string;
   name: string;
@@ -27,12 +28,20 @@ export function FormSelect({
   options: FormSelectOption[];
   icon?: React.ReactNode;
   className?: string;
+  // Called with undefined when "Any" is picked.
+  onValueChange?: (value: string | undefined) => void;
 }) {
   const [value, setValue] = useState(defaultValue || ANY);
 
   return (
     <>
-      <Select value={value} onValueChange={setValue}>
+      <Select
+        value={value}
+        onValueChange={(next) => {
+          setValue(next);
+          onValueChange?.(next === ANY ? undefined : next);
+        }}
+      >
         <SelectTrigger id={id} className={cn("h-9 w-full bg-white text-xs data-[size=default]:h-9", className)}>
           <span className="flex min-w-0 items-center gap-2">
             {icon}

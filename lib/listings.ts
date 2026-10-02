@@ -172,6 +172,7 @@ export type Sort = (typeof SORTS)[number];
 export type ListingFilters = {
   q?: string;
   make?: string;
+  model?: string;
   city?: string;
   fuelType?: Listing["fuel_type"];
   minPrice?: number;
@@ -198,7 +199,10 @@ function numberParam(searchParams: SearchParams, key: string): number | undefine
 
 // Invalid values are dropped rather than erroring: these come from the URL.
 export function parseListingFilters(searchParams: SearchParams): ListingFilters {
-  const make = param(searchParams, "make");
+  const rawMake = param(searchParams, "make");
+  const make = isMake(rawMake) ? rawMake : undefined;
+  // A model only counts alongside its make, and only if it's a known one.
+  const model = make ? matchOption(modelsFor(make), param(searchParams, "model") ?? null) : null;
   const city = param(searchParams, "city");
   const fuelType = param(searchParams, "fuel_type");
   const sort = param(searchParams, "sort");
@@ -206,7 +210,8 @@ export function parseListingFilters(searchParams: SearchParams): ListingFilters 
 
   return {
     q: param(searchParams, "q")?.trim().slice(0, 100) || undefined,
-    make: isMake(make) ? make : undefined,
+    make,
+    model: model ?? undefined,
     city: isCity(city) ? city : undefined,
     fuelType: includes(FUEL_TYPES, fuelType) ? fuelType : undefined,
     minPrice: numberParam(searchParams, "min_price"),
@@ -235,6 +240,7 @@ export function listingFiltersToParams(filters: ListingFilters): Record<string, 
   const entries: [string, string | number | undefined][] = [
     ["q", filters.q],
     ["make", filters.make],
+    ["model", filters.model],
     ["city", filters.city],
     ["fuel_type", filters.fuelType],
     ["min_price", filters.minPrice],
@@ -253,6 +259,7 @@ interface ListingFilterQuery {
   eq(column: "status" | "make" | "city" | "fuel_type", value: string): this;
   gte(column: "price" | "year", value: number): this;
   lte(column: "price" | "year", value: number): this;
+  ilike(column: "model", pattern: string): this;
   textSearch(column: "search_vector", query: string, options: { config: string }): this;
 }
 
@@ -265,6 +272,8 @@ export function applyListingFilters<Q extends ListingFilterQuery>(
   const tsQuery = filters.q ? toPrefixTsQuery(filters.q) : null;
   if (tsQuery) query = query.textSearch("search_vector", tsQuery, { config: "simple" });
   if (filters.make) query = query.eq("make", filters.make);
+  // Case-insensitive exact match; known model names contain no % or _.
+  if (filters.model) query = query.ilike("model", filters.model);
   if (filters.city) query = query.eq("city", filters.city);
   if (filters.fuelType) query = query.eq("fuel_type", filters.fuelType);
   if (filters.minPrice !== undefined) query = query.gte("price", filters.minPrice);

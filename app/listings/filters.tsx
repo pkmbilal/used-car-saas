@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { Search, SlidersHorizontal } from "lucide-react";
 import { FormSelect } from "@/components/form-select";
+import { MakeModelSelects } from "@/components/make-model-selects";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -11,7 +12,6 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { CITIES } from "@/lib/cities";
 import { capitalize, FUEL_TYPES } from "@/lib/listing-options";
 import type { ListingFilters } from "@/lib/listings";
-import { MAKES } from "@/lib/makes";
 
 const inputClass = "h-9 bg-white text-xs";
 const labelClass = "text-[11px] font-semibold text-ink";
@@ -85,18 +85,16 @@ export function Filters({
           className={inputClass}
         />
       </div>
-      <div className="flex flex-col gap-1.5">
-        <Label htmlFor={id("make")} className={labelClass}>
-          Make
-        </Label>
-        <FormSelect
-          id={id("make")}
-          name="make"
-          defaultValue={filters.make}
-          placeholder="Any"
-          options={MAKES.map((make) => ({ value: make, label: make }))}
-        />
-      </div>
+      <MakeModelSelects
+        make={filters.make}
+        model={filters.model}
+        makeId={id("make")}
+        modelId={id("model")}
+        makePlaceholder="Any"
+        modelPlaceholder="Any"
+        fieldClassName="flex flex-col gap-1.5"
+        labelClassName={labelClass}
+      />
       <div className="flex flex-col gap-1.5">
         <Label htmlFor={id("city")} className={labelClass}>
           City

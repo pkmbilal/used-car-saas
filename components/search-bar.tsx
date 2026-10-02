@@ -1,12 +1,12 @@
 import { MapPin, Search } from "lucide-react";
 import { FormSelect, type FormSelectOption } from "@/components/form-select";
+import { MakeModelSelects } from "@/components/make-model-selects";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { CITIES } from "@/lib/cities";
 import { formatSAR } from "@/lib/format";
 import type { ListingFilters } from "@/lib/listings";
-import { MAKES } from "@/lib/makes";
 import { cn } from "@/lib/utils";
 
 const MAX_PRICES = [50_000, 100_000, 150_000, 200_000, 300_000, 500_000];
@@ -22,10 +22,13 @@ function withCurrent(options: FormSelectOption[], value: number | undefined, lab
   return [{ value: String(value), label: label(value) }, ...options];
 }
 
+const fieldClass = "flex min-w-0 flex-col gap-2 lg:border-r lg:border-line lg:pr-3";
+const labelClass = "text-[11px] font-semibold text-ink";
+
 function Field({ id, label, children }: { id: string; label: string; children: React.ReactNode }) {
   return (
-    <div className="flex min-w-0 flex-col gap-2 lg:border-r lg:border-line lg:pr-3">
-      <Label htmlFor={id} className="text-[11px] font-semibold text-ink">
+    <div className={fieldClass}>
+      <Label htmlFor={id} className={labelClass}>
         {label}
       </Label>
       {children}
@@ -43,18 +46,19 @@ export function SearchBar({ filters, className }: { filters?: ListingFilters; cl
       <form
         method="get"
         action="/listings"
-        className="grid gap-4 p-5 sm:grid-cols-2 lg:grid-cols-[repeat(4,minmax(0,1fr))_auto] lg:items-end lg:gap-3 lg:pl-7"
+        className="grid gap-4 p-5 sm:grid-cols-2 lg:grid-cols-[repeat(5,minmax(0,1fr))_auto] lg:items-end lg:gap-3 lg:pl-7"
       >
         {filters?.sort && filters.sort !== "newest" && <input type="hidden" name="sort" value={filters.sort} />}
-        <Field id="search-make" label="Make">
-          <FormSelect
-            id="search-make"
-            name="make"
-            defaultValue={filters?.make}
-            placeholder="Any Make"
-            options={MAKES.map((make) => ({ value: make, label: make }))}
-          />
-        </Field>
+        <MakeModelSelects
+          make={filters?.make}
+          model={filters?.model}
+          makeId="search-make"
+          modelId="search-model"
+          makePlaceholder="Any Make"
+          modelPlaceholder="Any Model"
+          fieldClassName={fieldClass}
+          labelClassName={labelClass}
+        />
         <Field id="search-price" label="Max Price">
           <FormSelect
             id="search-price"

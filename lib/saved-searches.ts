@@ -62,6 +62,7 @@ export function describeFilters(filters: ListingFilters): string[] {
   return [
     filters.q ? `“${filters.q}”` : null,
     filters.make ?? null,
+    filters.model ?? null,
     filters.city ?? null,
     filters.fuelType ? capitalize(filters.fuelType) : null,
     priceRange(filters.minPrice, filters.maxPrice),
