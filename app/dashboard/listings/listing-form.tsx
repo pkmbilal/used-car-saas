@@ -4,28 +4,15 @@ import { useActionState } from "react";
 import { CITIES } from "@/lib/cities";
 import { capitalize, CONDITIONS, FUEL_TYPES } from "@/lib/listing-options";
 import type { ListingInput } from "@/lib/listings";
-import { MAKES } from "@/lib/makes";
 import type { ListingFormState } from "./actions";
+import { Field, inputClass } from "./form-fields";
+import { MakeModelFields } from "./make-model-fields";
 
 type Props = {
   listing?: ListingInput;
   action: (prev: ListingFormState, formData: FormData) => Promise<ListingFormState>;
   submitLabel: string;
 };
-
-const inputClass =
-  "rounded-md border border-zinc-300 px-3 py-2 dark:border-zinc-700 dark:bg-zinc-900";
-
-function Field({ id, label, children }: { id: string; label: string; children: React.ReactNode }) {
-  return (
-    <div className="flex flex-col gap-1">
-      <label htmlFor={id} className="text-sm font-medium">
-        {label}
-      </label>
-      {children}
-    </div>
-  );
-}
 
 function Select({
   id,
@@ -60,20 +47,7 @@ export function ListingForm({ listing, action, submitLabel }: Props) {
 
   return (
     <form action={formAction} className="grid gap-4 sm:grid-cols-2">
-      <Field id="make" label="Make">
-        <Select id="make" options={MAKES} defaultValue={listing?.make} placeholder="Choose a make" />
-      </Field>
-      <Field id="model" label="Model">
-        <input
-          id="model"
-          name="model"
-          required
-          maxLength={60}
-          placeholder="e.g. Camry"
-          defaultValue={listing?.model}
-          className={inputClass}
-        />
-      </Field>
+      <MakeModelFields make={listing?.make} model={listing?.model} />
       <Field id="year" label="Year">
         <input
           id="year"

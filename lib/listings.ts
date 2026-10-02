@@ -2,7 +2,7 @@ import "server-only";
 import { cache } from "react";
 import { CITIES, isCity } from "@/lib/cities";
 import { CONDITIONS, FUEL_TYPES } from "@/lib/listing-options";
-import { isMake, MAKES } from "@/lib/makes";
+import { isMake, MAKES, modelsFor } from "@/lib/makes";
 import { publicUrl } from "@/lib/r2";
 import { createClient } from "@/lib/supabase/server";
 import type { Database } from "@/lib/supabase/database.types";
@@ -51,7 +51,9 @@ export function parseListingFields(
   get: (field: keyof ListingInput) => string | null,
 ): { data: ListingInput } | ListingFieldError {
   const make = matchOption(MAKES, get("make"));
-  const model = (get("model") ?? "").trim();
+  const rawModel = (get("model") ?? "").trim();
+  // Known models get their canonical spelling; anything else is kept as typed.
+  const model = (make && matchOption(modelsFor(make), rawModel)) || rawModel;
   const year = parseWholeNumber(get("year"));
   const mileage = parseWholeNumber(get("mileage"));
   const price = parseWholeNumber(get("price"));
