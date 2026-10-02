@@ -10,7 +10,15 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { CITIES } from "@/lib/cities";
 import { formatKm } from "@/lib/format";
-import { BODY_TYPES, bodyTypeLabel, capitalize, FEATURES, FUEL_TYPES, TRANSMISSIONS } from "@/lib/listing-options";
+import {
+  BODY_TYPES,
+  bodyTypeLabel,
+  capitalize,
+  CONDITIONS,
+  FEATURES,
+  FUEL_TYPES,
+  TRANSMISSIONS,
+} from "@/lib/listing-options";
 import type { ListingFilters } from "@/lib/listings";
 
 const inputClass = "h-9 bg-white text-xs";
@@ -47,6 +55,7 @@ function Range({
 }
 
 export type FilterCounts = {
+  conditions: Record<string, number>;
   fuelTypes: Record<string, number>;
   bodyTypes: Record<string, number>;
   transmissions: Record<string, number>;
@@ -136,6 +145,13 @@ export function Filters({
           options={mileageOptions(filters.maxMileage)}
         />
       </div>
+      <CheckboxGroup
+        {...groupProps}
+        title="Condition"
+        name="condition"
+        selected={filters.conditions}
+        options={CONDITIONS.map((value) => ({ value, label: capitalize(value), count: counts.conditions[value] ?? 0 }))}
+      />
       <CheckboxGroup
         {...groupProps}
         title="Body Style"

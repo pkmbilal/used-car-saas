@@ -9,6 +9,7 @@ export const FUEL_TYPES = ["petrol", "diesel", "hybrid", "electric"] as const sa
 export const TRANSMISSIONS = ["automatic", "manual"] as const satisfies readonly NonNullable<ListingRow["transmission"]>[];
 export const BODY_TYPES = ["sedan", "suv", "hatchback", "coupe", "pickup", "van"] as const satisfies readonly NonNullable<ListingRow["body_type"]>[];
 
+export type Condition = (typeof CONDITIONS)[number];
 export type FuelType = (typeof FUEL_TYPES)[number];
 export type Transmission = (typeof TRANSMISSIONS)[number];
 export type BodyType = (typeof BODY_TYPES)[number];

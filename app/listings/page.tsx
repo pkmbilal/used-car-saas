@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
+import Link from "next/link";
+import { SearchX } from "lucide-react";
 import { ListingGrid } from "@/components/listing-card";
 import { Pagination } from "@/components/pagination";
 import { SaveSearchButton } from "@/components/save-search-button";
 import { SearchBar } from "@/components/search-bar";
+import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { getCurrentUser } from "@/lib/auth";
 import { getViewerFavoriteIds } from "@/lib/favorites";
@@ -20,8 +23,10 @@ import {
   listingsHref,
   MAX_SAVED_SEARCH_NAME,
 } from "@/lib/saved-searches";
+import { ActiveFilters } from "./active-filters";
 import { Filters } from "./filters";
 import { MobileFilters } from "./mobile-filters";
+import { RememberSearch } from "./remember-search";
 import { SortSelect } from "./sort-select";
 
 export const metadata: Metadata = {
@@ -55,7 +60,15 @@ export default async function ListingsPage({ searchParams }: PageProps<"/listing
     return search ? `/listings?${search}` : "/listings";
   }
 
+  // Featured cars sit in their own strip above, so don't repeat them in the grid.
+  const featuredIds = new Set(featured.map((listing) => listing.id));
+  const results = listings.filter((listing) => !featuredIds.has(listing.id));
+  const filtered = hasActiveFilters(filters);
+  // Past-the-end pages also report total 0 (see searchListings), so only page 1 counts as "no results".
+  const noResults = total === 0 && filters.page === 1;
+
   const counts = {
+    conditions: Object.fromEntries(facets.conditions),
     fuelTypes: Object.fromEntries(facets.fuelTypes),
     bodyTypes: Object.fromEntries(facets.bodyTypes),
     transmissions: Object.fromEntries(facets.transmissions),
@@ -63,6 +76,7 @@ export default async function ListingsPage({ searchParams }: PageProps<"/listing
 
   return (
     <main className="light bg-canvas text-ink">
+      <RememberSearch href={pageHref(filters.page)} />
       <section className="relative overflow-hidden bg-charcoal">
         <div className="absolute inset-y-0 right-0 w-2/3 bg-[radial-gradient(ellipse_at_70%_60%,rgba(111,224,124,.16),transparent_60%)]" />
         <div className="relative mx-auto w-full max-w-6xl px-4 pt-10 pb-20 sm:px-6">
@@ -95,7 +109,7 @@ export default async function ListingsPage({ searchParams }: PageProps<"/listing
               {filters.q && <span className="font-normal text-muted-foreground"> matching “{filters.q}”</span>}
             </p>
             <div className="flex flex-wrap items-center gap-3">
-              {hasActiveFilters(filters) && (
+              {filtered && (
                 <SaveSearchButton
                   key={searchHref}
                   params={searchParamsForSave}
@@ -108,6 +122,24 @@ export default async function ListingsPage({ searchParams }: PageProps<"/listing
               <SortSelect value={filters.sort} />
             </div>
           </div>
+          <ActiveFilters filters={filters} />
+
+          {noResults && (
+            <Card className="mt-4 items-center gap-2 rounded-lg px-6 py-12 text-center shadow-[0_2px_10px_rgba(20,30,25,.05)] ring-0">
+              <SearchX className="size-8 text-brand-600" strokeWidth={1.6} />
+              <p className="mt-1 text-sm font-semibold">No cars match these filters</p>
+              <p className="max-w-sm text-xs text-muted-foreground">
+                {filtered
+                  ? "Try removing a filter or widening your price and year range. Save this search to hear when a match is listed."
+                  : "There are no cars for sale right now. Check back soon."}
+              </p>
+              {filtered && (
+                <Button asChild size="sm" className="mt-3 text-xs font-semibold">
+                  <Link href="/listings">Clear all filters</Link>
+                </Button>
+              )}
+            </Card>
+          )}
 
           {featured.length > 0 && (
             <div className="mt-4 mb-8 border-b border-line pb-8">
@@ -116,7 +148,11 @@ export default async function ListingsPage({ searchParams }: PageProps<"/listing
             </div>
           )}
           <div className="mt-4">
-            <ListingGrid listings={listings} favoriteIds={favoriteIds} columns={3} />
+            <ListingGrid
+              listings={results}
+              // The no-results card covers page 1; otherwise this is a page past the end.
+              empty={noResults || featured.length > 0 ? "" : "No cars on this page."}
+              favoriteIds={favoriteIds} columns={3} />
           </div>
           <Pagination page={filters.page} pageCount={pageCount} hrefFor={pageHref} />
         </section>

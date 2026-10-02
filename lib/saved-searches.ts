@@ -68,6 +68,7 @@ export function describeFilters(filters: ListingFilters): string[] {
     filters.make ?? null,
     filters.model ?? null,
     filters.city ?? null,
+    joined(filters.conditions.map(capitalize)),
     joined(filters.bodyTypes.map(bodyTypeLabel)),
     joined(filters.fuelTypes.map(capitalize)),
     joined(filters.transmissions.map(capitalize)),

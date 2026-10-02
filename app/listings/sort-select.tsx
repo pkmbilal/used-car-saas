@@ -8,6 +8,8 @@ const listingSortLabels = {
   newest: "Newest First",
   price_asc: "Price: Low to High",
   price_desc: "Price: High to Low",
+  mileage_asc: "Mileage: Lowest First",
+  year_desc: "Year: Newest First",
 } as const;
 
 // Changing the sort keeps the filters but starts again from page 1. The first

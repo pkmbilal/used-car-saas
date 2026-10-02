@@ -8,6 +8,7 @@ import {
   FUEL_TYPES,
   TRANSMISSIONS,
   type BodyType,
+  type Condition,
   type Feature,
   type FuelType,
   type Transmission,
@@ -177,21 +178,36 @@ export async function getSellerListings(
   }));
 }
 
-// RLS-scoped: 0 unless the signed-in user owns the listing.
-export async function getListingViews(listingId: string): Promise<number> {
+export type ListingStats = { views: number; calls: number; whatsapps: number };
+
+// RLS-scoped: all zeros unless the signed-in user owns the listing.
+export async function getListingStats(listingId: string): Promise<ListingStats> {
   const supabase = await createClient();
   const { data } = await supabase
     .from("listing_view_counts")
-    .select("views")
+    .select("views, calls, whatsapps")
     .eq("listing_id", listingId)
     .maybeSingle();
-  return data?.views ?? 0;
+  return data ?? { views: 0, calls: 0, whatsapps: 0 };
 }
 
 // Best effort: a failed count must never break the listing page.
 export async function recordListingView(listingId: string): Promise<void> {
   const supabase = await createClient();
   await supabase.rpc("increment_listing_view", { p_listing_id: listingId });
+}
+
+export const CONTACT_KINDS = ["call", "whatsapp"] as const;
+export type ContactKind = (typeof CONTACT_KINDS)[number];
+
+export function isContactKind(value: unknown): value is ContactKind {
+  return includes(CONTACT_KINDS, value);
+}
+
+// Best effort, like recordListingView.
+export async function recordListingContact(listingId: string, kind: ContactKind): Promise<void> {
+  const supabase = await createClient();
+  await supabase.rpc("increment_listing_contact", { p_listing_id: listingId, p_kind: kind });
 }
 
 // Returns null unless the listing exists and belongs to the seller.
@@ -215,7 +231,7 @@ export async function getSellerListing(
 // ---------------------------------------------------------------------------
 
 export const PAGE_SIZE = 24;
-export const SORTS = ["newest", "price_asc", "price_desc"] as const;
+export const SORTS = ["newest", "price_asc", "price_desc", "mileage_asc", "year_desc"] as const;
 export type Sort = (typeof SORTS)[number];
 
 export type ListingFilters = {
@@ -223,6 +239,7 @@ export type ListingFilters = {
   make?: string;
   model?: string;
   city?: string;
+  conditions: Condition[];
   fuelTypes: FuelType[];
   bodyTypes: BodyType[];
   transmissions: Transmission[];
@@ -273,6 +290,7 @@ export function parseListingFilters(searchParams: SearchParams): ListingFilters 
     make,
     model: model ?? undefined,
     city: isCity(city) ? city : undefined,
+    conditions: listParam(searchParams, "condition", CONDITIONS),
     fuelTypes: listParam(searchParams, "fuel_type", FUEL_TYPES),
     bodyTypes: listParam(searchParams, "body_type", BODY_TYPES),
     transmissions: listParam(searchParams, "transmission", TRANSMISSIONS),
@@ -307,6 +325,7 @@ export function listingFiltersToParams(filters: ListingFilters): Record<string, 
     ["make", filters.make],
     ["model", filters.model],
     ["city", filters.city],
+    ["condition", list(filters.conditions)],
     ["fuel_type", list(filters.fuelTypes)],
     ["body_type", list(filters.bodyTypes)],
     ["transmission", list(filters.transmissions)],
@@ -326,6 +345,7 @@ export function listingFiltersToParams(filters: ListingFilters): Record<string, 
 // listings (full rows or a head-only count) can share the same filters.
 interface ListingFilterQuery {
   eq(column: "status" | "make" | "city", value: string): this;
+  in(column: "condition", values: readonly Condition[]): this;
   in(column: "fuel_type", values: readonly FuelType[]): this;
   in(column: "body_type", values: readonly BodyType[]): this;
   in(column: "transmission", values: readonly Transmission[]): this;
@@ -348,6 +368,7 @@ export function applyListingFilters<Q extends ListingFilterQuery>(
   // Case-insensitive exact match; known model names contain no % or _.
   if (filters.model) query = query.ilike("model", filters.model);
   if (filters.city) query = query.eq("city", filters.city);
+  if (filters.conditions.length) query = query.in("condition", filters.conditions);
   if (filters.fuelTypes.length) query = query.in("fuel_type", filters.fuelTypes);
   if (filters.bodyTypes.length) query = query.in("body_type", filters.bodyTypes);
   if (filters.transmissions.length) query = query.in("transmission", filters.transmissions);
@@ -369,12 +390,15 @@ export async function searchListings(
     filters,
   );
 
-  query =
-    filters.sort === "newest"
-      ? query.order("created_at", { ascending: false })
-      : query
-          .order("price", { ascending: filters.sort === "price_asc" })
-          .order("created_at", { ascending: false });
+  // Newest first breaks ties for every other sort.
+  if (filters.sort === "price_asc" || filters.sort === "price_desc") {
+    query = query.order("price", { ascending: filters.sort === "price_asc" });
+  } else if (filters.sort === "mileage_asc") {
+    query = query.order("mileage", { ascending: true });
+  } else if (filters.sort === "year_desc") {
+    query = query.order("year", { ascending: false });
+  }
+  query = query.order("created_at", { ascending: false });
 
   const from = (filters.page - 1) * PAGE_SIZE;
   const { data, count, error } = await query.range(from, from + PAGE_SIZE - 1);
@@ -421,6 +445,7 @@ export type FacetCounts = {
   total: number;
   makes: Map<string, number>;
   cities: Map<string, number>;
+  conditions: Map<Condition, number>;
   fuelTypes: Map<Listing["fuel_type"], number>;
   bodyTypes: Map<BodyType, number>;
   transmissions: Map<Transmission, number>;
@@ -441,13 +466,14 @@ export const getActiveFacetCounts = cache(async (): Promise<FacetCounts> => {
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("listings")
-    .select("make, city, fuel_type, body_type, transmission")
+    .select("make, city, condition, fuel_type, body_type, transmission")
     .eq("status", "active");
   if (error) throw error;
   return {
     total: data.length,
     makes: tally(data.map((row) => row.make)),
     cities: tally(data.map((row) => row.city)),
+    conditions: tally(data.map((row) => row.condition)),
     fuelTypes: tally(data.map((row) => row.fuel_type)),
     bodyTypes: tally(data.flatMap((row) => (row.body_type ? [row.body_type] : []))),
     transmissions: tally(data.flatMap((row) => (row.transmission ? [row.transmission] : []))),

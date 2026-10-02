@@ -1,7 +1,7 @@
 "use server";
 
 import { getCurrentUser } from "@/lib/auth";
-import { recordListingView } from "@/lib/listings";
+import { isContactKind, recordListingContact, recordListingView } from "@/lib/listings";
 import { parseReport } from "@/lib/moderation";
 import { createClient } from "@/lib/supabase/server";
 
@@ -36,4 +36,10 @@ const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 export async function recordView(listingId: string): Promise<void> {
   if (!UUID.test(listingId)) return;
   await recordListingView(listingId);
+}
+
+// Same rules as recordView, for Call / WhatsApp taps.
+export async function recordContact(listingId: string, kind: string): Promise<void> {
+  if (!UUID.test(listingId) || !isContactKind(kind)) return;
+  await recordListingContact(listingId, kind);
 }

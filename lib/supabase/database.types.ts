@@ -288,14 +288,20 @@ export type Database = {
         Row: {
           listing_id: string;
           views: number;
+          calls: number;
+          whatsapps: number;
         };
         Insert: {
           listing_id: string;
           views?: number;
+          calls?: number;
+          whatsapps?: number;
         };
         Update: {
           listing_id?: string;
           views?: number;
+          calls?: number;
+          whatsapps?: number;
         };
         Relationships: [
           {
@@ -467,6 +473,10 @@ export type Database = {
       [_ in never]: never;
     };
     Functions: {
+      increment_listing_contact: {
+        Args: { p_listing_id: string; p_kind: string };
+        Returns: undefined;
+      };
       increment_listing_view: {
         Args: { p_listing_id: string };
         Returns: undefined;
