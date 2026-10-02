@@ -1,10 +1,15 @@
-const sarFormatter = new Intl.NumberFormat("ar-SA", {
-  style: "currency",
-  currency: "SAR",
-});
+const amountFormatter = new Intl.NumberFormat("en-US", { maximumFractionDigits: 2 });
 
+// "165,000". On the page, prices render through <RiyalPrice>, which adds the
+// riyal symbol.
+export function formatAmount(amount: number): string {
+  return amountFormatter.format(amount);
+}
+
+// Plain-text prices (page titles, WhatsApp messages, select labels) where the
+// riyal symbol image can't go.
 export function formatSAR(amount: number): string {
-  return sarFormatter.format(amount);
+  return `SAR ${formatAmount(amount)}`;
 }
 
 const numberFormatter = new Intl.NumberFormat("en-US");

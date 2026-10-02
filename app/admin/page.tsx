@@ -1,7 +1,7 @@
 import Image from "next/image";
+import { RiyalPrice } from "@/components/riyal-price";
 import Link from "next/link";
 import { getOpenReports } from "@/lib/admin";
-import { formatSAR } from "@/lib/format";
 import { REPORT_REASONS, type ReportReason } from "@/lib/moderation";
 import { StatusBadge } from "@/app/dashboard/listings/status-badge";
 import { dismissReportsAction } from "./actions";
@@ -45,7 +45,7 @@ export default async function AdminReportsPage() {
                 <StatusBadge status={listing.status} />
               </div>
               <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-                {formatSAR(listing.price)} · Seller{" "}
+                <RiyalPrice amount={listing.price} /> · Seller{" "}
                 <Link href={`/sellers/${listing.seller_id}`} className="underline">
                   {listing.seller?.full_name ?? "Unnamed"}
                 </Link>

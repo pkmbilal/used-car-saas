@@ -3,7 +3,7 @@ import Link from "next/link";
 import { requireAdmin } from "@/lib/auth";
 
 export const metadata: Metadata = {
-  title: "Admin | Used Car Marketplace",
+  title: "Admin | DriveLoop",
   robots: { index: false },
 };
 
@@ -12,6 +12,7 @@ const sections = [
   { href: "/admin/listings", label: "Listings" },
   { href: "/admin/users", label: "Users" },
   { href: "/admin/verifications", label: "Verifications" },
+  { href: "/admin/dealers", label: "Dealers" },
 ];
 
 export default async function AdminLayout({ children }: LayoutProps<"/admin">) {

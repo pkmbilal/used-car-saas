@@ -49,7 +49,7 @@ export async function getListingQuota(): Promise<ListingQuota | null> {
 export const QUOTA_EXCEEDED_DB_MESSAGE = "listing_quota_exceeded";
 
 export function quotaExceededMessage(quota: Pick<ListingQuota, "plan" | "limit">): string {
-  return `You've used all ${quota.limit} listings for this month on the ${PLAN_LABELS[quota.plan]} plan. Contact us to upgrade.`;
+  return `You've used all ${quota.limit} listings for this month on the ${PLAN_LABELS[quota.plan]} plan. Apply for a dealer account from your account page to list more.`;
 }
 
 export function quotaSummary(quota: ListingQuota): string {

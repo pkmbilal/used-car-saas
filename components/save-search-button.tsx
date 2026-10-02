@@ -3,7 +3,10 @@
 import { useActionState, useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import { saveSearchAction, type SaveSearchState } from "@/app/saved-searches/actions";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 type Props = {
   // The validated filters as query params (see listingFiltersToParams).
@@ -35,9 +38,13 @@ export function SaveSearchButton({
     if (state.error === "signin") router.push(loginHref);
   }, [state.error, router, loginHref]);
 
+  useEffect(() => {
+    if (state.saved) toast.success("Search saved");
+  }, [state.saved]);
+
   if (state.saved) {
     return (
-      <p className="text-sm text-zinc-600 dark:text-zinc-400">
+      <p className="text-sm text-muted-foreground">
         Search saved.{" "}
         <Link href="/saved-searches" className="font-medium underline">
           View saved searches
@@ -48,13 +55,15 @@ export function SaveSearchButton({
 
   if (!open) {
     return (
-      <button
+      <Button
         type="button"
+        variant="outline"
+        size="sm"
         onClick={() => (signedIn ? setOpen(true) : router.push(loginHref))}
-        className="rounded-md border border-zinc-300 px-3 py-1.5 text-sm font-medium dark:border-zinc-700"
+        className="border-brand bg-white text-xs font-semibold text-brand hover:bg-mint hover:text-brand"
       >
         Save this search
-      </button>
+      </Button>
     );
   }
 
@@ -63,26 +72,22 @@ export function SaveSearchButton({
       {Object.entries(params).map(([key, value]) => (
         <input key={key} type="hidden" name={key} value={value} />
       ))}
-      <input
+      <Input
         name="name"
         required
         maxLength={maxNameLength}
         defaultValue={defaultName}
         aria-label="Search name"
-        className="min-w-0 flex-1 rounded-md border border-zinc-300 px-3 py-1.5 dark:border-zinc-700 dark:bg-zinc-900"
+        className="h-8 min-w-0 flex-1 bg-white"
       />
-      <button
-        type="submit"
-        disabled={pending}
-        className="rounded-md bg-zinc-900 px-3 py-1.5 font-medium text-white disabled:opacity-50 dark:bg-zinc-100 dark:text-zinc-900"
-      >
+      <Button type="submit" size="sm" disabled={pending}>
         {pending ? "Saving…" : "Save"}
-      </button>
-      <button type="button" onClick={() => setOpen(false)} className="text-zinc-600 dark:text-zinc-400">
+      </Button>
+      <Button type="button" variant="ghost" size="sm" onClick={() => setOpen(false)}>
         Cancel
-      </button>
+      </Button>
       {state.error && state.error !== "signin" && (
-        <p className="w-full text-red-600">{state.error}</p>
+        <p className="w-full text-destructive">{state.error}</p>
       )}
     </form>
   );

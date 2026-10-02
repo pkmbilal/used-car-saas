@@ -1,61 +1,60 @@
 import Link from "next/link";
+import { BrandLink } from "@/components/brand";
+import { MobileNav, UserMenu, type HeaderLink } from "@/components/header-menus";
+import { limeButton, outlineButton } from "@/components/header-styles";
+import { NavLink } from "@/components/nav-link";
+import { Button } from "@/components/ui/button";
 import { getCurrentUser } from "@/lib/auth";
 
 export async function SiteHeader() {
   const current = await getCurrentUser();
   const isSeller = current?.profile.role === "seller";
 
+  const mainLinks: HeaderLink[] = [
+    { href: "/", label: "Home" },
+    { href: "/listings", label: "Buy Cars" },
+    { href: "/dealers", label: "Dealers" },
+    { href: "/locations", label: "Locations" },
+    isSeller
+      ? { href: "/dashboard", label: "My Listings" }
+      : { href: "/account/become-seller", label: "Sell Your Car" },
+  ];
+  const accountLinks: HeaderLink[] = current
+    ? [
+        { href: "/favorites", label: "Saved cars" },
+        { href: "/saved-searches", label: "Saved searches" },
+        ...(current.profile.is_admin ? [{ href: "/admin", label: "Admin" }] : []),
+        { href: "/account", label: "Account" },
+      ]
+    : [];
+
   return (
-    <header className="border-b border-zinc-200 dark:border-zinc-800">
-      <nav className="mx-auto flex w-full max-w-5xl items-center justify-between gap-4 px-4 py-3">
-        <Link href="/" className="font-semibold tracking-tight">
-          Used Car Marketplace
-        </Link>
-        <div className="flex items-center gap-4 text-sm">
-          <Link href="/listings" className="font-medium">
-            Browse cars
-          </Link>
-          <Link
-            href={isSeller ? "/dashboard" : "/account/become-seller"}
-            className="font-medium"
-          >
-            {isSeller ? "My listings" : "Sell your car"}
-          </Link>
+    <header className="light relative z-20 bg-charcoal text-white">
+      <nav className="mx-auto flex h-[4.5rem] w-full max-w-6xl items-center gap-10 px-4 sm:px-6">
+        <BrandLink />
+        <div className="hidden items-center gap-8 text-[0.8125rem] font-medium md:flex">
+          {mainLinks.map((link) => (
+            <NavLink key={link.href} href={link.href} exact={link.href === "/"}>
+              {link.label}
+            </NavLink>
+          ))}
+        </div>
+        <div className="ml-auto hidden items-center gap-3 md:flex">
           {current ? (
-            <>
-              <Link href="/favorites" className="font-medium">
-                Saved
-              </Link>
-              <Link href="/saved-searches" className="font-medium">
-                Searches
-              </Link>
-              {current.profile.is_admin && (
-                <Link href="/admin" className="font-medium">
-                  Admin
-                </Link>
-              )}
-              <Link href="/account" className="text-zinc-600 dark:text-zinc-400">
-                {current.profile.full_name || current.user.email}
-              </Link>
-              <form action="/auth/signout" method="post">
-                <button type="submit" className="text-zinc-600 dark:text-zinc-400">
-                  Sign out
-                </button>
-              </form>
-            </>
+            <UserMenu name={current.profile.full_name || current.user.email || "Account"} links={accountLinks} />
           ) : (
             <>
-              <Link href="/login" className="font-medium">
-                Sign in
-              </Link>
-              <Link
-                href="/signup"
-                className="rounded-md bg-zinc-900 px-3 py-1.5 font-medium text-white dark:bg-zinc-100 dark:text-zinc-900"
-              >
-                Sign up
-              </Link>
+              <Button asChild variant="outline" className={outlineButton}>
+                <Link href="/login">Sign in</Link>
+              </Button>
+              <Button asChild className={limeButton}>
+                <Link href="/signup">Sign up</Link>
+              </Button>
             </>
           )}
+        </div>
+        <div className="ml-auto md:hidden">
+          <MobileNav mainLinks={mainLinks} accountLinks={accountLinks} signedIn={!!current} />
         </div>
       </nav>
     </header>

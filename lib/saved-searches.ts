@@ -1,12 +1,12 @@
 import "server-only";
-import { capitalize } from "@/lib/listing-options";
+import { bodyTypeLabel, capitalize, featureLabel } from "@/lib/listing-options";
 import {
   applyListingFilters,
   listingFiltersToParams,
   parseListingFilters,
   type ListingFilters,
 } from "@/lib/listings";
-import { formatSAR } from "@/lib/format";
+import { formatKm, formatSAR } from "@/lib/format";
 import { createClient } from "@/lib/supabase/server";
 import type { Json } from "@/lib/supabase/database.types";
 
@@ -57,15 +57,24 @@ function yearRange(min?: number, max?: number): string | null {
   return null;
 }
 
+function joined(labels: string[]): string | null {
+  return labels.length ? labels.join(", ") : null;
+}
+
 // Human-readable parts, e.g. ["“camry”", "Toyota", "Riyadh", "Up to SAR 80,000"].
 export function describeFilters(filters: ListingFilters): string[] {
   return [
     filters.q ? `“${filters.q}”` : null,
     filters.make ?? null,
+    filters.model ?? null,
     filters.city ?? null,
-    filters.fuelType ? capitalize(filters.fuelType) : null,
+    joined(filters.bodyTypes.map(bodyTypeLabel)),
+    joined(filters.fuelTypes.map(capitalize)),
+    joined(filters.transmissions.map(capitalize)),
+    joined(filters.features.map(featureLabel)),
     priceRange(filters.minPrice, filters.maxPrice),
     yearRange(filters.minYear, filters.maxYear),
+    filters.maxMileage !== undefined ? `Up to ${formatKm(filters.maxMileage)}` : null,
   ].filter((part): part is string => part !== null);
 }
 

@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { Badge } from "@/components/ui/badge";
 
 type Props = {
   name: string;
@@ -19,7 +20,7 @@ export function DealerLogo({ name, logoUrl, size }: Props) {
 
   return (
     <div
-      className={`relative shrink-0 overflow-hidden rounded-lg border border-zinc-200 bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900 ${sizeClass[size]}`}
+      className={`relative shrink-0 overflow-hidden rounded-lg border border-line bg-canvas ${sizeClass[size]}`}
     >
       {logoUrl ? (
         <Image
@@ -32,7 +33,7 @@ export function DealerLogo({ name, logoUrl, size }: Props) {
       ) : (
         <span
           aria-hidden
-          className="flex size-full items-center justify-center font-semibold text-zinc-500"
+          className="flex size-full items-center justify-center font-semibold text-brand"
         >
           {initials}
         </span>
@@ -43,8 +44,6 @@ export function DealerLogo({ name, logoUrl, size }: Props) {
 
 export function DealerBadge() {
   return (
-    <span className="rounded-full bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-800 dark:bg-blue-950 dark:text-blue-300">
-      Dealer
-    </span>
+    <Badge className="bg-charcoal text-lime">Dealer</Badge>
   );
 }

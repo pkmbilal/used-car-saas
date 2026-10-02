@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { requireSeller } from "@/lib/auth";
 import { CITIES } from "@/lib/cities";
-import { CONDITIONS, FUEL_TYPES } from "@/lib/listing-options";
+import { BODY_TYPES, CONDITIONS, FEATURE_VALUES, FUEL_TYPES, TRANSMISSIONS } from "@/lib/listing-options";
 import { IMPORT_COLUMNS, MAX_IMPORT_ROWS } from "@/lib/listing-import";
 import { MAKES } from "@/lib/makes";
 import { getListingQuota, isDealerPlan, quotaExceededMessage, quotaSummary } from "@/lib/plans";
@@ -16,6 +16,9 @@ const COLUMN_HINTS: Record<(typeof IMPORT_COLUMNS)[number], string> = {
   condition: CONDITIONS.join(", "),
   city: "One of the cities below",
   fuel_type: FUEL_TYPES.join(", "),
+  transmission: TRANSMISSIONS.join(", "),
+  body_type: BODY_TYPES.join(", "),
+  features: `Optional. Any of ${FEATURE_VALUES.join(", ")}, separated by ; e.g. sunroof;navigation`,
 };
 
 export default async function ImportListingsPage() {
@@ -31,7 +34,10 @@ export default async function ImportListingsPage() {
 
       {!isDealerPlan(profile.plan) ? (
         <p className="mt-6 rounded-md bg-amber-50 px-4 py-3 text-sm text-amber-900 dark:bg-amber-950 dark:text-amber-200">
-          CSV import is available on dealer plans. Contact us to upgrade.
+          CSV import is available on dealer plans.{" "}
+          <Link href="/account/dealer-application" className="font-medium underline">
+            Apply for a dealer account
+          </Link>
         </p>
       ) : quota?.remaining === 0 ? (
         <p className="mt-6 rounded-md bg-amber-50 px-4 py-3 text-sm text-amber-900 dark:bg-amber-950 dark:text-amber-200">

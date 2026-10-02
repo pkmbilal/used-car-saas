@@ -1,32 +1,29 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Figtree } from "next/font/google";
+import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
+import { Toaster } from "@/components/ui/sonner";
+import { cn } from "@/lib/utils";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const figtree = Figtree({
+  variable: "--font-sans",
   subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
-  title: "Used Car Marketplace",
-  description: "Buy and sell used cars in Saudi Arabia",
+  title: "DriveLoop | Used Cars in Saudi Arabia",
+  description: "Buy and sell verified used cars in Saudi Arabia",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-    >
+    <html lang="en" className={cn("h-full font-sans antialiased", figtree.variable)}>
       <body className="min-h-full flex flex-col">
         <SiteHeader />
-        {children}
+        <div className="flex flex-1 flex-col">{children}</div>
+        <SiteFooter />
+        <Toaster theme="light" />
       </body>
     </html>
   );

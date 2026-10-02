@@ -1,7 +1,8 @@
 import Image from "next/image";
+import { RiyalPrice } from "@/components/riyal-price";
 import Link from "next/link";
 import { requireSeller } from "@/lib/auth";
-import { formatDay, formatKm, formatSAR, formatViews } from "@/lib/format";
+import { formatDay, formatKm, formatViews } from "@/lib/format";
 import { getSellerListings, isFeatured } from "@/lib/listings";
 import { getListingQuota, isDealerPlan, quotaSummary } from "@/lib/plans";
 import { ListingActions } from "./listings/listing-actions";
@@ -95,7 +96,7 @@ export default async function DashboardPage() {
                     <StatusBadge status={listing.status} />
                   </div>
                   <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-                    {formatSAR(listing.price)} · {formatKm(listing.mileage)} ·{" "}
+                    <RiyalPrice amount={listing.price} /> · {formatKm(listing.mileage)} ·{" "}
                     {listing.city} · {formatViews(listing.views)}
                   </p>
                   {listing.status === "active" && listing.featured_until && isFeatured(listing) && (

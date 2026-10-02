@@ -38,7 +38,7 @@ export async function getOpenReports() {
   const { data, error } = await supabase
     .from("listing_reports")
     .select(
-      "id, reason, details, created_at, listing:listings(*, listing_images(*), seller:profiles(id, full_name))",
+      "id, reason, details, created_at, listing:listings(*, listing_images(*), seller:profiles!listings_seller_id_fkey(id, full_name))",
     )
     .eq("status", "open")
     .order("created_at", { ascending: false });
@@ -66,7 +66,7 @@ export async function getAllListings(filters: {
   const supabase = createAdminClient();
   let query = supabase
     .from("listings")
-    .select("*, listing_images(*), seller:profiles(id, full_name)", { count: "exact" });
+    .select("*, listing_images(*), seller:profiles!listings_seller_id_fkey(id, full_name)", { count: "exact" });
 
   if (filters.status) query = query.eq("status", filters.status);
   const q = searchTerm(filters.q);
@@ -139,7 +139,7 @@ export async function restoreListing(listingId: string): Promise<AdminResult> {
 
   const { data: listing } = await supabase
     .from("listings")
-    .select("status, seller:profiles(suspended_at)")
+    .select("status, seller:profiles!listings_seller_id_fkey(suspended_at)")
     .eq("id", listingId)
     .maybeSingle();
   if (!listing || listing.status !== "removed") return { error: "Listing is not removed." };
@@ -369,5 +369,109 @@ export async function revokeIdVerification(userId: string): Promise<AdminResult>
     .update({ id_verified_at: null })
     .eq("id", userId);
   if (error) return { error: "Could not revoke the badge. Try again." };
+  return {};
+}
+
+// ---------------------------------------------------------------------------
+// Dealer applications
+// ---------------------------------------------------------------------------
+
+export type PendingDealerApplication = Awaited<
+  ReturnType<typeof getPendingDealerApplications>
+>[number];
+
+// Oldest first, with short-lived links to any documents.
+export async function getPendingDealerApplications() {
+  await requireAdmin();
+  const supabase = createAdminClient();
+  const { data, error } = await supabase
+    .from("dealer_applications")
+    .select(
+      "id, business_name, showroom_address, cr_number, vat_number, muroor_number, requested_plan, cr_doc_key, vat_doc_key, muroor_doc_key, created_at, user:profiles!dealer_applications_user_id_fkey(id, full_name, phone, city, created_at, suspended_at)",
+    )
+    .eq("status", "pending")
+    .order("created_at", { ascending: true });
+  if (error) throw error;
+
+  return Promise.all(
+    data.map(async ({ cr_doc_key, vat_doc_key, muroor_doc_key, ...application }) => {
+      const docs = await Promise.all(
+        (
+          [
+            ["cr", cr_doc_key],
+            ["vat", vat_doc_key],
+            ["muroor", muroor_doc_key],
+          ] as const
+        ).map(async ([doc, key]) =>
+          key ? { doc, url: await presignGet(key), isPdf: key.endsWith(".pdf") } : null,
+        ),
+      );
+      return { ...application, docs: docs.filter((doc) => doc !== null) };
+    }),
+  );
+}
+
+async function reviewDealerApplication(
+  applicationId: string,
+  decision: { status: "approved" } | { status: "rejected"; reject_reason: string },
+) {
+  const { user } = await requireAdmin();
+  const supabase = createAdminClient();
+
+  const { data, error } = await supabase
+    .from("dealer_applications")
+    .update({ ...decision, reviewed_at: new Date().toISOString(), reviewed_by: user.id })
+    .eq("id", applicationId)
+    .eq("status", "pending")
+    .select("user_id, business_name, showroom_address, cr_doc_key, vat_doc_key, muroor_doc_key");
+  if (error) return { error: "Could not update the application. Try again." };
+  if (data.length === 0) return { error: "Application is no longer pending." };
+  return { application: data[0] };
+}
+
+// Grants the plan and prefills the storefront from the application. Documents
+// are kept as the dealer's business records.
+export async function approveDealerApplication(
+  applicationId: string,
+  plan: string,
+): Promise<AdminResult> {
+  if (plan !== "dealer" && plan !== "dealer_pro") return { error: "Choose a dealer plan." };
+
+  const reviewed = await reviewDealerApplication(applicationId, { status: "approved" });
+  if ("error" in reviewed) return reviewed;
+
+  const { user_id, business_name, showroom_address } = reviewed.application;
+  const supabase = createAdminClient();
+  const { error } = await supabase
+    .from("profiles")
+    .update({ plan, business_name, showroom_address })
+    .eq("id", user_id);
+  if (error) return { error: "Application approved, but the plan could not be granted." };
+  return {};
+}
+
+export async function rejectDealerApplication(
+  applicationId: string,
+  reason: string,
+): Promise<AdminResult> {
+  const rejectReason = reason.trim();
+  if (!rejectReason) return { error: "Give a reason the seller will see." };
+  if (rejectReason.length > MAX_REJECT_REASON) {
+    return { error: `Keep the reason under ${MAX_REJECT_REASON} characters.` };
+  }
+
+  const reviewed = await reviewDealerApplication(applicationId, {
+    status: "rejected",
+    reject_reason: rejectReason,
+  });
+  if ("error" in reviewed) return reviewed;
+
+  // Rejected applications don't need their documents; the seller re-uploads
+  // if they apply again.
+  const { cr_doc_key, vat_doc_key, muroor_doc_key } = reviewed.application;
+  const keys = [cr_doc_key, vat_doc_key, muroor_doc_key].filter((key) => key !== null);
+  await deleteObjects(keys, PRIVATE_BUCKET).catch((err) =>
+    console.error("Failed to delete dealer documents", keys, err),
+  );
   return {};
 }

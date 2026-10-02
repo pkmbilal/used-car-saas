@@ -1,7 +1,18 @@
 import "server-only";
+import { cache } from "react";
 import { CITIES, isCity } from "@/lib/cities";
-import { CONDITIONS, FUEL_TYPES } from "@/lib/listing-options";
-import { isMake, MAKES } from "@/lib/makes";
+import {
+  BODY_TYPES,
+  CONDITIONS,
+  FEATURE_VALUES,
+  FUEL_TYPES,
+  TRANSMISSIONS,
+  type BodyType,
+  type Feature,
+  type FuelType,
+  type Transmission,
+} from "@/lib/listing-options";
+import { isMake, MAKES, modelsFor } from "@/lib/makes";
 import { publicUrl } from "@/lib/r2";
 import { createClient } from "@/lib/supabase/server";
 import type { Database } from "@/lib/supabase/database.types";
@@ -13,7 +24,17 @@ export type ListingStatus = Listing["status"];
 
 export type ListingInput = Pick<
   Listing,
-  "make" | "model" | "year" | "mileage" | "price" | "condition" | "city" | "fuel_type"
+  | "make"
+  | "model"
+  | "year"
+  | "mileage"
+  | "price"
+  | "condition"
+  | "city"
+  | "fuel_type"
+  | "transmission"
+  | "body_type"
+  | "features"
 >;
 
 function includes<T extends string>(list: readonly T[], value: unknown): value is T {
@@ -30,6 +51,16 @@ function parseWholeNumber(value: FormDataEntryValue | null): number | null {
 function matchOption<T extends string>(list: readonly T[], value: string | null): T | null {
   const key = value?.trim().toLowerCase();
   return (key && list.find((option) => option.toLowerCase() === key)) || null;
+}
+
+// "a, b;c" -> the known values among a, b, c (case-insensitive, de-duplicated).
+// Used for the features field and for multi-value search filters.
+function matchOptions<T extends string>(list: readonly T[], value: string | null | undefined): T[] {
+  const matched = (value ?? "")
+    .split(/[,;]/)
+    .map((part) => matchOption(list, part))
+    .filter((option): option is T => option !== null);
+  return [...new Set(matched)];
 }
 
 export const LISTING_BOUNDS = {
@@ -50,13 +81,18 @@ export function parseListingFields(
   get: (field: keyof ListingInput) => string | null,
 ): { data: ListingInput } | ListingFieldError {
   const make = matchOption(MAKES, get("make"));
-  const model = (get("model") ?? "").trim();
+  const rawModel = (get("model") ?? "").trim();
+  // Known models get their canonical spelling; anything else is kept as typed.
+  const model = (make && matchOption(modelsFor(make), rawModel)) || rawModel;
   const year = parseWholeNumber(get("year"));
   const mileage = parseWholeNumber(get("mileage"));
   const price = parseWholeNumber(get("price"));
   const condition = matchOption(CONDITIONS, get("condition"));
   const city = matchOption(CITIES, get("city"));
   const fuelType = matchOption(FUEL_TYPES, get("fuel_type"));
+  const transmission = matchOption(TRANSMISSIONS, get("transmission"));
+  const bodyType = matchOption(BODY_TYPES, get("body_type"));
+  const features = matchOptions(FEATURE_VALUES, get("features"));
   const maxYear = maxListingYear();
   const { minYear, maxModelLength, maxMileage, maxPrice } = LISTING_BOUNDS;
 
@@ -76,9 +112,23 @@ export function parseListingFields(
   if (!condition) return { error: "Choose the condition.", field: "condition" };
   if (!city) return { error: "Choose a city.", field: "city" };
   if (!fuelType) return { error: "Choose the fuel type.", field: "fuel_type" };
+  if (!transmission) return { error: "Choose the transmission.", field: "transmission" };
+  if (!bodyType) return { error: "Choose the body style.", field: "body_type" };
 
   return {
-    data: { make, model, year, mileage, price, condition, city, fuel_type: fuelType },
+    data: {
+      make,
+      model,
+      year,
+      mileage,
+      price,
+      condition,
+      city,
+      fuel_type: fuelType,
+      transmission,
+      body_type: bodyType,
+      features,
+    },
   };
 }
 
@@ -86,6 +136,8 @@ export function parseListing(
   formData: FormData,
 ): { data: ListingInput } | { error: string } {
   return parseListingFields((field) => {
+    // Features are a checkbox group: one entry per ticked box.
+    if (field === "features") return formData.getAll(field).filter((v) => typeof v === "string").join(",");
     const value = formData.get(field);
     return typeof value === "string" ? value : null;
   });
@@ -169,8 +221,14 @@ export type Sort = (typeof SORTS)[number];
 export type ListingFilters = {
   q?: string;
   make?: string;
+  model?: string;
   city?: string;
-  fuelType?: Listing["fuel_type"];
+  fuelTypes: FuelType[];
+  bodyTypes: BodyType[];
+  transmissions: Transmission[];
+  // Listings must have every one of these.
+  features: Feature[];
+  maxMileage?: number;
   minPrice?: number;
   maxPrice?: number;
   minYear?: number;
@@ -186,6 +244,13 @@ function param(searchParams: SearchParams, key: string): string | undefined {
   return typeof value === "string" && value !== "" ? value : undefined;
 }
 
+// Multi-value filters travel as one comma-separated param ("hybrid,electric");
+// repeated params are accepted too.
+function listParam<T extends string>(searchParams: SearchParams, key: string, list: readonly T[]): T[] {
+  const value = searchParams[key];
+  return matchOptions(list, Array.isArray(value) ? value.join(",") : value);
+}
+
 function numberParam(searchParams: SearchParams, key: string): number | undefined {
   const value = param(searchParams, key);
   if (value === undefined) return undefined;
@@ -195,17 +260,24 @@ function numberParam(searchParams: SearchParams, key: string): number | undefine
 
 // Invalid values are dropped rather than erroring: these come from the URL.
 export function parseListingFilters(searchParams: SearchParams): ListingFilters {
-  const make = param(searchParams, "make");
+  const rawMake = param(searchParams, "make");
+  const make = isMake(rawMake) ? rawMake : undefined;
+  // A model only counts alongside its make, and only if it's a known one.
+  const model = make ? matchOption(modelsFor(make), param(searchParams, "model") ?? null) : null;
   const city = param(searchParams, "city");
-  const fuelType = param(searchParams, "fuel_type");
   const sort = param(searchParams, "sort");
   const page = numberParam(searchParams, "page");
 
   return {
     q: param(searchParams, "q")?.trim().slice(0, 100) || undefined,
-    make: isMake(make) ? make : undefined,
+    make,
+    model: model ?? undefined,
     city: isCity(city) ? city : undefined,
-    fuelType: includes(FUEL_TYPES, fuelType) ? fuelType : undefined,
+    fuelTypes: listParam(searchParams, "fuel_type", FUEL_TYPES),
+    bodyTypes: listParam(searchParams, "body_type", BODY_TYPES),
+    transmissions: listParam(searchParams, "transmission", TRANSMISSIONS),
+    features: listParam(searchParams, "features", FEATURE_VALUES),
+    maxMileage: numberParam(searchParams, "max_mileage"),
     minPrice: numberParam(searchParams, "min_price"),
     maxPrice: numberParam(searchParams, "max_price"),
     minYear: numberParam(searchParams, "min_year"),
@@ -229,11 +301,17 @@ export function toPrefixTsQuery(q: string): string | null {
 // The query-param form of the search filters (sort and page excluded), as
 // read back by parseListingFilters.
 export function listingFiltersToParams(filters: ListingFilters): Record<string, string> {
+  const list = (values: string[]) => (values.length ? values.join(",") : undefined);
   const entries: [string, string | number | undefined][] = [
     ["q", filters.q],
     ["make", filters.make],
+    ["model", filters.model],
     ["city", filters.city],
-    ["fuel_type", filters.fuelType],
+    ["fuel_type", list(filters.fuelTypes)],
+    ["body_type", list(filters.bodyTypes)],
+    ["transmission", list(filters.transmissions)],
+    ["features", list(filters.features)],
+    ["max_mileage", filters.maxMileage],
     ["min_price", filters.minPrice],
     ["max_price", filters.maxPrice],
     ["min_year", filters.minYear],
@@ -247,9 +325,14 @@ export function listingFiltersToParams(filters: ListingFilters): Record<string, 
 // The subset of the PostgREST filter builder used below, so any select on
 // listings (full rows or a head-only count) can share the same filters.
 interface ListingFilterQuery {
-  eq(column: "status" | "make" | "city" | "fuel_type", value: string): this;
+  eq(column: "status" | "make" | "city", value: string): this;
+  in(column: "fuel_type", values: readonly FuelType[]): this;
+  in(column: "body_type", values: readonly BodyType[]): this;
+  in(column: "transmission", values: readonly Transmission[]): this;
+  contains(column: "features", values: string[]): this;
   gte(column: "price" | "year", value: number): this;
-  lte(column: "price" | "year", value: number): this;
+  lte(column: "price" | "year" | "mileage", value: number): this;
+  ilike(column: "model", pattern: string): this;
   textSearch(column: "search_vector", query: string, options: { config: string }): this;
 }
 
@@ -262,8 +345,14 @@ export function applyListingFilters<Q extends ListingFilterQuery>(
   const tsQuery = filters.q ? toPrefixTsQuery(filters.q) : null;
   if (tsQuery) query = query.textSearch("search_vector", tsQuery, { config: "simple" });
   if (filters.make) query = query.eq("make", filters.make);
+  // Case-insensitive exact match; known model names contain no % or _.
+  if (filters.model) query = query.ilike("model", filters.model);
   if (filters.city) query = query.eq("city", filters.city);
-  if (filters.fuelType) query = query.eq("fuel_type", filters.fuelType);
+  if (filters.fuelTypes.length) query = query.in("fuel_type", filters.fuelTypes);
+  if (filters.bodyTypes.length) query = query.in("body_type", filters.bodyTypes);
+  if (filters.transmissions.length) query = query.in("transmission", filters.transmissions);
+  if (filters.features.length) query = query.contains("features", filters.features);
+  if (filters.maxMileage !== undefined) query = query.lte("mileage", filters.maxMileage);
   if (filters.minPrice !== undefined) query = query.gte("price", filters.minPrice);
   if (filters.maxPrice !== undefined) query = query.lte("price", filters.maxPrice);
   if (filters.minYear !== undefined) query = query.gte("year", filters.minYear);
@@ -328,14 +417,105 @@ export async function getLatestListings(limit: number): Promise<ListingWithImage
   return data.map(withImageUrls);
 }
 
+export type FacetCounts = {
+  total: number;
+  makes: Map<string, number>;
+  cities: Map<string, number>;
+  fuelTypes: Map<Listing["fuel_type"], number>;
+  bodyTypes: Map<BodyType, number>;
+  transmissions: Map<Transmission, number>;
+};
+
+function tally<T>(values: T[]): Map<T, number> {
+  const counts = new Map<T, number>();
+  for (const value of values) counts.set(value, (counts.get(value) ?? 0) + 1);
+  // Most common first.
+  return new Map([...counts].sort((a, b) => b[1] - a[1]));
+}
+
+// Active-listing counts per make, city and fuel type for browse UI. Tallied in
+// JS from one narrow select, which is fine at current volume; move this to a
+// grouped RPC once the listings table gets large (PostgREST's max-rows setting,
+// 1000 by default, would otherwise cap the counts).
+export const getActiveFacetCounts = cache(async (): Promise<FacetCounts> => {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("listings")
+    .select("make, city, fuel_type, body_type, transmission")
+    .eq("status", "active");
+  if (error) throw error;
+  return {
+    total: data.length,
+    makes: tally(data.map((row) => row.make)),
+    cities: tally(data.map((row) => row.city)),
+    fuelTypes: tally(data.map((row) => row.fuel_type)),
+    bodyTypes: tally(data.flatMap((row) => (row.body_type ? [row.body_type] : []))),
+    transmissions: tally(data.flatMap((row) => (row.transmission ? [row.transmission] : []))),
+  };
+});
+
+// The newest active listings in each of the given cities, up to perCity each.
+export async function getLatestByCities(
+  cities: string[],
+  perCity = 3,
+): Promise<Record<string, ListingWithImages[]>> {
+  const result: Record<string, ListingWithImages[]> = Object.fromEntries(cities.map((city) => [city, []]));
+  if (cities.length === 0) return result;
+
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("listings")
+    .select("*, listing_images(*)")
+    .eq("status", "active")
+    .in("city", cities)
+    .order("created_at", { ascending: false })
+    .limit(cities.length * perCity * 4);
+  if (error) throw error;
+
+  for (const listing of data) {
+    const bucket = result[listing.city];
+    if (bucket && bucket.length < perCity) bucket.push(withImageUrls(listing));
+  }
+  return result;
+}
+
+// Same make first, then cars in a similar price band, excluding the listing itself.
+export async function getSimilarListings(
+  listing: Pick<Listing, "id" | "make" | "price">,
+  limit = 4,
+): Promise<ListingWithImages[]> {
+  const supabase = await createClient();
+  const base = () =>
+    supabase
+      .from("listings")
+      .select("*, listing_images(*)")
+      .eq("status", "active")
+      .neq("id", listing.id)
+      .order("created_at", { ascending: false })
+      .limit(limit);
+
+  const { data: sameMake, error } = await base().eq("make", listing.make);
+  if (error) return [];
+  const similar = sameMake.map(withImageUrls);
+  if (similar.length >= limit) return similar;
+
+  const { data: samePrice } = await base()
+    .neq("make", listing.make)
+    .gte("price", Math.floor(listing.price * 0.75))
+    .lte("price", Math.ceil(listing.price * 1.25));
+  return [...similar, ...(samePrice ?? []).map(withImageUrls)].slice(0, limit);
+}
+
 // Active listings for everyone; drafts/sold only for their owner (via RLS).
 export async function getPublicListing(listingId: string) {
   const supabase = await createClient();
-  const { data } = await supabase
+  const { data, error } = await supabase
     .from("listings")
-    .select("*, listing_images(*), seller:profiles(id, full_name, phone, city, created_at, email_verified_at, id_verified_at, plan, business_name, about, logo_key, showroom_address)")
+    .select("*, listing_images(*), seller:profiles!listings_seller_id_fkey(id, full_name, phone, city, created_at, email_verified_at, id_verified_at, plan, business_name, about, logo_key, showroom_address)")
     .eq("id", listingId)
     .maybeSingle();
+  // A failed query would otherwise look like a missing listing (404).
+  if (error) console.error("getPublicListing failed", error);
   return data ? withImageUrls(data) : null;
 }
 

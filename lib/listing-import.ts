@@ -1,6 +1,6 @@
 import "server-only";
 import { parseCsv } from "@/lib/csv";
-import { CONDITIONS, FUEL_TYPES } from "@/lib/listing-options";
+import { BODY_TYPES, CONDITIONS, FEATURE_VALUES, FUEL_TYPES, TRANSMISSIONS } from "@/lib/listing-options";
 import {
   LISTING_BOUNDS,
   maxListingYear,
@@ -20,7 +20,13 @@ export const IMPORT_COLUMNS = [
   "condition",
   "city",
   "fuel_type",
+  "transmission",
+  "body_type",
+  "features",
 ] as const satisfies readonly (keyof ListingInput)[];
+
+// May be left out of the header row entirely.
+export const OPTIONAL_IMPORT_COLUMNS: readonly (typeof IMPORT_COLUMNS)[number][] = ["features"];
 
 export const MAX_IMPORT_ROWS = 200;
 // Stays under the default 1MB Server Action body limit.
@@ -45,6 +51,9 @@ function rowErrorMessage(field: keyof ListingInput, value: string): string {
     condition: CONDITIONS.join(", "),
     city: "one of the supported cities",
     fuel_type: FUEL_TYPES.join(", "),
+    transmission: TRANSMISSIONS.join(", "),
+    body_type: BODY_TYPES.join(", "),
+    features: `any of ${FEATURE_VALUES.join(", ")}, separated by ;`,
   };
 
   const trimmed = value.trim();
@@ -58,7 +67,9 @@ export function parseListingCsv(text: string): ParsedImport {
   if (!header) return { error: "The file is empty." };
 
   const columns = header.map((name) => name.trim().toLowerCase());
-  const missing = IMPORT_COLUMNS.filter((column) => !columns.includes(column));
+  const missing = IMPORT_COLUMNS.filter(
+    (column) => !columns.includes(column) && !OPTIONAL_IMPORT_COLUMNS.includes(column),
+  );
   if (missing.length) {
     return { error: `The header row is missing: ${missing.join(", ")}.` };
   }
