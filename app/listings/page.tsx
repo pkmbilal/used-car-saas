@@ -55,7 +55,11 @@ export default async function ListingsPage({ searchParams }: PageProps<"/listing
     return search ? `/listings?${search}` : "/listings";
   }
 
-  const fuelCounts = Object.fromEntries(facets.fuelTypes);
+  const counts = {
+    fuelTypes: Object.fromEntries(facets.fuelTypes),
+    bodyTypes: Object.fromEntries(facets.bodyTypes),
+    transmissions: Object.fromEntries(facets.transmissions),
+  };
 
   return (
     <main className="light bg-canvas text-ink">
@@ -78,10 +82,10 @@ export default async function ListingsPage({ searchParams }: PageProps<"/listing
 
       <div className="mx-auto mt-6 grid w-full max-w-6xl items-start gap-6 px-4 sm:px-6 lg:grid-cols-[257px_minmax(0,1fr)]">
         <Card className="gap-0 rounded-lg p-4 shadow-[0_2px_10px_rgba(20,30,25,.05)] ring-0 max-lg:hidden">
-          <Filters filters={filters} fuelCounts={fuelCounts} idPrefix="sidebar" />
+          <Filters filters={filters} counts={counts} idPrefix="sidebar" />
         </Card>
         <MobileFilters>
-          <Filters filters={filters} fuelCounts={fuelCounts} idPrefix="sheet" />
+          <Filters filters={filters} counts={counts} idPrefix="sheet" />
         </MobileFilters>
 
         <section>

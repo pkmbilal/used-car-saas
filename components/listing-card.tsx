@@ -1,11 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
 import { FavoriteButton } from "@/components/favorite-button";
-import { ArrowRight, Fuel, MapPin } from "lucide-react";
+import { ArrowRight, Car, Fuel, MapPin } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { formatKm, formatSAR } from "@/lib/format";
-import { capitalize } from "@/lib/listing-options";
+import { bodyTypeLabel, capitalize } from "@/lib/listing-options";
 import { isFeatured, type ListingWithImages } from "@/lib/listings";
 
 type CardProps = {
@@ -52,11 +52,23 @@ export function ListingCard({ listing, favorited, sizes }: CardProps) {
               <span>{listing.year}</span>
               <span aria-hidden>·</span>
               <span>{formatKm(listing.mileage)}</span>
+              {listing.transmission && (
+                <>
+                  <span aria-hidden>·</span>
+                  <span>{capitalize(listing.transmission)}</span>
+                </>
+              )}
             </p>
             <p className="mt-3 text-[15px] font-bold text-brand">
               {formatSAR(listing.price)}
             </p>
             <div className="mt-auto flex items-center gap-4 pt-3 text-[11px] text-muted-foreground">
+              {listing.body_type && (
+                <span className="flex items-center gap-1.5">
+                  <Car className="size-3" />
+                  {bodyTypeLabel(listing.body_type)}
+                </span>
+              )}
               <span className="flex items-center gap-1.5">
                 <Fuel className="size-3" />
                 {capitalize(listing.fuel_type)}

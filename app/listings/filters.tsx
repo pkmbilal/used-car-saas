@@ -1,16 +1,16 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
 import { Search, SlidersHorizontal } from "lucide-react";
 import { FormSelect } from "@/components/form-select";
 import { MakeModelSelects } from "@/components/make-model-selects";
+import { CheckboxGroup } from "./checkbox-group";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { CITIES } from "@/lib/cities";
-import { capitalize, FUEL_TYPES } from "@/lib/listing-options";
+import { formatKm } from "@/lib/format";
+import { BODY_TYPES, bodyTypeLabel, capitalize, FEATURES, FUEL_TYPES, TRANSMISSIONS } from "@/lib/listing-options";
 import type { ListingFilters } from "@/lib/listings";
 
 const inputClass = "h-9 bg-white text-xs";
@@ -46,20 +46,35 @@ function Range({
   );
 }
 
+export type FilterCounts = {
+  fuelTypes: Record<string, number>;
+  bodyTypes: Record<string, number>;
+  transmissions: Record<string, number>;
+};
+
+const MAX_MILEAGES = [20_000, 50_000, 100_000, 150_000, 200_000];
+
+// Keeps a custom value from the URL (e.g. max_mileage=80000) selectable.
+function mileageOptions(current: number | undefined) {
+  const values = current === undefined || MAX_MILEAGES.includes(current) ? MAX_MILEAGES : [current, ...MAX_MILEAGES];
+  return values.map((km) => ({ value: String(km), label: `Up to ${formatKm(km)}` }));
+}
+
 // Plain GET form: filters live in the URL. Client-side only for the Radix
 // controls; "Any" choices are left out of the query entirely.
 export function Filters({
   filters,
-  fuelCounts,
+  counts,
   idPrefix = "filters",
 }: {
   filters: ListingFilters;
-  fuelCounts: Record<string, number>;
+  // Active-listing counts per option, keyed by value.
+  counts: FilterCounts;
   // Filters render twice (sidebar and mobile sheet), so ids need a prefix.
   idPrefix?: string;
 }) {
-  const [fuel, setFuel] = useState<string>(filters.fuelType ?? "any");
   const id = (name: string) => `${idPrefix}-${name}`;
+  const groupProps = { idPrefix, legendClassName: labelClass };
 
   return (
     <form method="get" action="/listings" className="flex flex-col gap-5">
@@ -109,23 +124,46 @@ export function Filters({
       </div>
       <Range label="Price Range" hint="SAR" minName="min_price" maxName="max_price" min={filters.minPrice} max={filters.maxPrice} />
       <Range label="Year" minName="min_year" maxName="max_year" min={filters.minYear} max={filters.maxYear} />
-      <fieldset className="flex flex-col gap-2">
-        <legend className={`${labelClass} mb-2`}>Fuel Type</legend>
-        <RadioGroup value={fuel} onValueChange={setFuel} className="gap-2.5">
-          {["any", ...FUEL_TYPES].map((option) => (
-            <div key={option} className="flex items-center gap-2">
-              <RadioGroupItem value={option} id={id(`fuel-${option}`)} />
-              <Label htmlFor={id(`fuel-${option}`)} className="text-xs font-normal text-ink/80">
-                {option === "any" ? "Any" : capitalize(option)}
-                {option !== "any" && (
-                  <span className="text-[10px] text-muted-foreground">({fuelCounts[option] ?? 0})</span>
-                )}
-              </Label>
-            </div>
-          ))}
-        </RadioGroup>
-        {fuel !== "any" && <input type="hidden" name="fuel_type" value={fuel} />}
-      </fieldset>
+      <div className="flex flex-col gap-1.5">
+        <Label htmlFor={id("mileage")} className={labelClass}>
+          Mileage
+        </Label>
+        <FormSelect
+          id={id("mileage")}
+          name="max_mileage"
+          defaultValue={filters.maxMileage?.toString()}
+          placeholder="Any Mileage"
+          options={mileageOptions(filters.maxMileage)}
+        />
+      </div>
+      <CheckboxGroup
+        {...groupProps}
+        title="Body Style"
+        name="body_type"
+        selected={filters.bodyTypes}
+        options={BODY_TYPES.map((value) => ({ value, label: bodyTypeLabel(value), count: counts.bodyTypes[value] ?? 0 }))}
+      />
+      <CheckboxGroup
+        {...groupProps}
+        title="Fuel Type"
+        name="fuel_type"
+        selected={filters.fuelTypes}
+        options={FUEL_TYPES.map((value) => ({ value, label: capitalize(value), count: counts.fuelTypes[value] ?? 0 }))}
+      />
+      <CheckboxGroup
+        {...groupProps}
+        title="Transmission"
+        name="transmission"
+        selected={filters.transmissions}
+        options={TRANSMISSIONS.map((value) => ({ value, label: capitalize(value), count: counts.transmissions[value] ?? 0 }))}
+      />
+      <CheckboxGroup
+        {...groupProps}
+        title="Features"
+        name="features"
+        selected={filters.features}
+        options={FEATURES.map(({ value, label }) => ({ value, label }))}
+      />
       <Button type="submit" className="h-9 text-xs font-semibold">
         <Search className="size-3.5" />
         Apply Filters

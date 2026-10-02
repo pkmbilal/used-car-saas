@@ -31,7 +31,7 @@ import { Separator } from "@/components/ui/separator";
 import { getCurrentUser } from "@/lib/auth";
 import { getFavoriteIds } from "@/lib/favorites";
 import { formatKm, formatMonthYear, formatSAR, formatViews, whatsappUrl } from "@/lib/format";
-import { capitalize } from "@/lib/listing-options";
+import { bodyTypeLabel, capitalize, featureLabel } from "@/lib/listing-options";
 import { getListingViews, getPublicListing, getSimilarListings, isFeatured } from "@/lib/listings";
 import { getStorefront } from "@/lib/storefront";
 import { Gallery } from "./gallery";
@@ -53,17 +53,11 @@ export async function generateMetadata({
   };
 }
 
-// Columns the listings table doesn't have yet (transmission, body_type, color,
-// features, description). `select("*")` returns them automatically once a
+// Columns the listings table doesn't have yet (color, description). `select("*")` returns them automatically once a
 // migration adds them, and the page starts showing them.
 function optionalText(listing: object, key: string): string | null {
   const value = (listing as Record<string, unknown>)[key];
   return typeof value === "string" && value.trim() ? capitalize(value.trim()) : null;
-}
-
-function optionalList(listing: object, key: string): string[] | null {
-  const value = (listing as Record<string, unknown>)[key];
-  return Array.isArray(value) && value.every((item) => typeof item === "string") ? value : null;
 }
 
 export default async function ListingPage({ params }: PageProps<"/listings/[id]">) {
@@ -84,7 +78,7 @@ export default async function ListingPage({ params }: PageProps<"/listings/[id]"
   ]);
   const whatsappText = `Hi, I'm interested in your ${title} listed for ${formatSAR(listing.price)}: ${await listingUrl(listing.id)}`;
   const cover = listing.images[0];
-  const transmission = optionalText(listing, "transmission");
+  const transmission = listing.transmission ? capitalize(listing.transmission) : null;
 
   const specIcon = { className: "size-4", strokeWidth: 1.8 };
   const specs = [
@@ -95,7 +89,7 @@ export default async function ListingPage({ params }: PageProps<"/listings/[id]"
     { label: "Fuel Type", value: capitalize(listing.fuel_type), icon: <Fuel {...specIcon} /> },
     { label: "Condition", value: capitalize(listing.condition), icon: <Sparkles {...specIcon} /> },
     { label: "Transmission", value: transmission, icon: <Gauge {...specIcon} /> },
-    { label: "Body Style", value: optionalText(listing, "body_type"), icon: <Car {...specIcon} /> },
+    { label: "Body Style", value: listing.body_type && bodyTypeLabel(listing.body_type), icon: <Car {...specIcon} /> },
     { label: "Color", value: optionalText(listing, "color"), icon: <Palette {...specIcon} /> },
     { label: "City", value: listing.city, icon: <MapPin {...specIcon} /> },
     { label: "Listed", value: formatMonthYear(listing.created_at), icon: <Clock {...specIcon} /> },
@@ -162,7 +156,7 @@ export default async function ListingPage({ params }: PageProps<"/listings/[id]"
             featured={featured}
           />
           <SpecGrid specs={specs} />
-          <ListingFeatures features={optionalList(listing, "features")} />
+          <ListingFeatures features={listing.features.map(featureLabel)} />
           <ListingDescription text={optionalText(listing, "description")} />
         </div>
 

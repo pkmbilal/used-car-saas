@@ -2,7 +2,15 @@
 
 import { useActionState } from "react";
 import { CITIES } from "@/lib/cities";
-import { capitalize, CONDITIONS, FUEL_TYPES } from "@/lib/listing-options";
+import {
+  BODY_TYPES,
+  bodyTypeLabel,
+  capitalize,
+  CONDITIONS,
+  FEATURES,
+  FUEL_TYPES,
+  TRANSMISSIONS,
+} from "@/lib/listing-options";
 import type { ListingInput } from "@/lib/listings";
 import type { ListingFormState } from "./actions";
 import { Field, inputClass } from "./form-fields";
@@ -103,6 +111,40 @@ export function ListingForm({ listing, action, submitLabel }: Props) {
           format={capitalize}
         />
       </Field>
+      <Field id="transmission" label="Transmission">
+        <Select
+          id="transmission"
+          options={TRANSMISSIONS}
+          defaultValue={listing?.transmission ?? undefined}
+          placeholder="Choose the transmission"
+          format={capitalize}
+        />
+      </Field>
+      <Field id="body_type" label="Body style">
+        <Select
+          id="body_type"
+          options={BODY_TYPES}
+          defaultValue={listing?.body_type ?? undefined}
+          placeholder="Choose the body style"
+          format={bodyTypeLabel}
+        />
+      </Field>
+      <fieldset className="sm:col-span-2">
+        <legend className="text-sm font-medium">Features</legend>
+        <div className="mt-2 grid grid-cols-2 gap-x-4 gap-y-2 sm:grid-cols-3">
+          {FEATURES.map(({ value, label }) => (
+            <label key={value} className="flex items-center gap-2 text-sm">
+              <input
+                type="checkbox"
+                name="features"
+                value={value}
+                defaultChecked={listing?.features.includes(value)}
+              />
+              {label}
+            </label>
+          ))}
+        </div>
+      </fieldset>
 
       <div className="flex items-center gap-4 sm:col-span-2">
         <button

@@ -81,6 +81,9 @@ export type Database = {
           condition: "excellent" | "good" | "fair";
           city: string;
           fuel_type: "petrol" | "diesel" | "hybrid" | "electric";
+          transmission: "automatic" | "manual" | null;
+          body_type: "sedan" | "suv" | "hatchback" | "coupe" | "pickup" | "van" | null;
+          features: string[];
           status: "draft" | "active" | "sold" | "removed";
           removed_reason: string | null;
           featured_until: string | null;
@@ -99,6 +102,9 @@ export type Database = {
           condition: "excellent" | "good" | "fair";
           city: string;
           fuel_type: "petrol" | "diesel" | "hybrid" | "electric";
+          transmission?: "automatic" | "manual" | null;
+          body_type?: "sedan" | "suv" | "hatchback" | "coupe" | "pickup" | "van" | null;
+          features?: string[];
           status?: "draft" | "active" | "sold" | "removed";
           removed_reason?: string | null;
           featured_until?: string | null;
@@ -117,6 +123,9 @@ export type Database = {
           condition?: "excellent" | "good" | "fair";
           city?: string;
           fuel_type?: "petrol" | "diesel" | "hybrid" | "electric";
+          transmission?: "automatic" | "manual" | null;
+          body_type?: "sedan" | "suv" | "hatchback" | "coupe" | "pickup" | "van" | null;
+          features?: string[];
           status?: "draft" | "active" | "sold" | "removed";
           removed_reason?: string | null;
           featured_until?: string | null;

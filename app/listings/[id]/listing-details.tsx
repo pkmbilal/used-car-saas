@@ -1,8 +1,7 @@
 import type { ReactNode } from "react";
 
 // Spec tiles, a features list and a free-text description for the listing
-// page. Features and description render nothing until the listings table has
-// data for them.
+// page. Features and description render nothing when the listing has none.
 
 export type Spec = { label: string; value: string | null | undefined; icon: ReactNode };
 
