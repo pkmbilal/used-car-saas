@@ -38,7 +38,7 @@ export async function getOpenReports() {
   const { data, error } = await supabase
     .from("listing_reports")
     .select(
-      "id, reason, details, created_at, listing:listings(*, listing_images(*), seller:profiles(id, full_name))",
+      "id, reason, details, created_at, listing:listings(*, listing_images(*), seller:profiles!listings_seller_id_fkey(id, full_name))",
     )
     .eq("status", "open")
     .order("created_at", { ascending: false });
@@ -66,7 +66,7 @@ export async function getAllListings(filters: {
   const supabase = createAdminClient();
   let query = supabase
     .from("listings")
-    .select("*, listing_images(*), seller:profiles(id, full_name)", { count: "exact" });
+    .select("*, listing_images(*), seller:profiles!listings_seller_id_fkey(id, full_name)", { count: "exact" });
 
   if (filters.status) query = query.eq("status", filters.status);
   const q = searchTerm(filters.q);
@@ -139,7 +139,7 @@ export async function restoreListing(listingId: string): Promise<AdminResult> {
 
   const { data: listing } = await supabase
     .from("listings")
-    .select("status, seller:profiles(suspended_at)")
+    .select("status, seller:profiles!listings_seller_id_fkey(suspended_at)")
     .eq("id", listingId)
     .maybeSingle();
   if (!listing || listing.status !== "removed") return { error: "Listing is not removed." };
