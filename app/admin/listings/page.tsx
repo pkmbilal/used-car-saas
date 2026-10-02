@@ -1,7 +1,8 @@
 import Link from "next/link";
+import { RiyalPrice } from "@/components/riyal-price";
 import { StatusBadge } from "@/app/dashboard/listings/status-badge";
 import { FEATURE_DAYS, getAllListings } from "@/lib/admin";
-import { formatDay, formatMonthYear, formatSAR } from "@/lib/format";
+import { formatDay, formatMonthYear } from "@/lib/format";
 import { isFeatured, type ListingStatus } from "@/lib/listings";
 import { featureListingAction, restoreListingAction, unfeatureListingAction } from "../actions";
 import { AdminActionButton, RemoveListingButton } from "../admin-buttons";
@@ -64,7 +65,7 @@ export default async function AdminListingsPage({ searchParams }: PageProps<"/ad
                 <StatusBadge status={listing.status} />
               </div>
               <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-                {formatSAR(listing.price)} · {listing.city} · {listing.seller?.full_name ?? "Unnamed"} ·
+                <RiyalPrice amount={listing.price} /> · {listing.city} · {listing.seller?.full_name ?? "Unnamed"} ·
                 Listed {formatMonthYear(listing.created_at)}
               </p>
               {listing.featured_until && isFeatured(listing) && (

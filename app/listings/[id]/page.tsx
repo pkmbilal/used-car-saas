@@ -24,6 +24,7 @@ import {
 import { ListingGrid } from "@/components/listing-card";
 import { ReportListingButton } from "@/components/report-listing-button";
 import { VerificationBadges } from "@/components/verification-badges";
+import { RiyalPrice } from "@/components/riyal-price";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -144,7 +145,7 @@ export default async function ListingPage({ params }: PageProps<"/listings/[id]"
               {listing.city}
             </span>
           </p>
-          <p className="mt-4 text-3xl font-bold text-lime">{formatSAR(listing.price)}</p>
+          <p className="mt-4 text-3xl font-bold text-lime"><RiyalPrice amount={listing.price} /></p>
         </div>
       </section>
 
@@ -162,7 +163,7 @@ export default async function ListingPage({ params }: PageProps<"/listings/[id]"
 
         <aside className="flex flex-col gap-5">
           <Card className="gap-0 rounded-lg px-5 pt-4 pb-5 shadow-[0_2px_12px_rgba(20,30,25,.06)] ring-0">
-            <p className="text-[1.6875rem] font-bold text-brand">{formatSAR(listing.price)}</p>
+            <p className="text-[1.6875rem] font-bold text-brand"><RiyalPrice amount={listing.price} /></p>
             {views !== null && <p className="mt-1 text-xs text-muted-foreground">{formatViews(views)}</p>}
 
             {seller?.phone && !isOwner && (

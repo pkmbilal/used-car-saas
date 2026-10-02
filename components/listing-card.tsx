@@ -2,9 +2,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { FavoriteButton } from "@/components/favorite-button";
 import { ArrowRight, Car, Fuel, MapPin } from "lucide-react";
+import { RiyalPrice } from "@/components/riyal-price";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
-import { formatKm, formatSAR } from "@/lib/format";
+import { formatKm } from "@/lib/format";
 import { bodyTypeLabel, capitalize } from "@/lib/listing-options";
 import { isFeatured, type ListingWithImages } from "@/lib/listings";
 
@@ -60,7 +61,7 @@ export function ListingCard({ listing, favorited, sizes }: CardProps) {
               )}
             </p>
             <p className="mt-3 text-[0.9375rem] font-bold text-brand">
-              {formatSAR(listing.price)}
+              <RiyalPrice amount={listing.price} />
             </p>
             <div className="mt-auto flex items-center gap-4 pt-3 text-[0.6875rem] text-muted-foreground">
               {listing.body_type && (
