@@ -42,7 +42,7 @@ export function PlanCard({ plan, details, cta }: { plan: Plan; details: PlanDeta
       <ul className="mt-6 flex flex-col gap-2.5 text-[0.8125rem]">
         {details.features.map((feature) => (
           <li key={feature} className="flex items-start gap-2">
-            <Check className="mt-0.5 size-4 text-brand" strokeWidth={2.6} />
+            <Check className="mt-0.5 size-4 shrink-0 text-brand" strokeWidth={2.6} />
             {feature}
           </li>
         ))}
