@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import { getCurrentUser, type Profile } from "@/lib/auth";
 import { getLatestDealerApplication } from "@/lib/dealer-application";
-import { PLAN_DETAILS, PLANS, type Plan } from "@/lib/plans";
+import { getListingQuota, PLAN_DETAILS, PLANS, type Plan } from "@/lib/plans";
+import { PricingFaq } from "./faq";
 import { PlanCard, type PlanCta } from "./plan-card";
+import { UsageBanner } from "./usage-banner";
 
 export const metadata: Metadata = {
   title: "Pricing | DriveLoop",
@@ -47,7 +49,12 @@ function planCta(
 
 export default async function PricingPage() {
   const current = await getCurrentUser();
-  const latest = current ? await getLatestDealerApplication(current.user.id) : null;
+  const [latest, quota] = current
+    ? await Promise.all([
+        getLatestDealerApplication(current.user.id),
+        current.profile.role === "seller" ? getListingQuota() : null,
+      ])
+    : [null, null];
   const applicationPending = latest?.status === "pending";
 
   return (
@@ -66,6 +73,11 @@ export default async function PricingPage() {
       </section>
 
       <div className="mx-auto w-full max-w-6xl px-4 py-10 sm:px-6">
+        {quota && (
+          <div className="mb-8">
+            <UsageBanner quota={quota} applicationPending={applicationPending} />
+          </div>
+        )}
         <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-5">
           {PLANS.map((plan) => (
             <li key={plan}>
@@ -78,9 +90,9 @@ export default async function PricingPage() {
           ))}
         </ul>
         <p className="mt-6 text-center text-xs text-muted-foreground">
-          Prices are in Saudi Riyals. Dealer plans are activated after our team reviews your
-          application.
+          Prices are in Saudi Riyals.
         </p>
+        <PricingFaq />
       </div>
     </main>
   );
