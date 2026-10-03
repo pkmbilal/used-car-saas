@@ -14,6 +14,10 @@ export type FuelType = (typeof FUEL_TYPES)[number];
 export type Transmission = (typeof TRANSMISSIONS)[number];
 export type BodyType = (typeof BODY_TYPES)[number];
 
+// Must match the check constraints on listings.color and listings.description.
+export const MAX_COLOR_LENGTH = 30;
+export const MAX_DESCRIPTION_LENGTH = 4000;
+
 // Must match the check constraint on listings.features.
 export const FEATURES = [
   { value: "sunroof", label: "Sunroof" },

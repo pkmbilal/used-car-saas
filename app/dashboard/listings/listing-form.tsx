@@ -9,6 +9,8 @@ import {
   CONDITIONS,
   FEATURES,
   FUEL_TYPES,
+  MAX_COLOR_LENGTH,
+  MAX_DESCRIPTION_LENGTH,
   TRANSMISSIONS,
 } from "@/lib/listing-options";
 import type { ListingInput } from "@/lib/listings";
@@ -129,6 +131,29 @@ export function ListingForm({ listing, action, submitLabel }: Props) {
           format={bodyTypeLabel}
         />
       </Field>
+      <Field id="color" label="Color (optional)">
+        <input
+          id="color"
+          name="color"
+          maxLength={MAX_COLOR_LENGTH}
+          placeholder="e.g. Pearl white"
+          defaultValue={listing?.color ?? undefined}
+          className={inputClass}
+        />
+      </Field>
+      <div className="sm:col-span-2">
+        <Field id="description" label="Description (optional)">
+          <textarea
+            id="description"
+            name="description"
+            rows={5}
+            maxLength={MAX_DESCRIPTION_LENGTH}
+            placeholder="Service history, recent repairs, anything a buyer should know"
+            defaultValue={listing?.description ?? undefined}
+            className={inputClass}
+          />
+        </Field>
+      </div>
       <fieldset className="sm:col-span-2">
         <legend className="text-sm font-medium">Features</legend>
         <div className="mt-2 grid grid-cols-2 gap-x-4 gap-y-2 sm:grid-cols-3">

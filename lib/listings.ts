@@ -6,6 +6,8 @@ import {
   CONDITIONS,
   FEATURE_VALUES,
   FUEL_TYPES,
+  MAX_COLOR_LENGTH,
+  MAX_DESCRIPTION_LENGTH,
   TRANSMISSIONS,
   type BodyType,
   type Condition,
@@ -36,6 +38,8 @@ export type ListingInput = Pick<
   | "transmission"
   | "body_type"
   | "features"
+  | "color"
+  | "description"
 >;
 
 function includes<T extends string>(list: readonly T[], value: unknown): value is T {
@@ -69,7 +73,15 @@ export const LISTING_BOUNDS = {
   maxModelLength: 60,
   maxMileage: 2_000_000,
   maxPrice: 100_000_000,
+  maxColorLength: MAX_COLOR_LENGTH,
+  maxDescriptionLength: MAX_DESCRIPTION_LENGTH,
 } as const;
+
+// Optional free text: blank means "not given".
+function optionalText(value: string | null): string | null {
+  const text = value?.trim();
+  return text ? text : null;
+}
 
 export function maxListingYear(): number {
   return new Date().getFullYear() + 1;
@@ -94,8 +106,12 @@ export function parseListingFields(
   const transmission = matchOption(TRANSMISSIONS, get("transmission"));
   const bodyType = matchOption(BODY_TYPES, get("body_type"));
   const features = matchOptions(FEATURE_VALUES, get("features"));
+  const color = optionalText(get("color"));
+  // Normalize line endings so the length check matches what the database stores.
+  const description = optionalText(get("description")?.replace(/\r\n/g, "\n") ?? null);
   const maxYear = maxListingYear();
-  const { minYear, maxModelLength, maxMileage, maxPrice } = LISTING_BOUNDS;
+  const { minYear, maxModelLength, maxMileage, maxPrice, maxColorLength, maxDescriptionLength } =
+    LISTING_BOUNDS;
 
   if (!make) return { error: "Choose a make.", field: "make" };
   if (model.length < 1 || model.length > maxModelLength) {
@@ -115,6 +131,15 @@ export function parseListingFields(
   if (!fuelType) return { error: "Choose the fuel type.", field: "fuel_type" };
   if (!transmission) return { error: "Choose the transmission.", field: "transmission" };
   if (!bodyType) return { error: "Choose the body style.", field: "body_type" };
+  if (color && color.length > maxColorLength) {
+    return { error: `Keep the color under ${maxColorLength} characters.`, field: "color" };
+  }
+  if (description && description.length > maxDescriptionLength) {
+    return {
+      error: `Keep the description under ${maxDescriptionLength.toLocaleString("en")} characters.`,
+      field: "description",
+    };
+  }
 
   return {
     data: {
@@ -129,6 +154,8 @@ export function parseListingFields(
       transmission,
       body_type: bodyType,
       features,
+      color,
+      description,
     },
   };
 }
@@ -164,17 +191,17 @@ export function withImageUrls<
 // RLS-scoped: returns only the signed-in seller's listings.
 export async function getSellerListings(
   sellerId: string,
-): Promise<(ListingWithImages & { views: number })[]> {
+): Promise<(ListingWithImages & { stats: ListingStats })[]> {
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("listings")
-    .select("*, listing_images(*), listing_view_counts(views)")
+    .select("*, listing_images(*), listing_view_counts(views, calls, whatsapps)")
     .eq("seller_id", sellerId)
     .order("created_at", { ascending: false });
   if (error) throw error;
   return data.map(({ listing_view_counts, ...listing }) => ({
     ...withImageUrls(listing),
-    views: listing_view_counts?.views ?? 0,
+    stats: listing_view_counts ?? { views: 0, calls: 0, whatsapps: 0 },
   }));
 }
 

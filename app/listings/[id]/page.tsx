@@ -31,7 +31,7 @@ import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { getCurrentUser } from "@/lib/auth";
 import { getFavoriteIds } from "@/lib/favorites";
-import { formatDay, formatKm, formatMonthYear, formatSAR, formatViews, whatsappUrl } from "@/lib/format";
+import { formatDay, formatKm, formatMonthYear, formatListingStats, formatSAR, whatsappUrl } from "@/lib/format";
 import { bodyTypeLabel, capitalize } from "@/lib/listing-options";
 import { getListingStats, getPublicListing, getSimilarListings, isFeatured } from "@/lib/listings";
 import { getStorefront } from "@/lib/storefront";
@@ -54,13 +54,6 @@ export async function generateMetadata({
   return {
     title: `${listing.year} ${listing.make} ${listing.model} — ${formatSAR(listing.price)} | DriveLoop`,
   };
-}
-
-// Columns the listings table doesn't have yet (color, description). `select("*")` returns them automatically once a
-// migration adds them, and the page starts showing them.
-function optionalText(listing: object, key: string): string | null {
-  const value = (listing as Record<string, unknown>)[key];
-  return typeof value === "string" && value.trim() ? capitalize(value.trim()) : null;
 }
 
 export default async function ListingPage({ params }: PageProps<"/listings/[id]">) {
@@ -94,7 +87,7 @@ export default async function ListingPage({ params }: PageProps<"/listings/[id]"
     { label: "Condition", value: capitalize(listing.condition), icon: <Sparkles {...specIcon} /> },
     { label: "Transmission", value: transmission, icon: <Cog {...specIcon} /> },
     { label: "Body Style", value: listing.body_type && bodyTypeLabel(listing.body_type), icon: <Car {...specIcon} /> },
-    { label: "Color", value: optionalText(listing, "color"), icon: <Palette {...specIcon} /> },
+    { label: "Color", value: listing.color && capitalize(listing.color), icon: <Palette {...specIcon} /> },
     { label: "City", value: listing.city, icon: <MapPin {...specIcon} /> },
     { label: "Listed", value: formatMonthYear(listing.created_at), icon: <Clock {...specIcon} /> },
   ];
@@ -158,7 +151,7 @@ export default async function ListingPage({ params }: PageProps<"/listings/[id]"
           />
           <SpecGrid specs={specs} />
           <ListingFeatures features={listing.features} />
-          <ListingDescription text={optionalText(listing, "description")} />
+          <ListingDescription text={listing.description} />
         </div>
 
         <aside className="flex flex-col gap-5">
@@ -166,7 +159,7 @@ export default async function ListingPage({ params }: PageProps<"/listings/[id]"
             <p className="text-[1.6875rem] font-bold text-brand"><RiyalPrice amount={listing.price} /></p>
             {stats && (
               <p className="mt-1 text-xs text-muted-foreground">
-                {formatViews(stats.views)} · {formatCount(stats.calls, "call")} · {formatCount(stats.whatsapps, "WhatsApp")}
+                {formatListingStats(stats)}
               </p>
             )}
             {isOwner && featured && listing.featured_until && (
@@ -307,10 +300,6 @@ export default async function ListingPage({ params }: PageProps<"/listings/[id]"
       )}
     </main>
   );
-}
-
-function formatCount(count: number, noun: string): string {
-  return `${count.toLocaleString("en-US")} ${noun}${count === 1 ? "" : "s"}`;
 }
 
 // Absolute link for the prefilled WhatsApp message, from the current request.

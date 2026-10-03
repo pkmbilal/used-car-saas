@@ -2,7 +2,7 @@ import Image from "next/image";
 import { RiyalPrice } from "@/components/riyal-price";
 import Link from "next/link";
 import { requireSeller } from "@/lib/auth";
-import { formatDay, formatKm, formatViews } from "@/lib/format";
+import { formatDay, formatKm, formatListingStats } from "@/lib/format";
 import { getSellerListings, isFeatured } from "@/lib/listings";
 import { getListingQuota, isDealerPlan, quotaSummary } from "@/lib/plans";
 import { ListingActions } from "./listings/listing-actions";
@@ -97,7 +97,7 @@ export default async function DashboardPage() {
                   </div>
                   <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
                     <RiyalPrice amount={listing.price} /> · {formatKm(listing.mileage)} ·{" "}
-                    {listing.city} · {formatViews(listing.views)}
+                    {listing.city} · {formatListingStats(listing.stats)}
                   </p>
                   {listing.status === "active" && listing.featured_until && isFeatured(listing) && (
                     <p className="mt-1 text-sm text-amber-700 dark:text-amber-400">
