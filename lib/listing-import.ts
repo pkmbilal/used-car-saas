@@ -23,10 +23,16 @@ export const IMPORT_COLUMNS = [
   "transmission",
   "body_type",
   "features",
+  "color",
+  "description",
 ] as const satisfies readonly (keyof ListingInput)[];
 
 // May be left out of the header row entirely.
-export const OPTIONAL_IMPORT_COLUMNS: readonly (typeof IMPORT_COLUMNS)[number][] = ["features"];
+export const OPTIONAL_IMPORT_COLUMNS: readonly (typeof IMPORT_COLUMNS)[number][] = [
+  "features",
+  "color",
+  "description",
+];
 
 export const MAX_IMPORT_ROWS = 200;
 // Stays under the default 1MB Server Action body limit.
@@ -41,7 +47,8 @@ export type ParsedImport =
   | { rowErrors: ImportRowError[] };
 
 function rowErrorMessage(field: keyof ListingInput, value: string): string {
-  const { minYear, maxModelLength, maxMileage, maxPrice } = LISTING_BOUNDS;
+  const { minYear, maxModelLength, maxMileage, maxPrice, maxColorLength, maxDescriptionLength } =
+    LISTING_BOUNDS;
   const expected: Record<keyof ListingInput, string> = {
     make: "one of the supported makes",
     model: `up to ${maxModelLength} characters`,
@@ -54,6 +61,8 @@ function rowErrorMessage(field: keyof ListingInput, value: string): string {
     transmission: TRANSMISSIONS.join(", "),
     body_type: BODY_TYPES.join(", "),
     features: `any of ${FEATURE_VALUES.join(", ")}, separated by ;`,
+    color: `up to ${maxColorLength} characters`,
+    description: `up to ${maxDescriptionLength.toLocaleString("en")} characters`,
   };
 
   const trimmed = value.trim();

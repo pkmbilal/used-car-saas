@@ -19,6 +19,8 @@ const COLUMN_HINTS: Record<(typeof IMPORT_COLUMNS)[number], string> = {
   transmission: TRANSMISSIONS.join(", "),
   body_type: BODY_TYPES.join(", "),
   features: `Optional. Any of ${FEATURE_VALUES.join(", ")}, separated by ; e.g. sunroof;navigation`,
+  color: "Optional. Free text, e.g. Pearl white",
+  description: "Optional. Free text; wrap in double quotes if it contains commas or line breaks",
 };
 
 export default async function ImportListingsPage() {

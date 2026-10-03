@@ -44,5 +44,16 @@ export function formatDay(date: string): string {
 }
 
 export function formatViews(views: number): string {
-  return `${numberFormatter.format(views)} ${views === 1 ? "view" : "views"}`;
+  return formatCount(views, "view");
+}
+
+export function formatCount(count: number, noun: string): string {
+  return `${numberFormatter.format(count)} ${noun}${count === 1 ? "" : "s"}`;
+}
+
+// "120 views · 4 calls · 9 WhatsApps", for the seller's own listings.
+export function formatListingStats(stats: { views: number; calls: number; whatsapps: number }): string {
+  return [formatViews(stats.views), formatCount(stats.calls, "call"), formatCount(stats.whatsapps, "WhatsApp")].join(
+    " · ",
+  );
 }

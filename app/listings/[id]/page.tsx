@@ -7,11 +7,11 @@ import { cache } from "react";
 import { DealerBadge, DealerLogo } from "@/components/dealer-logo";
 import { FavoriteButton } from "@/components/favorite-button";
 import {
-  ArrowLeft,
   BadgeCheck,
   CalendarDays,
   Car,
   Clock,
+  Cog,
   Fuel,
   Gauge,
   MapPin,
@@ -31,10 +31,12 @@ import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { getCurrentUser } from "@/lib/auth";
 import { getFavoriteIds } from "@/lib/favorites";
-import { formatKm, formatMonthYear, formatSAR, formatViews, whatsappUrl } from "@/lib/format";
+import { formatDay, formatKm, formatMonthYear, formatListingStats, formatSAR, whatsappUrl } from "@/lib/format";
 import { bodyTypeLabel, capitalize } from "@/lib/listing-options";
-import { getListingViews, getPublicListing, getSimilarListings, isFeatured } from "@/lib/listings";
+import { getListingStats, getPublicListing, getSimilarListings, isFeatured } from "@/lib/listings";
 import { getStorefront } from "@/lib/storefront";
+import { BackLink } from "./back-link";
+import { ContactLink } from "./contact-link";
 import { Gallery } from "./gallery";
 import { ListingDescription, ListingFeatures, SpecGrid } from "./listing-details";
 import { ShareButton } from "./share-button";
@@ -54,13 +56,6 @@ export async function generateMetadata({
   };
 }
 
-// Columns the listings table doesn't have yet (color, description). `select("*")` returns them automatically once a
-// migration adds them, and the page starts showing them.
-function optionalText(listing: object, key: string): string | null {
-  const value = (listing as Record<string, unknown>)[key];
-  return typeof value === "string" && value.trim() ? capitalize(value.trim()) : null;
-}
-
 export default async function ListingPage({ params }: PageProps<"/listings/[id]">) {
   const { id } = await params;
   const [listing, current] = await Promise.all([getListing(id), getCurrentUser()]);
@@ -72,14 +67,15 @@ export default async function ListingPage({ params }: PageProps<"/listings/[id]"
   const seller = listing.seller;
   const storefront = seller ? getStorefront(seller) : null;
   const featured = isFeatured(listing);
-  const [views, favoriteIds, similar] = await Promise.all([
-    isOwner ? getListingViews(listing.id) : null,
+  const [stats, favoriteIds, similar] = await Promise.all([
+    isOwner ? getListingStats(listing.id) : null,
     current ? getFavoriteIds(current.user.id) : new Set<string>(),
     getSimilarListings(listing, 4),
   ]);
   const whatsappText = `Hi, I'm interested in your ${title} listed for ${formatSAR(listing.price)}: ${await listingUrl(listing.id)}`;
   const cover = listing.images[0];
   const transmission = listing.transmission ? capitalize(listing.transmission) : null;
+  const contactPhone = !isOwner && seller?.phone ? seller.phone : null;
 
   const specIcon = { className: "size-4", strokeWidth: 1.8 };
   const specs = [
@@ -89,15 +85,15 @@ export default async function ListingPage({ params }: PageProps<"/listings/[id]"
     { label: "Mileage", value: formatKm(listing.mileage), icon: <Gauge {...specIcon} /> },
     { label: "Fuel Type", value: capitalize(listing.fuel_type), icon: <Fuel {...specIcon} /> },
     { label: "Condition", value: capitalize(listing.condition), icon: <Sparkles {...specIcon} /> },
-    { label: "Transmission", value: transmission, icon: <Gauge {...specIcon} /> },
+    { label: "Transmission", value: transmission, icon: <Cog {...specIcon} /> },
     { label: "Body Style", value: listing.body_type && bodyTypeLabel(listing.body_type), icon: <Car {...specIcon} /> },
-    { label: "Color", value: optionalText(listing, "color"), icon: <Palette {...specIcon} /> },
+    { label: "Color", value: listing.color && capitalize(listing.color), icon: <Palette {...specIcon} /> },
     { label: "City", value: listing.city, icon: <MapPin {...specIcon} /> },
     { label: "Listed", value: formatMonthYear(listing.created_at), icon: <Clock {...specIcon} /> },
   ];
 
   return (
-    <main className="light bg-canvas text-ink">
+    <main className={`light bg-canvas text-ink ${contactPhone ? "max-lg:pb-20" : ""}`}>
       {!isOwner && listing.status === "active" && <ViewTracker listingId={listing.id} />}
       {isOwner && listing.status !== "active" && (
         <div className="bg-amber-50 text-sm text-amber-900">
@@ -123,10 +119,7 @@ export default async function ListingPage({ params }: PageProps<"/listings/[id]"
         )}
         <div className="absolute inset-0 bg-[linear-gradient(90deg,#1b2125_0%,#1b2125_36%,rgba(27,33,37,.55)_48%,rgba(27,33,37,0)_62%)]" />
         <div className="relative mx-auto w-full max-w-6xl px-4 pt-7 pb-9 sm:px-6">
-          <Link href="/listings" className="inline-flex items-center gap-2 text-xs font-medium text-white hover:text-lime">
-            <ArrowLeft className="size-3" strokeWidth={2.4} />
-            Back to Search
-          </Link>
+          <BackLink />
           <div className="mt-4 flex flex-wrap items-center gap-3.5">
             <h1 className="text-3xl font-semibold tracking-tight">{name}</h1>
             {featured && (
@@ -158,27 +151,43 @@ export default async function ListingPage({ params }: PageProps<"/listings/[id]"
           />
           <SpecGrid specs={specs} />
           <ListingFeatures features={listing.features} />
-          <ListingDescription text={optionalText(listing, "description")} />
+          <ListingDescription text={listing.description} />
         </div>
 
         <aside className="flex flex-col gap-5">
           <Card className="gap-0 rounded-lg px-5 pt-4 pb-5 shadow-[0_2px_12px_rgba(20,30,25,.06)] ring-0">
             <p className="text-[1.6875rem] font-bold text-brand"><RiyalPrice amount={listing.price} /></p>
-            {views !== null && <p className="mt-1 text-xs text-muted-foreground">{formatViews(views)}</p>}
+            {stats && (
+              <p className="mt-1 text-xs text-muted-foreground">
+                {formatListingStats(stats)}
+              </p>
+            )}
+            {isOwner && featured && listing.featured_until && (
+              <p className="mt-3 flex items-center gap-1.5 rounded-md bg-mint px-3 py-2 text-xs font-medium text-brand-600">
+                <Sparkles className="size-3.5" />
+                Featured until {formatDay(listing.featured_until)}
+              </p>
+            )}
 
-            {seller?.phone && !isOwner && (
+            {contactPhone && (
               <div className="mt-4 flex flex-col gap-2.5">
                 <Button asChild className="h-11 text-[0.8125rem] font-semibold hover:bg-brand-dark hover:text-white">
-                  <a href={`tel:${seller.phone}`}>
+                  <ContactLink listingId={listing.id} kind="call" href={`tel:${contactPhone}`}>
                     <Phone className="size-4" />
                     Call Seller
-                  </a>
+                  </ContactLink>
                 </Button>
                 <Button asChild variant="outline" className="h-11 border-brand text-[0.8125rem] font-semibold text-ink hover:bg-mint">
-                  <a href={whatsappUrl(seller.phone, whatsappText)} target="_blank" rel="noopener noreferrer">
+                  <ContactLink
+                    listingId={listing.id}
+                    kind="whatsapp"
+                    href={whatsappUrl(contactPhone, whatsappText)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     <MessageCircle className="size-4 text-brand" />
                     WhatsApp
-                  </a>
+                  </ContactLink>
                 </Button>
               </div>
             )}
@@ -249,7 +258,7 @@ export default async function ListingPage({ params }: PageProps<"/listings/[id]"
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-semibold">Similar Cars You May Like</h2>
             <Link
-              href={`/listings?make=${encodeURIComponent(listing.make)}`}
+              href={`/listings?${new URLSearchParams({ make: listing.make, model: listing.model })}`}
               className="text-[0.6875rem] font-semibold text-brand"
             >
               View All →
@@ -259,6 +268,35 @@ export default async function ListingPage({ params }: PageProps<"/listings/[id]"
             <ListingGrid listings={similar} favoriteIds={favoriteIds} />
           </div>
         </section>
+      )}
+
+      {/* On mobile the sidebar sits below the gallery and specs, so keep contact one tap away. */}
+      {contactPhone && (
+        <div className="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-white/95 backdrop-blur lg:hidden">
+          <div className="mx-auto flex w-full max-w-6xl items-center gap-2.5 px-4 py-3 sm:px-6">
+            <p className="mr-auto min-w-0 truncate text-base font-bold text-brand">
+              <RiyalPrice amount={listing.price} />
+            </p>
+            <Button asChild size="sm" className="h-10 px-4 text-xs font-semibold">
+              <ContactLink listingId={listing.id} kind="call" href={`tel:${contactPhone}`}>
+                <Phone className="size-4" />
+                Call
+              </ContactLink>
+            </Button>
+            <Button asChild size="sm" variant="outline" className="h-10 border-brand px-4 text-xs font-semibold text-ink">
+              <ContactLink
+                listingId={listing.id}
+                kind="whatsapp"
+                href={whatsappUrl(contactPhone, whatsappText)}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <MessageCircle className="size-4 text-brand" />
+                WhatsApp
+              </ContactLink>
+            </Button>
+          </div>
+        </div>
       )}
     </main>
   );
