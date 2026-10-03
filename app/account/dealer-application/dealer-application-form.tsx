@@ -8,6 +8,7 @@ import {
   DEALER_DOCS,
   REGISTRATION_NUMBER_MAX,
   type DealerDoc,
+  type DealerPlan,
 } from "@/lib/dealer-application-options";
 import { BUSINESS_NAME_MAX, SHOWROOM_ADDRESS_MAX } from "@/lib/storefront-options";
 import { ID_DOC_TYPES, isIdDocType, MAX_ID_DOC_BYTES } from "@/lib/verification-options";
@@ -15,6 +16,7 @@ import { requestDealerDocUploadAction, submitDealerApplicationAction } from "../
 
 type Props = {
   profile: Pick<Profile, "full_name" | "phone" | "city" | "business_name" | "showroom_address">;
+  defaultPlan?: DealerPlan;
 };
 
 const inputClass =
@@ -30,7 +32,8 @@ const NUMBER_FIELDS: { name: string; label: string; doc: DealerDoc }[] = [
 
 const PLAN_CHOICES = [
   { value: "dealer", label: "Dealer", note: "30 listings a month, storefront, CSV import" },
-  { value: "dealer_pro", label: "Dealer Pro", note: "Unlimited listings, storefront, CSV import" },
+  { value: "dealer_pro", label: "Pro", note: "100 listings a month, storefront, CSV import, featured listings" },
+  { value: "showroom", label: "Showroom", note: "Unlimited listings, storefront, CSV import, featured listings" },
 ] as const;
 
 function Field({
@@ -52,7 +55,7 @@ function Field({
   );
 }
 
-export function DealerApplicationForm({ profile }: Props) {
+export function DealerApplicationForm({ profile, defaultPlan = "dealer" }: Props) {
   const [files, setFiles] = useState<Partial<Record<DealerDoc, File>>>({});
   const [pending, startTransition] = useTransition();
   const [progress, setProgress] = useState<string>();
@@ -218,7 +221,7 @@ export function DealerApplicationForm({ profile }: Props) {
 
       <fieldset className="flex flex-col gap-3" disabled={pending}>
         <legend className="mb-4 text-lg font-medium">Plan</legend>
-        {PLAN_CHOICES.map((plan, index) => (
+        {PLAN_CHOICES.map((plan) => (
           <label
             key={plan.value}
             className="flex cursor-pointer items-start gap-3 rounded-md border border-zinc-200 p-4 has-[:checked]:border-zinc-900 dark:border-zinc-800 dark:has-[:checked]:border-zinc-100"
@@ -227,7 +230,7 @@ export function DealerApplicationForm({ profile }: Props) {
               type="radio"
               name="requested_plan"
               value={plan.value}
-              defaultChecked={index === 0}
+              defaultChecked={plan.value === defaultPlan}
               className="mt-1"
             />
             <span>

@@ -26,6 +26,7 @@ const columns: { title: string; links: [string, string][] }[] = [
     title: "SELL",
     links: [
       ["Sell Your Car", "/account/become-seller"],
+      ["Pricing", "/pricing"],
       ["Seller Dashboard", "/dashboard"],
       ["My Account", "/account"],
     ],

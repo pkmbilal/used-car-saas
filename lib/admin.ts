@@ -1,5 +1,6 @@
 import "server-only";
 import { requireAdmin } from "@/lib/auth";
+import { isDealerPlanChoice } from "@/lib/dealer-application-options";
 import { withImageUrls, type ListingStatus } from "@/lib/listings";
 import { SUSPENSION_REMOVAL_REASON } from "@/lib/moderation";
 import { isPlan } from "@/lib/plans";
@@ -435,7 +436,7 @@ export async function approveDealerApplication(
   applicationId: string,
   plan: string,
 ): Promise<AdminResult> {
-  if (plan !== "dealer" && plan !== "dealer_pro") return { error: "Choose a dealer plan." };
+  if (!isDealerPlanChoice(plan)) return { error: "Choose a dealer plan." };
 
   const reviewed = await reviewDealerApplication(applicationId, { status: "approved" });
   if ("error" in reviewed) return reviewed;

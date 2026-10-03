@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { requireUser } from "@/lib/auth";
 import { getLatestDealerApplication } from "@/lib/dealer-application";
+import { isDealerPlanChoice } from "@/lib/dealer-application-options";
 import { isDealerPlan, PLAN_LABELS } from "@/lib/plans";
 import { DealerApplicationForm } from "./dealer-application-form";
 
@@ -11,8 +12,11 @@ export const metadata: Metadata = {
 
 const noticeClass = "rounded-md px-4 py-3 text-sm";
 
-export default async function DealerApplicationPage() {
+export default async function DealerApplicationPage({
+  searchParams,
+}: PageProps<"/account/dealer-application">) {
   const { user, profile } = await requireUser("/account/dealer-application");
+  const { plan } = await searchParams;
   const latest = await getLatestDealerApplication(user.id);
 
   return (
@@ -54,7 +58,10 @@ export default async function DealerApplicationPage() {
                 {latest.reject_reason ? `: ${latest.reject_reason}` : "."} You can apply again.
               </p>
             )}
-            <DealerApplicationForm profile={profile} />
+            <DealerApplicationForm
+              profile={profile}
+              defaultPlan={isDealerPlanChoice(plan) ? plan : undefined}
+            />
           </>
         )}
       </div>

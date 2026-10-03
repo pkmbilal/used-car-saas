@@ -18,9 +18,9 @@ export function isDealerDoc(value: unknown): value is DealerDoc {
 }
 
 // Plans a dealer can apply for; billing isn't wired up, so a moderator grants them.
-export const DEALER_PLANS = ["dealer", "dealer_pro"] as const;
+export const DEALER_PLANS = ["dealer", "dealer_pro", "showroom"] as const;
 export type DealerPlan = (typeof DEALER_PLANS)[number];
 
 export function isDealerPlanChoice(value: unknown): value is DealerPlan {
-  return value === "dealer" || value === "dealer_pro";
+  return typeof value === "string" && (DEALER_PLANS as readonly string[]).includes(value);
 }

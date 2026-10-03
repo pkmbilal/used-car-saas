@@ -26,7 +26,7 @@ export type Database = {
           suspended_at: string | null;
           email_verified_at: string | null;
           id_verified_at: string | null;
-          plan: "free" | "dealer" | "dealer_pro";
+          plan: "free" | "dealer" | "dealer_pro" | "showroom";
           business_name: string | null;
           about: string | null;
           logo_key: string | null;
@@ -43,7 +43,7 @@ export type Database = {
           suspended_at?: string | null;
           email_verified_at?: string | null;
           id_verified_at?: string | null;
-          plan?: "free" | "dealer" | "dealer_pro";
+          plan?: "free" | "dealer" | "dealer_pro" | "showroom";
           business_name?: string | null;
           about?: string | null;
           logo_key?: string | null;
@@ -60,7 +60,7 @@ export type Database = {
           suspended_at?: string | null;
           email_verified_at?: string | null;
           id_verified_at?: string | null;
-          plan?: "free" | "dealer" | "dealer_pro";
+          plan?: "free" | "dealer" | "dealer_pro" | "showroom";
           business_name?: string | null;
           about?: string | null;
           logo_key?: string | null;
@@ -376,7 +376,7 @@ export type Database = {
           cr_number: string | null;
           vat_number: string | null;
           muroor_number: string | null;
-          requested_plan: "dealer" | "dealer_pro";
+          requested_plan: "dealer" | "dealer_pro" | "showroom";
           cr_doc_key: string | null;
           vat_doc_key: string | null;
           muroor_doc_key: string | null;
@@ -394,7 +394,7 @@ export type Database = {
           cr_number?: string | null;
           vat_number?: string | null;
           muroor_number?: string | null;
-          requested_plan: "dealer" | "dealer_pro";
+          requested_plan: "dealer" | "dealer_pro" | "showroom";
           cr_doc_key?: string | null;
           vat_doc_key?: string | null;
           muroor_doc_key?: string | null;
@@ -412,7 +412,7 @@ export type Database = {
           cr_number?: string | null;
           vat_number?: string | null;
           muroor_number?: string | null;
-          requested_plan?: "dealer" | "dealer_pro";
+          requested_plan?: "dealer" | "dealer_pro" | "showroom";
           cr_doc_key?: string | null;
           vat_doc_key?: string | null;
           muroor_doc_key?: string | null;
@@ -490,7 +490,7 @@ export type Database = {
       listing_quota_status: {
         Args: Record<PropertyKey, never>;
         Returns: {
-          plan: "free" | "dealer" | "dealer_pro";
+          plan: "free" | "dealer" | "dealer_pro" | "showroom";
           used: number;
           monthly_limit: number | null;
         }[];
