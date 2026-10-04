@@ -10,7 +10,12 @@ import {
   MAX_IMAGES_PER_LISTING,
 } from "@/lib/listing-options";
 import { getSellerListing, parseListing, type ListingStatus } from "@/lib/listings";
-import { getListingQuota, QUOTA_EXCEEDED_DB_MESSAGE, quotaExceededMessage } from "@/lib/plans";
+import {
+  featureOwnListing,
+  getListingQuota,
+  QUOTA_EXCEEDED_DB_MESSAGE,
+  quotaExceededMessage,
+} from "@/lib/plans";
 import { deleteObjects, presignPut } from "@/lib/r2";
 import { createClient } from "@/lib/supabase/server";
 
@@ -25,6 +30,15 @@ const SUSPENDED_ERROR = "Your account is suspended, so you can't publish listing
 
 function revalidateDashboard() {
   revalidatePath("/dashboard", "layout");
+}
+
+// Featured listings show on the home page and at the top of search, not just
+// the dashboard.
+export async function featureListing(listingId: string): Promise<ActionResult> {
+  await requireSeller();
+  const result = await featureOwnListing(listingId);
+  if (!result.error) revalidatePath("/", "layout");
+  return result;
 }
 
 export async function createListing(

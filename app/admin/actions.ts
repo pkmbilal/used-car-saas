@@ -49,8 +49,13 @@ export async function suspendUserAction(userId: string) {
   return revalidating(suspendUser(userId));
 }
 
-export async function setUserPlanAction(userId: string, plan: string) {
-  return revalidating(setUserPlan(userId, plan));
+export async function setUserPlanAction(
+  userId: string,
+  plan: string,
+  months: number | null,
+  note: string,
+) {
+  return revalidating(setUserPlan(userId, plan, months, note));
 }
 
 export async function unsuspendUserAction(userId: string) {
@@ -69,8 +74,12 @@ export async function revokeIdVerificationAction(userId: string) {
   return revalidating(revokeIdVerification(userId));
 }
 
-export async function approveDealerApplicationAction(applicationId: string, plan: string) {
-  return revalidating(approveDealerApplication(applicationId, plan));
+export async function approveDealerApplicationAction(
+  applicationId: string,
+  plan: string,
+  months: number | null,
+) {
+  return revalidating(approveDealerApplication(applicationId, plan, months));
 }
 
 export async function rejectDealerApplicationAction(applicationId: string, reason: string) {

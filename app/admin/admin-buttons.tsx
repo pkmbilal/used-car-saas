@@ -104,40 +104,86 @@ export function RemoveListingButton({ listingId }: { listingId: string }) {
   return <ReasonActionButton label="Remove" action={removeListingAction.bind(null, listingId)} />;
 }
 
-// Changes a seller's plan as soon as a different option is picked.
+type Option = { value: string; label: string };
+
+// Plan durations travel as strings ("" = no expiry) because <select> values do.
+function durationMonths(value: string): number | null {
+  return value === "" ? null : Number(value);
+}
+
+const selectClass =
+  "rounded-md border border-zinc-300 px-2 py-1 text-sm disabled:opacity-50 dark:border-zinc-700 dark:bg-zinc-900";
+
+// Grants a plan for a duration, with an optional note for the plan history.
+// Picking the current plan again renews it from today.
 export function PlanSelect({
   plan,
   plans,
+  durations,
   action,
 }: {
   plan: string;
-  plans: { value: string; label: string }[];
-  action: (plan: string) => Promise<AdminResult>;
+  plans: Option[];
+  durations: Option[];
+  action: (plan: string, months: number | null, note: string) => Promise<AdminResult>;
 }) {
   const { pending, error, run } = useAdminAction();
   const [value, setValue] = useState(plan);
+  const [duration, setDuration] = useState(durations[0]?.value ?? "");
+  const [note, setNote] = useState("");
 
   return (
-    <span className="inline-flex flex-col items-end gap-1">
-      <select
-        value={value}
-        disabled={pending}
-        aria-label="Plan"
-        onChange={(event) => {
-          const next = event.target.value;
-          setValue(next);
-          run(() => action(next));
-        }}
-        className="rounded-md border border-zinc-300 px-2 py-1 text-sm disabled:opacity-50 dark:border-zinc-700 dark:bg-zinc-900"
-      >
-        {plans.map((option) => (
-          <option key={option.value} value={option.value}>
-            {option.label}
-          </option>
-        ))}
-      </select>
+    <form
+      className="inline-flex flex-col items-end gap-1"
+      onSubmit={(event) => {
+        event.preventDefault();
+        run(() => action(value, durationMonths(duration), note), () => setNote(""));
+      }}
+    >
+      <span className="flex flex-wrap items-center justify-end gap-2">
+        <select
+          value={value}
+          disabled={pending}
+          aria-label="Plan"
+          onChange={(event) => setValue(event.target.value)}
+          className={selectClass}
+        >
+          {plans.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </select>
+        {value !== "free" && (
+          <select
+            value={duration}
+            disabled={pending}
+            aria-label="Plan duration"
+            onChange={(event) => setDuration(event.target.value)}
+            className={selectClass}
+          >
+            {durations.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+        )}
+        <input
+          value={note}
+          disabled={pending}
+          onChange={(event) => setNote(event.target.value)}
+          maxLength={300}
+          placeholder="Note (optional)"
+          aria-label="Note for the plan history"
+          className={`w-40 ${selectClass}`}
+        />
+        <button type="submit" disabled={pending} className={buttonClass}>
+          Save
+        </button>
+      </span>
       {error && <span className="text-sm text-red-600">{error}</span>}
-    </span>
+    </form>
   );
 }
 
@@ -145,14 +191,17 @@ export function PlanSelect({
 export function ApproveDealerButton({
   plan,
   plans,
+  durations,
   action,
 }: {
   plan: string;
-  plans: { value: string; label: string }[];
-  action: (plan: string) => Promise<AdminResult>;
+  plans: Option[];
+  durations: Option[];
+  action: (plan: string, months: number | null) => Promise<AdminResult>;
 }) {
   const { pending, error, run } = useAdminAction();
   const [value, setValue] = useState(plan);
+  const [duration, setDuration] = useState(durations[0]?.value ?? "");
 
   return (
     <span className="inline-flex flex-col items-end gap-1">
@@ -162,9 +211,22 @@ export function ApproveDealerButton({
           disabled={pending}
           aria-label="Plan to grant"
           onChange={(event) => setValue(event.target.value)}
-          className="rounded-md border border-zinc-300 px-2 py-1 text-sm disabled:opacity-50 dark:border-zinc-700 dark:bg-zinc-900"
+          className={selectClass}
         >
           {plans.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </select>
+        <select
+          value={duration}
+          disabled={pending}
+          aria-label="Plan duration"
+          onChange={(event) => setDuration(event.target.value)}
+          className={selectClass}
+        >
+          {durations.map((option) => (
             <option key={option.value} value={option.value}>
               {option.label}
             </option>
@@ -173,7 +235,7 @@ export function ApproveDealerButton({
         <button
           type="button"
           disabled={pending}
-          onClick={() => run(() => action(value))}
+          onClick={() => run(() => action(value, durationMonths(duration)))}
           className={buttonClass}
         >
           Approve

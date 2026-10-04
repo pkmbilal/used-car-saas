@@ -27,6 +27,7 @@ export type Database = {
           email_verified_at: string | null;
           id_verified_at: string | null;
           plan: "free" | "dealer" | "dealer_pro" | "showroom";
+          plan_expires_at: string | null;
           business_name: string | null;
           about: string | null;
           logo_key: string | null;
@@ -44,6 +45,7 @@ export type Database = {
           email_verified_at?: string | null;
           id_verified_at?: string | null;
           plan?: "free" | "dealer" | "dealer_pro" | "showroom";
+          plan_expires_at?: string | null;
           business_name?: string | null;
           about?: string | null;
           logo_key?: string | null;
@@ -61,6 +63,7 @@ export type Database = {
           email_verified_at?: string | null;
           id_verified_at?: string | null;
           plan?: "free" | "dealer" | "dealer_pro" | "showroom";
+          plan_expires_at?: string | null;
           business_name?: string | null;
           about?: string | null;
           logo_key?: string | null;
@@ -240,6 +243,112 @@ export type Database = {
           granted_by?: string | null;
         };
         Relationships: [];
+      };
+      plan_changes: {
+        Row: {
+          id: string;
+          user_id: string;
+          from_plan: "free" | "dealer" | "dealer_pro" | "showroom";
+          to_plan: "free" | "dealer" | "dealer_pro" | "showroom";
+          expires_at: string | null;
+          changed_by: string | null;
+          source: "admin" | "dealer_application" | "expiry";
+          note: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          from_plan: "free" | "dealer" | "dealer_pro" | "showroom";
+          to_plan: "free" | "dealer" | "dealer_pro" | "showroom";
+          expires_at?: string | null;
+          changed_by?: string | null;
+          source: "admin" | "dealer_application" | "expiry";
+          note?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          user_id?: string;
+          from_plan?: "free" | "dealer" | "dealer_pro" | "showroom";
+          to_plan?: "free" | "dealer" | "dealer_pro" | "showroom";
+          expires_at?: string | null;
+          changed_by?: string | null;
+          source?: "admin" | "dealer_application" | "expiry";
+          note?: string | null;
+          created_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "plan_changes_user_id_fkey";
+            columns: ["user_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "plan_changes_changed_by_fkey";
+            columns: ["changed_by"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      featured_grants: {
+        Row: {
+          id: string;
+          listing_id: string | null;
+          seller_id: string;
+          days: number;
+          featured_until: string;
+          granted_by: string | null;
+          self_serve: boolean;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          listing_id?: string | null;
+          seller_id: string;
+          days: number;
+          featured_until: string;
+          granted_by?: string | null;
+          self_serve?: boolean;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          listing_id?: string | null;
+          seller_id?: string;
+          days?: number;
+          featured_until?: string;
+          granted_by?: string | null;
+          self_serve?: boolean;
+          created_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "featured_grants_listing_id_fkey";
+            columns: ["listing_id"];
+            isOneToOne: false;
+            referencedRelation: "listings";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "featured_grants_seller_id_fkey";
+            columns: ["seller_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "featured_grants_granted_by_fkey";
+            columns: ["granted_by"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+        ];
       };
       listing_quota_usage: {
         Row: {
@@ -506,8 +615,16 @@ export type Database = {
       [_ in never]: never;
     };
     Functions: {
+      expire_plans: {
+        Args: Record<PropertyKey, never>;
+        Returns: number;
+      };
       feature_listing: {
         Args: { p_listing_id: string; p_days: number; p_admin: string };
+        Returns: string;
+      };
+      feature_own_listing: {
+        Args: { p_listing_id: string };
         Returns: string;
       };
       increment_listing_contact: {
@@ -518,10 +635,22 @@ export type Database = {
         Args: { p_listing_id: string };
         Returns: undefined;
       };
+      set_plan: {
+        Args: {
+          p_user: string;
+          p_plan: "free" | "dealer" | "dealer_pro" | "showroom";
+          p_expires_at: string | null;
+          p_changed_by: string | null;
+          p_source: "admin" | "dealer_application" | "expiry";
+          p_note?: string | null;
+        };
+        Returns: undefined;
+      };
       listing_quota_status: {
         Args: Record<PropertyKey, never>;
         Returns: {
           plan: "free" | "dealer" | "dealer_pro" | "showroom";
+          plan_expires_at: string | null;
           used: number;
           monthly_limit: number | null;
           featured_used: number;
