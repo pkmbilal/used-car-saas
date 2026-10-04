@@ -214,6 +214,33 @@ export type Database = {
           },
         ];
       };
+      featured_usage: {
+        Row: {
+          id: string;
+          seller_id: string;
+          listing_id: string | null;
+          month: string;
+          granted_at: string;
+          granted_by: string | null;
+        };
+        Insert: {
+          id?: string;
+          seller_id: string;
+          listing_id?: string | null;
+          month: string;
+          granted_at?: string;
+          granted_by?: string | null;
+        };
+        Update: {
+          id?: string;
+          seller_id?: string;
+          listing_id?: string | null;
+          month?: string;
+          granted_at?: string;
+          granted_by?: string | null;
+        };
+        Relationships: [];
+      };
       listing_quota_usage: {
         Row: {
           seller_id: string;
@@ -479,6 +506,10 @@ export type Database = {
       [_ in never]: never;
     };
     Functions: {
+      feature_listing: {
+        Args: { p_listing_id: string; p_days: number; p_admin: string };
+        Returns: string;
+      };
       increment_listing_contact: {
         Args: { p_listing_id: string; p_kind: string };
         Returns: undefined;
@@ -493,6 +524,8 @@ export type Database = {
           plan: "free" | "dealer" | "dealer_pro" | "showroom";
           used: number;
           monthly_limit: number | null;
+          featured_used: number;
+          featured_allowance: number | null;
         }[];
       };
     };

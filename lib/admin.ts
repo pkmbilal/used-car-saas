@@ -166,30 +166,26 @@ export async function dismissReports(listingId: string): Promise<AdminResult> {
   return {};
 }
 
-// Featured placement is granted by hand until payments land. Re-featuring a
-// listing that is still featured extends it rather than resetting it.
+// Featured placement is granted by hand until payments land. feature_listing
+// enforces the plan's monthly allowance (Pro/Showroom); listings on other
+// plans can be featured as paid extras. Re-featuring a listing that is still
+// featured extends it rather than resetting it.
 export const FEATURE_DAYS = [7, 30] as const;
 
 export async function featureListing(listingId: string, days: number): Promise<AdminResult> {
-  await requireAdmin();
+  const { user } = await requireAdmin();
   if (!(FEATURE_DAYS as readonly number[]).includes(days)) return { error: "Unknown duration." };
 
   const supabase = createAdminClient();
-  const { data: listing } = await supabase
-    .from("listings")
-    .select("status, featured_until")
-    .eq("id", listingId)
-    .maybeSingle();
-  if (!listing || listing.status !== "active") return { error: "Only live listings can be featured." };
-
-  const now = Date.now();
-  const current = listing.featured_until ? new Date(listing.featured_until).getTime() : 0;
-  const featuredUntil = new Date(Math.max(now, current) + days * 24 * 60 * 60 * 1000);
-
-  const { error } = await supabase
-    .from("listings")
-    .update({ featured_until: featuredUntil.toISOString() })
-    .eq("id", listingId);
+  const { error } = await supabase.rpc("feature_listing", {
+    p_listing_id: listingId,
+    p_days: days,
+    p_admin: user.id,
+  });
+  if (error?.message === "listing_not_active") return { error: "Only live listings can be featured." };
+  if (error?.message === "featured_allowance_exceeded") {
+    return { error: "This seller has used all the featured listings included in their plan this month." };
+  }
   if (error) return { error: "Could not feature the listing. Try again." };
   return {};
 }

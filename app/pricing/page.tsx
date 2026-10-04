@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { getCurrentUser, type Profile } from "@/lib/auth";
 import { getLatestDealerApplication } from "@/lib/dealer-application";
+import { salesWhatsappUrl } from "@/lib/contact";
 import { getListingQuota, PLAN_DETAILS, PLANS, type Plan } from "@/lib/plans";
 import { PricingFaq } from "./faq";
 import { PlanCard, type PlanCta } from "./plan-card";
@@ -56,6 +57,7 @@ export default async function PricingPage() {
       ])
     : [null, null];
   const applicationPending = latest?.status === "pending";
+  const salesUrl = salesWhatsappUrl("Hi, I have a question about DriveLoop plans.");
 
   return (
     <main className="light bg-canvas text-ink">
@@ -91,8 +93,17 @@ export default async function PricingPage() {
         </ul>
         <p className="mt-6 text-center text-xs text-muted-foreground">
           Prices are in Saudi Riyals.
+          {salesUrl && (
+            <>
+              {" "}
+              Questions?{" "}
+              <a href={salesUrl} target="_blank" rel="noopener noreferrer" className="font-semibold text-brand underline">
+                Talk to sales on WhatsApp
+              </a>
+            </>
+          )}
         </p>
-        <PricingFaq />
+        <PricingFaq salesUrl={salesUrl} />
       </div>
     </main>
   );

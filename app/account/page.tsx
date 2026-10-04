@@ -42,8 +42,8 @@ export default async function AccountPage({ searchParams }: PageProps<"/account"
       {profile.role === "seller" && profile.plan === "free" && (
         <p className="mt-8 text-sm">
           Selling as a business?{" "}
-          <Link href="/account/dealer-application" className="font-medium underline">
-            Apply for a dealer account
+          <Link href="/pricing" className="font-medium underline">
+            See dealer plans
           </Link>
         </p>
       )}

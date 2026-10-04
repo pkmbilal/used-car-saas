@@ -16,7 +16,10 @@ export default async function NewListingPage() {
       <h1 className="mt-2 text-2xl font-semibold tracking-tight">Sell your car</h1>
       {quota?.remaining === 0 ? (
         <p className="mt-6 rounded-md bg-amber-50 px-4 py-3 text-sm text-amber-900 dark:bg-amber-950 dark:text-amber-200">
-          {quotaExceededMessage(quota)}
+          {quotaExceededMessage(quota)}{" "}
+          <Link href="/pricing" className="font-medium underline">
+            See plans
+          </Link>
         </p>
       ) : (
         <>

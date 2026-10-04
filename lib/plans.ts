@@ -89,6 +89,8 @@ export type ListingQuota = {
   used: number;
   limit: number | null; // null = unlimited
   remaining: number | null;
+  featuredUsed: number;
+  featuredAllowance: number | null; // null = none included, admins feature as paid extras
 };
 
 export async function getListingQuota(): Promise<ListingQuota | null> {
@@ -102,6 +104,8 @@ export async function getListingQuota(): Promise<ListingQuota | null> {
     used: row.used,
     limit: row.monthly_limit,
     remaining: row.monthly_limit === null ? null : Math.max(0, row.monthly_limit - row.used),
+    featuredUsed: row.featured_used,
+    featuredAllowance: row.featured_allowance,
   };
 }
 
@@ -109,7 +113,7 @@ export async function getListingQuota(): Promise<ListingQuota | null> {
 export const QUOTA_EXCEEDED_DB_MESSAGE = "listing_quota_exceeded";
 
 export function quotaExceededMessage(quota: Pick<ListingQuota, "plan" | "limit">): string {
-  return `You've used all ${quota.limit} listings for this month on the ${PLAN_LABELS[quota.plan]} plan. Apply for a dealer account from your account page to list more.`;
+  return `You've used all ${quota.limit} listings for this month on the ${PLAN_LABELS[quota.plan]} plan. See the Pricing page to upgrade for more listings.`;
 }
 
 export function quotaSummary(quota: ListingQuota): string {

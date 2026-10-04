@@ -23,6 +23,8 @@ export function UsageBanner({
           {quota.limit === null
             ? `Unlimited listings · ${quota.used} created this month`
             : `${quota.used} of ${quota.limit} listings used this month`}
+          {quota.featuredAllowance !== null &&
+            ` · ${quota.featuredUsed} of ${quota.featuredAllowance} featured listings used`}
         </p>
         {quota.limit !== null && (
           <div className="mt-3 h-1.5 max-w-sm overflow-hidden rounded-full bg-mint">
