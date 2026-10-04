@@ -1,4 +1,5 @@
 import "server-only";
+import { DEALER_PLANS } from "@/lib/dealer-application-options";
 import { isDealerPlan, type Plan } from "@/lib/plans";
 import { publicUrl } from "@/lib/r2";
 import { createClient } from "@/lib/supabase/server";
@@ -53,7 +54,7 @@ export async function getDealerStorefronts() {
       "id, full_name, city, created_at, email_verified_at, id_verified_at, plan, business_name, about, logo_key, showroom_address, listings!listings_seller_id_fkey(count)",
     )
     .eq("role", "seller")
-    .in("plan", ["dealer", "dealer_pro"])
+    .in("plan", DEALER_PLANS)
     .is("suspended_at", null)
     .eq("listings.status", "active")
     .order("business_name", { ascending: true });

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { requireUser } from "@/lib/auth";
+import { isDealerPlanChoice } from "@/lib/dealer-application-options";
 import { becomeSeller } from "../actions";
 import { DealerApplicationForm } from "../dealer-application/dealer-application-form";
 import { ProfileForm } from "../profile-form";
@@ -23,7 +24,7 @@ export default async function BecomeSellerPage({
 }: PageProps<"/account/become-seller">) {
   const { profile } = await requireUser("/account/become-seller");
   if (profile.role === "seller") redirect("/dashboard");
-  const { type } = await searchParams;
+  const { type, plan } = await searchParams;
 
   if (type === "dealer") {
     return (
@@ -37,7 +38,10 @@ export default async function BecomeSellerPage({
           account once approved.
         </p>
         <div className="mt-8">
-          <DealerApplicationForm profile={profile} />
+          <DealerApplicationForm
+            profile={profile}
+            defaultPlan={isDealerPlanChoice(plan) ? plan : undefined}
+          />
         </div>
       </main>
     );

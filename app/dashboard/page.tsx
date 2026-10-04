@@ -22,6 +22,14 @@ export default async function DashboardPage() {
           {quota && (
             <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
               {quotaSummary(quota)}
+              {quota.plan !== "showroom" && (
+                <>
+                  {" · "}
+                  <Link href="/pricing" className="underline">
+                    Upgrade
+                  </Link>
+                </>
+              )}
               {isDealerPlan(quota.plan) && (
                 <>
                   {" · "}

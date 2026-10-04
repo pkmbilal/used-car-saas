@@ -37,13 +37,16 @@ export default async function ImportListingsPage() {
       {!isDealerPlan(profile.plan) ? (
         <p className="mt-6 rounded-md bg-amber-50 px-4 py-3 text-sm text-amber-900 dark:bg-amber-950 dark:text-amber-200">
           CSV import is available on dealer plans.{" "}
-          <Link href="/account/dealer-application" className="font-medium underline">
-            Apply for a dealer account
+          <Link href="/pricing" className="font-medium underline">
+            See dealer plans
           </Link>
         </p>
       ) : quota?.remaining === 0 ? (
         <p className="mt-6 rounded-md bg-amber-50 px-4 py-3 text-sm text-amber-900 dark:bg-amber-950 dark:text-amber-200">
-          {quotaExceededMessage(quota)}
+          {quotaExceededMessage(quota)}{" "}
+          <Link href="/pricing" className="font-medium underline">
+            See plans
+          </Link>
         </p>
       ) : (
         <>

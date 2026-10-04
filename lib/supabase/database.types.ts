@@ -26,7 +26,7 @@ export type Database = {
           suspended_at: string | null;
           email_verified_at: string | null;
           id_verified_at: string | null;
-          plan: "free" | "dealer" | "dealer_pro";
+          plan: "free" | "dealer" | "dealer_pro" | "showroom";
           business_name: string | null;
           about: string | null;
           logo_key: string | null;
@@ -43,7 +43,7 @@ export type Database = {
           suspended_at?: string | null;
           email_verified_at?: string | null;
           id_verified_at?: string | null;
-          plan?: "free" | "dealer" | "dealer_pro";
+          plan?: "free" | "dealer" | "dealer_pro" | "showroom";
           business_name?: string | null;
           about?: string | null;
           logo_key?: string | null;
@@ -60,7 +60,7 @@ export type Database = {
           suspended_at?: string | null;
           email_verified_at?: string | null;
           id_verified_at?: string | null;
-          plan?: "free" | "dealer" | "dealer_pro";
+          plan?: "free" | "dealer" | "dealer_pro" | "showroom";
           business_name?: string | null;
           about?: string | null;
           logo_key?: string | null;
@@ -213,6 +213,33 @@ export type Database = {
             referencedColumns: ["id"];
           },
         ];
+      };
+      featured_usage: {
+        Row: {
+          id: string;
+          seller_id: string;
+          listing_id: string | null;
+          month: string;
+          granted_at: string;
+          granted_by: string | null;
+        };
+        Insert: {
+          id?: string;
+          seller_id: string;
+          listing_id?: string | null;
+          month: string;
+          granted_at?: string;
+          granted_by?: string | null;
+        };
+        Update: {
+          id?: string;
+          seller_id?: string;
+          listing_id?: string | null;
+          month?: string;
+          granted_at?: string;
+          granted_by?: string | null;
+        };
+        Relationships: [];
       };
       listing_quota_usage: {
         Row: {
@@ -376,7 +403,7 @@ export type Database = {
           cr_number: string | null;
           vat_number: string | null;
           muroor_number: string | null;
-          requested_plan: "dealer" | "dealer_pro";
+          requested_plan: "dealer" | "dealer_pro" | "showroom";
           cr_doc_key: string | null;
           vat_doc_key: string | null;
           muroor_doc_key: string | null;
@@ -394,7 +421,7 @@ export type Database = {
           cr_number?: string | null;
           vat_number?: string | null;
           muroor_number?: string | null;
-          requested_plan: "dealer" | "dealer_pro";
+          requested_plan: "dealer" | "dealer_pro" | "showroom";
           cr_doc_key?: string | null;
           vat_doc_key?: string | null;
           muroor_doc_key?: string | null;
@@ -412,7 +439,7 @@ export type Database = {
           cr_number?: string | null;
           vat_number?: string | null;
           muroor_number?: string | null;
-          requested_plan?: "dealer" | "dealer_pro";
+          requested_plan?: "dealer" | "dealer_pro" | "showroom";
           cr_doc_key?: string | null;
           vat_doc_key?: string | null;
           muroor_doc_key?: string | null;
@@ -479,6 +506,10 @@ export type Database = {
       [_ in never]: never;
     };
     Functions: {
+      feature_listing: {
+        Args: { p_listing_id: string; p_days: number; p_admin: string };
+        Returns: string;
+      };
       increment_listing_contact: {
         Args: { p_listing_id: string; p_kind: string };
         Returns: undefined;
@@ -490,9 +521,11 @@ export type Database = {
       listing_quota_status: {
         Args: Record<PropertyKey, never>;
         Returns: {
-          plan: "free" | "dealer" | "dealer_pro";
+          plan: "free" | "dealer" | "dealer_pro" | "showroom";
           used: number;
           monthly_limit: number | null;
+          featured_used: number;
+          featured_allowance: number | null;
         }[];
       };
     };

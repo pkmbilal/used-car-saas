@@ -1,8 +1,9 @@
 import "server-only";
 import { requireAdmin } from "@/lib/auth";
+import { isDealerPlanChoice } from "@/lib/dealer-application-options";
 import { withImageUrls, type ListingStatus } from "@/lib/listings";
 import { SUSPENSION_REMOVAL_REASON } from "@/lib/moderation";
-import { isPlan } from "@/lib/plans";
+import { FEATURED_ALLOWANCE, isPlan } from "@/lib/plans";
 import { deleteObjects, presignGet, PRIVATE_BUCKET } from "@/lib/r2";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { MAX_REJECT_REASON } from "@/lib/verification-options";
@@ -57,6 +58,23 @@ export async function getOpenReports() {
   return [...groups.values()];
 }
 
+// The current quota month in Riyadh time as YYYY-MM-01, mirroring
+// public.current_quota_month().
+function quotaMonth(): string {
+  const month = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Asia/Riyadh",
+    year: "numeric",
+    month: "2-digit",
+  }).format(new Date());
+  return `${month}-01`;
+}
+
+export type FeaturedStatus = {
+  used: number;
+  allowance: number | null; // null = no allowance, featured as paid extras
+  countedThisMonth: boolean; // re-featuring this listing won't use another slot
+};
+
 export async function getAllListings(filters: {
   status?: ListingStatus;
   q?: string;
@@ -66,7 +84,9 @@ export async function getAllListings(filters: {
   const supabase = createAdminClient();
   let query = supabase
     .from("listings")
-    .select("*, listing_images(*), seller:profiles!listings_seller_id_fkey(id, full_name)", { count: "exact" });
+    .select("*, listing_images(*), seller:profiles!listings_seller_id_fkey(id, full_name, plan)", {
+      count: "exact",
+    });
 
   if (filters.status) query = query.eq("status", filters.status);
   const q = searchTerm(filters.q);
@@ -77,7 +97,34 @@ export async function getAllListings(filters: {
     .range(...range(filters.page));
   // Out-of-range pages error in PostgREST; treat them as empty.
   if (error) return { listings: [], total: count ?? 0 };
-  return { listings: data.map(withImageUrls), total: count ?? 0 };
+
+  // This month's featured usage for the sellers on this page.
+  const sellerIds = [...new Set(data.map((listing) => listing.seller_id))];
+  const { data: usage } = sellerIds.length
+    ? await supabase
+        .from("featured_usage")
+        .select("seller_id, listing_id")
+        .in("seller_id", sellerIds)
+        .eq("month", quotaMonth())
+    : { data: [] };
+  const usedBySeller = new Map<string, number>();
+  const countedListings = new Set<string>();
+  for (const row of usage ?? []) {
+    usedBySeller.set(row.seller_id, (usedBySeller.get(row.seller_id) ?? 0) + 1);
+    if (row.listing_id) countedListings.add(row.listing_id);
+  }
+
+  return {
+    listings: data.map((listing) => ({
+      ...withImageUrls(listing),
+      featured: {
+        used: usedBySeller.get(listing.seller_id) ?? 0,
+        allowance: listing.seller ? FEATURED_ALLOWANCE[listing.seller.plan] : null,
+        countedThisMonth: countedListings.has(listing.id),
+      } satisfies FeaturedStatus,
+    })),
+    total: count ?? 0,
+  };
 }
 
 export async function getUsers(filters: { q?: string; page: number }) {
@@ -165,30 +212,26 @@ export async function dismissReports(listingId: string): Promise<AdminResult> {
   return {};
 }
 
-// Featured placement is granted by hand until payments land. Re-featuring a
-// listing that is still featured extends it rather than resetting it.
+// Featured placement is granted by hand until payments land. feature_listing
+// enforces the plan's monthly allowance (Pro/Showroom); listings on other
+// plans can be featured as paid extras. Re-featuring a listing that is still
+// featured extends it rather than resetting it.
 export const FEATURE_DAYS = [7, 30] as const;
 
 export async function featureListing(listingId: string, days: number): Promise<AdminResult> {
-  await requireAdmin();
+  const { user } = await requireAdmin();
   if (!(FEATURE_DAYS as readonly number[]).includes(days)) return { error: "Unknown duration." };
 
   const supabase = createAdminClient();
-  const { data: listing } = await supabase
-    .from("listings")
-    .select("status, featured_until")
-    .eq("id", listingId)
-    .maybeSingle();
-  if (!listing || listing.status !== "active") return { error: "Only live listings can be featured." };
-
-  const now = Date.now();
-  const current = listing.featured_until ? new Date(listing.featured_until).getTime() : 0;
-  const featuredUntil = new Date(Math.max(now, current) + days * 24 * 60 * 60 * 1000);
-
-  const { error } = await supabase
-    .from("listings")
-    .update({ featured_until: featuredUntil.toISOString() })
-    .eq("id", listingId);
+  const { error } = await supabase.rpc("feature_listing", {
+    p_listing_id: listingId,
+    p_days: days,
+    p_admin: user.id,
+  });
+  if (error?.message === "listing_not_active") return { error: "Only live listings can be featured." };
+  if (error?.message === "featured_allowance_exceeded") {
+    return { error: "This seller has used all the featured listings included in their plan this month." };
+  }
   if (error) return { error: "Could not feature the listing. Try again." };
   return {};
 }
@@ -435,7 +478,7 @@ export async function approveDealerApplication(
   applicationId: string,
   plan: string,
 ): Promise<AdminResult> {
-  if (plan !== "dealer" && plan !== "dealer_pro") return { error: "Choose a dealer plan." };
+  if (!isDealerPlanChoice(plan)) return { error: "Choose a dealer plan." };
 
   const reviewed = await reviewDealerApplication(applicationId, { status: "approved" });
   if ("error" in reviewed) return reviewed;
