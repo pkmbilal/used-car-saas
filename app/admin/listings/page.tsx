@@ -1,9 +1,10 @@
 import Link from "next/link";
 import { RiyalPrice } from "@/components/riyal-price";
 import { StatusBadge } from "@/app/dashboard/listings/status-badge";
-import { FEATURE_DAYS, getAllListings } from "@/lib/admin";
+import { FEATURE_DAYS, getAllListings, type FeaturedStatus } from "@/lib/admin";
 import { formatDay, formatMonthYear } from "@/lib/format";
 import { isFeatured, type ListingStatus } from "@/lib/listings";
+import { PLAN_LABELS } from "@/lib/plans";
 import { featureListingAction, restoreListingAction, unfeatureListingAction } from "../actions";
 import { AdminActionButton, RemoveListingButton } from "../admin-buttons";
 import { pageParam, Pager, textParam } from "../pager";
@@ -12,6 +13,15 @@ const STATUSES: ListingStatus[] = ["active", "draft", "sold", "removed"];
 
 function isStatus(value: string | undefined): value is ListingStatus {
   return STATUSES.includes(value as ListingStatus);
+}
+
+function atFeaturedLimit({ used, allowance, countedThisMonth }: FeaturedStatus): boolean {
+  return allowance !== null && used >= allowance && !countedThisMonth;
+}
+
+function featuredSummary({ used, allowance, countedThisMonth }: FeaturedStatus): string {
+  if (allowance === null) return "No featured allowance · paid extra";
+  return `Featured ${used} of ${allowance} this month${countedThisMonth ? " · this listing already counted" : ""}`;
 }
 
 const inputClass =
@@ -65,9 +75,27 @@ export default async function AdminListingsPage({ searchParams }: PageProps<"/ad
                 <StatusBadge status={listing.status} />
               </div>
               <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-                <RiyalPrice amount={listing.price} /> · {listing.city} · {listing.seller?.full_name ?? "Unnamed"} ·
-                Listed {formatMonthYear(listing.created_at)}
+                <RiyalPrice amount={listing.price} /> · {listing.city} · {listing.seller?.full_name ?? "Unnamed"}{" "}
+                {listing.seller && (
+                  <span className="rounded bg-zinc-100 px-1.5 py-0.5 text-xs font-medium text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300">
+                    {PLAN_LABELS[listing.seller.plan]}
+                  </span>
+                )}{" "}
+                · Listed {formatMonthYear(listing.created_at)}
               </p>
+              {listing.status === "active" && (
+                <p
+                  className={`mt-1 text-sm ${
+                    atFeaturedLimit(listing.featured)
+                      ? "text-amber-700 dark:text-amber-400"
+                      : "text-zinc-600 dark:text-zinc-400"
+                  }`}
+                >
+                  {atFeaturedLimit(listing.featured)
+                    ? `Featured allowance used up this month (${listing.featured.used} of ${listing.featured.allowance})`
+                    : featuredSummary(listing.featured)}
+                </p>
+              )}
               {listing.featured_until && isFeatured(listing) && (
                 <p className="mt-1 text-sm text-amber-700 dark:text-amber-400">
                   Featured until {formatDay(listing.featured_until)}
@@ -81,13 +109,14 @@ export default async function AdminListingsPage({ searchParams }: PageProps<"/ad
             </div>
             {listing.status === "active" && (
               <>
-                {FEATURE_DAYS.map((days) => (
-                  <AdminActionButton
-                    key={days}
-                    label={`Feature ${days}d`}
-                    action={featureListingAction.bind(null, listing.id, days)}
-                  />
-                ))}
+                {!atFeaturedLimit(listing.featured) &&
+                  FEATURE_DAYS.map((days) => (
+                    <AdminActionButton
+                      key={days}
+                      label={`Feature ${days}d`}
+                      action={featureListingAction.bind(null, listing.id, days)}
+                    />
+                  ))}
                 {isFeatured(listing) && (
                   <AdminActionButton
                     label="Unfeature"

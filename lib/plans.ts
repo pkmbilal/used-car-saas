@@ -75,6 +75,16 @@ export const PLAN_DETAILS: Record<Plan, PlanDetails> = {
   },
 };
 
+// Featured listings included per month; null = none included, admins feature
+// them as paid extras. Must match plan_monthly_featured_allowance in the
+// featured_allowance migration, which enforces it.
+export const FEATURED_ALLOWANCE: Record<Plan, number | null> = {
+  free: null,
+  dealer: null,
+  dealer_pro: 3,
+  showroom: 10,
+};
+
 export function isPlan(value: unknown): value is Plan {
   return typeof value === "string" && value in PLAN_LABELS;
 }
