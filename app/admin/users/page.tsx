@@ -3,7 +3,7 @@ import { VerificationBadges } from "@/components/verification-badges";
 import { getUsers } from "@/lib/admin";
 import { getCurrentUser } from "@/lib/auth";
 import { formatDay, formatMonthYear } from "@/lib/format";
-import { PLAN_DURATION_OPTIONS, PLAN_LABELS, PLANS } from "@/lib/plans";
+import { PLAN_DURATION_OPTIONS, PLAN_LABELS, PLAN_PRICES, PLANS } from "@/lib/plans";
 import {
   revokeIdVerificationAction,
   setUserPlanAction,
@@ -44,7 +44,9 @@ export default async function AdminUsersPage({ searchParams }: PageProps<"/admin
           <li key={user.id} className="flex flex-wrap items-center gap-4 py-3">
             <div className="min-w-0 flex-1">
               <div className="flex flex-wrap items-center gap-2">
-                <span className="font-medium">{user.full_name ?? "Unnamed"}</span>
+                <Link href={`/admin/users/${user.id}`} className="font-medium underline">
+                  {user.full_name ?? "Unnamed"}
+                </Link>
                 <span className="rounded-full bg-zinc-100 px-2 py-0.5 text-xs font-medium text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300">
                   {user.role === "seller" ? "Seller" : "Buyer"}
                 </span>
@@ -82,6 +84,7 @@ export default async function AdminUsersPage({ searchParams }: PageProps<"/admin
                 plan={user.plan}
                 plans={planOptions}
                 durations={PLAN_DURATION_OPTIONS}
+                prices={PLAN_PRICES}
                 action={setUserPlanAction.bind(null, user.id)}
               />
             )}

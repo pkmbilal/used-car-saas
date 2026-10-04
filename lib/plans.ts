@@ -108,8 +108,12 @@ export function isPlanDuration(value: unknown): value is PlanDurationMonths {
 }
 
 export function planExpiryFromNow(months: PlanDurationMonths): string | null {
+  return planExpiryFrom(new Date(), months);
+}
+
+export function planExpiryFrom(start: Date, months: PlanDurationMonths): string | null {
   if (months === null) return null;
-  const date = new Date();
+  const date = new Date(start);
   date.setMonth(date.getMonth() + months);
   return date.toISOString();
 }
@@ -200,3 +204,11 @@ export function quotaSummary(quota: ListingQuota): string {
     ? `${plan} · Unlimited listings`
     : `${plan} · ${quota.used} of ${quota.limit} listings used this month`;
 }
+
+// Monthly SAR price per plan, for prefilling recorded payments.
+export const PLAN_PRICES: Record<Plan, number> = {
+  free: PLAN_DETAILS.free.price,
+  dealer: PLAN_DETAILS.dealer.price,
+  dealer_pro: PLAN_DETAILS.dealer_pro.price,
+  showroom: PLAN_DETAILS.showroom.price,
+};

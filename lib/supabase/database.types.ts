@@ -350,6 +350,113 @@ export type Database = {
           },
         ];
       };
+      plan_payments: {
+        Row: {
+          id: string;
+          user_id: string;
+          plan_change_id: string | null;
+          amount: number;
+          method: "bank_transfer" | "cash" | "other";
+          reference: string | null;
+          recorded_by: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          plan_change_id?: string | null;
+          amount: number;
+          method: "bank_transfer" | "cash" | "other";
+          reference?: string | null;
+          recorded_by?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          user_id?: string;
+          plan_change_id?: string | null;
+          amount?: number;
+          method?: "bank_transfer" | "cash" | "other";
+          reference?: string | null;
+          recorded_by?: string | null;
+          created_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "plan_payments_user_id_fkey";
+            columns: ["user_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "plan_payments_plan_change_id_fkey";
+            columns: ["plan_change_id"];
+            isOneToOne: false;
+            referencedRelation: "plan_changes";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "plan_payments_recorded_by_fkey";
+            columns: ["recorded_by"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      admin_actions: {
+        Row: {
+          id: string;
+          admin_id: string | null;
+          action: "listing_removed" | "listing_restored" | "reports_dismissed" | "listing_unfeatured" | "user_suspended" | "user_unsuspended" | "id_approved" | "id_rejected" | "id_revoked" | "dealer_approved" | "dealer_rejected";
+          user_id: string | null;
+          listing_id: string | null;
+          reason: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          admin_id?: string | null;
+          action: "listing_removed" | "listing_restored" | "reports_dismissed" | "listing_unfeatured" | "user_suspended" | "user_unsuspended" | "id_approved" | "id_rejected" | "id_revoked" | "dealer_approved" | "dealer_rejected";
+          user_id?: string | null;
+          listing_id?: string | null;
+          reason?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          admin_id?: string | null;
+          action?: "listing_removed" | "listing_restored" | "reports_dismissed" | "listing_unfeatured" | "user_suspended" | "user_unsuspended" | "id_approved" | "id_rejected" | "id_revoked" | "dealer_approved" | "dealer_rejected";
+          user_id?: string | null;
+          listing_id?: string | null;
+          reason?: string | null;
+          created_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "admin_actions_admin_id_fkey";
+            columns: ["admin_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "admin_actions_user_id_fkey";
+            columns: ["user_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "admin_actions_listing_id_fkey";
+            columns: ["listing_id"];
+            isOneToOne: false;
+            referencedRelation: "listings";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       listing_quota_usage: {
         Row: {
           seller_id: string;
@@ -644,7 +751,7 @@ export type Database = {
           p_source: "admin" | "dealer_application" | "expiry";
           p_note?: string | null;
         };
-        Returns: undefined;
+        Returns: string;
       };
       listing_quota_status: {
         Args: Record<PropertyKey, never>;

@@ -5,6 +5,7 @@ import {
   approveDealerApplication,
   approveIdVerification,
   dismissReports,
+  extendUserPlan,
   featureListing,
   rejectDealerApplication,
   rejectIdVerification,
@@ -17,6 +18,7 @@ import {
   unsuspendUser,
   type AdminResult,
 } from "@/lib/admin";
+import type { PaymentInput } from "@/lib/payment-options";
 
 // Moderation changes what buyers, sellers and admins all see.
 async function revalidating(result: Promise<AdminResult>): Promise<AdminResult> {
@@ -54,8 +56,18 @@ export async function setUserPlanAction(
   plan: string,
   months: number | null,
   note: string,
+  payment: PaymentInput | null,
 ) {
-  return revalidating(setUserPlan(userId, plan, months, note));
+  return revalidating(setUserPlan(userId, plan, months, note, payment));
+}
+
+export async function extendUserPlanAction(
+  userId: string,
+  months: number,
+  note: string,
+  payment: PaymentInput | null,
+) {
+  return revalidating(extendUserPlan(userId, months, note, payment));
 }
 
 export async function unsuspendUserAction(userId: string) {

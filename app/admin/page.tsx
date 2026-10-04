@@ -1,79 +1,102 @@
-import Image from "next/image";
-import { RiyalPrice } from "@/components/riyal-price";
 import Link from "next/link";
-import { getOpenReports } from "@/lib/admin";
-import { REPORT_REASONS, type ReportReason } from "@/lib/moderation";
-import { StatusBadge } from "@/app/dashboard/listings/status-badge";
-import { dismissReportsAction } from "./actions";
-import { AdminActionButton, RemoveListingButton } from "./admin-buttons";
+import { RiyalPrice } from "@/components/riyal-price";
+import { EXPIRING_WINDOW_DAYS, getAdminOverview } from "@/lib/admin";
+import { formatCount } from "@/lib/format";
+import { PLAN_LABELS, PLANS } from "@/lib/plans";
 
-function reasonCounts(reasons: ReportReason[]): string {
-  const counts = new Map<ReportReason, number>();
-  for (const reason of reasons) counts.set(reason, (counts.get(reason) ?? 0) + 1);
-  return [...counts]
-    .map(([reason, count]) => `${REPORT_REASONS[reason]}${count > 1 ? ` ×${count}` : ""}`)
-    .join(" · ");
+function Tile({
+  label,
+  value,
+  href,
+  alert = false,
+}: {
+  label: string;
+  value: React.ReactNode;
+  href?: string;
+  alert?: boolean;
+}) {
+  const body = (
+    <>
+      <p className="text-sm text-zinc-600 dark:text-zinc-400">{label}</p>
+      <p className={`mt-1 text-2xl font-semibold ${alert ? "text-red-600" : ""}`}>{value}</p>
+    </>
+  );
+  const className =
+    "block rounded-lg border border-zinc-200 p-4 dark:border-zinc-800";
+  return href ? (
+    <Link href={href} className={`${className} hover:border-zinc-400 dark:hover:border-zinc-600`}>
+      {body}
+    </Link>
+  ) : (
+    <div className={className}>{body}</div>
+  );
 }
 
-export default async function AdminReportsPage() {
-  const reported = await getOpenReports();
+const gridClass = "mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4";
 
-  if (reported.length === 0) {
-    return <p className="text-zinc-600 dark:text-zinc-400">No open reports. All clear.</p>;
-  }
+export default async function AdminOverviewPage() {
+  const overview = await getAdminOverview();
+  const paidPlans = PLANS.filter((plan) => plan !== "free");
 
   return (
-    <ul className="divide-y divide-zinc-200 dark:divide-zinc-800">
-      {reported.map(({ listing, reports }) => {
-        const cover = listing.images[0];
-        const title = `${listing.year} ${listing.make} ${listing.model}`;
-        const details = reports.filter((report) => report.details);
-        return (
-          <li key={listing.id} className="flex flex-wrap items-start gap-4 py-4">
-            <div className="relative aspect-[4/3] w-28 shrink-0 overflow-hidden rounded-md bg-zinc-100 dark:bg-zinc-800">
-              {cover && <Image src={cover.url} alt="" fill sizes="112px" className="object-cover" />}
-            </div>
-            <div className="min-w-0 flex-1">
-              <div className="flex items-center gap-2">
-                {listing.status === "active" ? (
-                  <Link href={`/listings/${listing.id}`} className="truncate font-medium">
-                    {title}
-                  </Link>
-                ) : (
-                  <span className="truncate font-medium">{title}</span>
-                )}
-                <StatusBadge status={listing.status} />
-              </div>
-              <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-                <RiyalPrice amount={listing.price} /> · Seller{" "}
-                <Link href={`/sellers/${listing.seller_id}`} className="underline">
-                  {listing.seller?.full_name ?? "Unnamed"}
-                </Link>
-              </p>
-              <p className="mt-2 text-sm font-medium">
-                {reports.length === 1 ? "1 report" : `${reports.length} reports`}:{" "}
-                <span className="font-normal">{reasonCounts(reports.map((r) => r.reason))}</span>
-              </p>
-              {details.length > 0 && (
-                <ul className="mt-2 flex flex-col gap-1 text-sm text-zinc-600 dark:text-zinc-400">
-                  {details.slice(0, 3).map((report) => (
-                    <li key={report.id} className="border-l-2 border-zinc-200 pl-2 dark:border-zinc-700">
-                      {report.details}
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
-            <div className="flex flex-col items-end gap-2">
-              {listing.status === "active" && <RemoveListingButton listingId={listing.id} />}
-              <AdminActionButton
-                label="Dismiss reports"
-                action={dismissReportsAction.bind(null, listing.id)}
-              />
-            </div>
-          </li>
-        );
-      })}
-    </ul>
+    <div className="flex flex-col gap-10">
+      <section>
+        <h2 className="font-semibold">Needs attention</h2>
+        <div className={gridClass}>
+          <Tile
+            label="Open reports"
+            value={overview.pending.reports}
+            href="/admin/reports"
+            alert={overview.pending.reports > 0}
+          />
+          <Tile
+            label="ID verifications"
+            value={overview.pending.verifications}
+            href="/admin/verifications"
+            alert={overview.pending.verifications > 0}
+          />
+          <Tile
+            label="Dealer applications"
+            value={overview.pending.dealers}
+            href="/admin/dealers"
+            alert={overview.pending.dealers > 0}
+          />
+          <Tile
+            label={`Plans ending in ${EXPIRING_WINDOW_DAYS} days`}
+            value={overview.expiringPlans}
+            href="/admin/plans?tab=expiring"
+            alert={overview.expiringPlans > 0}
+          />
+        </div>
+      </section>
+
+      <section>
+        <h2 className="font-semibold">Marketplace</h2>
+        <div className={gridClass}>
+          <Tile label="Live listings" value={overview.activeListings} href="/admin/listings?status=active" />
+          <Tile label="Featured now" value={overview.featuredListings} />
+          <Tile label="New listings, last 7 days" value={overview.newListings} />
+          <Tile label="New users, last 7 days" value={overview.newUsers} href="/admin/users" />
+        </div>
+      </section>
+
+      <section>
+        <h2 className="font-semibold">Plans</h2>
+        <div className={gridClass}>
+          {paidPlans.map((plan) => (
+            <Tile
+              key={plan}
+              label={PLAN_LABELS[plan]}
+              value={formatCount(overview.planCounts.get(plan) ?? 0, "seller")}
+            />
+          ))}
+          <Tile
+            label="Payments recorded this month"
+            value={<RiyalPrice amount={overview.paymentsThisMonth} />}
+            href="/admin/plans?tab=payments"
+          />
+        </div>
+      </section>
+    </div>
   );
 }
