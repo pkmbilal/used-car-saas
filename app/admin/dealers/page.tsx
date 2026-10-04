@@ -2,7 +2,7 @@ import Link from "next/link";
 import { getPendingDealerApplications } from "@/lib/admin";
 import { DEALER_DOCS, DEALER_PLANS } from "@/lib/dealer-application-options";
 import { formatMonthYear } from "@/lib/format";
-import { PLAN_LABELS } from "@/lib/plans";
+import { PLAN_DURATION_OPTIONS, PLAN_LABELS } from "@/lib/plans";
 import { approveDealerApplicationAction, rejectDealerApplicationAction } from "../actions";
 import { ApproveDealerButton, ReasonActionButton } from "../admin-buttons";
 
@@ -79,6 +79,7 @@ export default async function AdminDealersPage() {
               <ApproveDealerButton
                 plan={application.requested_plan}
                 plans={planOptions}
+                durations={PLAN_DURATION_OPTIONS}
                 action={approveDealerApplicationAction.bind(null, application.id)}
               />
               <ReasonActionButton

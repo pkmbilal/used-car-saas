@@ -4,17 +4,26 @@ import { useState, useTransition } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import type { ListingStatus } from "@/lib/listings";
-import { deleteListing, setListingStatus, type ActionResult } from "./actions";
+import { deleteListing, featureListing, setListingStatus, type ActionResult } from "./actions";
 
 type Props = {
   listingId: string;
   status: ListingStatus;
   showEdit?: boolean;
+  // Featured slots left this month; the button shows when this is above 0.
+  featureSlots?: number;
+  featureDays?: number;
 };
 
 const buttonClass = "text-sm font-medium underline-offset-4 hover:underline disabled:opacity-50";
 
-export function ListingActions({ listingId, status, showEdit = false }: Props) {
+export function ListingActions({
+  listingId,
+  status,
+  showEdit = false,
+  featureSlots = 0,
+  featureDays,
+}: Props) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string>();
@@ -57,6 +66,16 @@ export function ListingActions({ listingId, status, showEdit = false }: Props) {
             onClick={() => run(() => setListingStatus(listingId, "sold"))}
           >
             Mark as sold
+          </button>
+        )}
+        {status === "active" && featureSlots > 0 && (
+          <button
+            type="button"
+            disabled={pending}
+            className={`${buttonClass} text-amber-700 dark:text-amber-400`}
+            onClick={() => run(() => featureListing(listingId))}
+          >
+            Feature for {featureDays} days ({featureSlots} left)
           </button>
         )}
         <button

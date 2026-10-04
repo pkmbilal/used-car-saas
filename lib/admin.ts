@@ -3,7 +3,7 @@ import { requireAdmin } from "@/lib/auth";
 import { isDealerPlanChoice } from "@/lib/dealer-application-options";
 import { withImageUrls, type ListingStatus } from "@/lib/listings";
 import { SUSPENSION_REMOVAL_REASON } from "@/lib/moderation";
-import { FEATURED_ALLOWANCE, isPlan } from "@/lib/plans";
+import { FEATURED_ALLOWANCE, isPlan, isPlanDuration, planExpiryFromNow } from "@/lib/plans";
 import { deleteObjects, presignGet, PRIVATE_BUCKET } from "@/lib/r2";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { MAX_REJECT_REASON } from "@/lib/verification-options";
@@ -150,6 +150,42 @@ export async function getUsers(filters: { q?: string; page: number }) {
   };
 }
 
+export type PlanChange = Awaited<ReturnType<typeof getPlanChanges>>["changes"][number];
+
+// Newest first: every plan change, with who it was for and who made it.
+export async function getPlanChanges(page: number) {
+  await requireAdmin();
+  const supabase = createAdminClient();
+  const { data, count, error } = await supabase
+    .from("plan_changes")
+    .select(
+      "*, user:profiles!plan_changes_user_id_fkey(id, full_name), changed_by_profile:profiles!plan_changes_changed_by_fkey(full_name)",
+      { count: "exact" },
+    )
+    .order("created_at", { ascending: false })
+    .range(...range(page));
+  if (error) return { changes: [], total: count ?? 0 };
+  return { changes: data, total: count ?? 0 };
+}
+
+export type FeaturedGrant = Awaited<ReturnType<typeof getFeaturedGrants>>["grants"][number];
+
+// Newest first: every featured placement, admin-granted or self-serve.
+export async function getFeaturedGrants(page: number) {
+  await requireAdmin();
+  const supabase = createAdminClient();
+  const { data, count, error } = await supabase
+    .from("featured_grants")
+    .select(
+      "*, listing:listings(id, year, make, model), seller:profiles!featured_grants_seller_id_fkey(id, full_name), granted_by_profile:profiles!featured_grants_granted_by_fkey(full_name)",
+      { count: "exact" },
+    )
+    .order("created_at", { ascending: false })
+    .range(...range(page));
+  if (error) return { grants: [], total: count ?? 0 };
+  return { grants: data, total: count ?? 0 };
+}
+
 // ---------------------------------------------------------------------------
 // Listing moderation
 // ---------------------------------------------------------------------------
@@ -294,13 +330,32 @@ export async function unsuspendUser(userId: string): Promise<AdminResult> {
   return {};
 }
 
-// Plans are granted by hand until billing lands.
-export async function setUserPlan(userId: string, plan: string): Promise<AdminResult> {
-  await requireAdmin();
+const MAX_PLAN_NOTE = 300;
+
+// Plans are granted by hand until billing lands. set_plan records the change
+// in plan_changes; Free never expires.
+export async function setUserPlan(
+  userId: string,
+  plan: string,
+  months: number | null,
+  note: string,
+): Promise<AdminResult> {
+  const { user } = await requireAdmin();
   if (!isPlan(plan)) return { error: "Unknown plan." };
+  if (!isPlanDuration(months)) return { error: "Unknown duration." };
+  if (note.trim().length > MAX_PLAN_NOTE) {
+    return { error: `Keep the note under ${MAX_PLAN_NOTE} characters.` };
+  }
 
   const supabase = createAdminClient();
-  const { error } = await supabase.from("profiles").update({ plan }).eq("id", userId);
+  const { error } = await supabase.rpc("set_plan", {
+    p_user: userId,
+    p_plan: plan,
+    p_expires_at: planExpiryFromNow(months),
+    p_changed_by: user.id,
+    p_source: "admin",
+    p_note: note,
+  });
   if (error) return { error: "Could not change the plan. Try again." };
   return {};
 }
@@ -469,7 +524,7 @@ async function reviewDealerApplication(
     .select("user_id, business_name, showroom_address, cr_doc_key, vat_doc_key, muroor_doc_key");
   if (error) return { error: "Could not update the application. Try again." };
   if (data.length === 0) return { error: "Application is no longer pending." };
-  return { application: data[0] };
+  return { application: data[0], reviewerId: user.id };
 }
 
 // Grants the plan and prefills the storefront from the application. Documents
@@ -477,18 +532,29 @@ async function reviewDealerApplication(
 export async function approveDealerApplication(
   applicationId: string,
   plan: string,
+  months: number | null,
 ): Promise<AdminResult> {
   if (!isDealerPlanChoice(plan)) return { error: "Choose a dealer plan." };
+  if (!isPlanDuration(months)) return { error: "Unknown duration." };
 
   const reviewed = await reviewDealerApplication(applicationId, { status: "approved" });
   if ("error" in reviewed) return reviewed;
 
   const { user_id, business_name, showroom_address } = reviewed.application;
   const supabase = createAdminClient();
-  const { error } = await supabase
+  const { error: profileError } = await supabase
     .from("profiles")
-    .update({ plan, business_name, showroom_address })
+    .update({ business_name, showroom_address })
     .eq("id", user_id);
+  if (profileError) return { error: "Application approved, but the business details could not be saved." };
+
+  const { error } = await supabase.rpc("set_plan", {
+    p_user: user_id,
+    p_plan: plan,
+    p_expires_at: planExpiryFromNow(months),
+    p_changed_by: reviewed.reviewerId,
+    p_source: "dealer_application",
+  });
   if (error) return { error: "Application approved, but the plan could not be granted." };
   return {};
 }

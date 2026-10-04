@@ -4,7 +4,14 @@ import Link from "next/link";
 import { requireSeller } from "@/lib/auth";
 import { formatDay, formatKm, formatListingStats } from "@/lib/format";
 import { getSellerListings, isFeatured } from "@/lib/listings";
-import { getListingQuota, isDealerPlan, quotaSummary } from "@/lib/plans";
+import {
+  getListingQuota,
+  isDealerPlan,
+  isPlanExpiringSoon,
+  PLAN_LABELS,
+  quotaSummary,
+  SELF_FEATURE_DAYS,
+} from "@/lib/plans";
 import { ListingActions } from "./listings/listing-actions";
 import { StatusBadge } from "./listings/status-badge";
 
@@ -66,6 +73,16 @@ export default async function DashboardPage() {
         )}
       </div>
 
+      {quota?.planExpiresAt && isPlanExpiringSoon(quota) && (
+        <p className="mt-6 rounded-md bg-amber-50 px-4 py-3 text-sm text-amber-900 dark:bg-amber-950 dark:text-amber-200">
+          Your {PLAN_LABELS[quota.plan]} plan ends on {formatDay(quota.planExpiresAt)}. After that
+          you&apos;ll be on the Free plan.{" "}
+          <Link href="/pricing" className="font-medium underline">
+            Renew your plan
+          </Link>
+        </p>
+      )}
+
       {profile.suspended_at && (
         <p className="mt-6 rounded-md bg-red-50 px-4 py-3 text-sm text-red-900 dark:bg-red-950 dark:text-red-200">
           Your account is suspended. Your listings are hidden from buyers and you can&apos;t
@@ -118,7 +135,13 @@ export default async function DashboardPage() {
                     </p>
                   )}
                 </div>
-                <ListingActions listingId={listing.id} status={listing.status} showEdit />
+                <ListingActions
+                  listingId={listing.id}
+                  status={listing.status}
+                  showEdit
+                  featureSlots={isFeatured(listing) ? 0 : (quota?.featuredRemaining ?? 0)}
+                  featureDays={SELF_FEATURE_DAYS}
+                />
               </li>
             );
           })}

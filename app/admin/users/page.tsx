@@ -2,8 +2,8 @@ import Link from "next/link";
 import { VerificationBadges } from "@/components/verification-badges";
 import { getUsers } from "@/lib/admin";
 import { getCurrentUser } from "@/lib/auth";
-import { formatMonthYear } from "@/lib/format";
-import { PLAN_LABELS, PLANS } from "@/lib/plans";
+import { formatDay, formatMonthYear } from "@/lib/format";
+import { PLAN_DURATION_OPTIONS, PLAN_LABELS, PLANS } from "@/lib/plans";
 import {
   revokeIdVerificationAction,
   setUserPlanAction,
@@ -70,6 +70,9 @@ export default async function AdminUsersPage({ searchParams }: PageProps<"/admin
                     <Link href={`/sellers/${user.id}`} className="underline">
                       {user.listingCount === 1 ? "1 listing" : `${user.listingCount} listings`}
                     </Link>
+                    {" · "}
+                    {PLAN_LABELS[user.plan]}
+                    {user.plan_expires_at && ` until ${formatDay(user.plan_expires_at)}`}
                   </>
                 )}
               </p>
@@ -78,6 +81,7 @@ export default async function AdminUsersPage({ searchParams }: PageProps<"/admin
               <PlanSelect
                 plan={user.plan}
                 plans={planOptions}
+                durations={PLAN_DURATION_OPTIONS}
                 action={setUserPlanAction.bind(null, user.id)}
               />
             )}
