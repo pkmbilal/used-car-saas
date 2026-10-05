@@ -67,7 +67,7 @@ export function PricingFaq({ salesUrl }: { salesUrl: string | null }) {
               {q}
               <Plus className="size-4 shrink-0 text-brand transition group-open:rotate-45" />
             </summary>
-            <p className="pb-4 text-[0.8125rem] leading-relaxed text-muted-foreground">{a}</p>
+            <p className="pb-4 text-label leading-relaxed text-muted-foreground">{a}</p>
           </details>
         ))}
       </div>

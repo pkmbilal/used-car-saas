@@ -57,7 +57,7 @@ export default async function CityPage({ params, searchParams }: PageProps<"/loc
       <section className="relative overflow-hidden bg-charcoal">
         <div className="absolute inset-y-0 right-0 w-2/3 bg-[radial-gradient(ellipse_at_70%_60%,rgba(111,224,124,.16),transparent_60%)]" />
         <div className="relative mx-auto w-full max-w-6xl px-4 pt-10 pb-14 sm:px-6">
-          <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-[0.6875rem] text-white/60">
+          <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-caption text-white/60">
             <Link href="/locations" className="text-white/60 hover:text-lime">
               Locations
             </Link>
@@ -67,7 +67,7 @@ export default async function CityPage({ params, searchParams }: PageProps<"/loc
           <h1 className="mt-3 max-w-md text-3xl leading-tight font-medium tracking-tight text-white md:text-4xl">
             Used Cars in <span className="text-lime">{city}</span>
           </h1>
-          <p className="mt-3.5 text-[0.78125rem] text-white/85">
+          <p className="mt-3.5 text-label text-white/85">
             {numberFormatter.format(total)} {total === 1 ? "car" : "cars"} for sale
             {cityDealers.length > 0 &&
               ` · ${cityDealers.length} ${cityDealers.length === 1 ? "dealer" : "dealers"}`}
@@ -79,7 +79,7 @@ export default async function CityPage({ params, searchParams }: PageProps<"/loc
         <div className="flex flex-wrap items-center justify-between gap-3">
           <Link
             href={`/listings?city=${encodeURIComponent(city)}`}
-            className="flex items-center gap-2 text-[0.6875rem] font-semibold text-brand"
+            className="flex items-center gap-2 text-caption font-semibold text-brand"
           >
             Refine with filters
             <ArrowRight className="size-3" strokeWidth={2.4} />
@@ -99,7 +99,7 @@ export default async function CityPage({ params, searchParams }: PageProps<"/loc
 
       {cityDealers.length > 0 && (
         <section className="mx-auto w-full max-w-6xl px-4 pb-10 sm:px-6">
-          <p className="text-[0.6875rem] font-bold tracking-[0.2em] text-brand-600">DEALERS</p>
+          <p className="text-caption font-bold tracking-[0.2em] text-brand-600">DEALERS</p>
           <h2 className="mt-2 text-2xl font-semibold tracking-tight">Dealers in {city}</h2>
           <ul className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-5">
             {cityDealers.map((dealer) => (
@@ -114,12 +114,12 @@ export default async function CityPage({ params, searchParams }: PageProps<"/loc
       <section className="mx-auto w-full max-w-6xl px-4 sm:px-6">
         <div className="flex items-end justify-between gap-4">
           <div>
-            <p className="text-[0.6875rem] font-bold tracking-[0.2em] text-brand-600">MORE LOCATIONS</p>
+            <p className="text-caption font-bold tracking-[0.2em] text-brand-600">MORE LOCATIONS</p>
             <h2 className="mt-2 text-2xl font-semibold tracking-tight">Other Cities</h2>
           </div>
           <Link
             href="/locations"
-            className="mb-1 flex shrink-0 items-center gap-2 text-[0.6875rem] font-semibold text-brand"
+            className="mb-1 flex shrink-0 items-center gap-2 text-caption font-semibold text-brand"
           >
             All Cities
             <ArrowRight className="size-3" strokeWidth={2.4} />

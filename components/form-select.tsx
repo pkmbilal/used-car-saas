@@ -42,7 +42,7 @@ export function FormSelect({
           onValueChange?.(next === ANY ? undefined : next);
         }}
       >
-        <SelectTrigger id={id} className={cn("h-9 w-full bg-white text-xs data-[size=default]:h-9", className)}>
+        <SelectTrigger id={id} className={cn("h-9 w-full bg-white text-xs data-[size=default]:h-9 max-sm:text-sm max-sm:data-[size=default]:h-10", className)}>
           <span className="flex min-w-0 items-center gap-2">
             {icon}
             <SelectValue placeholder={placeholder} />

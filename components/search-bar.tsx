@@ -23,7 +23,7 @@ function withCurrent(options: FormSelectOption[], value: number | undefined, lab
 }
 
 const fieldClass = "flex min-w-0 flex-col gap-2 lg:border-r lg:border-line lg:pr-3";
-const labelClass = "text-[0.6875rem] font-semibold text-ink";
+const labelClass = "text-caption font-semibold text-ink";
 
 function Field({ id, label, children }: { id: string; label: string; children: React.ReactNode }) {
   return (
@@ -95,7 +95,7 @@ export function SearchBar({ filters, className }: { filters?: ListingFilters; cl
             icon={<MapPin className="size-3.5 text-muted-foreground" />}
           />
         </Field>
-        <Button type="submit" size="lg" className="h-11 px-6 text-xs font-semibold sm:col-span-2 lg:col-span-1">
+        <Button type="submit" size="lg" className="h-11 px-6 text-xs max-sm:text-sm font-semibold sm:col-span-2 lg:col-span-1">
           <Search className="size-4" />
           Search Cars
         </Button>

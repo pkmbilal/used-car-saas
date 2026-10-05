@@ -22,7 +22,7 @@ export function CityCard({ city, count }: { city: City; count: number }) {
         </span>
         <span className="min-w-0 flex-1">
           <span className="block truncate text-sm font-semibold">{city}</span>
-          <span className="mt-0.5 block text-[0.6875rem] text-muted-foreground">
+          <span className="mt-0.5 block text-caption text-muted-foreground">
             {count} {count === 1 ? "car" : "cars"}
           </span>
         </span>

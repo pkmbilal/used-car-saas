@@ -36,18 +36,18 @@ const columns: { title: string; links: [string, string][] }[] = [
 export function SiteFooter() {
   return (
     <footer className="light mt-20 bg-gradient-to-br from-forest to-forest-dark text-white">
-      <div className="mx-auto grid w-full max-w-6xl gap-10 px-4 py-12 sm:px-6 md:grid-cols-[1.6fr_repeat(4,minmax(0,1fr))]">
-        <div className="flex flex-col gap-4">
+      <div className="mx-auto grid w-full max-w-6xl grid-cols-2 gap-10 px-4 py-12 sm:px-6 md:grid-cols-[1.6fr_repeat(4,minmax(0,1fr))]">
+        <div className="col-span-2 flex flex-col gap-4 md:col-span-1">
           <BrandLink />
-          <p className="max-w-64 text-xs leading-relaxed text-white/70">
+          <p className="max-w-64 text-xs leading-relaxed max-sm:text-sm text-white/70">
             Saudi Arabia&apos;s marketplace for used cars. Buy and sell directly with sellers.
           </p>
         </div>
         {columns.map((column) => (
           <div key={column.title} className="flex flex-col gap-3">
-            <p className="mb-1 text-[0.6875rem] font-bold tracking-[0.15em] text-lime">{column.title}</p>
+            <p className="mb-1 text-caption font-bold tracking-[0.15em] text-lime">{column.title}</p>
             {column.links.map(([label, href]) => (
-              <Link key={href} href={href} className="text-xs text-white/70 hover:text-lime">
+              <Link key={href} href={href} className="text-xs text-white/70 max-sm:py-1 max-sm:text-sm hover:text-lime">
                 {label}
               </Link>
             ))}
@@ -55,7 +55,7 @@ export function SiteFooter() {
         ))}
       </div>
       <div className="border-t border-white/10">
-        <p className="mx-auto w-full max-w-6xl px-4 py-5 text-[0.6875rem] text-white/55 sm:px-6">
+        <p className="mx-auto w-full max-w-6xl px-4 py-5 text-caption text-white/55 sm:px-6">
           © {new Date().getFullYear()} DriveLoop. All rights reserved.
         </p>
       </div>

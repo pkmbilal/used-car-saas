@@ -80,11 +80,11 @@ export default async function ListingsPage({ searchParams }: PageProps<"/listing
       <section className="relative overflow-hidden bg-charcoal">
         <div className="absolute inset-y-0 right-0 w-2/3 bg-[radial-gradient(ellipse_at_70%_60%,rgba(111,224,124,.16),transparent_60%)]" />
         <div className="relative mx-auto w-full max-w-6xl px-4 pt-10 pb-20 sm:px-6">
-          <p className="text-[0.65625rem] font-bold tracking-[0.24em] text-[#5fd06e]">USED CARS FOR SALE</p>
+          <p className="text-eyebrow font-bold tracking-[0.24em] text-[#5fd06e]">USED CARS FOR SALE</p>
           <h1 className="mt-2.5 max-w-md text-3xl leading-tight font-medium tracking-tight text-white md:text-4xl">
             Find Your <span className="text-lime">Perfect Car</span> With Easy Filters
           </h1>
-          <p className="mt-3.5 max-w-sm text-[0.78125rem] leading-relaxed text-white/85">
+          <p className="mt-3.5 max-w-sm text-label leading-relaxed text-white/85">
             Set your preferences, find the right match, and contact the seller directly.
           </p>
         </div>
@@ -104,7 +104,7 @@ export default async function ListingsPage({ searchParams }: PageProps<"/listing
 
         <section>
           <div className="flex flex-wrap items-center justify-between gap-3">
-            <p className="text-[0.8125rem] font-semibold">
+            <p className="text-label font-semibold">
               {numberFormatter.format(total)} {total === 1 ? "Car" : "Cars"} Found
               {filters.q && <span className="font-normal text-muted-foreground"> matching “{filters.q}”</span>}
             </p>
@@ -134,7 +134,7 @@ export default async function ListingsPage({ searchParams }: PageProps<"/listing
                   : "There are no cars for sale right now. Check back soon."}
               </p>
               {filtered && (
-                <Button asChild size="sm" className="mt-3 text-xs font-semibold">
+                <Button asChild size="sm" className="mt-3 text-xs max-sm:text-sm font-semibold">
                   <Link href="/listings">Clear all filters</Link>
                 </Button>
               )}
@@ -143,7 +143,7 @@ export default async function ListingsPage({ searchParams }: PageProps<"/listing
 
           {featured.length > 0 && (
             <div className="mt-4 mb-8 border-b border-line pb-8">
-              <p className="mb-3 text-[0.6875rem] font-bold tracking-[0.2em] text-brand-600">FEATURED</p>
+              <p className="mb-3 text-caption font-bold tracking-[0.2em] text-brand-600">FEATURED</p>
               <ListingGrid listings={featured} favoriteIds={favoriteIds} columns={3} />
             </div>
           )}

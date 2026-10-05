@@ -14,10 +14,10 @@ export default function ListingNotFound() {
         It may have been sold or taken down by the seller. There are plenty more to choose from.
       </p>
       <div className="mt-6 flex flex-wrap justify-center gap-3">
-        <Button asChild className="h-10 px-5 text-xs font-semibold">
+        <Button asChild className="h-10 px-5 text-xs max-sm:text-sm font-semibold">
           <Link href="/listings">Browse cars</Link>
         </Button>
-        <Button asChild variant="outline" className="h-10 bg-white px-5 text-xs font-semibold">
+        <Button asChild variant="outline" className="h-10 bg-white px-5 text-xs max-sm:text-sm font-semibold">
           <Link href="/">Go home</Link>
         </Button>
       </div>

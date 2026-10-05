@@ -18,12 +18,12 @@ export function CityBrowser({ cities }: { cities: City[] }) {
     <>
       <div className="flex items-end justify-between gap-4">
         <div>
-          <p className="text-[0.6875rem] font-bold tracking-[0.2em] text-brand-600">BROWSE BY LOCATION</p>
+          <p className="text-caption font-bold tracking-[0.2em] text-brand-600">BROWSE BY LOCATION</p>
           <h2 className="mt-2 text-2xl font-semibold tracking-tight">Cars Near You</h2>
         </div>
         <Link
           href={isCity(current.name) ? cityHref(current.name) : `/listings?city=${encodeURIComponent(current.name)}`}
-          className="mb-1 flex shrink-0 items-center gap-2 text-[0.6875rem] font-semibold text-brand"
+          className="mb-1 flex shrink-0 items-center gap-2 text-caption font-semibold text-brand"
         >
           View All in {current.name}
           <ArrowRight className="size-3" strokeWidth={2.4} />
@@ -54,8 +54,8 @@ export function CityBrowser({ cities }: { cities: City[] }) {
                   <MapPin className="size-3.5" />
                 </span>
                 <span className="flex flex-1 flex-col gap-0.5">
-                  <span className="text-[0.8125rem] font-semibold">{city.name}</span>
-                  <span className="text-[0.625rem] opacity-70">
+                  <span className="text-label font-semibold">{city.name}</span>
+                  <span className="text-eyebrow opacity-70">
                     {city.count} {city.count === 1 ? "car" : "cars"}
                   </span>
                 </span>

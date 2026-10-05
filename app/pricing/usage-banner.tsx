@@ -19,7 +19,7 @@ export function UsageBanner({
         <p className="text-sm">
           You&apos;re on the <span className="font-semibold">{PLAN_LABELS[quota.plan]}</span> plan
         </p>
-        <p className="mt-1 text-[0.8125rem] text-muted-foreground">
+        <p className="mt-1 text-label text-muted-foreground">
           {quota.limit === null
             ? `Unlimited listings · ${quota.used} created this month`
             : `${quota.used} of ${quota.limit} listings used this month`}
@@ -35,12 +35,12 @@ export function UsageBanner({
           </div>
         )}
         {applicationPending && (
-          <p className="mt-3 text-[0.8125rem] text-amber-700">Your dealer application is under review.</p>
+          <p className="mt-3 text-label text-amber-700">Your dealer application is under review.</p>
         )}
       </div>
       <Link
         href="/dashboard"
-        className="flex items-center gap-1.5 text-[0.8125rem] font-semibold text-brand hover:text-brand-dark"
+        className="flex items-center gap-1.5 text-label font-semibold text-brand hover:text-brand-dark"
       >
         Go to dashboard
         <ArrowRight className="size-3.5" />

@@ -40,7 +40,7 @@ export function ListingCard({ listing, favorited, sizes }: CardProps) {
               />
             )}
             {isFeatured(listing) && (
-              <Badge className="absolute top-3 left-3 bg-lime text-[0.6875rem] font-semibold text-on-lime">
+              <Badge className="absolute top-3 left-3 bg-lime text-caption font-semibold text-on-lime">
                 Featured
               </Badge>
             )}
@@ -49,7 +49,7 @@ export function ListingCard({ listing, favorited, sizes }: CardProps) {
             <p className="truncate text-sm font-semibold">
               {listing.make} {listing.model}
             </p>
-            <p className="mt-2 flex flex-wrap gap-x-2 text-[0.6875rem] text-muted-foreground">
+            <p className="mt-2 flex flex-wrap gap-x-2 text-caption text-muted-foreground">
               <span>{listing.year}</span>
               <span aria-hidden>·</span>
               <span>{formatKm(listing.mileage)}</span>
@@ -63,19 +63,19 @@ export function ListingCard({ listing, favorited, sizes }: CardProps) {
             <p className="mt-3 text-[0.9375rem] font-bold text-brand">
               <RiyalPrice amount={listing.price} />
             </p>
-            <div className="mt-auto flex items-center gap-4 pt-3 text-[0.6875rem] text-muted-foreground">
+            <div className="mt-auto flex items-center gap-4 pt-3 text-caption text-muted-foreground">
               {listing.body_type && (
                 <span className="flex items-center gap-1.5">
-                  <Car className="size-3" />
+                  <Car className="size-3.5 sm:size-3" />
                   {bodyTypeLabel(listing.body_type)}
                 </span>
               )}
               <span className="flex items-center gap-1.5">
-                <Fuel className="size-3" />
+                <Fuel className="size-3.5 sm:size-3" />
                 {capitalize(listing.fuel_type)}
               </span>
               <span className="flex items-center gap-1.5">
-                <MapPin className="size-3" />
+                <MapPin className="size-3.5 sm:size-3" />
                 {listing.city}
               </span>
               <span className="ml-auto flex size-5 items-center justify-center rounded-full border border-ink/80 transition group-hover:border-brand group-hover:bg-brand group-hover:text-white">

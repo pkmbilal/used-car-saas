@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { MAKES, modelsFor } from "@/lib/makes";
 
-const triggerClass = "h-9 w-full bg-white text-xs data-[size=default]:h-9";
+const triggerClass = "h-9 w-full bg-white text-xs data-[size=default]:h-9 max-sm:text-sm max-sm:data-[size=default]:h-10";
 
 // Make and Model filters for GET search forms. Model choices follow the
 // selected make, and the model resets to "Any" when the make changes.

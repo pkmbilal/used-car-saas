@@ -123,7 +123,7 @@ export default async function ListingPage({ params }: PageProps<"/listings/[id]"
           <div className="mt-4 flex flex-wrap items-center gap-3.5">
             <h1 className="text-3xl font-semibold tracking-tight">{name}</h1>
             {featured && (
-              <Badge className="h-6 bg-[#4fc35f] px-3 text-[0.6875rem] font-semibold">Featured</Badge>
+              <Badge className="h-6 bg-[#4fc35f] px-3 text-caption font-semibold">Featured</Badge>
             )}
           </div>
           <p className="mt-2.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[0.9375rem]">
@@ -171,13 +171,13 @@ export default async function ListingPage({ params }: PageProps<"/listings/[id]"
 
             {contactPhone && (
               <div className="mt-4 flex flex-col gap-2.5">
-                <Button asChild className="h-11 text-[0.8125rem] font-semibold hover:bg-brand-dark hover:text-white">
+                <Button asChild className="h-11 text-label font-semibold hover:bg-brand-dark hover:text-white">
                   <ContactLink listingId={listing.id} kind="call" href={`tel:${contactPhone}`}>
                     <Phone className="size-4" />
                     Call Seller
                   </ContactLink>
                 </Button>
-                <Button asChild variant="outline" className="h-11 border-brand text-[0.8125rem] font-semibold text-ink hover:bg-mint">
+                <Button asChild variant="outline" className="h-11 border-brand text-label font-semibold text-ink hover:bg-mint">
                   <ContactLink
                     listingId={listing.id}
                     kind="whatsapp"
@@ -218,7 +218,7 @@ export default async function ListingPage({ params }: PageProps<"/listings/[id]"
                   </div>
                 </div>
                 <Separator className="mt-4" />
-                <div className="flex flex-col gap-3.5 pt-4 text-[0.71875rem] leading-relaxed text-ink/75">
+                <div className="flex flex-col gap-3.5 pt-4 text-caption leading-relaxed text-ink/75">
                   <p className="flex items-start gap-3.5">
                     <MapPin className="mt-0.5 size-4 shrink-0 text-brand" />
                     <span>
@@ -236,7 +236,7 @@ export default async function ListingPage({ params }: PageProps<"/listings/[id]"
                     </span>
                   </p>
                 </div>
-                <Button asChild variant="link" className="mt-3 h-auto justify-start px-0 text-xs font-semibold text-brand">
+                <Button asChild variant="link" className="mt-3 h-auto justify-start max-sm:h-auto px-0 text-xs max-sm:text-sm font-semibold text-brand">
                   <Link href={`/sellers/${seller.id}`}>
                     {storefront ? "Visit dealer storefront →" : "View seller’s listings →"}
                   </Link>
@@ -259,7 +259,7 @@ export default async function ListingPage({ params }: PageProps<"/listings/[id]"
             <h2 className="text-lg font-semibold">Similar Cars You May Like</h2>
             <Link
               href={`/listings?${new URLSearchParams({ make: listing.make, model: listing.model })}`}
-              className="text-[0.6875rem] font-semibold text-brand"
+              className="text-caption font-semibold text-brand"
             >
               View All →
             </Link>
@@ -277,13 +277,13 @@ export default async function ListingPage({ params }: PageProps<"/listings/[id]"
             <p className="mr-auto min-w-0 truncate text-base font-bold text-brand">
               <RiyalPrice amount={listing.price} />
             </p>
-            <Button asChild size="sm" className="h-10 px-4 text-xs font-semibold">
+            <Button asChild size="sm" className="h-10 px-4 text-xs max-sm:text-sm font-semibold">
               <ContactLink listingId={listing.id} kind="call" href={`tel:${contactPhone}`}>
                 <Phone className="size-4" />
                 Call
               </ContactLink>
             </Button>
-            <Button asChild size="sm" variant="outline" className="h-10 border-brand px-4 text-xs font-semibold text-ink">
+            <Button asChild size="sm" variant="outline" className="h-10 border-brand px-4 text-xs max-sm:text-sm font-semibold text-ink">
               <ContactLink
                 listingId={listing.id}
                 kind="whatsapp"

@@ -37,11 +37,11 @@ export function SortSelect<T extends string = keyof typeof listingSortLabels>({
 
   return (
     <div className="flex items-center gap-3">
-      <Label htmlFor="sort" className="text-[0.6875rem] font-normal text-ink/70">
+      <Label htmlFor="sort" className="text-caption font-normal text-ink/70">
         Sort by
       </Label>
       <Select value={value} onValueChange={change}>
-        <SelectTrigger id="sort" className="h-8 min-w-40 bg-white text-xs">
+        <SelectTrigger id="sort" className="h-8 min-w-40 bg-white text-xs max-sm:h-10 max-sm:text-sm">
           <SelectValue />
         </SelectTrigger>
         <SelectContent align="end" className="light">
