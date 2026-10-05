@@ -23,9 +23,9 @@ export function DealerCard({ dealer }: { dealer: DealerSummary }) {
           </div>
         </div>
         {storefront.about && (
-          <p className="mt-4 line-clamp-2 text-[0.8125rem] text-muted-foreground">{storefront.about}</p>
+          <p className="mt-4 line-clamp-2 text-label text-muted-foreground">{storefront.about}</p>
         )}
-        <div className="mt-auto flex items-center gap-4 pt-4 text-[0.6875rem] text-muted-foreground">
+        <div className="mt-auto flex items-center gap-4 pt-4 text-caption text-muted-foreground">
           {profile.city && (
             <span className="flex items-center gap-1.5">
               <MapPin className="size-3" />

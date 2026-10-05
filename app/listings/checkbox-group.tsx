@@ -46,7 +46,7 @@ export function CheckboxGroup({
               />
               {option.label}
               {option.count !== undefined && (
-                <span className="text-[0.625rem] text-muted-foreground">({option.count})</span>
+                <span className="text-eyebrow text-muted-foreground">({option.count})</span>
               )}
             </label>
           );

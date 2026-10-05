@@ -57,6 +57,20 @@
   --color-forest-dark: #0f2219;
   --color-mint: #eaf0ea;
   --color-line: #e3e6e1;
+
+  /* Small UI text. Desktop sizes here; bumped up on phones below. */
+  --text-eyebrow: 0.625rem;
+  --text-caption: 0.6875rem;
+  --text-label: 0.8125rem;
+}
+
+/* Phones: the small text steps up so it stays readable. */
+@media (width < 40rem) {
+  :root {
+    --text-eyebrow: 0.75rem;
+    --text-caption: 0.8125rem;
+    --text-label: 0.875rem;
+  }
 }
 
 /* shadcn theme mapped to DriveLoop. Light only: shadcn is used on the public

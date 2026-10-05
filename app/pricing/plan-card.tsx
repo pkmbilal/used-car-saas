@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils";
 export type PlanCta = { label: string; href: string } | { label: string; disabled: true } | null;
 
 export function PlanCard({ plan, details, cta }: { plan: Plan; details: PlanDetails; cta: PlanCta }) {
-  const buttonClass = "h-10 w-full text-[0.8125rem] font-semibold";
+  const buttonClass = "h-10 w-full text-label font-semibold";
 
   return (
     <Card
@@ -22,24 +22,24 @@ export function PlanCard({ plan, details, cta }: { plan: Plan; details: PlanDeta
       <div className="flex items-center justify-between gap-3">
         <h2 className="text-base font-semibold">{PLAN_LABELS[plan]}</h2>
         {details.highlighted && (
-          <span className="rounded-full bg-brand px-2.5 py-0.5 text-[0.6875rem] font-bold tracking-wide text-white">
+          <span className="rounded-full bg-brand px-2.5 py-0.5 text-caption font-bold tracking-wide text-white">
             Most popular
           </span>
         )}
       </div>
-      <p className="mt-1 text-[0.8125rem] text-muted-foreground">{details.tagline}</p>
+      <p className="mt-1 text-label text-muted-foreground">{details.tagline}</p>
       <p className="mt-5 flex items-baseline gap-1.5">
         {details.price === 0 ? (
           <span className="text-3xl font-semibold tracking-tight">Free</span>
         ) : (
           <>
             <RiyalPrice amount={details.price} className="text-3xl font-semibold tracking-tight" />
-            <span className="text-[0.8125rem] text-muted-foreground">/ month</span>
+            <span className="text-label text-muted-foreground">/ month</span>
           </>
         )}
       </p>
 
-      <ul className="mt-6 flex flex-col gap-2.5 text-[0.8125rem]">
+      <ul className="mt-6 flex flex-col gap-2.5 text-label">
         {details.features.map((feature) => (
           <li key={feature} className="flex items-start gap-2">
             <Check className="mt-0.5 size-4 shrink-0 text-brand" strokeWidth={2.6} />

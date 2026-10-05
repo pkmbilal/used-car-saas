@@ -25,7 +25,7 @@ export function ShareButton({ title }: { title: string }) {
   }
 
   return (
-    <Button type="button" variant="outline" onClick={share} className="h-10 w-full bg-white text-xs font-medium">
+    <Button type="button" variant="outline" onClick={share} className="h-10 w-full bg-white text-xs max-sm:text-sm font-medium">
       <Share2 className="size-3.5" />
       Share
     </Button>

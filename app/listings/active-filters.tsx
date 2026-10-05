@@ -70,7 +70,7 @@ export function ActiveFilters({ filters }: { filters: ListingFilters }) {
           key={chip.key}
           href={hrefWithout(filters, chip.without)}
           aria-label={`Remove filter: ${chip.label}`}
-          className="inline-flex h-7 items-center gap-1.5 rounded-full border border-line bg-white px-3 text-[0.6875rem] font-medium text-ink hover:border-brand hover:bg-mint"
+          className="inline-flex h-7 items-center gap-1.5 rounded-full border border-line bg-white px-3 text-caption font-medium text-ink hover:border-brand hover:bg-mint"
         >
           {chip.label}
           <X className="size-3 text-muted-foreground" strokeWidth={2.4} />
@@ -78,7 +78,7 @@ export function ActiveFilters({ filters }: { filters: ListingFilters }) {
       ))}
       <Link
         href={filters.sort === "newest" ? "/listings" : `/listings?sort=${filters.sort}`}
-        className="px-1 text-[0.6875rem] font-semibold text-brand hover:underline"
+        className="px-1 text-caption font-semibold text-brand hover:underline"
       >
         Clear all
       </Link>
