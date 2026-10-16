@@ -141,7 +141,8 @@ export async function getUsers(filters: { q?: string; page: number }) {
   const supabase = createAdminClient();
   let query = supabase
     .from("profiles")
-    .select("*, listings(count)", { count: "exact" });
+    // Named FK: favorites also links profiles to listings.
+    .select("*, listings!listings_seller_id_fkey(count)", { count: "exact" });
 
   const q = searchTerm(filters.q);
   if (q) query = query.or(`full_name.ilike.%${q}%,phone.ilike.%${q}%`);
