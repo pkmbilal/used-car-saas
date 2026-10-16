@@ -722,6 +722,14 @@ export type Database = {
       [_ in never]: never;
     };
     Functions: {
+      admin_daily_activity: {
+        Args: { p_days: number };
+        Returns: { day: string; listings: number; users: number }[];
+      };
+      admin_engagement_totals: {
+        Args: Record<PropertyKey, never>;
+        Returns: { views: number; calls: number; whatsapps: number }[];
+      };
       expire_plans: {
         Args: Record<PropertyKey, never>;
         Returns: number;

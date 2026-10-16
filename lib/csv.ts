@@ -39,3 +39,13 @@ export function parseCsv(text: string): string[][] {
   }
   return records;
 }
+
+// The reverse: quotes cells that need it and starts with a BOM so Excel reads
+// the file as UTF-8.
+export function toCsv(records: (string | number)[][]): string {
+  const escape = (cell: string | number) => {
+    const text = String(cell);
+    return /[",\r\n]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text;
+  };
+  return "﻿" + records.map((record) => record.map(escape).join(",")).join("\r\n") + "\r\n";
+}

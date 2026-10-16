@@ -130,3 +130,27 @@
     }
   }
 }
+
+/* Admin dashboard charts. Categorical slots validated for CVD separation in
+   both modes (dataviz palette, slots 1-4); dark steps are their own values. */
+.admin-viz {
+  --viz-1: #2a78d6;
+  --viz-2: #eb6834;
+  --viz-3: #1baf7a;
+  --viz-4: #eda100;
+  --viz-grid: #e8eae6;
+  --viz-axis: #5c635e;
+  --viz-surface: #ffffff;
+}
+
+@media (prefers-color-scheme: dark) {
+  .admin-viz:not(:where(.light, .light *)) {
+    --viz-1: #3987e5;
+    --viz-2: #d95926;
+    --viz-3: #199e70;
+    --viz-4: #c98500;
+    --viz-grid: #27272a;
+    --viz-axis: #a1a1aa;
+    --viz-surface: #18181b;
+  }
+}
