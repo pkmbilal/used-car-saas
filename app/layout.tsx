@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Figtree } from "next/font/google";
+import { HideOnAdmin } from "@/components/hide-on-admin";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { Toaster } from "@/components/ui/sonner";
@@ -20,9 +21,13 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" className={cn("h-full font-sans antialiased", figtree.variable)}>
       <body className="min-h-full flex flex-col">
-        <SiteHeader />
+        <HideOnAdmin>
+          <SiteHeader />
+        </HideOnAdmin>
         <div className="flex flex-1 flex-col">{children}</div>
-        <SiteFooter />
+        <HideOnAdmin>
+          <SiteFooter />
+        </HideOnAdmin>
         <Toaster theme="light" />
       </body>
     </html>

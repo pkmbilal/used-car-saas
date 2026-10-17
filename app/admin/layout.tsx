@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 };
 
 export default async function AdminLayout({ children }: LayoutProps<"/admin">) {
-  const { profile } = await requireAdmin();
+  const { user, profile } = await requireAdmin();
   const pending = await getPendingCounts();
 
   // Sections with work waiting show how much.
@@ -49,7 +49,16 @@ export default async function AdminLayout({ children }: LayoutProps<"/admin">) {
   ];
 
   return (
-    <AdminShell sections={sections} attention={attention} adminName={profile.full_name ?? "Admin"}>
+    <AdminShell
+      sections={sections}
+      attention={attention}
+      user={{
+        id: user.id,
+        name: profile.full_name ?? "Admin",
+        email: user.email ?? null,
+        isSeller: profile.role === "seller",
+      }}
+    >
       {children}
     </AdminShell>
   );

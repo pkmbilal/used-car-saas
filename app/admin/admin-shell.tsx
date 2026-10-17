@@ -7,14 +7,20 @@ import {
   BadgeCheck,
   Bell,
   Car,
+  ExternalLink,
+  ChevronDown,
   ChevronRight,
   CreditCard,
   Flag,
   History,
   LayoutDashboard,
+  LogOut,
   Menu,
   Search,
+  Settings,
+  ShieldCheck,
   Store,
+  UserRound,
   Users,
   X,
   type LucideIcon,
@@ -27,6 +33,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Avatar } from "./ui";
+
+export type AdminUser = { id: string; name: string; email: string | null; isSeller: boolean };
 
 export type AdminSection = { href: string; label: string; count?: number; description?: string };
 
@@ -47,12 +56,10 @@ function isActive(pathname: string, href: string) {
 
 function Sidebar({
   sections,
-  adminName,
   open,
   onClose,
 }: {
   sections: AdminSection[];
-  adminName: string;
   open: boolean;
   onClose: () => void;
 }) {
@@ -64,10 +71,10 @@ function Sidebar({
       }`}
     >
       <div className="flex items-center justify-between border-b border-white/10 px-5 py-5">
-        <div>
+        <Link href="/admin" onClick={onClose}>
           <p className="text-lg font-semibold leading-none">DriveLoop</p>
           <p className="mt-1.5 text-eyebrow font-semibold tracking-[0.16em] text-lime">ADMIN</p>
-        </div>
+        </Link>
         <button type="button" onClick={onClose} aria-label="Close menu" className="rounded p-1 hover:bg-white/10 lg:hidden">
           <X className="size-5" />
         </button>
@@ -97,14 +104,14 @@ function Sidebar({
           );
         })}
       </nav>
-      <div className="flex items-center gap-3 border-t border-white/10 px-5 py-4">
-        <span className="grid size-9 place-items-center rounded-full bg-white/15 text-sm font-semibold">
-          {adminName.slice(0, 2).toUpperCase()}
-        </span>
-        <div className="min-w-0">
-          <p className="truncate text-sm font-semibold">{adminName}</p>
-          <p className="text-caption text-white/60">Administrator</p>
-        </div>
+      <div className="border-t border-white/10 p-3">
+        <Link
+          href="/"
+          className="flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-white/80 hover:bg-white/10 hover:text-white"
+        >
+          <ExternalLink className="size-5 shrink-0" aria-hidden />
+          View site
+        </Link>
       </div>
     </aside>
   );
@@ -184,15 +191,106 @@ function NotificationsMenu({ items }: { items: AdminSection[] }) {
   );
 }
 
+// The signed-in admin, with their account links and sign out.
+function AdminUserMenu({ user }: { user: AdminUser }) {
+  const links = [
+    {
+      href: `/admin/users/${user.id}`,
+      label: "My admin profile",
+      hint: "Your record and moderation history",
+      icon: UserRound,
+    },
+    { href: "/account", label: "Account settings", hint: "Name, phone and city", icon: Settings },
+    ...(user.isSeller
+      ? [{ href: "/dashboard", label: "My listings", hint: "Cars you're selling", icon: Car }]
+      : []),
+    { href: "/", label: "View site", hint: "DriveLoop as buyers see it", icon: ExternalLink },
+  ];
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger
+        aria-label="Account menu"
+        className="group flex items-center gap-2.5 rounded-full py-1 pr-3 pl-1 ring-1 ring-transparent transition-colors hover:bg-zinc-100 hover:ring-line aria-expanded:bg-zinc-100 aria-expanded:ring-line dark:hover:bg-zinc-800 dark:hover:ring-zinc-700 dark:aria-expanded:bg-zinc-800"
+      >
+        <span className="relative">
+          <Avatar name={user.name} />
+          <span className="absolute -right-0.5 -bottom-0.5 size-3 rounded-full bg-green-500 ring-2 ring-white dark:ring-zinc-900" aria-hidden />
+        </span>
+        <span className="hidden max-w-40 text-left sm:block">
+          <span className="block truncate text-sm font-semibold leading-tight">{user.name}</span>
+          <span className="block text-xs text-zinc-500">Administrator</span>
+        </span>
+        <ChevronDown
+          className="hidden size-4 text-zinc-500 transition-transform group-aria-expanded:rotate-180 sm:block"
+          aria-hidden
+        />
+      </DropdownMenuTrigger>
+
+      <DropdownMenuContent
+        align="end"
+        sideOffset={8}
+        className="w-80 overflow-hidden rounded-xl p-0 shadow-xl ring-1 ring-black/5"
+      >
+        <div className="relative bg-gradient-to-br from-forest via-forest to-brand px-4 pt-4 pb-5 text-white">
+          <div className="flex items-center gap-3">
+            <span className="rounded-full ring-2 ring-white/30">
+              <Avatar name={user.name} size="lg" />
+            </span>
+            <div className="min-w-0">
+              <p className="truncate font-semibold">{user.name}</p>
+              {user.email && <p className="truncate text-sm text-white/70">{user.email}</p>}
+              <span className="mt-1.5 inline-flex items-center gap-1 rounded-full bg-lime/15 px-2 py-0.5 text-xs font-medium text-lime ring-1 ring-lime/30">
+                <ShieldCheck className="size-3" aria-hidden />
+                Administrator
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div className="p-1.5">
+          {links.map(({ href, label, hint, icon: Icon }) => (
+            <DropdownMenuItem key={href} asChild className="gap-3 rounded-lg px-2 py-2">
+              <Link href={href}>
+                <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-canvas text-forest ring-1 ring-line group-focus/dropdown-menu-item:bg-mint group-focus/dropdown-menu-item:text-brand">
+                  <Icon className="size-4" aria-hidden />
+                </span>
+                <span className="min-w-0">
+                  <span className="block text-sm font-medium">{label}</span>
+                  <span className="block truncate text-xs text-muted-foreground">{hint}</span>
+                </span>
+              </Link>
+            </DropdownMenuItem>
+          ))}
+        </div>
+
+        <DropdownMenuSeparator className="mx-0 my-0" />
+        <div className="bg-canvas/70 p-1.5">
+          <form action="/auth/signout" method="post" className="contents">
+            <DropdownMenuItem asChild variant="destructive" className="gap-3 rounded-lg px-2 py-2">
+              <button type="submit" className="w-full">
+                <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-white ring-1 ring-red-100">
+                  <LogOut className="size-4" aria-hidden />
+                </span>
+                <span className="text-sm font-medium">Sign out</span>
+              </button>
+            </DropdownMenuItem>
+          </form>
+        </div>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
+
 export function AdminShell({
   sections,
   attention,
-  adminName,
+  user,
   children,
 }: {
   sections: AdminSection[];
   attention: AdminSection[];
-  adminName: string;
+  user: AdminUser;
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
@@ -200,8 +298,8 @@ export function AdminShell({
   const current = [...sections].reverse().find(({ href }) => isActive(pathname, href));
 
   return (
-    <div className="flex flex-1 bg-canvas dark:bg-zinc-950">
-      <Sidebar sections={sections} adminName={adminName} open={menuOpen} onClose={() => setMenuOpen(false)} />
+    <div className="flex min-h-svh flex-1 bg-canvas dark:bg-zinc-950">
+      <Sidebar sections={sections} open={menuOpen} onClose={() => setMenuOpen(false)} />
       {menuOpen && (
         <div className="fixed inset-0 z-30 bg-black/40 lg:hidden" onClick={() => setMenuOpen(false)} aria-hidden />
       )}
@@ -217,8 +315,10 @@ export function AdminShell({
             <Menu className="size-5" />
           </button>
           <AdminSearch />
-          <div className="ml-auto">
+          <div className="ml-auto flex items-center gap-2 sm:gap-3">
             <NotificationsMenu items={attention} />
+            <span className="h-6 w-px bg-line dark:bg-zinc-800" aria-hidden />
+            <AdminUserMenu user={user} />
           </div>
         </header>
 
