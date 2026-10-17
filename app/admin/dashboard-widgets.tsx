@@ -2,7 +2,8 @@ import Link from "next/link";
 import { ArrowDownRight, ArrowUpRight, type LucideIcon } from "lucide-react";
 import type { ListingStatus } from "@/lib/listings";
 
-export const cardClass = "rounded-lg border border-line bg-white dark:border-zinc-800 dark:bg-zinc-900";
+export const cardClass =
+  "rounded-xl border border-line bg-white shadow-[0_1px_2px_rgba(21,32,26,0.04)] dark:border-zinc-800 dark:bg-zinc-900";
 
 const numberFormat = new Intl.NumberFormat("en-US");
 export const formatNumber = (n: number) => numberFormat.format(n);

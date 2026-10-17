@@ -38,25 +38,32 @@ export function Pager({
     return search ? `${basePath}?${search}` : basePath;
   }
 
+  const from = (page - 1) * ADMIN_PAGE_SIZE + 1;
+  const to = Math.min(page * ADMIN_PAGE_SIZE, total);
+  const button =
+    "inline-flex h-8 items-center rounded-md border border-zinc-300 bg-white px-3 text-sm font-medium dark:border-zinc-700 dark:bg-zinc-900";
+
   return (
-    <nav className="mt-8 flex items-center justify-center gap-6 text-sm">
-      {page > 1 ? (
-        <Link href={href(page - 1)} className="font-medium">
-          ← Previous
-        </Link>
-      ) : (
-        <span className="text-zinc-400">← Previous</span>
-      )}
+    <nav className="mt-4 flex flex-wrap items-center justify-between gap-3 text-sm">
       <span className="text-zinc-600 dark:text-zinc-400">
-        Page {page} of {pageCount}
+        Showing {from}–{to} of {total} · Page {page} of {pageCount}
       </span>
-      {page < pageCount ? (
-        <Link href={href(page + 1)} className="font-medium">
-          Next →
-        </Link>
-      ) : (
-        <span className="text-zinc-400">Next →</span>
-      )}
+      <span className="flex gap-2">
+        {page > 1 ? (
+          <Link href={href(page - 1)} className={`${button} hover:bg-canvas dark:hover:bg-zinc-800`}>
+            Previous
+          </Link>
+        ) : (
+          <span className={`${button} opacity-40`}>Previous</span>
+        )}
+        {page < pageCount ? (
+          <Link href={href(page + 1)} className={`${button} hover:bg-canvas dark:hover:bg-zinc-800`}>
+            Next
+          </Link>
+        ) : (
+          <span className={`${button} opacity-40`}>Next</span>
+        )}
+      </span>
     </nav>
   );
 }

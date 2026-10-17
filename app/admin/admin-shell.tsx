@@ -7,6 +7,7 @@ import {
   BadgeCheck,
   Bell,
   Car,
+  ChevronRight,
   CreditCard,
   Flag,
   History,
@@ -27,7 +28,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-export type AdminSection = { href: string; label: string; count?: number };
+export type AdminSection = { href: string; label: string; count?: number; description?: string };
 
 const ICONS: Record<string, LucideIcon> = {
   "/admin": LayoutDashboard,
@@ -222,14 +223,31 @@ export function AdminShell({
         </header>
 
         <main className="flex flex-col gap-6 px-4 py-6 sm:px-6">
-          {/* The overview renders its own header with the range controls. */}
+          {/* The overview renders its own header with the range controls;
+              nested pages (a user's details) get a way back instead. */}
           {current && current.href !== "/admin" && (
             <div>
-              <p className="text-sm text-zinc-500">
-                Admin <span className="mx-1.5">/</span>
-                <span className="text-zinc-900 dark:text-zinc-100">{current.label}</span>
+              <p className="flex items-center gap-1.5 text-sm text-zinc-500">
+                <Link href="/admin" className="hover:text-zinc-900 dark:hover:text-zinc-100">
+                  Admin
+                </Link>
+                <ChevronRight className="size-3.5" aria-hidden />
+                {pathname === current.href ? (
+                  <span className="text-zinc-900 dark:text-zinc-100">{current.label}</span>
+                ) : (
+                  <Link href={current.href} className="hover:text-zinc-900 dark:hover:text-zinc-100">
+                    {current.label}
+                  </Link>
+                )}
               </p>
-              <h1 className="mt-1 text-2xl font-bold tracking-tight">{current.label}</h1>
+              {pathname === current.href && (
+                <>
+                  <h1 className="mt-1 text-2xl font-bold tracking-tight">{current.label}</h1>
+                  {current.description && (
+                    <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">{current.description}</p>
+                  )}
+                </>
+              )}
             </div>
           )}
           <div>{children}</div>

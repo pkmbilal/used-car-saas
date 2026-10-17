@@ -1,50 +1,147 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { toast } from "sonner";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import type { AdminResult } from "@/lib/admin";
 import { PAYMENT_METHODS, type PaymentInput, type PaymentMethod } from "@/lib/payment-options";
 import { removeListingAction } from "./actions";
+import { dangerButtonClass, fieldClass, primaryButtonClass, secondaryButtonClass } from "./ui";
 
-const buttonClass = "text-sm font-medium underline-offset-4 hover:underline disabled:opacity-50";
+const TONE_CLASS = {
+  primary: primaryButtonClass,
+  default: secondaryButtonClass,
+  danger: dangerButtonClass,
+} as const;
+
+type Tone = keyof typeof TONE_CLASS;
 
 function useAdminAction() {
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string>();
 
-  function run(action: () => Promise<AdminResult>, after?: () => void) {
+  function run(action: () => Promise<AdminResult>, after?: () => void, success?: string) {
     setError(undefined);
     startTransition(async () => {
       const result = await action();
-      if (result.error) setError(result.error);
-      else after?.();
+      if (result.error) {
+        setError(result.error);
+        toast.error(result.error);
+      } else {
+        if (success) toast.success(success);
+        after?.();
+      }
     });
   }
 
   return { pending, error, run };
 }
 
+function ErrorText({ error }: { error?: string }) {
+  return error ? <span className="text-sm text-red-600 dark:text-red-400">{error}</span> : null;
+}
+
+// Asks before running a one-click action that's hard to undo.
+function ConfirmDialog({
+  open,
+  onOpenChange,
+  title,
+  description,
+  confirmLabel,
+  tone,
+  pending,
+  onConfirm,
+  children,
+}: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  title: string;
+  description: string;
+  confirmLabel: string;
+  tone: Tone;
+  pending: boolean;
+  onConfirm: () => void;
+  children?: React.ReactNode;
+}) {
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-md">
+        <form
+          className="grid gap-4"
+          onSubmit={(event) => {
+            event.preventDefault();
+            onConfirm();
+          }}
+        >
+          <DialogHeader>
+            <DialogTitle>{title}</DialogTitle>
+            <DialogDescription>{description}</DialogDescription>
+          </DialogHeader>
+          {children}
+          <DialogFooter>
+            <button type="button" onClick={() => onOpenChange(false)} className={secondaryButtonClass}>
+              Cancel
+            </button>
+            <button type="submit" disabled={pending} className={TONE_CLASS[tone]}>
+              {pending ? "Working…" : confirmLabel}
+            </button>
+          </DialogFooter>
+        </form>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
 // `action` is a server action bound to its target id by the server page.
+// With `confirm`, the admin is asked first.
 export function AdminActionButton({
   label,
   action,
   tone = "default",
+  success,
+  confirm,
 }: {
   label: string;
   action: () => Promise<AdminResult>;
-  tone?: "default" | "danger";
+  tone?: Tone;
+  success?: string;
+  confirm?: { title: string; description: string };
 }) {
   const { pending, error, run } = useAdminAction();
+  const [open, setOpen] = useState(false);
+
   return (
     <span className="inline-flex flex-col items-end gap-1">
       <button
         type="button"
         disabled={pending}
-        onClick={() => run(action)}
-        className={`${buttonClass} ${tone === "danger" ? "text-red-600" : ""}`}
+        onClick={() => (confirm ? setOpen(true) : run(action, undefined, success))}
+        className={TONE_CLASS[tone]}
       >
-        {label}
+        {pending ? "Working…" : label}
       </button>
-      {error && <span className="text-sm text-red-600">{error}</span>}
+      {!confirm && <ErrorText error={error} />}
+      {confirm && (
+        <ConfirmDialog
+          open={open}
+          onOpenChange={setOpen}
+          title={confirm.title}
+          description={confirm.description}
+          confirmLabel={label}
+          tone={tone}
+          pending={pending}
+          onConfirm={() => run(action, () => setOpen(false), success)}
+        >
+          <ErrorText error={error} />
+        </ConfirmDialog>
+      )}
     </span>
   );
 }
@@ -54,55 +151,71 @@ export function AdminActionButton({
 export function ReasonActionButton({
   label,
   action,
+  title = `${label}?`,
+  description = "The seller sees this reason.",
+  success,
 }: {
   label: string;
   action: (reason: string) => Promise<AdminResult>;
+  title?: string;
+  description?: string;
+  success?: string;
 }) {
   const { pending, error, run } = useAdminAction();
   const [open, setOpen] = useState(false);
   const [reason, setReason] = useState("");
 
-  if (!open) {
-    return (
-      <button type="button" onClick={() => setOpen(true)} className={`${buttonClass} text-red-600`}>
+  return (
+    <>
+      <button type="button" onClick={() => setOpen(true)} className={dangerButtonClass}>
         {label}
       </button>
-    );
-  }
-
-  return (
-    <form
-      className="flex flex-col items-end gap-1"
-      onSubmit={(event) => {
-        event.preventDefault();
-        run(() => action(reason), () => setOpen(false));
-      }}
-    >
-      <div className="flex items-center gap-2">
-        <input
+      <ConfirmDialog
+        open={open}
+        onOpenChange={setOpen}
+        title={title}
+        description={description}
+        confirmLabel={label}
+        tone="danger"
+        pending={pending}
+        onConfirm={() =>
+          run(
+            () => action(reason),
+            () => {
+              setOpen(false);
+              setReason("");
+            },
+            success,
+          )
+        }
+      >
+        <textarea
           autoFocus
           value={reason}
           onChange={(event) => setReason(event.target.value)}
           maxLength={300}
           required
+          rows={3}
           placeholder="Reason shown to seller"
           aria-label="Reason shown to seller"
-          className="w-56 rounded-md border border-zinc-300 px-2 py-1 text-sm dark:border-zinc-700 dark:bg-zinc-900"
+          className="rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm outline-none focus:border-brand focus:ring-2 focus:ring-brand/20"
         />
-        <button type="submit" disabled={pending} className={`${buttonClass} text-red-600`}>
-          Confirm
-        </button>
-        <button type="button" onClick={() => setOpen(false)} className={buttonClass}>
-          Cancel
-        </button>
-      </div>
-      {error && <span className="text-sm text-red-600">{error}</span>}
-    </form>
+        <ErrorText error={error} />
+      </ConfirmDialog>
+    </>
   );
 }
 
 export function RemoveListingButton({ listingId }: { listingId: string }) {
-  return <ReasonActionButton label="Remove" action={removeListingAction.bind(null, listingId)} />;
+  return (
+    <ReasonActionButton
+      label="Remove listing"
+      title="Remove this listing?"
+      description="It disappears from search and its open reports are closed. The seller sees your reason."
+      success="Listing removed"
+      action={removeListingAction.bind(null, listingId)}
+    />
+  );
 }
 
 type Option = { value: string; label: string };
@@ -112,8 +225,14 @@ function durationMonths(value: string): number | null {
   return value === "" ? null : Number(value);
 }
 
-const selectClass =
-  "rounded-md border border-zinc-300 px-2 py-1 text-sm disabled:opacity-50 dark:border-zinc-700 dark:bg-zinc-900";
+function Field({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <label className="flex flex-col gap-1">
+      <span className="text-xs text-zinc-500">{label}</span>
+      {children}
+    </label>
+  );
+}
 
 // Optional payment recorded with a plan change. The amount follows the plan
 // price × months until the admin types their own.
@@ -154,54 +273,57 @@ function PaymentFields({
   pending: boolean;
 }) {
   return (
-    <span className="flex flex-wrap items-center justify-end gap-2">
-      <label className="flex items-center gap-1 text-sm">
+    <div className="rounded-lg border border-line bg-canvas/60 p-3 dark:border-zinc-800 dark:bg-zinc-800/40">
+      <label className="flex items-center gap-2 text-sm font-medium">
         <input
           type="checkbox"
           checked={fields.record}
           disabled={pending}
           onChange={(event) => fields.setRecord(event.target.checked)}
+          className="size-4 accent-brand"
         />
-        Record payment
+        Record a payment with this change
       </label>
       {fields.record && (
-        <>
-          <input
-            type="number"
-            min="0.01"
-            step="0.01"
-            required
-            value={fields.amount}
-            disabled={pending}
-            onChange={(event) => fields.setAmount(event.target.value)}
-            aria-label="Amount paid in SAR"
-            className={`w-28 ${selectClass}`}
-          />
-          <select
-            value={fields.method}
-            disabled={pending}
-            aria-label="Payment method"
-            onChange={(event) => fields.setMethod(event.target.value as PaymentMethod)}
-            className={selectClass}
-          >
-            {Object.entries(PAYMENT_METHODS).map(([value, label]) => (
-              <option key={value} value={value}>
-                {label}
-              </option>
-            ))}
-          </select>
-          <input
-            value={fields.reference}
-            disabled={pending}
-            onChange={(event) => fields.setReference(event.target.value)}
-            maxLength={100}
-            placeholder="Reference (optional)"
-            aria-label="Payment reference"
-            className={`w-40 ${selectClass}`}
-          />
-        </>
+        <div className="mt-3 grid gap-3 sm:grid-cols-3">
+          <Field label="Amount (SAR)">
+            <input
+              type="number"
+              min="0.01"
+              step="0.01"
+              required
+              value={fields.amount}
+              disabled={pending}
+              onChange={(event) => fields.setAmount(event.target.value)}
+              className={fieldClass}
+            />
+          </Field>
+          <Field label="Method">
+            <select
+              value={fields.method}
+              disabled={pending}
+              onChange={(event) => fields.setMethod(event.target.value as PaymentMethod)}
+              className={fieldClass}
+            >
+              {Object.entries(PAYMENT_METHODS).map(([value, label]) => (
+                <option key={value} value={value}>
+                  {label}
+                </option>
+              ))}
+            </select>
+          </Field>
+          <Field label="Reference (optional)">
+            <input
+              value={fields.reference}
+              disabled={pending}
+              onChange={(event) => fields.setReference(event.target.value)}
+              maxLength={100}
+              className={fieldClass}
+            />
+          </Field>
+        </div>
       )}
-    </span>
+    </div>
   );
 }
 
@@ -238,7 +360,7 @@ export function PlanSelect({
 
   return (
     <form
-      className="inline-flex flex-col items-end gap-1"
+      className="flex flex-col gap-3"
       onSubmit={(event) => {
         event.preventDefault();
         run(
@@ -247,59 +369,64 @@ export function PlanSelect({
             setNote("");
             payment.reset();
           },
+          "Plan saved",
         );
       }}
     >
-      <span className="flex flex-wrap items-center justify-end gap-2">
-        <select
-          value={value}
-          disabled={pending}
-          aria-label="Plan"
-          onChange={(event) => {
-            setValue(event.target.value);
-            payment.resetAmount();
-          }}
-          className={selectClass}
-        >
-          {plans.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </select>
-        {value !== "free" && (
+      <div className="grid gap-3 sm:grid-cols-2">
+        <Field label="Plan">
           <select
-            value={duration}
+            value={value}
             disabled={pending}
-            aria-label="Plan duration"
             onChange={(event) => {
-              setDuration(event.target.value);
+              setValue(event.target.value);
               payment.resetAmount();
             }}
-            className={selectClass}
+            className={fieldClass}
           >
-            {durations.map((option) => (
+            {plans.map((option) => (
               <option key={option.value} value={option.value}>
                 {option.label}
               </option>
             ))}
           </select>
+        </Field>
+        {value !== "free" && (
+          <Field label="Duration">
+            <select
+              value={duration}
+              disabled={pending}
+              onChange={(event) => {
+                setDuration(event.target.value);
+                payment.resetAmount();
+              }}
+              className={fieldClass}
+            >
+              {durations.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+          </Field>
         )}
+      </div>
+      <Field label="Note for the plan history (optional)">
         <input
           value={note}
           disabled={pending}
           onChange={(event) => setNote(event.target.value)}
           maxLength={300}
-          placeholder="Note (optional)"
-          aria-label="Note for the plan history"
-          className={`w-40 ${selectClass}`}
+          className={fieldClass}
         />
-        <button type="submit" disabled={pending} className={buttonClass}>
-          Save
-        </button>
-      </span>
+      </Field>
       {value !== "free" && <PaymentFields fields={payment.fields} pending={pending} />}
-      {error && <span className="text-sm text-red-600">{error}</span>}
+      <div className="flex items-center justify-end gap-3">
+        <ErrorText error={error} />
+        <button type="submit" disabled={pending} className={primaryButtonClass}>
+          {pending ? "Saving…" : "Save plan"}
+        </button>
+      </div>
     </form>
   );
 }
@@ -317,57 +444,79 @@ export function ExtendPlanForm({
   action: (months: number, note: string, payment: PaymentInput | null) => Promise<AdminResult>;
 }) {
   const { pending, error, run } = useAdminAction();
+  const [open, setOpen] = useState(false);
   const [duration, setDuration] = useState(durations[0]?.value ?? "1");
   const [note, setNote] = useState("");
   const payment = usePayment(suggestedPrice(prices, plan, duration));
 
   return (
-    <form
-      className="inline-flex flex-col items-end gap-1"
-      onSubmit={(event) => {
-        event.preventDefault();
-        run(
-          () => action(Number(duration), note, payment.value()),
-          () => {
-            setNote("");
-            payment.reset();
-          },
-        );
-      }}
-    >
-      <span className="flex flex-wrap items-center justify-end gap-2">
-        <select
-          value={duration}
-          disabled={pending}
-          aria-label="Extend by"
-          onChange={(event) => {
-            setDuration(event.target.value);
-            payment.resetAmount();
-          }}
-          className={selectClass}
-        >
-          {durations.map((option) => (
-            <option key={option.value} value={option.value}>
-              +{option.label}
-            </option>
-          ))}
-        </select>
-        <input
-          value={note}
-          disabled={pending}
-          onChange={(event) => setNote(event.target.value)}
-          maxLength={300}
-          placeholder="Note (optional)"
-          aria-label="Note for the plan history"
-          className={`w-40 ${selectClass}`}
-        />
-        <button type="submit" disabled={pending} className={buttonClass}>
-          Extend
-        </button>
-      </span>
-      <PaymentFields fields={payment.fields} pending={pending} />
-      {error && <span className="text-sm text-red-600">{error}</span>}
-    </form>
+    <>
+      <button type="button" onClick={() => setOpen(true)} className={primaryButtonClass}>
+        Extend plan
+      </button>
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent className="sm:max-w-lg">
+          <form
+            className="grid gap-4"
+            onSubmit={(event) => {
+              event.preventDefault();
+              run(
+                () => action(Number(duration), note, payment.value()),
+                () => {
+                  setNote("");
+                  payment.reset();
+                  setOpen(false);
+                },
+                "Plan extended",
+              );
+            }}
+          >
+            <DialogHeader>
+              <DialogTitle>Extend plan</DialogTitle>
+              <DialogDescription>The months are added on top of the current end date.</DialogDescription>
+            </DialogHeader>
+            <div className="grid gap-3 sm:grid-cols-2">
+              <Field label="Extend by">
+                <select
+                  value={duration}
+                  disabled={pending}
+                  onChange={(event) => {
+                    setDuration(event.target.value);
+                    payment.resetAmount();
+                  }}
+                  className={fieldClass}
+                >
+                  {durations.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+              </Field>
+              <Field label="Note (optional)">
+                <input
+                  value={note}
+                  disabled={pending}
+                  onChange={(event) => setNote(event.target.value)}
+                  maxLength={300}
+                  className={fieldClass}
+                />
+              </Field>
+            </div>
+            <PaymentFields fields={payment.fields} pending={pending} />
+            <ErrorText error={error} />
+            <DialogFooter>
+              <button type="button" onClick={() => setOpen(false)} className={secondaryButtonClass}>
+                Cancel
+              </button>
+              <button type="submit" disabled={pending} className={primaryButtonClass}>
+                {pending ? "Extending…" : "Extend plan"}
+              </button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }
 
@@ -388,44 +537,41 @@ export function ApproveDealerButton({
   const [duration, setDuration] = useState(durations[0]?.value ?? "");
 
   return (
-    <span className="inline-flex flex-col items-end gap-1">
-      <span className="flex items-center gap-2">
-        <select
-          value={value}
-          disabled={pending}
-          aria-label="Plan to grant"
-          onChange={(event) => setValue(event.target.value)}
-          className={selectClass}
-        >
-          {plans.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </select>
-        <select
-          value={duration}
-          disabled={pending}
-          aria-label="Plan duration"
-          onChange={(event) => setDuration(event.target.value)}
-          className={selectClass}
-        >
-          {durations.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </select>
+    <div className="flex flex-col gap-2">
+      <div className="flex flex-wrap items-end gap-3">
+        <Field label="Plan to grant">
+          <select value={value} disabled={pending} onChange={(event) => setValue(event.target.value)} className={fieldClass}>
+            {plans.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+        </Field>
+        <Field label="Duration">
+          <select
+            value={duration}
+            disabled={pending}
+            onChange={(event) => setDuration(event.target.value)}
+            className={fieldClass}
+          >
+            {durations.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+        </Field>
         <button
           type="button"
           disabled={pending}
-          onClick={() => run(() => action(value, durationMonths(duration)))}
-          className={buttonClass}
+          onClick={() => run(() => action(value, durationMonths(duration)), undefined, "Dealer approved")}
+          className={primaryButtonClass}
         >
-          Approve
+          {pending ? "Approving…" : "Approve dealer"}
         </button>
-      </span>
-      {error && <span className="text-sm text-red-600">{error}</span>}
-    </span>
+      </div>
+      <ErrorText error={error} />
+    </div>
   );
 }

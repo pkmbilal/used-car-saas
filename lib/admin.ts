@@ -384,11 +384,14 @@ export async function getExpiringPlans() {
     .lte("plan_expires_at", daysFromNow(EXPIRING_WINDOW_DAYS))
     .order("plan_expires_at", { ascending: true });
   if (error) throw error;
-  const soon = Date.now() + ENDING_SOON_DAYS * DAY_MS;
-  return data.map((profile) => ({
-    ...profile,
-    endsSoon: profile.plan_expires_at !== null && new Date(profile.plan_expires_at).getTime() <= soon,
-  }));
+  const now = Date.now();
+  return data.map((profile) => {
+    const daysLeft =
+      profile.plan_expires_at === null
+        ? null
+        : Math.ceil((new Date(profile.plan_expires_at).getTime() - now) / DAY_MS);
+    return { ...profile, daysLeft, endsSoon: daysLeft !== null && daysLeft <= ENDING_SOON_DAYS };
+  });
 }
 
 export type PlanPayment = Awaited<ReturnType<typeof getPayments>>["payments"][number];

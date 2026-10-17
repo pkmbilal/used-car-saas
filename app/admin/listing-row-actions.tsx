@@ -38,11 +38,14 @@ export function ListingRowActions({
   sellerId,
   status,
   featured,
+  canFeature = true,
 }: {
   listingId: string;
   sellerId: string;
   status: ListingStatus;
   featured: boolean;
+  // False once the seller has used their plan's featured allowance this month.
+  canFeature?: boolean;
 }) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
@@ -77,7 +80,7 @@ export function ListingRowActions({
           {status === "active" && (
             <>
               <DropdownMenuSeparator />
-              {FEATURE_OPTIONS.map((days) => (
+              {canFeature && FEATURE_OPTIONS.map((days) => (
                 <DropdownMenuItem
                   key={days}
                   onSelect={() =>

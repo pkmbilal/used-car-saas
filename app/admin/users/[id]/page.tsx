@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { ArrowRight } from "lucide-react";
 import { StatusBadge } from "@/app/dashboard/listings/status-badge";
 import { RiyalPrice } from "@/components/riyal-price";
 import { VerificationBadges } from "@/components/verification-badges";
@@ -18,36 +19,33 @@ import {
 } from "../../actions";
 import { AdminActionButton, PlanSelect } from "../../admin-buttons";
 import { PLAN_CHANGE_SOURCES } from "../../labels";
+import { Avatar, DetailGrid, linkClass, muted, Panel, Pill, type PillTone, table } from "../../ui";
 
 const planOptions = PLANS.map((plan) => ({ value: plan, label: PLAN_LABELS[plan] }));
 
-const metaClass = "text-sm text-zinc-600 dark:text-zinc-400";
-const listClass = "mt-4 divide-y divide-zinc-200 dark:divide-zinc-800";
-const rowClass = "flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 py-3";
+const REVIEW_STATUS: Record<"pending" | "approved" | "rejected", { label: string; tone: PillTone }> = {
+  pending: { label: "Pending", tone: "amber" },
+  approved: { label: "Approved", tone: "green" },
+  rejected: { label: "Rejected", tone: "red" },
+};
 
-const REVIEW_STATUS_LABELS = {
-  pending: "Pending",
-  approved: "Approved",
-  rejected: "Rejected",
-} as const;
-
-const REPORT_STATUS_LABELS = {
-  open: "Open",
-  resolved: "Resolved",
-  dismissed: "Dismissed",
-} as const;
-
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
-  return (
-    <section>
-      <h2 className="font-semibold">{title}</h2>
-      {children}
-    </section>
-  );
-}
+const REPORT_STATUS: Record<"open" | "resolved" | "dismissed", { label: string; tone: PillTone }> = {
+  open: { label: "Open", tone: "red" },
+  resolved: { label: "Resolved", tone: "green" },
+  dismissed: { label: "Dismissed", tone: "neutral" },
+};
 
 function Empty({ children }: { children: React.ReactNode }) {
-  return <p className={`mt-4 ${metaClass}`}>{children}</p>;
+  return <p className={`px-5 py-6 text-sm ${muted}`}>{children}</p>;
+}
+
+function Stat({ label, value }: { label: string; value: React.ReactNode }) {
+  return (
+    <div className="rounded-lg bg-canvas px-4 py-3 dark:bg-zinc-800/60">
+      <p className="text-xs text-zinc-500">{label}</p>
+      <p className="mt-1 text-lg font-semibold tabular-nums">{value}</p>
+    </div>
+  );
 }
 
 export default async function AdminUserPage({ params }: PageProps<"/admin/users/[id]">) {
@@ -57,46 +55,254 @@ export default async function AdminUserPage({ params }: PageProps<"/admin/users/
 
   const { profile } = detail;
   const isSeller = profile.role === "seller";
+  const isSelf = profile.id === current?.user.id;
+  const liveListings = detail.listings.filter((listing) => listing.status === "active").length;
+  const paidTotal = detail.payments.reduce((sum, payment) => sum + Number(payment.amount), 0);
+  const openReports = detail.reports.filter((report) => report.status === "open").length;
 
   return (
-    <div className="flex flex-col gap-10">
-      <div className="flex flex-wrap items-start justify-between gap-4">
-        <div className="min-w-0">
-          <div className="flex flex-wrap items-center gap-2">
-            <h2 className="text-xl font-semibold">{profile.full_name ?? "Unnamed"}</h2>
-            <span className="rounded-full bg-zinc-100 px-2 py-0.5 text-xs font-medium text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300">
-              {isSeller ? "Seller" : "Buyer"}
-            </span>
-            {profile.is_admin && (
-              <span className="rounded-full bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-800 dark:bg-blue-950 dark:text-blue-300">
-                Admin
+    <div className="grid items-start gap-6 xl:grid-cols-[minmax(0,1fr)_24rem]">
+      <div className="flex min-w-0 flex-col gap-6">
+        <Panel flush>
+          <div className="h-20 bg-gradient-to-r from-forest via-forest to-brand" aria-hidden />
+          <div className="px-5 pb-5">
+            <div className="-mt-8 flex flex-wrap items-end gap-4">
+              <span className="rounded-full ring-4 ring-white dark:ring-zinc-900">
+                <Avatar name={profile.full_name} size="lg" />
               </span>
+              <div className="min-w-0 flex-1 pb-1">
+                <h1 className="text-2xl font-bold tracking-tight">{profile.full_name ?? "Unnamed"}</h1>
+                {profile.business_name && <p className={`text-sm ${muted}`}>{profile.business_name}</p>}
+              </div>
+              {isSeller && (
+                <Link href={`/sellers/${profile.id}`} className={`inline-flex items-center gap-1 pb-1 text-sm ${linkClass}`}>
+                  Public profile <ArrowRight className="size-4" aria-hidden />
+                </Link>
+              )}
+            </div>
+
+            <div className="mt-4 flex flex-wrap items-center gap-2">
+              <Pill tone={isSeller ? "brand" : "neutral"}>{isSeller ? "Seller" : "Buyer"}</Pill>
+              {profile.is_admin && <Pill tone="blue">Admin</Pill>}
+              {profile.suspended_at && <Pill tone="red">Suspended {formatDay(profile.suspended_at)}</Pill>}
+              <VerificationBadges profile={profile} />
+            </div>
+
+            <div className="mt-5">
+              <DetailGrid
+                items={[
+                  { label: "Phone", value: profile.phone },
+                  { label: "City", value: profile.city },
+                  { label: "Member since", value: formatMonthYear(profile.created_at) },
+                  {
+                    label: "Plan",
+                    value: isSeller
+                      ? `${PLAN_LABELS[profile.plan]}${profile.plan_expires_at ? ` until ${formatDay(profile.plan_expires_at)}` : ""}`
+                      : "—",
+                  },
+                ]}
+              />
+            </div>
+
+            {isSeller && (
+              <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
+                <Stat label="Listings" value={detail.listings.length} />
+                <Stat label="Live now" value={liveListings} />
+                <Stat label="Paid in total" value={<RiyalPrice amount={paidTotal} />} />
+                <Stat label="Open reports" value={openReports} />
+              </div>
             )}
-            {profile.suspended_at && (
-              <span className="rounded-full bg-red-100 px-2 py-0.5 text-xs font-medium text-red-800 dark:bg-red-950 dark:text-red-300">
-                Suspended {formatDay(profile.suspended_at)}
-              </span>
-            )}
-            <VerificationBadges profile={profile} />
           </div>
-          <p className={`mt-1 ${metaClass}`}>
-            {[profile.business_name, profile.phone, profile.city, `Joined ${formatMonthYear(profile.created_at)}`]
-              .filter(Boolean)
-              .join(" · ")}
-          </p>
-          {isSeller && (
-            <p className={`mt-1 ${metaClass}`}>
-              {PLAN_LABELS[profile.plan]} plan
-              {profile.plan_expires_at && ` until ${formatDay(profile.plan_expires_at)}`}
-              {" · "}
-              <Link href={`/sellers/${profile.id}`} className="underline">
-                Public profile
-              </Link>
-            </p>
+        </Panel>
+
+        {isSeller && (
+          <Panel flush title="Listings" description={`${detail.listings.length} most recent`}>
+            {detail.listings.length === 0 ? (
+              <Empty>No listings yet.</Empty>
+            ) : (
+              <div className={table.wrap}>
+                <table className={`${table.table} min-w-[40rem]`}>
+                  <thead>
+                    <tr className={table.headRow}>
+                      <th className={table.th}>Vehicle</th>
+                      <th className={table.th}>Price</th>
+                      <th className={table.th}>Status</th>
+                      <th className={table.th}>Listed</th>
+                    </tr>
+                  </thead>
+                  <tbody className={table.body}>
+                    {detail.listings.map((listing) => (
+                      <tr key={listing.id} className={table.row}>
+                        <td className={table.td}>
+                          <Link href={`/listings/${listing.id}`} className={linkClass}>
+                            {listing.year} {listing.make} {listing.model}
+                          </Link>
+                          {listing.featuredNow && listing.featured_until && (
+                            <span className="mt-1 block text-xs text-amber-700 dark:text-amber-400">
+                              Featured until {formatDay(listing.featured_until)}
+                            </span>
+                          )}
+                          {listing.removed_reason && (
+                            <span className="mt-1 block text-xs text-red-700 dark:text-red-400">{listing.removed_reason}</span>
+                          )}
+                        </td>
+                        <td className={`${table.td} font-medium tabular-nums`}>
+                          <RiyalPrice amount={listing.price} />
+                        </td>
+                        <td className={table.td}>
+                          <StatusBadge status={listing.status} />
+                        </td>
+                        <td className={`${table.td} whitespace-nowrap text-zinc-600 dark:text-zinc-400`}>
+                          {formatDay(listing.created_at)}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </Panel>
+        )}
+
+        {isSeller && (
+          <div className="grid gap-6 lg:grid-cols-2">
+            <Panel flush title="Plan history">
+              {detail.planChanges.length === 0 ? (
+                <Empty>No plan changes.</Empty>
+              ) : (
+                <ul className={table.body}>
+                  {detail.planChanges.map((change) => (
+                    <li key={change.id} className="px-5 py-3">
+                      <div className="flex flex-wrap items-center justify-between gap-2">
+                        <span className="inline-flex items-center gap-1.5">
+                          <Pill>{PLAN_LABELS[change.from_plan]}</Pill>
+                          <ArrowRight className="size-3.5 text-zinc-400" aria-label="to" />
+                          <Pill tone="brand">{PLAN_LABELS[change.to_plan]}</Pill>
+                        </span>
+                        <span className="text-xs text-zinc-500">{formatDay(change.created_at)}</span>
+                      </div>
+                      <p className="mt-1 text-xs text-zinc-500">
+                        {PLAN_CHANGE_SOURCES[change.source]}
+                        {change.changed_by_profile?.full_name && `, ${change.changed_by_profile.full_name}`}
+                        {change.expires_at && `. Ends ${formatDay(change.expires_at)}`}
+                      </p>
+                      {change.note && <p className="mt-1 text-sm">{change.note}</p>}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </Panel>
+
+            <Panel flush title="Payments">
+              {detail.payments.length === 0 ? (
+                <Empty>No payments recorded.</Empty>
+              ) : (
+                <ul className={table.body}>
+                  {detail.payments.map((payment) => (
+                    <li key={payment.id} className="flex items-center justify-between gap-3 px-5 py-3">
+                      <div className="min-w-0">
+                        <p className="text-sm font-medium">{PAYMENT_METHODS[payment.method]}</p>
+                        <p className="text-xs text-zinc-500">
+                          {formatDay(payment.created_at)}
+                          {payment.reference && `, ref ${payment.reference}`}
+                          {payment.recorded_by_profile?.full_name && `, by ${payment.recorded_by_profile.full_name}`}
+                        </p>
+                      </div>
+                      <RiyalPrice amount={payment.amount} className="font-semibold" />
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </Panel>
+
+            <Panel flush title="Featured grants">
+              {detail.featuredGrants.length === 0 ? (
+                <Empty>No featured placements.</Empty>
+              ) : (
+                <ul className={table.body}>
+                  {detail.featuredGrants.map((grant) => (
+                    <li key={grant.id} className="px-5 py-3">
+                      {grant.listing ? (
+                        <Link href={`/listings/${grant.listing.id}`} className={`text-sm ${linkClass}`}>
+                          {grant.listing.year} {grant.listing.make} {grant.listing.model}
+                        </Link>
+                      ) : (
+                        <span className="text-sm text-zinc-500">Deleted listing</span>
+                      )}
+                      <p className="mt-0.5 text-xs text-zinc-500">
+                        {grant.days} days until {formatDay(grant.featured_until)}.{" "}
+                        {grant.self_serve ? "Self-serve" : "Granted by an admin"} on {formatDay(grant.created_at)}
+                      </p>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </Panel>
+
+            <Panel flush title="Reports on their listings">
+              {detail.reports.length === 0 ? (
+                <Empty>No reports.</Empty>
+              ) : (
+                <ul className={table.body}>
+                  {detail.reports.map((report) => (
+                    <li key={report.id} className="px-5 py-3">
+                      <div className="flex flex-wrap items-center justify-between gap-2">
+                        <Link href={`/listings/${report.listing.id}`} className={`text-sm ${linkClass}`}>
+                          {report.listing.year} {report.listing.make} {report.listing.model}
+                        </Link>
+                        <Pill tone={REPORT_STATUS[report.status].tone}>{REPORT_STATUS[report.status].label}</Pill>
+                      </div>
+                      <p className="mt-0.5 text-xs text-zinc-500">
+                        {REPORT_REASONS[report.reason]}, {formatDay(report.created_at)}
+                      </p>
+                      {report.details && <p className="mt-1 text-sm">{report.details}</p>}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </Panel>
+          </div>
+        )}
+
+        <Panel flush title="Verification and dealer applications">
+          {detail.idRequests.length === 0 && detail.dealerApplications.length === 0 ? (
+            <Empty>No requests.</Empty>
+          ) : (
+            <ul className={table.body}>
+              {detail.idRequests.map((request) => (
+                <li key={request.id} className="flex flex-wrap items-center justify-between gap-3 px-5 py-3">
+                  <div className="min-w-0">
+                    <p className="text-sm font-medium">ID verification</p>
+                    <p className="text-xs text-zinc-500">Submitted {formatDay(request.created_at)}</p>
+                    {request.reject_reason && <p className="mt-1 text-sm">{request.reject_reason}</p>}
+                  </div>
+                  <Pill tone={REVIEW_STATUS[request.status].tone}>{REVIEW_STATUS[request.status].label}</Pill>
+                </li>
+              ))}
+              {detail.dealerApplications.map((application) => (
+                <li key={application.id} className="flex flex-wrap items-center justify-between gap-3 px-5 py-3">
+                  <div className="min-w-0">
+                    <p className="text-sm font-medium">Dealer application: {application.business_name}</p>
+                    <p className="text-xs text-zinc-500">
+                      Asked for {PLAN_LABELS[application.requested_plan]}, submitted {formatDay(application.created_at)}
+                    </p>
+                    {application.reject_reason && <p className="mt-1 text-sm">{application.reject_reason}</p>}
+                  </div>
+                  <Pill tone={REVIEW_STATUS[application.status].tone}>{REVIEW_STATUS[application.status].label}</Pill>
+                </li>
+              ))}
+            </ul>
           )}
-        </div>
-        <div className="flex flex-col items-end gap-2">
-          {isSeller && (
+        </Panel>
+
+        <Panel title="Admin actions">
+          <ActionList actions={detail.actions} empty="No moderation actions on this user" />
+        </Panel>
+      </div>
+
+      <aside className="flex flex-col gap-6 xl:sticky xl:top-20">
+        {isSeller && (
+          <Panel title="Plan" description="Picking the current plan again renews it from today.">
             <PlanSelect
               plan={profile.plan}
               plans={planOptions}
@@ -104,195 +310,57 @@ export default async function AdminUserPage({ params }: PageProps<"/admin/users/
               prices={PLAN_PRICES}
               action={setUserPlanAction.bind(null, profile.id)}
             />
-          )}
-          {profile.id_verified_at && (
-            <AdminActionButton
-              label="Revoke ID badge"
-              tone="danger"
-              action={revokeIdVerificationAction.bind(null, profile.id)}
-            />
-          )}
-          {profile.id !== current?.user.id &&
-            (profile.suspended_at ? (
-              <AdminActionButton label="Unsuspend" action={unsuspendUserAction.bind(null, profile.id)} />
-            ) : (
-              <AdminActionButton
-                label="Suspend"
-                tone="danger"
-                action={suspendUserAction.bind(null, profile.id)}
-              />
-            ))}
-        </div>
-      </div>
-
-      {isSeller && (
-        <Section title={`Listings (${detail.listings.length})`}>
-          {detail.listings.length === 0 ? (
-            <Empty>No listings.</Empty>
-          ) : (
-            <ul className={listClass}>
-              {detail.listings.map((listing) => (
-                <li key={listing.id} className={rowClass}>
-                  <div className="flex min-w-0 flex-wrap items-center gap-2">
-                    <Link href={`/listings/${listing.id}`} className="font-medium underline">
-                      {listing.year} {listing.make} {listing.model}
-                    </Link>
-                    <StatusBadge status={listing.status} />
-                    <RiyalPrice amount={listing.price} className={metaClass} />
-                    {listing.removed_reason && <span className={metaClass}>· {listing.removed_reason}</span>}
-                  </div>
-                  <p className={metaClass}>
-                    {listing.featuredNow &&
-                      listing.featured_until &&
-                      `Featured until ${formatDay(listing.featured_until)} · `}
-                    Listed {formatDay(listing.created_at)}
-                  </p>
-                </li>
-              ))}
-            </ul>
-          )}
-        </Section>
-      )}
-
-      {isSeller && (
-        <Section title="Plan history">
-          {detail.planChanges.length === 0 ? (
-            <Empty>No plan changes.</Empty>
-          ) : (
-            <ul className={listClass}>
-              {detail.planChanges.map((change) => (
-                <li key={change.id} className={rowClass}>
-                  <div className="min-w-0">
-                    <p>
-                      {PLAN_LABELS[change.from_plan]} → {PLAN_LABELS[change.to_plan]}
-                      {change.expires_at && ` until ${formatDay(change.expires_at)}`}
-                    </p>
-                    {change.note && <p className={metaClass}>{change.note}</p>}
-                  </div>
-                  <p className={metaClass}>
-                    {PLAN_CHANGE_SOURCES[change.source]}
-                    {change.changed_by_profile?.full_name && ` by ${change.changed_by_profile.full_name}`}
-                    {` · ${formatDay(change.created_at)}`}
-                  </p>
-                </li>
-              ))}
-            </ul>
-          )}
-        </Section>
-      )}
-
-      {isSeller && (
-        <Section title="Payments">
-          {detail.payments.length === 0 ? (
-            <Empty>No payments recorded.</Empty>
-          ) : (
-            <ul className={listClass}>
-              {detail.payments.map((payment) => (
-                <li key={payment.id} className={rowClass}>
-                  <p>
-                    <RiyalPrice amount={payment.amount} className="font-medium" /> ·{" "}
-                    {PAYMENT_METHODS[payment.method]}
-                    {payment.reference && ` · ${payment.reference}`}
-                  </p>
-                  <p className={metaClass}>
-                    {payment.recorded_by_profile?.full_name && `By ${payment.recorded_by_profile.full_name} · `}
-                    {formatDay(payment.created_at)}
-                  </p>
-                </li>
-              ))}
-            </ul>
-          )}
-        </Section>
-      )}
-
-      {isSeller && (
-        <Section title="Featured grants">
-          {detail.featuredGrants.length === 0 ? (
-            <Empty>No featured placements.</Empty>
-          ) : (
-            <ul className={listClass}>
-              {detail.featuredGrants.map((grant) => (
-                <li key={grant.id} className={rowClass}>
-                  <p>
-                    {grant.listing ? (
-                      <Link href={`/listings/${grant.listing.id}`} className="underline">
-                        {grant.listing.year} {grant.listing.make} {grant.listing.model}
-                      </Link>
-                    ) : (
-                      "Deleted listing"
-                    )}{" "}
-                    · {grant.days} days, until {formatDay(grant.featured_until)}
-                  </p>
-                  <p className={metaClass}>
-                    {grant.self_serve ? "Self-serve" : "By admin"} · {formatDay(grant.created_at)}
-                  </p>
-                </li>
-              ))}
-            </ul>
-          )}
-        </Section>
-      )}
-
-      {isSeller && (
-        <Section title="Reports on their listings">
-          {detail.reports.length === 0 ? (
-            <Empty>No reports.</Empty>
-          ) : (
-            <ul className={listClass}>
-              {detail.reports.map((report) => (
-                <li key={report.id} className={rowClass}>
-                  <div className="min-w-0">
-                    <p>
-                      <Link href={`/listings/${report.listing.id}`} className="underline">
-                        {report.listing.year} {report.listing.make} {report.listing.model}
-                      </Link>{" "}
-                      · {REPORT_REASONS[report.reason]}
-                    </p>
-                    {report.details && <p className={metaClass}>{report.details}</p>}
-                  </div>
-                  <p className={metaClass}>
-                    {REPORT_STATUS_LABELS[report.status]} · {formatDay(report.created_at)}
-                  </p>
-                </li>
-              ))}
-            </ul>
-          )}
-        </Section>
-      )}
-
-      <Section title="Verification and dealer applications">
-        {detail.idRequests.length === 0 && detail.dealerApplications.length === 0 ? (
-          <Empty>No requests.</Empty>
-        ) : (
-          <ul className={listClass}>
-            {detail.idRequests.map((request) => (
-              <li key={request.id} className={rowClass}>
-                <div className="min-w-0">
-                  <p>ID verification · {REVIEW_STATUS_LABELS[request.status]}</p>
-                  {request.reject_reason && <p className={metaClass}>{request.reject_reason}</p>}
-                </div>
-                <p className={metaClass}>Submitted {formatDay(request.created_at)}</p>
-              </li>
-            ))}
-            {detail.dealerApplications.map((application) => (
-              <li key={application.id} className={rowClass}>
-                <div className="min-w-0">
-                  <p>
-                    Dealer application ({application.business_name}, asked for{" "}
-                    {PLAN_LABELS[application.requested_plan]}) · {REVIEW_STATUS_LABELS[application.status]}
-                  </p>
-                  {application.reject_reason && <p className={metaClass}>{application.reject_reason}</p>}
-                </div>
-                <p className={metaClass}>Submitted {formatDay(application.created_at)}</p>
-              </li>
-            ))}
-          </ul>
+          </Panel>
         )}
-      </Section>
 
-      <Section title="Admin actions">
-        <ActionList actions={detail.actions} empty="No moderation actions on this user." />
-      </Section>
+        {(profile.id_verified_at || !isSelf) && (
+          <Panel title="Account">
+            <div className="flex flex-col gap-4">
+              {profile.id_verified_at && (
+                <div className="flex items-center justify-between gap-3">
+                  <p className={`text-sm ${muted}`}>Verified on {formatDay(profile.id_verified_at)}</p>
+                  <AdminActionButton
+                    label="Revoke ID badge"
+                    tone="danger"
+                    success="ID badge revoked"
+                    confirm={{
+                      title: "Revoke the ID badge?",
+                      description: "The badge disappears from their profile and listings. They can apply again.",
+                    }}
+                    action={revokeIdVerificationAction.bind(null, profile.id)}
+                  />
+                </div>
+              )}
+              {!isSelf && (
+                <div className="flex items-center justify-between gap-3">
+                  <p className={`text-sm ${muted}`}>
+                    {profile.suspended_at ? "Suspended. Their listings are hidden." : "Active account."}
+                  </p>
+                  {profile.suspended_at ? (
+                    <AdminActionButton
+                      label="Unsuspend"
+                      success="User unsuspended"
+                      action={unsuspendUserAction.bind(null, profile.id)}
+                    />
+                  ) : (
+                    <AdminActionButton
+                      label="Suspend"
+                      tone="danger"
+                      success="User suspended"
+                      confirm={{
+                        title: "Suspend this user?",
+                        description:
+                          "Their live listings are hidden and they can't publish new ones until you unsuspend them.",
+                      }}
+                      action={suspendUserAction.bind(null, profile.id)}
+                    />
+                  )}
+                </div>
+              )}
+            </div>
+          </Panel>
+        )}
+      </aside>
     </div>
   );
 }
