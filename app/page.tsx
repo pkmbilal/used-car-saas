@@ -96,7 +96,7 @@ export default async function Home() {
           <h1 className="mt-3 max-w-lg text-4xl leading-[1.08] font-medium tracking-tight text-white md:text-[2.9375rem]">
             Find Your Next Ride with <span className="font-semibold text-lime">Confidence</span>
           </h1>
-          <p className="mt-5 max-w-md text-[0.9375rem] leading-relaxed text-white/80">
+          <p className="mt-5 max-w-md text-lg leading-relaxed sm:text-[0.9375rem] text-white/80">
             Browse used cars from private sellers and dealers across the Kingdom, and talk to them directly.
           </p>
           <div className="mt-7 flex flex-wrap gap-x-8 gap-y-3 text-xs text-white">

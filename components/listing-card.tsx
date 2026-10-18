@@ -60,7 +60,7 @@ export function ListingCard({ listing, favorited, sizes }: CardProps) {
                 </>
               )}
             </p>
-            <p className="mt-3 text-[0.9375rem] font-bold text-brand">
+            <p className="mt-3 text-base font-bold sm:text-[0.9375rem] text-brand">
               <RiyalPrice amount={listing.price} />
             </p>
             <div className="mt-auto flex items-center gap-4 pt-3 text-caption text-muted-foreground">
