@@ -4,6 +4,7 @@ import { HideOnAdmin } from "@/components/hide-on-admin";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { Toaster } from "@/components/ui/sonner";
+import { siteUrl } from "@/lib/site";
 import { cn } from "@/lib/utils";
 import "./globals.css";
 
@@ -13,6 +14,7 @@ const figtree = Figtree({
 });
 
 export const metadata: Metadata = {
+  metadataBase: siteUrl(),
   title: "DriveLoop | Used Cars in Saudi Arabia",
   description: "Buy and sell verified used cars in Saudi Arabia",
 };

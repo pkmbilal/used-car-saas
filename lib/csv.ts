@@ -41,10 +41,11 @@ export function parseCsv(text: string): string[][] {
 }
 
 // The reverse: quotes cells that need it and starts with a BOM so Excel reads
-// the file as UTF-8.
+// the file as UTF-8. Text starting with = + - @ gets a leading ' so Excel
+// shows it rather than running it as a formula (user names end up here).
 export function toCsv(records: (string | number)[][]): string {
   const escape = (cell: string | number) => {
-    const text = String(cell);
+    const text = typeof cell === "string" && /^[=+\-@\t\r]/.test(cell) ? `'${cell}` : String(cell);
     return /[",\r\n]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text;
   };
   return "﻿" + records.map((record) => record.map(escape).join(",")).join("\r\n") + "\r\n";
