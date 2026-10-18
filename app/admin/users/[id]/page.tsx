@@ -81,6 +81,15 @@ export default async function AdminUserPage({ params }: PageProps<"/admin/users/
               )}
             </div>
 
+            {(isSeller || profile.id_verified_at || !isSelf) && (
+              <a
+                href="#manage"
+                className="mt-4 flex h-9 w-full items-center justify-center rounded-md bg-forest text-sm font-medium text-white xl:hidden"
+              >
+                Manage plan & account
+              </a>
+            )}
+
             <div className="mt-4 flex flex-wrap items-center gap-2">
               <Pill tone={isSeller ? "brand" : "neutral"}>{isSeller ? "Seller" : "Buyer"}</Pill>
               {profile.is_admin && <Pill tone="blue">Admin</Pill>}
@@ -121,7 +130,7 @@ export default async function AdminUserPage({ params }: PageProps<"/admin/users/
               <Empty>No listings yet.</Empty>
             ) : (
               <div className={table.wrap}>
-                <table className={`${table.table} min-w-[40rem]`}>
+                <table className={`${table.table} md:min-w-[40rem]`}>
                   <thead>
                     <tr className={table.headRow}>
                       <th className={table.th}>Vehicle</th>
@@ -133,7 +142,7 @@ export default async function AdminUserPage({ params }: PageProps<"/admin/users/
                   <tbody className={table.body}>
                     {detail.listings.map((listing) => (
                       <tr key={listing.id} className={table.row}>
-                        <td className={table.td}>
+                        <td className={`${table.td} ${table.tdPrimary}`}>
                           <Link href={`/listings/${listing.id}`} className={linkClass}>
                             {listing.year} {listing.make} {listing.model}
                           </Link>
@@ -146,13 +155,13 @@ export default async function AdminUserPage({ params }: PageProps<"/admin/users/
                             <span className="mt-1 block text-xs text-red-700 dark:text-red-400">{listing.removed_reason}</span>
                           )}
                         </td>
-                        <td className={`${table.td} font-medium tabular-nums`}>
+                        <td data-label="Price" className={`${table.td} font-medium tabular-nums`}>
                           <RiyalPrice amount={listing.price} />
                         </td>
-                        <td className={table.td}>
+                        <td data-label="Status" className={table.td}>
                           <StatusBadge status={listing.status} />
                         </td>
-                        <td className={`${table.td} whitespace-nowrap text-zinc-600 dark:text-zinc-400`}>
+                        <td data-label="Listed" className={`${table.td} whitespace-nowrap text-zinc-600 dark:text-zinc-400`}>
                           {formatDay(listing.created_at)}
                         </td>
                       </tr>
@@ -300,7 +309,7 @@ export default async function AdminUserPage({ params }: PageProps<"/admin/users/
         </Panel>
       </div>
 
-      <aside className="flex flex-col gap-6 xl:sticky xl:top-20">
+      <aside id="manage" className="flex scroll-mt-20 flex-col gap-6 xl:sticky xl:top-20">
         {isSeller && (
           <Panel title="Plan" description="Picking the current plan again renews it from today.">
             <PlanSelect

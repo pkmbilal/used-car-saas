@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
@@ -119,7 +119,16 @@ function Sidebar({
 
 // Searches listings by make/model or users by name/phone, using the filters
 // those pages already have.
-function AdminSearch() {
+function AdminSearch({
+  className = "",
+  autoFocus = false,
+  onDone,
+}: {
+  className?: string;
+  autoFocus?: boolean;
+  // Called after a search, or on Escape (closes the phone search row).
+  onDone?: () => void;
+}) {
   const router = useRouter();
   const [scope, setScope] = useState<"listings" | "users">("listings");
   const [q, setQ] = useState("");
@@ -127,11 +136,12 @@ function AdminSearch() {
   return (
     <form
       role="search"
-      className="flex h-9 w-full max-w-md items-center gap-2 rounded-md border border-zinc-300 bg-white px-2 focus-within:border-brand focus-within:ring-2 focus-within:ring-brand/20 dark:border-zinc-700 dark:bg-zinc-900"
+      className={`flex h-9 w-full max-w-md items-center gap-2 rounded-md border border-zinc-300 bg-white px-2 focus-within:border-brand focus-within:ring-2 focus-within:ring-brand/20 dark:border-zinc-700 dark:bg-zinc-900 ${className}`}
       onSubmit={(event) => {
         event.preventDefault();
         const query = q.trim();
         router.push(query ? `/admin/${scope}?q=${encodeURIComponent(query)}` : `/admin/${scope}`);
+        onDone?.();
       }}
     >
       <Search className="size-4 shrink-0 text-zinc-500" aria-hidden />
@@ -140,6 +150,10 @@ function AdminSearch() {
         onChange={(event) => setQ(event.target.value)}
         placeholder={scope === "listings" ? "Search listings by make or model" : "Search users by name or phone"}
         aria-label="Search"
+        autoFocus={autoFocus}
+        onKeyDown={(event) => {
+          if (event.key === "Escape") onDone?.();
+        }}
         className="min-w-0 flex-1 bg-transparent text-sm outline-none"
       />
       <select
@@ -295,6 +309,23 @@ export function AdminShell({
 }) {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+
+  // While the phone drawer is open: Escape closes it and the page behind
+  // doesn't scroll.
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setMenuOpen(false);
+    };
+    document.addEventListener("keydown", onKey);
+    const overflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = overflow;
+    };
+  }, [menuOpen]);
   const current = [...sections].reverse().find(({ href }) => isActive(pathname, href));
 
   return (
@@ -305,24 +336,43 @@ export function AdminShell({
       )}
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="sticky top-0 z-20 flex h-16 items-center gap-3 border-b border-line bg-white px-4 sm:px-6 dark:border-zinc-800 dark:bg-zinc-900">
-          <button
-            type="button"
-            onClick={() => setMenuOpen(true)}
-            aria-label="Open admin menu"
-            className="rounded-md p-2 text-zinc-600 hover:bg-zinc-100 lg:hidden dark:text-zinc-300 dark:hover:bg-zinc-800"
-          >
-            <Menu className="size-5" />
-          </button>
-          <AdminSearch />
-          <div className="ml-auto flex items-center gap-2 sm:gap-3">
-            <NotificationsMenu items={attention} />
-            <span className="h-6 w-px bg-line dark:bg-zinc-800" aria-hidden />
-            <AdminUserMenu user={user} />
-          </div>
-        </header>
+        <div className="sticky top-0 z-20 border-b border-line bg-white dark:border-zinc-800 dark:bg-zinc-900">
+          <header className="flex h-16 items-center gap-2 px-3 sm:gap-3 sm:px-6">
+            <button
+              type="button"
+              onClick={() => setMenuOpen(true)}
+              aria-label="Open admin menu"
+              className="rounded-md p-2 text-zinc-600 hover:bg-zinc-100 lg:hidden dark:text-zinc-300 dark:hover:bg-zinc-800"
+            >
+              <Menu className="size-5" />
+            </button>
+            <AdminSearch className="max-sm:hidden" />
+            <Link href="/admin" className="font-semibold sm:hidden">
+              DriveLoop <span className="text-brand dark:text-lime">Admin</span>
+            </Link>
+            <div className="ml-auto flex items-center gap-1 sm:gap-3">
+              <button
+                type="button"
+                onClick={() => setSearchOpen((open) => !open)}
+                aria-label={searchOpen ? "Close search" : "Search"}
+                aria-expanded={searchOpen}
+                className="rounded-md p-2 text-zinc-600 hover:bg-zinc-100 sm:hidden dark:text-zinc-300 dark:hover:bg-zinc-800"
+              >
+                {searchOpen ? <X className="size-5" /> : <Search className="size-5" />}
+              </button>
+              <NotificationsMenu items={attention} />
+              <span className="h-6 w-px bg-line max-sm:hidden dark:bg-zinc-800" aria-hidden />
+              <AdminUserMenu user={user} />
+            </div>
+          </header>
+          {searchOpen && (
+            <div className="border-t border-line px-3 py-2 sm:hidden dark:border-zinc-800">
+              <AdminSearch autoFocus onDone={() => setSearchOpen(false)} className="max-w-none" />
+            </div>
+          )}
+        </div>
 
-        <main className="flex flex-col gap-6 px-4 py-6 sm:px-6">
+        <main className="flex flex-col gap-6 px-4 py-5 sm:px-6 sm:py-6">
           {/* The overview renders its own header with the range controls;
               nested pages (a user's details) get a way back instead. */}
           {current && current.href !== "/admin" && (

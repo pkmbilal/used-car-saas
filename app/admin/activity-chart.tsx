@@ -1,13 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export type ActivityPoint = { day: string; listings: number; users: number };
 
-const W = 720;
-const H = 240;
 const PAD = { left: 36, right: 12, top: 12, bottom: 28 };
-const BOTTOM = H - PAD.bottom;
 
 const SERIES = [
   { key: "listings", label: "New listings", color: "var(--viz-1)" },
@@ -34,9 +31,24 @@ function niceScale(max: number): { top: number; step: number } {
 }
 
 // New listings and new users per day, one shared count axis, with a crosshair
-// tooltip on hover.
+// tooltip on hover or tap. The SVG is drawn at its real pixel width so the
+// axis text stays readable on phones.
 export function ActivityChart({ points }: { points: ActivityPoint[] }) {
   const [hover, setHover] = useState<number | null>(null);
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const [width, setWidth] = useState(720);
+
+  useEffect(() => {
+    const el = wrapRef.current;
+    if (!el) return;
+    const observer = new ResizeObserver(([entry]) => setWidth(Math.round(entry.contentRect.width)));
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  const W = Math.max(280, width);
+  const H = W < 480 ? 200 : 240;
+  const BOTTOM = H - PAD.bottom;
   const n = points.length;
   const max = Math.max(0, ...points.flatMap((p) => [p.listings, p.users]));
   const { top, step } = niceScale(max);
@@ -47,7 +59,7 @@ export function ActivityChart({ points }: { points: ActivityPoint[] }) {
     points.map((p, i) => `${i ? "L" : "M"}${x(i).toFixed(1)},${y(p[key]).toFixed(1)}`).join("");
 
   const ticks = Array.from({ length: top / step + 1 }, (_, i) => i * step);
-  const labelEvery = Math.max(1, Math.ceil(n / 7));
+  const labelEvery = Math.max(1, Math.ceil(n / Math.max(2, Math.floor(W / 90))));
   const hovered = hover === null ? null : points[hover];
 
   function onPointerMove(event: React.PointerEvent<SVGRectElement>) {
@@ -68,7 +80,7 @@ export function ActivityChart({ points }: { points: ActivityPoint[] }) {
         ))}
       </div>
 
-      <div className="relative mt-3">
+      <div ref={wrapRef} className="relative mt-3">
         <svg viewBox={`0 0 ${W} ${H}`} className="block h-auto w-full" role="img" aria-label="New listings and new users per day">
           {ticks.map((t) => (
             <g key={t}>
@@ -122,6 +134,7 @@ export function ActivityChart({ points }: { points: ActivityPoint[] }) {
             height={BOTTOM}
             fill="transparent"
             onPointerMove={onPointerMove}
+            onPointerDown={onPointerMove}
             onPointerLeave={() => setHover(null)}
           />
         </svg>

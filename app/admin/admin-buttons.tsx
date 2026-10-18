@@ -537,8 +537,8 @@ export function ApproveDealerButton({
   const [duration, setDuration] = useState(durations[0]?.value ?? "");
 
   return (
-    <div className="flex flex-col gap-2">
-      <div className="flex flex-wrap items-end gap-3">
+    <div className="flex w-full flex-col gap-2 sm:w-auto">
+      <div className="grid gap-3 sm:flex sm:flex-wrap sm:items-end">
         <Field label="Plan to grant">
           <select value={value} disabled={pending} onChange={(event) => setValue(event.target.value)} className={fieldClass}>
             {plans.map((option) => (

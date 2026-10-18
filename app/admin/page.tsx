@@ -9,6 +9,7 @@ import { isFeatured } from "@/lib/listings";
 import { PLAN_LABELS, PLANS } from "@/lib/plans";
 import { ActivityChart } from "./activity-chart";
 import { AttentionRow, Card, cardClass, ChangeBadge, formatNumber, KpiCard, StatusDonut } from "./dashboard-widgets";
+import { table } from "./ui";
 import { ListingRowActions } from "./listing-row-actions";
 import { textParam } from "./pager";
 
@@ -33,14 +34,14 @@ export default async function AdminOverviewPage({ searchParams }: PageProps<"/ad
           <h1 className="mt-1 text-2xl font-bold tracking-tight">Marketplace overview</h1>
           <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">How DriveLoop is doing over the {rangeLabel}.</p>
         </div>
-        <div className="flex flex-wrap items-center gap-3">
-          <nav aria-label="Date range" className="flex rounded-md border border-zinc-300 bg-white p-0.5 dark:border-zinc-700 dark:bg-zinc-900">
+        <div className="flex flex-wrap items-center gap-3 max-sm:w-full">
+          <nav aria-label="Date range" className="flex rounded-md max-sm:w-full border border-zinc-300 bg-white p-0.5 dark:border-zinc-700 dark:bg-zinc-900">
             {DASHBOARD_RANGES.map((range) => (
               <Link
                 key={range}
                 href={range === 30 ? "/admin" : `/admin?range=${range}`}
                 aria-current={range === days ? "page" : undefined}
-                className={`rounded px-3 py-1.5 text-sm font-medium ${
+                className={`flex-1 rounded px-3 py-1.5 text-center text-sm font-medium whitespace-nowrap ${
                   range === days
                     ? "bg-brand text-white"
                     : "text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
@@ -52,7 +53,7 @@ export default async function AdminOverviewPage({ searchParams }: PageProps<"/ad
           </nav>
           <a
             href={`/admin/export?range=${days}`}
-            className="inline-flex items-center gap-2 rounded-md border border-brand px-3 py-1.5 text-sm font-medium text-brand hover:bg-mint dark:text-lime dark:hover:bg-zinc-800"
+            className="inline-flex items-center justify-center gap-2 rounded-md border border-brand max-sm:w-full px-3 py-1.5 text-sm font-medium text-brand hover:bg-mint dark:text-lime dark:hover:bg-zinc-800"
           >
             <Download className="size-4" aria-hidden />
             Export listings CSV
@@ -129,35 +130,35 @@ export default async function AdminOverviewPage({ searchParams }: PageProps<"/ad
         </Card>
       </div>
 
-      <section className={cardClass}>
-        <div className="flex items-center justify-between gap-3 px-5 pt-5 pb-4">
+      <section className={`${cardClass} overflow-hidden`}>
+        <div className="flex items-center justify-between gap-3 border-b border-line px-5 py-4 dark:border-zinc-800">
           <h2 className="font-semibold">Recently added listings</h2>
           <Link href="/admin/listings" className="inline-flex items-center gap-1 text-sm font-medium text-brand dark:text-lime">
             View all <ArrowRight className="size-4" aria-hidden />
           </Link>
         </div>
-        <div className="overflow-x-auto px-5 pb-2">
-          <table className="w-full min-w-[56rem] text-sm tabular-nums">
+        <div className={table.wrap}>
+          <table className={`${table.table} tabular-nums md:min-w-[56rem]`}>
             <thead>
-              <tr className="bg-canvas text-left text-xs font-semibold text-zinc-600 dark:bg-zinc-800/60 dark:text-zinc-400">
-                <th className="rounded-l-md px-3 py-2.5">Vehicle</th>
-                <th className="px-3 py-2.5">Seller</th>
-                <th className="px-3 py-2.5">City</th>
-                <th className="px-3 py-2.5">Price</th>
-                <th className="px-3 py-2.5">Status</th>
-                <th className="px-3 py-2.5">Added</th>
-                <th className="w-12 rounded-r-md px-3 py-2.5">
+              <tr className={table.headRow}>
+                <th className={table.th}>Vehicle</th>
+                <th className={table.th}>Seller</th>
+                <th className={table.th}>City</th>
+                <th className={table.th}>Price</th>
+                <th className={table.th}>Status</th>
+                <th className={table.th}>Added</th>
+                <th className={`${table.th} w-12`}>
                   <span className="sr-only">Actions</span>
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-line dark:divide-zinc-800">
+            <tbody className={table.body}>
               {d.recentListings.map((listing) => {
                 const photo = listing.images[0];
                 const featured = listing.status === "active" && isFeatured(listing);
                 return (
-                  <tr key={listing.id}>
-                    <td className="px-3 py-3">
+                  <tr key={listing.id} className={table.row}>
+                    <td className={`${table.td} ${table.tdPrimary}`}>
                       <div className="flex items-center gap-3">
                         <div className="relative h-11 w-18 shrink-0 overflow-hidden rounded bg-zinc-100 dark:bg-zinc-800">
                           {photo ? (
@@ -177,7 +178,7 @@ export default async function AdminOverviewPage({ searchParams }: PageProps<"/ad
                         </div>
                       </div>
                     </td>
-                    <td className="px-3 py-3">
+                    <td data-label="Seller" className={table.td}>
                       {listing.seller ? (
                         <>
                           <Link href={`/admin/users/${listing.seller.id}`} className="font-medium hover:text-brand">
@@ -191,20 +192,20 @@ export default async function AdminOverviewPage({ searchParams }: PageProps<"/ad
                         <span className="text-zinc-500">Unknown</span>
                       )}
                     </td>
-                    <td className="px-3 py-3">
+                    <td data-label="City" className={table.td}>
                       <span className="inline-flex items-center gap-1.5 text-zinc-700 dark:text-zinc-300">
                         <MapPin className="size-4 text-zinc-400" aria-hidden />
                         {listing.city}
                       </span>
                     </td>
-                    <td className="px-3 py-3 font-medium">
+                    <td data-label="Price" className={`${table.td} font-medium`}>
                       <RiyalPrice amount={listing.price} />
                     </td>
-                    <td className="px-3 py-3">
+                    <td data-label="Status" className={table.td}>
                       <StatusBadge status={listing.status} />
                     </td>
-                    <td className="px-3 py-3 text-zinc-600 dark:text-zinc-400">{formatDay(listing.created_at)}</td>
-                    <td className="px-3 py-3 text-right">
+                    <td data-label="Added" className={`${table.td} text-zinc-600 dark:text-zinc-400`}>{formatDay(listing.created_at)}</td>
+                    <td className={`${table.td} text-right ${table.tdActions}`}>
                       <ListingRowActions
                         listingId={listing.id}
                         sellerId={listing.seller_id}
@@ -217,7 +218,7 @@ export default async function AdminOverviewPage({ searchParams }: PageProps<"/ad
               })}
             </tbody>
           </table>
-          {d.recentListings.length === 0 && <p className="py-6 text-sm text-zinc-600 dark:text-zinc-400">No listings yet.</p>}
+          {d.recentListings.length === 0 && <p className="px-5 py-6 text-sm text-zinc-600 dark:text-zinc-400">No listings yet.</p>}
         </div>
       </section>
 

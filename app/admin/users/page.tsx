@@ -17,15 +17,15 @@ export default async function AdminUsersPage({ searchParams }: PageProps<"/admin
 
   return (
     <div className="flex flex-col gap-4">
-      <form className="flex items-center gap-2 self-end">
-        <div className="relative">
+      <form className="flex w-full items-center gap-2 sm:w-auto sm:self-end">
+        <div className="relative flex-1 sm:flex-none">
           <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-zinc-400" aria-hidden />
           <input
             name="q"
             defaultValue={q}
             placeholder="Name or phone"
             aria-label="Search name or phone"
-            className={`${fieldClass} w-60 pl-9`}
+            className={`${fieldClass} w-full pl-9 sm:w-60`}
           />
         </div>
         <button type="submit" className={primaryButtonClass}>
@@ -44,7 +44,7 @@ export default async function AdminUsersPage({ searchParams }: PageProps<"/admin
           </EmptyState>
         ) : (
           <div className={table.wrap}>
-            <table className={`${table.table} min-w-[56rem]`}>
+            <table className={`${table.table} md:min-w-[56rem]`}>
               <thead>
                 <tr className={table.headRow}>
                   <th className={table.th}>User</th>
@@ -62,7 +62,7 @@ export default async function AdminUsersPage({ searchParams }: PageProps<"/admin
                   const isSeller = user.role === "seller";
                   return (
                     <tr key={user.id} className={table.row}>
-                      <td className={table.td}>
+                      <td className={`${table.td} ${table.tdPrimary}`}>
                         <div className="flex items-center gap-3">
                           <Avatar name={user.full_name} />
                           <div className="min-w-0">
@@ -78,11 +78,11 @@ export default async function AdminUsersPage({ searchParams }: PageProps<"/admin
                           </div>
                         </div>
                       </td>
-                      <td className={table.td}>
+                      <td data-label="Contact" className={table.td}>
                         <span className="block tabular-nums">{user.phone ?? "No phone"}</span>
                         <span className="text-xs text-zinc-500">{user.city ?? "No city"}</span>
                       </td>
-                      <td className={table.td}>
+                      <td data-label="Plan" className={table.td}>
                         {isSeller ? (
                           <>
                             <span className="block font-medium">{PLAN_LABELS[user.plan]}</span>
@@ -94,11 +94,11 @@ export default async function AdminUsersPage({ searchParams }: PageProps<"/admin
                           <span className="text-zinc-400">—</span>
                         )}
                       </td>
-                      <td className={`${table.td} tabular-nums`}>{isSeller ? user.listingCount : <span className="text-zinc-400">—</span>}</td>
-                      <td className={`${table.td} whitespace-nowrap text-zinc-600 dark:text-zinc-400`}>
+                      <td data-label="Listings" className={`${table.td} tabular-nums`}>{isSeller ? user.listingCount : <span className="text-zinc-400">—</span>}</td>
+                      <td data-label="Joined" className={`${table.td} whitespace-nowrap text-zinc-600 dark:text-zinc-400`}>
                         {formatMonthYear(user.created_at)}
                       </td>
-                      <td className={`${table.td} text-right`}>
+                      <td className={`${table.td} text-right ${table.tdActions}`}>
                         <UserRowActions
                           userId={user.id}
                           isSeller={isSeller}

@@ -85,7 +85,7 @@ async function PlanChanges({ params, page }: ListProps) {
           <EmptyState icon={History} title="No plan changes yet" />
         ) : (
           <div className={table.wrap}>
-            <table className={`${table.table} min-w-[52rem]`}>
+            <table className={`${table.table} md:min-w-[52rem]`}>
               <thead>
                 <tr className={table.headRow}>
                   <th className={table.th}>User</th>
@@ -98,10 +98,10 @@ async function PlanChanges({ params, page }: ListProps) {
               <tbody className={table.body}>
                 {changes.map((change) => (
                   <tr key={change.id} className={table.row}>
-                    <td className={table.td}>
+                    <td className={`${table.td} ${table.tdPrimary}`}>
                       <UserCell id={change.user_id} name={change.user?.full_name} />
                     </td>
-                    <td className={table.td}>
+                    <td data-label="Change" className={table.td}>
                       <span className="inline-flex items-center gap-2">
                         <Pill>{PLAN_LABELS[change.from_plan]}</Pill>
                         <ArrowRight className="size-3.5 text-zinc-400" aria-label="to" />
@@ -109,16 +109,16 @@ async function PlanChanges({ params, page }: ListProps) {
                       </span>
                       {change.note && <span className="mt-1 block max-w-72 text-xs text-zinc-500">{change.note}</span>}
                     </td>
-                    <td className={`${table.td} whitespace-nowrap`}>
+                    <td data-label="Ends" className={`${table.td} whitespace-nowrap`}>
                       {change.expires_at ? formatDay(change.expires_at) : <span className="text-zinc-400">No end date</span>}
                     </td>
-                    <td className={table.td}>
+                    <td data-label="Source" className={table.td}>
                       <span className="block">{PLAN_CHANGE_SOURCES[change.source]}</span>
                       {change.changed_by_profile?.full_name && (
                         <span className="text-xs text-zinc-500">{change.changed_by_profile.full_name}</span>
                       )}
                     </td>
-                    <td className={`${table.td} whitespace-nowrap text-zinc-600 dark:text-zinc-400`}>
+                    <td data-label="Date" className={`${table.td} whitespace-nowrap text-zinc-600 dark:text-zinc-400`}>
                       {formatDay(change.created_at)}
                     </td>
                   </tr>
@@ -143,7 +143,7 @@ async function FeaturedGrants({ params, page }: ListProps) {
           <EmptyState icon={Star} title="No featured grants yet" />
         ) : (
           <div className={table.wrap}>
-            <table className={`${table.table} min-w-[52rem]`}>
+            <table className={`${table.table} md:min-w-[52rem]`}>
               <thead>
                 <tr className={table.headRow}>
                   <th className={table.th}>Listing</th>
@@ -156,7 +156,7 @@ async function FeaturedGrants({ params, page }: ListProps) {
               <tbody className={table.body}>
                 {grants.map((grant) => (
                   <tr key={grant.id} className={table.row}>
-                    <td className={table.td}>
+                    <td className={`${table.td} ${table.tdPrimary}`}>
                       {grant.listing ? (
                         <Link href={`/listings/${grant.listing.id}`} className={linkClass}>
                           {grant.listing.year} {grant.listing.make} {grant.listing.model}
@@ -165,12 +165,12 @@ async function FeaturedGrants({ params, page }: ListProps) {
                         <span className="text-zinc-500">Deleted listing</span>
                       )}
                     </td>
-                    <td className={table.td}>
+                    <td data-label="Seller" className={table.td}>
                       <UserCell id={grant.seller?.id ?? null} name={grant.seller?.full_name} />
                     </td>
-                    <td className={`${table.td} tabular-nums`}>{grant.days} days</td>
-                    <td className={`${table.td} whitespace-nowrap`}>{formatDay(grant.featured_until)}</td>
-                    <td className={table.td}>
+                    <td data-label="Length" className={`${table.td} tabular-nums`}>{grant.days} days</td>
+                    <td data-label="Featured until" className={`${table.td} whitespace-nowrap`}>{formatDay(grant.featured_until)}</td>
+                    <td data-label="Granted" className={table.td}>
                       <span className="block">
                         {grant.self_serve ? (
                           <Pill tone="blue">Self-serve</Pill>
@@ -262,11 +262,11 @@ async function Payments({ params, page }: ListProps) {
           <EmptyState icon={CreditCard} title="No payments recorded yet" />
         ) : (
           <div className={table.wrap}>
-            <table className={`${table.table} min-w-[52rem]`}>
+            <table className={`${table.table} md:min-w-[52rem]`}>
               <thead>
                 <tr className={table.headRow}>
                   <th className={table.th}>User</th>
-                  <th className={`${table.th} text-right`}>Amount</th>
+                  <th className={`${table.th} md:text-right`}>Amount</th>
                   <th className={table.th}>Method</th>
                   <th className={table.th}>For</th>
                   <th className={table.th}>Recorded</th>
@@ -275,17 +275,17 @@ async function Payments({ params, page }: ListProps) {
               <tbody className={table.body}>
                 {payments.map((payment) => (
                   <tr key={payment.id} className={table.row}>
-                    <td className={table.td}>
+                    <td className={`${table.td} ${table.tdPrimary}`}>
                       <UserCell id={payment.user?.id ?? null} name={payment.user?.full_name} />
                     </td>
-                    <td className={`${table.td} text-right font-semibold tabular-nums`}>
+                    <td data-label="Amount" className={`${table.td} font-semibold tabular-nums md:text-right`}>
                       <RiyalPrice amount={payment.amount} />
                     </td>
-                    <td className={table.td}>
+                    <td data-label="Method" className={table.td}>
                       <span className="block">{PAYMENT_METHODS[payment.method]}</span>
                       {payment.reference && <span className="text-xs text-zinc-500">{payment.reference}</span>}
                     </td>
-                    <td className={table.td}>
+                    <td data-label="For" className={table.td}>
                       {payment.plan_change ? (
                         <>
                           <Pill tone="brand">{PLAN_LABELS[payment.plan_change.to_plan]}</Pill>
@@ -299,7 +299,7 @@ async function Payments({ params, page }: ListProps) {
                         <span className="text-zinc-400">—</span>
                       )}
                     </td>
-                    <td className={table.td}>
+                    <td data-label="Recorded" className={table.td}>
                       <span className="block whitespace-nowrap">{formatDay(payment.created_at)}</span>
                       {payment.recorded_by_profile?.full_name && (
                         <span className="text-xs text-zinc-500">By {payment.recorded_by_profile.full_name}</span>

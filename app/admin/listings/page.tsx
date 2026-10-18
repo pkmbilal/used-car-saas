@@ -70,16 +70,16 @@ export default async function AdminListingsPage({ searchParams }: PageProps<"/ad
             ...STATUSES.map((s) => ({ href: statusHref(s), label: STATUS_LABELS[s], active: activeStatus === s })),
           ]}
         />
-        <form className="flex items-center gap-2">
+        <form className="flex w-full items-center gap-2 sm:w-auto">
           {activeStatus && <input type="hidden" name="status" value={activeStatus} />}
-          <div className="relative">
+          <div className="relative flex-1 sm:flex-none">
             <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-zinc-400" aria-hidden />
             <input
               name="q"
               defaultValue={q}
               placeholder="Make or model"
               aria-label="Search make or model"
-              className={`${fieldClass} w-56 pl-9`}
+              className={`${fieldClass} w-full pl-9 sm:w-56`}
             />
           </div>
           <button type="submit" className={primaryButtonClass}>
@@ -99,7 +99,7 @@ export default async function AdminListingsPage({ searchParams }: PageProps<"/ad
           </EmptyState>
         ) : (
           <div className={table.wrap}>
-            <table className={`${table.table} min-w-[60rem]`}>
+            <table className={`${table.table} md:min-w-[60rem]`}>
               <thead>
                 <tr className={table.headRow}>
                   <th className={table.th}>Vehicle</th>
@@ -119,7 +119,7 @@ export default async function AdminListingsPage({ searchParams }: PageProps<"/ad
                   const title = `${listing.year} ${listing.make} ${listing.model}`;
                   return (
                     <tr key={listing.id} className={table.row}>
-                      <td className={table.td}>
+                      <td className={`${table.td} ${table.tdPrimary}`}>
                         <div className="flex items-center gap-3">
                           <div className="relative h-12 w-18 shrink-0 overflow-hidden rounded-md bg-zinc-100 dark:bg-zinc-800">
                             {photo ? (
@@ -147,7 +147,7 @@ export default async function AdminListingsPage({ searchParams }: PageProps<"/ad
                           </div>
                         </div>
                       </td>
-                      <td className={table.td}>
+                      <td data-label="Seller" className={table.td}>
                         {listing.seller ? (
                           <div className="flex flex-col items-start gap-1">
                             <Link href={`/admin/users/${listing.seller.id}`} className={linkClass}>
@@ -159,19 +159,19 @@ export default async function AdminListingsPage({ searchParams }: PageProps<"/ad
                           <span className="text-zinc-500">Unknown</span>
                         )}
                       </td>
-                      <td className={`${table.td} font-medium tabular-nums`}>
+                      <td data-label="Price" className={`${table.td} font-medium tabular-nums`}>
                         <RiyalPrice amount={listing.price} />
                       </td>
-                      <td className={table.td}>
+                      <td data-label="Status" className={table.td}>
                         <StatusBadge status={listing.status} />
                       </td>
-                      <td className={table.td}>
+                      <td data-label="Featured" className={table.td}>
                         <FeaturedCell listing={listing} />
                       </td>
-                      <td className={`${table.td} whitespace-nowrap text-zinc-600 dark:text-zinc-400`}>
+                      <td data-label="Listed" className={`${table.td} whitespace-nowrap text-zinc-600 dark:text-zinc-400`}>
                         {formatDay(listing.created_at)}
                       </td>
-                      <td className={`${table.td} text-right`}>
+                      <td className={`${table.td} text-right ${table.tdActions}`}>
                         <ListingRowActions
                           listingId={listing.id}
                           sellerId={listing.seller_id}

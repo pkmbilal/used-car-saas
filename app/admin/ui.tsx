@@ -175,15 +175,20 @@ export function SegmentedNav({
   );
 }
 
-// Table styling shared by every admin table.
+// Table styling shared by every admin table. Below md each row turns into a
+// card: cells stack in two columns and show their data-label above the value.
+// Use tdPrimary for the main cell (vehicle, user) and tdActions for the ⋮ menu.
 export const table = {
-  wrap: "overflow-x-auto",
-  table: "w-full text-sm",
-  headRow: "border-b border-line bg-canvas/70 text-left text-xs font-medium text-zinc-500 dark:border-zinc-800 dark:bg-zinc-800/40",
+  wrap: "md:overflow-x-auto",
+  table: "w-full text-sm max-md:block",
+  headRow:
+    "border-b border-line bg-canvas/70 text-left text-xs font-medium text-zinc-500 max-md:hidden dark:border-zinc-800 dark:bg-zinc-800/40",
   th: "px-5 py-3 font-medium whitespace-nowrap",
-  body: "divide-y divide-line dark:divide-zinc-800",
-  row: "hover:bg-canvas/50 dark:hover:bg-zinc-800/30",
-  td: "px-5 py-3.5 align-middle",
+  body: "divide-y divide-line max-md:block dark:divide-zinc-800",
+  row: "hover:bg-canvas/50 max-md:relative max-md:grid max-md:grid-cols-2 max-md:gap-x-4 max-md:gap-y-3 max-md:p-4 dark:hover:bg-zinc-800/30",
+  td: "align-middle md:px-5 md:py-3.5 max-md:block max-md:min-w-0 max-md:before:mb-0.5 max-md:before:block max-md:before:text-xs max-md:before:font-normal max-md:before:text-zinc-500 max-md:before:content-[attr(data-label)]",
+  tdPrimary: "max-md:col-span-2 max-md:pr-10 max-md:before:hidden",
+  tdActions: "max-md:absolute max-md:top-3 max-md:right-3 max-md:before:hidden",
 };
 
 // Text input and select styling inside admin toolbars and forms.
