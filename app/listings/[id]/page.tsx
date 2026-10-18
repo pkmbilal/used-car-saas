@@ -93,7 +93,7 @@ export default async function ListingPage({ params }: PageProps<"/listings/[id]"
   ];
 
   return (
-    <main className={`light bg-canvas text-ink ${contactPhone ? "max-lg:pb-20" : ""}`}>
+    <main className={`light bg-canvas text-ink ${contactPhone ? "max-lg:pb-[calc(5rem+env(safe-area-inset-bottom))]" : ""}`}>
       {!isOwner && listing.status === "active" && <ViewTracker listingId={listing.id} />}
       {isOwner && listing.status !== "active" && (
         <div className="bg-amber-50 text-sm text-amber-900">
@@ -272,7 +272,7 @@ export default async function ListingPage({ params }: PageProps<"/listings/[id]"
 
       {/* On mobile the sidebar sits below the gallery and specs, so keep contact one tap away. */}
       {contactPhone && (
-        <div className="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-white/95 backdrop-blur lg:hidden">
+        <div className="pb-safe fixed inset-x-0 bottom-0 z-40 border-t border-line bg-white/95 backdrop-blur lg:hidden">
           <div className="mx-auto flex w-full max-w-6xl items-center gap-2.5 px-4 py-3 sm:px-6">
             <p className="mr-auto min-w-0 truncate text-base font-bold text-brand">
               <RiyalPrice amount={listing.price} />

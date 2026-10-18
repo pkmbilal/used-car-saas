@@ -35,7 +35,7 @@ const columns: { title: string; links: [string, string][] }[] = [
 
 export function SiteFooter() {
   return (
-    <footer className="light mt-20 bg-gradient-to-br from-forest to-forest-dark text-white">
+    <footer className="light mt-20 max-md:hidden bg-gradient-to-br from-forest to-forest-dark text-white">
       <div className="mx-auto grid w-full max-w-6xl grid-cols-2 gap-10 px-4 py-12 sm:px-6 md:grid-cols-[1.6fr_repeat(4,minmax(0,1fr))]">
         <div className="col-span-2 flex flex-col gap-4 md:col-span-1">
           <BrandLink />

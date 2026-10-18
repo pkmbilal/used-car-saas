@@ -141,7 +141,8 @@ export async function getUsers(filters: { q?: string; page: number }) {
   const supabase = createAdminClient();
   let query = supabase
     .from("profiles")
-    .select("*, listings(count)", { count: "exact" });
+    // Named FK: favorites also links profiles to listings.
+    .select("*, listings!listings_seller_id_fkey(count)", { count: "exact" });
 
   const q = searchTerm(filters.q);
   if (q) query = query.or(`full_name.ilike.%${q}%,phone.ilike.%${q}%`);
@@ -271,6 +272,105 @@ export async function getAdminOverview() {
   };
 }
 
+// Date ranges the dashboard can show, in days.
+export const DASHBOARD_RANGES = [7, 30, 90] as const;
+export type DashboardRange = (typeof DASHBOARD_RANGES)[number];
+
+export function isDashboardRange(value: number): value is DashboardRange {
+  return (DASHBOARD_RANGES as readonly number[]).includes(value);
+}
+
+const STATUS_ORDER: ListingStatus[] = ["active", "sold", "draft", "removed"];
+
+// Change against the previous period of the same length, as a percentage.
+// Null when there's nothing to compare against.
+function percentChange(current: number, previous: number): number | null {
+  if (previous === 0) return null;
+  return ((current - previous) / previous) * 100;
+}
+
+export type Dashboard = Awaited<ReturnType<typeof getDashboard>>;
+
+// Everything on the admin overview for the last `days` days, plus the
+// all-time totals.
+export async function getDashboard(days: DashboardRange) {
+  await requireAdmin();
+  const supabase = createAdminClient();
+  const since = daysFromNow(-days);
+  const before = daysFromNow(-2 * days);
+
+  const listingCount = () => supabase.from("listings").select("id", { count: "exact", head: true });
+  const userCount = () => supabase.from("profiles").select("id", { count: "exact", head: true });
+
+  const [overview, activity, engagement, statusCounts, users, listingsNow, listingsBefore, usersNow, usersBefore, recent] =
+    await Promise.all([
+      getAdminOverview(),
+      supabase.rpc("admin_daily_activity", { p_days: days }),
+      supabase.rpc("admin_engagement_totals"),
+      Promise.all(STATUS_ORDER.map((status) => listingCount().eq("status", status))),
+      userCount(),
+      listingCount().gte("created_at", since),
+      listingCount().gte("created_at", before).lt("created_at", since),
+      userCount().gte("created_at", since),
+      userCount().gte("created_at", before).lt("created_at", since),
+      supabase
+        .from("listings")
+        .select("*, listing_images(*), seller:profiles!listings_seller_id_fkey(id, full_name, plan)")
+        .order("created_at", { ascending: false })
+        .limit(6),
+    ]);
+
+  const statuses = STATUS_ORDER.map((status, i) => ({ status, count: statusCounts[i].count ?? 0 }));
+  const totalListings = statuses.reduce((sum, { count }) => sum + count, 0);
+  const totals = engagement.data?.[0] ?? { views: 0, calls: 0, whatsapps: 0 };
+
+  return {
+    ...overview,
+    days,
+    activity: activity.data ?? [],
+    statuses,
+    totalListings,
+    totalUsers: users.count ?? 0,
+    newListingsInRange: listingsNow.count ?? 0,
+    listingsChange: percentChange(listingsNow.count ?? 0, listingsBefore.count ?? 0),
+    newUsersInRange: usersNow.count ?? 0,
+    usersChange: percentChange(usersNow.count ?? 0, usersBefore.count ?? 0),
+    views: Number(totals.views),
+    contacts: Number(totals.calls) + Number(totals.whatsapps),
+    calls: Number(totals.calls),
+    whatsapps: Number(totals.whatsapps),
+    recentListings: (recent.data ?? []).map(withImageUrls),
+  };
+}
+
+// PostgREST caps each response, so the export reads in pages of this size.
+const EXPORT_BATCH = 1000;
+
+// Listings added in the last `days` days, newest first, for the CSV export.
+export async function getListingsForExport(days: DashboardRange) {
+  await requireAdmin();
+  const supabase = createAdminClient();
+  const since = daysFromNow(-days);
+  const query = (from: number) =>
+    supabase
+      .from("listings")
+      .select(
+        "id, created_at, year, make, model, mileage, price, city, fuel_type, status, featured_until, seller:profiles!listings_seller_id_fkey(full_name, plan), listing_view_counts(views, calls, whatsapps)",
+      )
+      .gte("created_at", since)
+      .order("created_at", { ascending: false })
+      .order("id")
+      .range(from, from + EXPORT_BATCH - 1);
+
+  const rows: NonNullable<Awaited<ReturnType<typeof query>>["data"]> = [];
+  for (let from = 0; ; from += EXPORT_BATCH) {
+    const { data, error } = await query(from);
+    if (error) throw error;
+    rows.push(...data);
+    if (data.length < EXPORT_BATCH) return rows;
+  }
+}
+
 export type ExpiringPlan = Awaited<ReturnType<typeof getExpiringPlans>>[number];
 
 // Paid plans ending soon, soonest first. expire_plans moves them to Free.
@@ -284,11 +384,14 @@ export async function getExpiringPlans() {
     .lte("plan_expires_at", daysFromNow(EXPIRING_WINDOW_DAYS))
     .order("plan_expires_at", { ascending: true });
   if (error) throw error;
-  const soon = Date.now() + ENDING_SOON_DAYS * DAY_MS;
-  return data.map((profile) => ({
-    ...profile,
-    endsSoon: profile.plan_expires_at !== null && new Date(profile.plan_expires_at).getTime() <= soon,
-  }));
+  const now = Date.now();
+  return data.map((profile) => {
+    const daysLeft =
+      profile.plan_expires_at === null
+        ? null
+        : Math.ceil((new Date(profile.plan_expires_at).getTime() - now) / DAY_MS);
+    return { ...profile, daysLeft, endsSoon: daysLeft !== null && daysLeft <= ENDING_SOON_DAYS };
+  });
 }
 
 export type PlanPayment = Awaited<ReturnType<typeof getPayments>>["payments"][number];
