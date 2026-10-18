@@ -59,31 +59,23 @@ export function UserMenu({ name, links }: { name: string; links: HeaderLink[] })
 }
 
 // Slide-over navigation for small screens.
-export function MobileNav({
-  mainLinks,
-  accountLinks,
-  signedIn,
-}: {
-  mainLinks: HeaderLink[];
-  accountLinks: HeaderLink[];
-  signedIn: boolean;
-}) {
-  const linkClass = "rounded-md px-3 py-2.5 text-sm font-medium text-white hover:bg-white/10 hover:text-lime";
+export function MobileNav({ links, signedIn }: { links: HeaderLink[]; signedIn: boolean }) {
+  const linkClass = "rounded-md px-3 py-3 text-base font-medium text-white hover:bg-white/10 hover:text-lime";
 
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button variant="outline" size="icon" aria-label="Menu" className="size-10 border-white/30 bg-transparent text-white hover:bg-white/10 hover:text-white md:hidden">
+        <Button variant="outline" size="icon" aria-label="Menu" className="size-9 border-white/30 bg-transparent text-white hover:bg-white/10 hover:text-white md:hidden">
           <Menu className="size-5" />
         </Button>
       </SheetTrigger>
-      <SheetContent className="light w-72 border-white/10 bg-charcoal text-white [&>[data-slot=sheet-close]]:text-white">
+      <SheetContent className="light pt-safe pb-safe w-72 border-white/10 bg-charcoal text-white [&>[data-slot=sheet-close]]:text-white">
         <SheetTitle className="sr-only">Menu</SheetTitle>
         <div className="p-4">
           <BrandLink />
         </div>
         <nav className="flex flex-col gap-1 px-2">
-          {[...mainLinks, ...accountLinks].map((link) => (
+          {links.map((link) => (
             <SheetClose key={link.href} asChild>
               <Link href={link.href} className={linkClass}>
                 {link.label}

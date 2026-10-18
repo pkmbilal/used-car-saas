@@ -66,7 +66,7 @@ function Sidebar({
   const pathname = usePathname();
   return (
     <aside
-      className={`fixed inset-y-0 left-0 z-40 flex w-64 shrink-0 flex-col bg-forest text-white transition-transform lg:sticky lg:top-0 lg:z-auto lg:h-svh lg:translate-x-0 ${
+      className={`pt-safe pb-safe fixed inset-y-0 left-0 z-50 flex w-64 shrink-0 flex-col bg-forest text-white transition-transform lg:sticky lg:top-0 lg:z-auto lg:h-svh lg:translate-x-0 ${
         open ? "translate-x-0" : "-translate-x-full"
       }`}
     >
@@ -114,6 +114,66 @@ function Sidebar({
         </Link>
       </div>
     </aside>
+  );
+}
+
+// Phone and tablet navigation: the busiest sections, plus "More" for the
+// full drawer.
+const TAB_HREFS = ["/admin", "/admin/reports", "/admin/listings", "/admin/users"];
+
+function AdminTabBar({ sections, onMore }: { sections: AdminSection[]; onMore: () => void }) {
+  const pathname = usePathname();
+  const tabs = TAB_HREFS.flatMap((href) => sections.filter((section) => section.href === href));
+  const tabClass = "relative flex h-full flex-col items-center justify-center gap-1 text-[0.6875rem] font-medium";
+  // "More" lights up on sections that don't have their own tab.
+  const onOther = !tabs.some(({ href }) => isActive(pathname, href));
+  const otherWaiting = sections.some((section) => section.count && !TAB_HREFS.includes(section.href));
+
+  return (
+    <nav
+      aria-label="Admin"
+      className="pb-safe fixed inset-x-0 bottom-0 z-30 border-t border-line bg-white/95 backdrop-blur lg:hidden dark:border-zinc-800 dark:bg-zinc-900/95"
+    >
+      <ul className="mx-auto grid h-16 max-w-xl grid-cols-5">
+        {tabs.map(({ href, label, count }) => {
+          const Icon = ICONS[href] ?? LayoutDashboard;
+          const active = isActive(pathname, href);
+          return (
+            <li key={href}>
+              <Link
+                href={href}
+                aria-current={active ? "page" : undefined}
+                className={`${tabClass} ${active ? "text-brand dark:text-lime" : "text-zinc-500 dark:text-zinc-400"}`}
+              >
+                <span className="relative">
+                  <Icon className="size-[1.375rem]" strokeWidth={active ? 2.4 : 2} aria-hidden />
+                  {count ? (
+                    <span className="absolute -top-1.5 -right-2.5 grid min-w-4 place-items-center rounded-full bg-red-500 px-1 text-[0.625rem] font-bold leading-4 text-white">
+                      {count > 99 ? "99+" : count}
+                    </span>
+                  ) : null}
+                </span>
+                {label}
+              </Link>
+            </li>
+          );
+        })}
+        <li>
+          <button
+            type="button"
+            onClick={onMore}
+            aria-label="More admin sections"
+            className={`${tabClass} w-full ${onOther ? "text-brand dark:text-lime" : "text-zinc-500 dark:text-zinc-400"}`}
+          >
+            <span className="relative">
+              <Menu className="size-[1.375rem]" aria-hidden />
+              {otherWaiting && <span className="absolute -top-0.5 -right-1 size-2.5 rounded-full bg-red-500" aria-hidden />}
+            </span>
+            More
+          </button>
+        </li>
+      </ul>
+    </nav>
   );
 }
 
@@ -332,22 +392,14 @@ export function AdminShell({
     <div className="flex min-h-svh flex-1 bg-canvas dark:bg-zinc-950">
       <Sidebar sections={sections} open={menuOpen} onClose={() => setMenuOpen(false)} />
       {menuOpen && (
-        <div className="fixed inset-0 z-30 bg-black/40 lg:hidden" onClick={() => setMenuOpen(false)} aria-hidden />
+        <div className="fixed inset-0 z-40 bg-black/40 lg:hidden" onClick={() => setMenuOpen(false)} aria-hidden />
       )}
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <div className="sticky top-0 z-20 border-b border-line bg-white dark:border-zinc-800 dark:bg-zinc-900">
+        <div className="pt-safe sticky top-0 z-20 border-b border-line bg-white dark:border-zinc-800 dark:bg-zinc-900">
           <header className="flex h-16 items-center gap-2 px-3 sm:gap-3 sm:px-6">
-            <button
-              type="button"
-              onClick={() => setMenuOpen(true)}
-              aria-label="Open admin menu"
-              className="rounded-md p-2 text-zinc-600 hover:bg-zinc-100 lg:hidden dark:text-zinc-300 dark:hover:bg-zinc-800"
-            >
-              <Menu className="size-5" />
-            </button>
             <AdminSearch className="max-sm:hidden" />
-            <Link href="/admin" className="font-semibold sm:hidden">
+            <Link href="/admin" className="pl-1 font-semibold sm:hidden">
               DriveLoop <span className="text-brand dark:text-lime">Admin</span>
             </Link>
             <div className="ml-auto flex items-center gap-1 sm:gap-3">
@@ -372,7 +424,7 @@ export function AdminShell({
           )}
         </div>
 
-        <main className="flex flex-col gap-6 px-4 py-5 sm:px-6 sm:py-6">
+        <main className="flex flex-col gap-6 px-4 py-5 sm:px-6 sm:py-6 max-lg:pb-[calc(5.25rem+env(safe-area-inset-bottom))]">
           {/* The overview renders its own header with the range controls;
               nested pages (a user's details) get a way back instead. */}
           {current && current.href !== "/admin" && (
@@ -403,6 +455,7 @@ export function AdminShell({
           <div>{children}</div>
         </main>
       </div>
+      <AdminTabBar sections={sections} onMore={() => setMenuOpen(true)} />
     </div>
   );
 }

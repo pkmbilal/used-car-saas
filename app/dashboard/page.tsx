@@ -19,11 +19,11 @@ export default async function DashboardPage() {
   const { user, profile } = await requireSeller();
   const [listings, quota] = await Promise.all([getSellerListings(user.id), getListingQuota()]);
   const newListingClass =
-    "rounded-md bg-zinc-900 px-4 py-2 text-sm text-white dark:bg-zinc-100 dark:text-zinc-900";
+    "rounded-md bg-zinc-900 px-4 py-2.5 text-center text-sm text-white max-sm:flex-1 sm:py-2 dark:bg-zinc-100 dark:text-zinc-900";
 
   return (
-    <main className="mx-auto w-full max-w-5xl px-4 py-12">
-      <div className="flex items-center justify-between gap-4">
+    <main className="mx-auto w-full max-w-5xl px-4 py-6 sm:py-12">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight">Your listings</h1>
           {quota && (
@@ -57,11 +57,11 @@ export default async function DashboardPage() {
             New listing
           </span>
         ) : (
-          <div className="flex shrink-0 items-center gap-2">
+          <div className="flex shrink-0 items-center gap-2 max-sm:w-full">
             {isDealerPlan(profile.plan) && (
               <Link
                 href="/dashboard/listings/import"
-                className="rounded-md border border-zinc-300 px-4 py-2 text-sm dark:border-zinc-700"
+                className="rounded-md border border-zinc-300 px-4 py-2.5 text-center text-sm max-sm:flex-1 sm:py-2 dark:border-zinc-700"
               >
                 Import CSV
               </Link>
@@ -113,7 +113,7 @@ export default async function DashboardPage() {
                     <Image src={cover.url} alt="" fill sizes="112px" className="object-cover" />
                   )}
                 </Link>
-                <div className="min-w-0 flex-1">
+                <div className="min-w-0 flex-1 max-sm:basis-[calc(100%-8rem)]">
                   <div className="flex items-center gap-2">
                     <Link href={editHref} className="truncate font-medium">
                       {listing.year} {listing.make} {listing.model}

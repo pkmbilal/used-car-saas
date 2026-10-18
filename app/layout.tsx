@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Figtree } from "next/font/google";
 import { HideOnAdmin } from "@/components/hide-on-admin";
 import { SiteFooter } from "@/components/site-footer";
@@ -17,6 +17,13 @@ export const metadata: Metadata = {
   description: "Buy and sell verified used cars in Saudi Arabia",
 };
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  themeColor: "#1b2125",
+};
+
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" className={cn("h-full font-sans antialiased", figtree.variable)}>
@@ -28,7 +35,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <HideOnAdmin>
           <SiteFooter />
         </HideOnAdmin>
-        <Toaster theme="light" />
+        {/* On phones, toasts sit above the bottom tab bar. */}
+        <Toaster theme="light" mobileOffset={{ bottom: "calc(5rem + env(safe-area-inset-bottom))" }} />
       </body>
     </html>
   );

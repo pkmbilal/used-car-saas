@@ -125,10 +125,25 @@
      in rem scales with it; a percentage keeps the user's browser font setting. */
   html {
     @apply font-sans;
+    -webkit-tap-highlight-color: transparent;
     @media (width >= 80rem) {
       font-size: 106.25%;
     }
   }
+  /* Phones: keep page content clear of the fixed bottom tab bar. */
+  @media (width < 48rem) {
+    body:has([data-tab-bar]) {
+      padding-bottom: calc(4rem + env(safe-area-inset-bottom));
+    }
+  }
+}
+
+/* Room for the iPhone notch and home indicator (viewport-fit=cover). */
+@utility pt-safe {
+  padding-top: env(safe-area-inset-top);
+}
+@utility pb-safe {
+  padding-bottom: env(safe-area-inset-bottom);
 }
 
 /* Admin dashboard charts. Categorical slots validated for CVD separation in
