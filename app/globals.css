@@ -64,12 +64,20 @@
   --text-label: 0.8125rem;
 }
 
-/* Phones: the small text steps up so it stays readable. */
+/* Phones: the whole type scale steps up so text stays readable. Tailwind's
+   text-* utilities read these variables, so this reaches every page. */
 @media (width < 40rem) {
   :root {
-    --text-eyebrow: 0.75rem;
-    --text-caption: 0.8125rem;
-    --text-label: 0.875rem;
+    --text-eyebrow: 0.8125rem;
+    --text-caption: 0.875rem;
+    --text-label: 0.9375rem;
+    --text-xs: 0.8125rem;
+    --text-sm: 0.9375rem;
+    --text-base: 1.0625rem;
+    --text-lg: 1.1875rem;
+    --text-xl: 1.3125rem;
+    --text-2xl: 1.75rem;
+    --text-3xl: 2rem;
   }
 }
 

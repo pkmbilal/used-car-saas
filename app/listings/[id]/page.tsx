@@ -126,7 +126,7 @@ export default async function ListingPage({ params }: PageProps<"/listings/[id]"
               <Badge className="h-6 bg-[#4fc35f] px-3 text-caption font-semibold">Featured</Badge>
             )}
           </div>
-          <p className="mt-2.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[0.9375rem]">
+          <p className="mt-2.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-base sm:text-[0.9375rem]">
             <span>{listing.year}</span>
             <span className="opacity-60">·</span>
             <span>{formatKm(listing.mileage)}</span>
@@ -208,7 +208,7 @@ export default async function ListingPage({ params }: PageProps<"/listings/[id]"
                     </span>
                   )}
                   <div className="min-w-0">
-                    <p className="truncate text-[0.9375rem] font-semibold">
+                    <p className="truncate text-base font-semibold sm:text-[0.9375rem]">
                       {storefront?.name ?? seller.full_name ?? "Seller"}
                     </p>
                     <div className="mt-1 flex flex-wrap items-center gap-1.5">
