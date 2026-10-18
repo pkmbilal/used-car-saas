@@ -43,6 +43,17 @@ export function SignupForm({ next }: { next: string }) {
           <button type="submit" name="intent" value="register" disabled={pending} className={primaryButtonClass}>
             {pending ? "Creating account…" : "Create account"}
           </button>
+          <p className="text-xs text-zinc-600 dark:text-zinc-400">
+            By creating an account you agree to our{" "}
+            <Link href="/terms" className="font-medium underline">
+              Terms of Use
+            </Link>{" "}
+            and{" "}
+            <Link href="/privacy" className="font-medium underline">
+              Privacy Policy
+            </Link>
+            .
+          </p>
           <p className="text-sm text-zinc-600 dark:text-zinc-400">
             Already have an account?{" "}
             <Link href={loginHref} className="font-medium underline">

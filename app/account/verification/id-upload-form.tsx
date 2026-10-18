@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState, useTransition } from "react";
 import {
   ID_DOC_TYPES,
@@ -14,6 +15,7 @@ export function IdUploadForm() {
   const [pending, startTransition] = useTransition();
   const [progress, setProgress] = useState<string>();
   const [error, setError] = useState<string>();
+  const [consented, setConsented] = useState(false);
 
   // Uploads one file: presign → PUT straight to the private bucket.
   async function uploadFile(file: File): Promise<{ key: string } | { error: string }> {
@@ -46,6 +48,7 @@ export function IdUploadForm() {
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (files.length === 0) return setError("Choose your ID document first.");
+    if (!consented) return setError("Tick the consent box to continue.");
     setError(undefined);
 
     startTransition(async () => {
@@ -89,9 +92,26 @@ export function IdUploadForm() {
           JPEG, PNG, WebP or PDF, up to 10 MB each.
         </p>
       </div>
+      <label className="flex items-start gap-2 text-xs text-zinc-600 dark:text-zinc-400">
+        <input
+          type="checkbox"
+          checked={consented}
+          disabled={pending}
+          onChange={(event) => setConsented(event.target.checked)}
+          className="mt-0.5"
+        />
+        <span>
+          I consent to DriveLoop storing these documents privately and reviewing them to verify my identity, as
+          described in the{" "}
+          <Link href="/privacy" className="font-medium underline">
+            Privacy Policy
+          </Link>
+          .
+        </span>
+      </label>
       <button
         type="submit"
-        disabled={pending || files.length === 0}
+        disabled={pending || files.length === 0 || !consented}
         className="self-start rounded-md bg-zinc-900 px-4 py-2 text-sm font-medium text-white disabled:opacity-50 dark:bg-zinc-100 dark:text-zinc-900"
       >
         {progress ?? "Submit for review"}

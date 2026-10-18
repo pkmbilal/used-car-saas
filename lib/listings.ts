@@ -456,6 +456,26 @@ export async function getFeaturedListings(
   return data.map(withImageUrls);
 }
 
+// Every active listing's id and last edit, for the sitemap. Paged because the
+// API returns at most 1,000 rows per request; Google caps a sitemap at 50,000.
+export async function getSitemapListings(): Promise<Pick<Listing, "id" | "updated_at">[]> {
+  const supabase = await createClient();
+  const pageSize = 1000;
+  const rows: Pick<Listing, "id" | "updated_at">[] = [];
+  while (rows.length < 45000) {
+    const { data, error } = await supabase
+      .from("listings")
+      .select("id, updated_at")
+      .eq("status", "active")
+      .order("id")
+      .range(rows.length, rows.length + pageSize - 1);
+    if (error) throw error;
+    rows.push(...data);
+    if (data.length < pageSize) break;
+  }
+  return rows;
+}
+
 export async function getLatestListings(limit: number): Promise<ListingWithImages[]> {
   const supabase = await createClient();
   const { data, error } = await supabase
