@@ -7,6 +7,8 @@ import { formatDay, formatMonthYear } from "@/lib/format";
 import { PLAN_LABELS } from "@/lib/plans";
 import { pageParam, Pager, textParam } from "../pager";
 import { Avatar, EmptyState, fieldClass, linkClass, Panel, Pill, primaryButtonClass, table } from "../ui";
+import { cn } from "@/lib/utils";
+import { ExpandableRow } from "../expandable-row";
 import { UserRowActions } from "../user-row-actions";
 
 export default async function AdminUsersPage({ searchParams }: PageProps<"/admin/users">) {
@@ -61,8 +63,8 @@ export default async function AdminUsersPage({ searchParams }: PageProps<"/admin
                 {users.map((user) => {
                   const isSeller = user.role === "seller";
                   return (
-                    <tr key={user.id} className={table.row}>
-                      <td className={`${table.td} ${table.tdPrimary}`}>
+                    <ExpandableRow key={user.id}>
+                      <td className={cn(table.td, table.tdPrimary, "max-md:pr-20")}>
                         <div className="flex items-center gap-3">
                           <Avatar name={user.full_name} />
                           <div className="min-w-0">
@@ -78,11 +80,11 @@ export default async function AdminUsersPage({ searchParams }: PageProps<"/admin
                           </div>
                         </div>
                       </td>
-                      <td data-label="Contact" className={table.td}>
+                      <td data-label="Contact" className={cn(table.td, table.tdDetail)}>
                         <span className="block tabular-nums">{user.phone ?? "No phone"}</span>
                         <span className="text-xs text-zinc-500">{user.city ?? "No city"}</span>
                       </td>
-                      <td data-label="Plan" className={table.td}>
+                      <td data-label="Plan" className={cn(table.td, table.tdDetail)}>
                         {isSeller ? (
                           <>
                             <span className="block font-medium">{PLAN_LABELS[user.plan]}</span>
@@ -94,8 +96,8 @@ export default async function AdminUsersPage({ searchParams }: PageProps<"/admin
                           <span className="text-zinc-400">—</span>
                         )}
                       </td>
-                      <td data-label="Listings" className={`${table.td} tabular-nums`}>{isSeller ? user.listingCount : <span className="text-zinc-400">—</span>}</td>
-                      <td data-label="Joined" className={`${table.td} whitespace-nowrap text-zinc-600 dark:text-zinc-400`}>
+                      <td data-label="Listings" className={cn(table.td, table.tdDetail, "tabular-nums")}>{isSeller ? user.listingCount : <span className="text-zinc-400">—</span>}</td>
+                      <td data-label="Joined" className={cn(table.td, table.tdDetail, "whitespace-nowrap text-zinc-600 dark:text-zinc-400")}>
                         {formatMonthYear(user.created_at)}
                       </td>
                       <td className={`${table.td} text-right ${table.tdActions}`}>
@@ -107,7 +109,7 @@ export default async function AdminUsersPage({ searchParams }: PageProps<"/admin
                           idVerified={user.id_verified_at !== null}
                         />
                       </td>
-                    </tr>
+                    </ExpandableRow>
                   );
                 })}
               </tbody>

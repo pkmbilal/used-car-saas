@@ -7,6 +7,8 @@ import { getAllListings, type FeaturedStatus } from "@/lib/admin";
 import { formatDay, formatKm } from "@/lib/format";
 import { isFeatured, type ListingStatus } from "@/lib/listings";
 import { PLAN_LABELS } from "@/lib/plans";
+import { cn } from "@/lib/utils";
+import { ExpandableRow } from "../expandable-row";
 import { ListingRowActions } from "../listing-row-actions";
 import { pageParam, Pager, textParam } from "../pager";
 import { EmptyState, fieldClass, linkClass, Panel, Pill, primaryButtonClass, SegmentedNav, table } from "../ui";
@@ -118,8 +120,8 @@ export default async function AdminListingsPage({ searchParams }: PageProps<"/ad
                   const photo = listing.images[0];
                   const title = `${listing.year} ${listing.make} ${listing.model}`;
                   return (
-                    <tr key={listing.id} className={table.row}>
-                      <td className={`${table.td} ${table.tdPrimary}`}>
+                    <ExpandableRow key={listing.id}>
+                      <td className={cn(table.td, table.tdPrimary, "max-md:pr-20")}>
                         <div className="flex items-center gap-3">
                           <div className="relative h-12 w-18 shrink-0 overflow-hidden rounded-md bg-zinc-100 dark:bg-zinc-800">
                             {photo ? (
@@ -147,7 +149,7 @@ export default async function AdminListingsPage({ searchParams }: PageProps<"/ad
                           </div>
                         </div>
                       </td>
-                      <td data-label="Seller" className={table.td}>
+                      <td data-label="Seller" className={cn(table.td, table.tdDetail)}>
                         {listing.seller ? (
                           <div className="flex flex-col items-start gap-1">
                             <Link href={`/admin/users/${listing.seller.id}`} className={linkClass}>
@@ -165,10 +167,10 @@ export default async function AdminListingsPage({ searchParams }: PageProps<"/ad
                       <td data-label="Status" className={table.td}>
                         <StatusBadge status={listing.status} />
                       </td>
-                      <td data-label="Featured" className={table.td}>
+                      <td data-label="Featured" className={cn(table.td, table.tdDetail)}>
                         <FeaturedCell listing={listing} />
                       </td>
-                      <td data-label="Listed" className={`${table.td} whitespace-nowrap text-zinc-600 dark:text-zinc-400`}>
+                      <td data-label="Listed" className={cn(table.td, table.tdDetail, "whitespace-nowrap text-zinc-600 dark:text-zinc-400")}>
                         {formatDay(listing.created_at)}
                       </td>
                       <td className={`${table.td} text-right ${table.tdActions}`}>
@@ -180,7 +182,7 @@ export default async function AdminListingsPage({ searchParams }: PageProps<"/ad
                           canFeature={!atFeaturedLimit(listing.featured)}
                         />
                       </td>
-                    </tr>
+                    </ExpandableRow>
                   );
                 })}
               </tbody>

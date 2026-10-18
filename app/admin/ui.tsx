@@ -189,6 +189,8 @@ export const table = {
   td: "align-middle md:px-5 md:py-3.5 max-md:block max-md:min-w-0 max-md:before:mb-0.5 max-md:before:block max-md:before:text-xs max-md:before:font-normal max-md:before:text-zinc-500 max-md:before:content-[attr(data-label)]",
   tdPrimary: "max-md:col-span-2 max-md:pr-10 max-md:before:hidden",
   tdActions: "max-md:absolute max-md:top-3 max-md:right-3 max-md:before:hidden",
+  // Inside an ExpandableRow: hidden on the phone card until it's expanded.
+  tdDetail: "max-md:hidden max-md:group-data-expanded/row:block",
 };
 
 // Text input and select styling inside admin toolbars and forms.
