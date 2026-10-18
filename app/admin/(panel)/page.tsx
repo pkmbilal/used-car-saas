@@ -7,8 +7,10 @@ import { DASHBOARD_RANGES, EXPIRING_WINDOW_DAYS, getDashboard, isDashboardRange 
 import { formatCount, formatDay, formatKm } from "@/lib/format";
 import { isFeatured } from "@/lib/listings";
 import { PLAN_LABELS, PLANS } from "@/lib/plans";
+import { cn } from "@/lib/utils";
 import { ActivityChart } from "./activity-chart";
 import { AttentionRow, Card, cardClass, ChangeBadge, formatNumber, KpiCard, StatusDonut } from "./dashboard-widgets";
+import { ExpandableRow } from "./expandable-row";
 import { table } from "./ui";
 import { ListingRowActions } from "./listing-row-actions";
 import { textParam } from "./pager";
@@ -157,8 +159,8 @@ export default async function AdminOverviewPage({ searchParams }: PageProps<"/ad
                 const photo = listing.images[0];
                 const featured = listing.status === "active" && isFeatured(listing);
                 return (
-                  <tr key={listing.id} className={table.row}>
-                    <td className={`${table.td} ${table.tdPrimary}`}>
+                  <ExpandableRow key={listing.id}>
+                    <td className={cn(table.td, table.tdPrimary, "max-md:pr-20")}>
                       <div className="flex items-center gap-3">
                         <div className="relative h-11 w-18 shrink-0 overflow-hidden rounded bg-zinc-100 dark:bg-zinc-800">
                           {photo ? (
@@ -178,7 +180,7 @@ export default async function AdminOverviewPage({ searchParams }: PageProps<"/ad
                         </div>
                       </div>
                     </td>
-                    <td data-label="Seller" className={table.td}>
+                    <td data-label="Seller" className={cn(table.td, table.tdDetail)}>
                       {listing.seller ? (
                         <>
                           <Link href={`/admin/users/${listing.seller.id}`} className="font-medium hover:text-brand">
@@ -192,7 +194,7 @@ export default async function AdminOverviewPage({ searchParams }: PageProps<"/ad
                         <span className="text-zinc-500">Unknown</span>
                       )}
                     </td>
-                    <td data-label="City" className={table.td}>
+                    <td data-label="City" className={cn(table.td, table.tdDetail)}>
                       <span className="inline-flex items-center gap-1.5 text-zinc-700 dark:text-zinc-300">
                         <MapPin className="size-4 text-zinc-400" aria-hidden />
                         {listing.city}
@@ -204,7 +206,9 @@ export default async function AdminOverviewPage({ searchParams }: PageProps<"/ad
                     <td data-label="Status" className={table.td}>
                       <StatusBadge status={listing.status} />
                     </td>
-                    <td data-label="Added" className={`${table.td} text-zinc-600 dark:text-zinc-400`}>{formatDay(listing.created_at)}</td>
+                    <td data-label="Added" className={cn(table.td, table.tdDetail, "text-zinc-600 dark:text-zinc-400")}>
+                      {formatDay(listing.created_at)}
+                    </td>
                     <td className={`${table.td} text-right ${table.tdActions}`}>
                       <ListingRowActions
                         listingId={listing.id}
@@ -213,7 +217,7 @@ export default async function AdminOverviewPage({ searchParams }: PageProps<"/ad
                         featured={featured}
                       />
                     </td>
-                  </tr>
+                  </ExpandableRow>
                 );
               })}
             </tbody>

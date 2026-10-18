@@ -341,6 +341,7 @@ function AdminUserMenu({ user }: { user: AdminUser }) {
         <DropdownMenuSeparator className="mx-0 my-0" />
         <div className="bg-canvas/70 p-1.5">
           <form action="/auth/signout" method="post" className="contents">
+            <input type="hidden" name="next" value="/admin/login" />
             <DropdownMenuItem asChild variant="destructive" className="gap-3 rounded-lg px-2 py-2">
               <button type="submit" className="w-full">
                 <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-white ring-1 ring-red-100">

@@ -24,10 +24,10 @@ export const getCurrentUser = cache(async () => {
   return { user, profile };
 });
 
-export async function requireUser(next?: string) {
+export async function requireUser(next?: string, loginPath = "/login") {
   const current = await getCurrentUser();
   if (!current) {
-    redirect(next ? `/login?next=${encodeURIComponent(next)}` : "/login");
+    redirect(next ? `${loginPath}?next=${encodeURIComponent(next)}` : loginPath);
   }
   return current;
 }
@@ -40,9 +40,9 @@ export async function requireSeller(next = "/dashboard") {
   return current;
 }
 
-// 404 rather than a redirect so the admin area isn't advertised.
+// Signed-out visitors go to the admin sign-in; signed-in non-admins get a 404.
 export async function requireAdmin() {
-  const current = await requireUser("/admin");
+  const current = await requireUser("/admin", "/admin/login");
   if (!current.profile.is_admin) notFound();
   return current;
 }
