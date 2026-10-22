@@ -2,7 +2,15 @@
 
 import Link from "next/link";
 import { useActionState } from "react";
-import { CodeStep, Field, FormMessages, primaryButtonClass } from "@/components/auth-fields";
+import { Mail } from "lucide-react";
+import {
+  authLinkClass,
+  CodeStep,
+  Field,
+  FormMessages,
+  PasswordField,
+  SubmitButton,
+} from "@/components/auth-fields";
 import { loginAction, type LoginState } from "./actions";
 
 const initialState: LoginState = { step: "credentials", email: "" };
@@ -15,7 +23,7 @@ export function LoginForm({ next }: { next: string }) {
   const [state, formAction, pending] = useActionState(loginAction, initialState);
 
   return (
-    <form action={formAction} className="flex flex-col gap-3">
+    <form action={formAction} className="flex flex-col gap-4">
       <input type="hidden" name="next" value={next} />
 
       {state.step === "credentials" ? (
@@ -24,23 +32,28 @@ export function LoginForm({ next }: { next: string }) {
             id="email"
             label="Email"
             type="email"
+            icon={Mail}
             autoComplete="email"
+            placeholder="you@example.com"
             defaultValue={state.email}
           />
-          <Field id="password" label="Password" type="password" autoComplete="current-password" />
-          <Link
-            href={withNext("/forgot-password", next)}
-            className="self-end text-sm text-zinc-600 dark:text-zinc-400"
-          >
-            Forgot password?
-          </Link>
+          <PasswordField
+            id="password"
+            label="Password"
+            autoComplete="current-password"
+            aside={
+              <Link href={withNext("/forgot-password", next)} className={`text-caption ${authLinkClass}`}>
+                Forgot password?
+              </Link>
+            }
+          />
           <FormMessages error={state.error} notice={state.notice} />
-          <button type="submit" name="intent" value="signin" disabled={pending} className={primaryButtonClass}>
-            {pending ? "Signing in…" : "Sign in"}
-          </button>
-          <p className="text-sm text-zinc-600 dark:text-zinc-400">
+          <SubmitButton intent="signin" pending={pending} pendingLabel="Signing in…">
+            Sign in
+          </SubmitButton>
+          <p className="mt-2 border-t border-line pt-5 text-center text-sm text-zinc-600">
             New here?{" "}
-            <Link href={withNext("/signup", next)} className="font-medium underline">
+            <Link href={withNext("/signup", next)} className={authLinkClass}>
               Create an account
             </Link>
           </p>

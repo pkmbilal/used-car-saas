@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { ArrowLeft, ShieldCheck } from "lucide-react";
+import { RoadLines } from "@/components/auth-shell";
 import { Logo } from "@/components/brand";
 import { getCurrentUser, safeNext } from "@/lib/auth";
 import { AdminLoginForm } from "./admin-login-form";
@@ -91,24 +92,5 @@ function BrandPanel() {
         Restricted area · every action is logged
       </p>
     </aside>
-  );
-}
-
-// Faint perspective road lines and a glow behind the panel.
-function RoadLines() {
-  return (
-    <div aria-hidden className="pointer-events-none absolute inset-0">
-      <div className="absolute -top-24 -right-24 size-80 rounded-full bg-lime/10 blur-3xl" />
-      <div className="absolute -bottom-32 -left-16 size-96 rounded-full bg-brand/30 blur-3xl" />
-      <svg className="absolute inset-0 hidden size-full lg:block" preserveAspectRatio="none" viewBox="0 0 400 800">
-        <g stroke="white" strokeOpacity="0.06" strokeWidth="1.5" fill="none">
-          <path d="M200 380 L-40 800" />
-          <path d="M200 380 L440 800" />
-          <path d="M200 380 L120 800" />
-          <path d="M200 380 L280 800" />
-        </g>
-        <path d="M200 380 L200 800" stroke="#6fe07c" strokeOpacity="0.14" strokeWidth="2" strokeDasharray="14 18" fill="none" />
-      </svg>
-    </div>
   );
 }

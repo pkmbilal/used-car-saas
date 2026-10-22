@@ -1,3 +1,4 @@
+import { AuthShell } from "@/components/auth-shell";
 import { safeNext } from "@/lib/auth";
 import { ResetForm } from "./reset-form";
 
@@ -9,9 +10,12 @@ export default async function ForgotPasswordPage({
   const next = safeNext((await searchParams).next);
 
   return (
-    <main className="mx-auto w-full max-w-sm px-4 py-16">
-      <h1 className="mb-6 text-2xl font-semibold tracking-tight">Reset your password</h1>
+    <AuthShell
+      eyebrow="ACCOUNT RECOVERY"
+      title="Reset your password"
+      subtitle="We'll email you a code to choose a new one."
+    >
       <ResetForm next={next} />
-    </main>
+    </AuthShell>
   );
 }
