@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { BrandLink } from "@/components/brand";
 import { MobileNav, UserMenu, type HeaderLink } from "@/components/header-menus";
+import { HeaderShell } from "@/components/header-shell";
 import { limeButton, outlineButton } from "@/components/header-styles";
 import { MobileTabBar } from "@/components/mobile-tab-bar";
 import { NavLink } from "@/components/nav-link";
@@ -36,10 +37,10 @@ export async function SiteHeader() {
 
   return (
     <>
-      <header className="light pt-safe sticky top-0 z-30 bg-charcoal text-white">
-        <nav className="mx-auto flex h-14 w-full md:h-[4.5rem] max-w-6xl items-center gap-10 px-4 sm:px-6">
+      <HeaderShell>
+        <nav className="mx-auto flex h-14 w-full max-w-6xl items-center gap-6 px-4 transition-[height] duration-300 sm:px-6 md:h-[4.5rem] md:group-data-scrolled:h-16 lg:gap-8">
           <BrandLink />
-          <div className="hidden items-center gap-8 text-label font-medium md:flex">
+          <div className="hidden items-center gap-0.5 rounded-full bg-white/[0.04] p-1 text-label font-medium ring-1 ring-white/10 md:flex">
             {mainLinks.map((link) => (
               <NavLink key={link.href} href={link.href} exact={link.href === "/"}>
                 {link.label}
@@ -64,7 +65,7 @@ export async function SiteHeader() {
             <MobileNav links={menuLinks} signedIn={!!current} />
           </div>
         </nav>
-      </header>
+      </HeaderShell>
       <MobileTabBar signedIn={!!current} isSeller={isSeller} />
     </>
   );
