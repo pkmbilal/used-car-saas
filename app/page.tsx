@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, MessageCircle, ShieldCheck, type LucideIcon } from "lucide-react";
+import { ArrowRight, MessageCircle, Plus, ShieldCheck, type LucideIcon } from "lucide-react";
 import { ListingGrid } from "@/components/listing-card";
 import { SearchBar } from "@/components/search-bar";
 import { Badge } from "@/components/ui/badge";
@@ -30,6 +30,9 @@ function topKeys(counts: Map<string, number>, fallback: readonly string[], n: nu
 }
 
 const sectionClass = "mx-auto mt-14 w-full max-w-6xl px-4 sm:px-6 md:mt-20";
+// Lime pill CTA on dark backgrounds; pair with <CtaArrow /> as the last child.
+const limeCtaClass =
+  "group h-12 gap-3 rounded-full bg-gradient-to-b from-lime-light to-lime pr-2.5 pl-6 text-sm font-semibold text-on-lime shadow-[inset_0_1px_0_rgba(255,255,255,.45),0_10px_30px_-8px_rgba(111,224,124,.55)] transition-all hover:text-on-lime hover:shadow-[inset_0_1px_0_rgba(255,255,255,.45),0_14px_36px_-6px_rgba(111,224,124,.7)] focus-visible:ring-2 focus-visible:ring-lime/60 focus-visible:ring-offset-2 focus-visible:ring-offset-forest-dark motion-safe:hover:-translate-y-px";
 
 export default async function Home() {
   const [featured, latest, facets, favoriteIds, byCity] = await Promise.all([
@@ -66,20 +69,22 @@ export default async function Home() {
             Browse used cars from private sellers and dealers across the Kingdom, and talk to them directly.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
-            <Button
-              asChild
-              className="h-11 rounded-full bg-lime px-6 text-xs font-semibold text-on-lime hover:bg-lime-light hover:text-on-lime max-sm:text-sm"
-            >
+            <Button asChild className={limeCtaClass}>
               <Link href="/listings">
                 Browse Cars
-                <ArrowRight className="size-3" strokeWidth={2.6} />
+                <CtaArrow />
               </Link>
             </Button>
             <Button
               asChild
-              className="h-11 rounded-full border border-white/30 bg-transparent px-6 text-xs font-semibold text-white hover:bg-white/10 hover:text-white max-sm:text-sm"
+              className="h-12 gap-2.5 rounded-full border border-white/15 bg-white/[0.06] pr-6 pl-3 text-sm font-semibold text-white shadow-[inset_0_1px_0_rgba(255,255,255,.08)] backdrop-blur-md transition-all hover:border-white/25 hover:bg-white/[0.1] hover:text-white focus-visible:ring-2 focus-visible:ring-lime/60 focus-visible:ring-offset-2 focus-visible:ring-offset-forest-dark motion-safe:hover:-translate-y-px"
             >
-              <Link href="/account/become-seller">Sell Your Car</Link>
+              <Link href="/account/become-seller">
+                <span className="grid size-6 place-items-center rounded-full bg-gradient-to-b from-lime/25 to-lime/5 ring-1 ring-lime/30">
+                  <Plus className="size-3.5 text-lime" strokeWidth={2.2} />
+                </span>
+                Sell Your Car
+              </Link>
             </Button>
           </div>
           <TrustBand
@@ -92,7 +97,7 @@ export default async function Home() {
       </section>
 
       <div className="relative mx-auto -mt-20 w-full max-w-6xl px-4 sm:px-6">
-        <SearchBar variant="hero" total={facets.total} />
+        <SearchBar variant="hero" />
       </div>
 
       {/* Popular brands */}
@@ -203,19 +208,24 @@ export default async function Home() {
                 List your car in minutes and reach buyers in {cityNames.slice(0, 3).join(", ")} and beyond.
               </p>
             </div>
-            <Button
-              asChild
-              className="h-11 shrink-0 rounded-full bg-lime px-6 text-xs font-semibold text-on-lime hover:bg-lime-light hover:text-on-lime max-sm:text-sm"
-            >
+            <Button asChild className={`shrink-0 ${limeCtaClass}`}>
               <Link href="/account/become-seller">
                 Sell Your Car
-                <ArrowRight className="size-3" strokeWidth={2.6} />
+                <CtaArrow />
               </Link>
             </Button>
           </div>
         </div>
       </section>
     </main>
+  );
+}
+
+function CtaArrow() {
+  return (
+    <span className="grid size-7 place-items-center rounded-full bg-on-lime text-lime">
+      <ArrowRight className="size-3.5 transition-transform motion-safe:group-hover:translate-x-0.5" strokeWidth={2.4} />
+    </span>
   );
 }
 

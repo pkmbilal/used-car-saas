@@ -85,13 +85,10 @@ export function SearchBar({
   filters,
   className,
   variant = "default",
-  total,
 }: {
   filters?: ListingFilters;
   className?: string;
   variant?: Variant;
-  // Live car count shown in the hero header.
-  total?: number;
 }) {
   const hero = variant === "hero";
   const style = styles[variant];
@@ -112,12 +109,6 @@ export function SearchBar({
             <span aria-hidden className="size-1.5 rounded-full bg-lime" />
             FIND YOUR CAR
           </span>
-          {!!total && (
-            <span className="text-caption text-muted-foreground">
-              <span className="font-semibold text-ink">{total.toLocaleString("en-US")}</span>{" "}
-              {total === 1 ? "car" : "cars"} live
-            </span>
-          )}
         </div>
       )}
       <form method="get" action="/listings" className={style.form}>
