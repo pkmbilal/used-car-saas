@@ -157,11 +157,10 @@ export default async function Home() {
       {/* How it works */}
       <section className={sectionClass}>
         <SectionHeading eyebrow="HOW IT WORKS" title="Simple Steps, Either Way" />
-        <div className="mt-8 grid gap-12 sm:mt-10 lg:grid-cols-2 lg:gap-0 lg:divide-x lg:divide-line">
+        <div className="mt-8 grid gap-4 sm:mt-10 lg:grid-cols-2 lg:gap-6">
           <HowItWorksColumn
             tag="FOR BUYERS"
             intro="Find, compare and buy a used car without the guesswork."
-            note={`${facets.total} ${facets.total === 1 ? "car" : "cars"} available now`}
             cta={{ href: "/listings", label: "Browse Cars" }}
             steps={[
               ["Search", "Filter listings by make, price, year, fuel type and city."],
@@ -169,7 +168,7 @@ export default async function Home() {
               ["Contact Seller", "Message the seller on WhatsApp or call them to arrange a viewing."],
               ["Buy Your Car", "Inspect the car, agree on a price and drive away."],
             ]}
-            className="lg:pr-12"
+            className="border border-line bg-white"
           />
           <HowItWorksColumn
             tag="FOR SELLERS"
@@ -182,7 +181,7 @@ export default async function Home() {
               ["Get Buyer Leads", "Buyers contact you directly by WhatsApp or phone."],
               ["Sell Your Car", "Agree on a price, hand over the keys and mark it as sold."],
             ]}
-            className="lg:pl-12"
+            className="border border-transparent bg-mint"
           />
         </div>
       </section>
@@ -250,15 +249,15 @@ function HowItWorksColumn({
 }: {
   tag: string;
   intro: string;
-  note: string;
+  note?: string;
   cta: { href: string; label: string };
   steps: [string, string][];
   className?: string;
 }) {
   return (
-    <div className={className}>
+    <div className={`rounded-2xl p-6 sm:p-8 xl:p-10 ${className}`}>
       <Eyebrow>{tag}</Eyebrow>
-      <p className="mt-3 max-w-sm font-display text-2xl font-medium tracking-tight">{intro}</p>
+      <p className="mt-3 max-w-sm font-display text-2xl font-medium tracking-tight max-sm:text-xl lg:max-w-md">{intro}</p>
       <ol className="mt-8 grid gap-x-8 gap-y-7 sm:grid-cols-2">
         {steps.map(([label, desc], i) => (
           <li key={label} className="border-t border-line pt-4">
@@ -269,8 +268,8 @@ function HowItWorksColumn({
         ))}
       </ol>
       <div className="mt-8 flex flex-wrap items-center justify-between gap-3">
-        <span className="text-caption text-muted-foreground">{note}</span>
-        <Button asChild className="h-9 rounded-full px-5 text-caption font-semibold hover:bg-brand-dark hover:text-white">
+        {note && <span className="text-caption text-muted-foreground">{note}</span>}
+        <Button asChild className="h-9 rounded-full px-5 text-caption font-semibold text-white hover:bg-brand-dark hover:text-white">
           <Link href={cta.href}>
             {cta.label}
             <ArrowRight className="size-3" strokeWidth={2.6} />
