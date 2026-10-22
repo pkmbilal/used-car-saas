@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { LEGAL_CONTACT_EMAIL, LegalPage } from "@/components/legal-page";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy | DriveLoop",
-  description: "How DriveLoop collects, uses and protects your personal data.",
+  title: "Privacy Policy | KarSouq",
+  description: "How KarSouq collects, uses and protects your personal data.",
 };
 
 // TODO(legal): draft written to the Saudi PDPL's main requirements. Have it
@@ -12,7 +12,7 @@ export default function PrivacyPage() {
   return (
     <LegalPage title="Privacy Policy" updated="18 October 2026">
       <p>
-        DriveLoop (&quot;we&quot;) runs a marketplace for used cars in the Kingdom of Saudi Arabia. This policy
+        KarSouq (&quot;we&quot;) runs a marketplace for used cars in the Kingdom of Saudi Arabia. This policy
         explains what personal data we collect, why, and the rights you have under the Personal Data Protection Law
         (PDPL).
       </p>
@@ -38,7 +38,7 @@ export default function PrivacyPage() {
 
       <h2>Identity documents</h2>
       <p>
-        ID documents are stored in private storage that is not publicly accessible. Only DriveLoop administrators can
+        ID documents are stored in private storage that is not publicly accessible. Only KarSouq administrators can
         view them, and only to review your verification request. You give explicit consent when you upload them.
       </p>
 

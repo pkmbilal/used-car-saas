@@ -6,7 +6,7 @@ import { getActiveFacetCounts } from "@/lib/listings";
 import { SortSelect } from "../listings/sort-select";
 
 export const metadata: Metadata = {
-  title: "Used cars by city | DriveLoop",
+  title: "Used cars by city | KarSouq",
   description: "Browse used cars for sale in Riyadh, Jeddah, Dammam and every other city across Saudi Arabia.",
 };
 

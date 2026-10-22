@@ -7,7 +7,7 @@ import { isDealerPlan, PLAN_LABELS } from "@/lib/plans";
 import { DealerApplicationForm } from "./dealer-application-form";
 
 export const metadata: Metadata = {
-  title: "Dealer account | DriveLoop",
+  title: "Dealer account | KarSouq",
 };
 
 const noticeClass = "rounded-md px-4 py-3 text-sm";

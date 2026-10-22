@@ -52,7 +52,7 @@ export async function generateMetadata({
   const listing = await getListing(id);
   if (!listing) return { title: "Listing not found" };
   return {
-    title: `${listing.year} ${listing.make} ${listing.model} — ${formatSAR(listing.price)} | DriveLoop`,
+    title: `${listing.year} ${listing.make} ${listing.model} — ${formatSAR(listing.price)} | KarSouq`,
   };
 }
 

@@ -15,7 +15,7 @@ const figtree = Figtree({
 
 export const metadata: Metadata = {
   metadataBase: siteUrl(),
-  title: "DriveLoop | Used Cars in Saudi Arabia",
+  title: "KarSouq | Used Cars in Saudi Arabia",
   description: "Buy and sell verified used cars in Saudi Arabia",
 };
 

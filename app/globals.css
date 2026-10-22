@@ -3,7 +3,7 @@
 @import "shadcn/tailwind.css";
 
 /* Dark mode follows the OS (as before shadcn), except inside `.light`: the
-   DriveLoop public pages and their shadcn popovers are light-only. */
+   KarSouq public pages and their shadcn popovers are light-only. */
 @custom-variant dark {
   @media (prefers-color-scheme: dark) {
     &:not(:where(.light, .light *)) {
@@ -42,7 +42,7 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
-/* DriveLoop palette, alongside the shadcn semantic colors above. */
+/* KarSouq palette, alongside the shadcn semantic colors above. */
 @theme {
   --color-ink: #15201a;
   --color-canvas: #f5f6f3;
@@ -81,7 +81,7 @@
   }
 }
 
-/* shadcn theme mapped to DriveLoop. Light only: shadcn is used on the public
+/* shadcn theme mapped to KarSouq. Light only: shadcn is used on the public
    pages, which are a light design. */
 :root {
   --background: #ffffff;

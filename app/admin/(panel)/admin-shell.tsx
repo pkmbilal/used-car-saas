@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { Logo } from "@/components/brand";
 import { usePathname, useRouter } from "next/navigation";
 import {
   BadgeCheck,
@@ -72,8 +73,8 @@ function Sidebar({
     >
       <div className="flex items-center justify-between border-b border-white/10 px-5 py-5">
         <Link href="/admin" onClick={onClose}>
-          <p className="text-lg font-semibold leading-none">DriveLoop</p>
-          <p className="mt-1.5 text-eyebrow font-semibold tracking-[0.16em] text-lime">ADMIN</p>
+          <Logo className="h-9 w-auto" />
+          <p className="mt-2 text-eyebrow font-semibold tracking-[0.16em] text-lime">ADMIN</p>
         </Link>
         <button type="button" onClick={onClose} aria-label="Close menu" className="rounded p-1 hover:bg-white/10 lg:hidden">
           <X className="size-5" />
@@ -278,7 +279,7 @@ function AdminUserMenu({ user }: { user: AdminUser }) {
     ...(user.isSeller
       ? [{ href: "/dashboard", label: "My listings", hint: "Cars you're selling", icon: Car }]
       : []),
-    { href: "/", label: "View site", hint: "DriveLoop as buyers see it", icon: ExternalLink },
+    { href: "/", label: "View site", hint: "KarSouq as buyers see it", icon: ExternalLink },
   ];
 
   return (
@@ -401,7 +402,7 @@ export function AdminShell({
           <header className="flex h-16 items-center gap-2 px-3 sm:gap-3 sm:px-6">
             <AdminSearch className="max-sm:hidden" />
             <Link href="/admin" className="pl-1 font-semibold sm:hidden">
-              DriveLoop <span className="text-brand dark:text-lime">Admin</span>
+              KarSouq <span className="text-brand dark:text-lime">Admin</span>
             </Link>
             <div className="ml-auto flex items-center gap-1 sm:gap-3">
               <button

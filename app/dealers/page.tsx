@@ -3,8 +3,8 @@ import { DealerCard } from "@/components/dealer-card";
 import { getDealerStorefronts } from "@/lib/storefront";
 
 export const metadata: Metadata = {
-  title: "Car dealers | DriveLoop",
-  description: "Browse car dealers on DriveLoop and see their showrooms and cars for sale.",
+  title: "Car dealers | KarSouq",
+  description: "Browse car dealers on KarSouq and see their showrooms and cars for sale.",
 };
 
 export default async function DealersPage() {

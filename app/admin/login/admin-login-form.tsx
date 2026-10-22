@@ -35,7 +35,7 @@ export function AdminLoginForm({ next }: { next: string }) {
             required
             autoFocus
             defaultValue={state.email}
-            placeholder="you@driveloop.sa"
+            placeholder="you@karsouq.com"
             aria-invalid={invalid || undefined}
             aria-describedby={invalid ? "login-error" : undefined}
             className={inputClass}

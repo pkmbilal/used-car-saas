@@ -18,7 +18,7 @@ export async function generateMetadata({ params }: PageProps<"/locations/[city]"
   const city = cityFromSlug((await params).city);
   if (!city) return { title: "City not found" };
   return {
-    title: `Used cars for sale in ${city} | DriveLoop`,
+    title: `Used cars for sale in ${city} | KarSouq`,
     description: `Browse used cars for sale in ${city} from private sellers and dealers, and contact them directly.`,
   };
 }

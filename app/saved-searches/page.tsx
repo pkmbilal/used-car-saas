@@ -5,7 +5,7 @@ import { describeFilters, getSavedSearches, MAX_SAVED_SEARCHES } from "@/lib/sav
 import { deleteSavedSearchAction, openSavedSearchAction } from "./actions";
 
 export const metadata: Metadata = {
-  title: "Saved searches | DriveLoop",
+  title: "Saved searches | KarSouq",
 };
 
 export default async function SavedSearchesPage() {

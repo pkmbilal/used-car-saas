@@ -34,7 +34,7 @@ export default async function AdminOverviewPage({ searchParams }: PageProps<"/ad
             <span className="text-zinc-900 dark:text-zinc-100">Overview</span>
           </p>
           <h1 className="mt-1 text-2xl font-bold tracking-tight">Marketplace overview</h1>
-          <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">How DriveLoop is doing over the {rangeLabel}.</p>
+          <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">How KarSouq is doing over the {rangeLabel}.</p>
         </div>
         <div className="flex flex-wrap items-center gap-3 max-sm:w-full">
           <nav aria-label="Date range" className="flex rounded-md max-sm:w-full border border-zinc-300 bg-white p-0.5 dark:border-zinc-700 dark:bg-zinc-900">

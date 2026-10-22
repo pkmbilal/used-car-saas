@@ -4,7 +4,7 @@ import { requireAdmin } from "@/lib/auth";
 import { AdminShell, type AdminSection } from "./admin-shell";
 
 export const metadata: Metadata = {
-  title: "Admin | DriveLoop",
+  title: "Admin | KarSouq",
   robots: { index: false },
 };
 
@@ -21,7 +21,7 @@ export default async function AdminLayout({ children }: LayoutProps<"/admin">) {
       count: pending.reports,
       description: "Listings buyers have flagged. Remove the listing or dismiss the reports.",
     },
-    { href: "/admin/listings", label: "Listings", description: "Every listing on DriveLoop, in any status." },
+    { href: "/admin/listings", label: "Listings", description: "Every listing on KarSouq, in any status." },
     {
       href: "/admin/users",
       label: "Users",

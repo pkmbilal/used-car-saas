@@ -24,7 +24,7 @@ export async function generateMetadata({
   const storefront = getStorefront(seller.profile);
   const name = storefront?.name ?? seller.profile.full_name ?? "Seller";
   return {
-    title: `${name} | DriveLoop`,
+    title: `${name} | KarSouq`,
     description: storefront?.about?.slice(0, 160),
   };
 }
@@ -66,7 +66,7 @@ export default async function SellerPage({ params }: PageProps<"/sellers/[id]">)
               {profile.phone && (
                 <div className="mt-4 flex flex-wrap gap-3">
                   <Button asChild className="hover:bg-brand-dark hover:text-white">
-                    <a href={whatsappUrl(profile.phone, `Hi ${storefront.name}, I found you on DriveLoop.`)} target="_blank" rel="noopener noreferrer">
+                    <a href={whatsappUrl(profile.phone, `Hi ${storefront.name}, I found you on KarSouq.`)} target="_blank" rel="noopener noreferrer">
                       <MessageCircle className="size-4" />
                       WhatsApp dealer
                     </a>
