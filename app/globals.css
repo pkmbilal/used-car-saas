@@ -177,3 +177,94 @@
     --viz-surface: #18181b;
   }
 }
+
+/* Page loading animation (components/brand-loader.tsx). One 2.4s loop: the
+   car draws in, the green accents follow, it lunges forward with speed
+   streaks, then fades and starts over. The tagline lights one word per third. */
+.ks-loader {
+  --ks-loop: 2.4s;
+  --ks-word: #5c635e;
+  --ks-word-on: var(--color-brand);
+}
+
+@media (prefers-color-scheme: dark) {
+  .ks-loader:not(:where(.light, .light *)) {
+    --ks-word: #a1a1aa;
+    --ks-word-on: var(--color-lime);
+  }
+}
+
+.ks-loader-stop-a {
+  stop-color: var(--color-brand);
+}
+.ks-loader-stop-b {
+  stop-color: var(--color-lime);
+}
+
+.ks-loader-reveal {
+  transform-box: fill-box;
+  transform-origin: left center;
+  animation: ks-reveal var(--ks-loop) cubic-bezier(0.65, 0, 0.35, 1) infinite;
+}
+.ks-loader-reveal-late {
+  animation-name: ks-reveal-late;
+}
+.ks-loader-car {
+  animation: ks-drive var(--ks-loop) ease-in-out infinite;
+}
+.ks-loader-streaks line {
+  opacity: 0;
+  animation: ks-streak var(--ks-loop) ease-out infinite;
+}
+.ks-loader-road {
+  opacity: 0.25;
+  animation: ks-road 0.6s linear infinite;
+}
+.ks-loader-word {
+  color: var(--ks-word);
+  animation: ks-word var(--ks-loop) step-end infinite;
+}
+
+@keyframes ks-reveal {
+  0% { transform: scaleX(0); }
+  40%, 100% { transform: scaleX(1); }
+}
+@keyframes ks-reveal-late {
+  0%, 25% { transform: scaleX(0); }
+  50%, 100% { transform: scaleX(1); }
+}
+@keyframes ks-drive {
+  0%, 50% { transform: translateX(0); opacity: 1; }
+  60% { transform: translateX(14px); }
+  72% { transform: translateX(-4px); }
+  82% { transform: translateX(0); opacity: 1; }
+  100% { transform: translateX(0); opacity: 0; }
+}
+@keyframes ks-streak {
+  0%, 50% { opacity: 0; transform: translateX(20px); }
+  62% { opacity: 0.5; }
+  85%, 100% { opacity: 0; transform: translateX(-30px); }
+}
+@keyframes ks-road {
+  to { stroke-dashoffset: 50; }
+}
+@keyframes ks-word {
+  0% { color: var(--ks-word-on); }
+  33.33% { color: var(--ks-word); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ks-loader-reveal,
+  .ks-loader-car,
+  .ks-loader-streaks line,
+  .ks-loader-road,
+  .ks-loader-word {
+    animation: none;
+  }
+  .ks-loader svg {
+    animation: ks-pulse 1.6s ease-in-out infinite;
+  }
+}
+@keyframes ks-pulse {
+  50% { opacity: 0.55; }
+}
