@@ -92,14 +92,9 @@ export function MobileNav({ links, signedIn }: { links: HeaderLink[]; signedIn: 
               </Button>
             </SignOutForm>
           ) : (
-            <>
-              <Button asChild variant="outline" className={outlineButton}>
-                <Link href="/login">Sign in</Link>
-              </Button>
-              <Button asChild className={limeButton}>
-                <Link href="/signup">Sign up</Link>
-              </Button>
-            </>
+            <Button asChild className={`${limeButton} flex-1`}>
+              <Link href="/login">Sign in</Link>
+            </Button>
           )}
         </div>
       </SheetContent>

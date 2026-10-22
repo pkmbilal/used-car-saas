@@ -1,8 +1,9 @@
 import Link from "next/link";
+import { Car } from "lucide-react";
 import { BrandLink } from "@/components/brand";
 import { MobileNav, UserMenu, type HeaderLink } from "@/components/header-menus";
 import { HeaderShell } from "@/components/header-shell";
-import { limeButton, outlineButton } from "@/components/header-styles";
+import { outlineButton, sellButton } from "@/components/header-styles";
 import { MobileTabBar } from "@/components/mobile-tab-bar";
 import { NavLink } from "@/components/nav-link";
 import { Button } from "@/components/ui/button";
@@ -18,10 +19,9 @@ export async function SiteHeader() {
     { href: "/dealers", label: "Dealers" },
     { href: "/locations", label: "Locations" },
     { href: "/pricing", label: "Pricing" },
-    isSeller
-      ? { href: "/dashboard", label: "My Listings" }
-      : { href: "/account/become-seller", label: "Sell Your Car" },
+    ...(isSeller ? [{ href: "/dashboard", label: "My Listings" }] : []),
   ];
+  const sellHref = isSeller ? "/dashboard/listings/new" : "/account/become-seller";
   const accountLinks: HeaderLink[] = current
     ? [
         { href: "/favorites", label: "Saved cars" },
@@ -51,15 +51,16 @@ export async function SiteHeader() {
             {current ? (
               <UserMenu name={current.profile.full_name || current.user.email || "Account"} links={accountLinks} />
             ) : (
-              <>
-                <Button asChild variant="outline" className={outlineButton}>
-                  <Link href="/login">Sign in</Link>
-                </Button>
-                <Button asChild className={limeButton}>
-                  <Link href="/signup">Sign up</Link>
-                </Button>
-              </>
+              <Button asChild variant="outline" className={outlineButton}>
+                <Link href="/login">Sign in</Link>
+              </Button>
             )}
+            <Button asChild className={sellButton}>
+              <Link href={sellHref}>
+                <Car className="size-4" />
+                Sell your car
+              </Link>
+            </Button>
           </div>
           <div className="ml-auto md:hidden">
             <MobileNav links={menuLinks} signedIn={!!current} />
