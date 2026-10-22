@@ -29,7 +29,7 @@ function topKeys(counts: Map<string, number>, fallback: readonly string[], n: nu
   return keys.slice(0, n);
 }
 
-const sectionClass = "mx-auto mt-20 w-full max-w-6xl px-4 sm:px-6 md:mt-28";
+const sectionClass = "mx-auto mt-14 w-full max-w-6xl px-4 sm:px-6 md:mt-20";
 
 export default async function Home() {
   const [featured, latest, facets, favoriteIds, byCity] = await Promise.all([
@@ -38,14 +38,13 @@ export default async function Home() {
     getActiveFacetCounts(),
     getViewerFavoriteIds(),
     // Runs while the queries above are in flight.
-    getActiveFacetCounts().then((counts) => getLatestByCities(topKeys(counts.cities, CITIES, 6), 3)),
+    getActiveFacetCounts().then((counts) => getLatestByCities(topKeys(counts.cities, CITIES, 6), 4)),
   ]);
 
   const showcase = featured.length > 0 ? featured : latest;
   const heroImage = showcase.find((listing) => listing.images[0])?.images[0];
   const makes = topKeys(facets.makes, DEFAULT_MAKES.filter(isMake), 8);
   const cityNames = topKeys(facets.cities, CITIES, 6);
-  const brandCount = [...facets.makes.keys()].filter((make) => make !== "Other").length;
 
   return (
     <main className="light bg-canvas text-ink">
@@ -94,16 +93,6 @@ export default async function Home() {
 
       <div className="relative mx-auto -mt-20 w-full max-w-6xl px-4 sm:px-6">
         <SearchBar variant="hero" total={facets.total} />
-        {facets.total > 0 && (
-          <Stats
-            items={[
-              [facets.total, facets.total === 1 ? "Car Available" : "Cars Available"],
-              [facets.cities.size, facets.cities.size === 1 ? "City" : "Cities"],
-              [brandCount, brandCount === 1 ? "Brand" : "Brands"],
-              ["Direct", "Seller Contact"],
-            ]}
-          />
-        )}
       </div>
 
       {/* Popular brands */}
@@ -133,7 +122,7 @@ export default async function Home() {
       </section>
 
       {/* Featured */}
-      <section className="mt-20 bg-white py-16 md:mt-28 md:py-24">
+      <section className="mt-14 bg-white py-12 md:mt-20 md:py-16">
         <div className="mx-auto w-full max-w-6xl px-4 sm:px-6">
           <SectionHeading
             eyebrow={featured.length > 0 ? "FEATURED CARS" : "JUST LISTED"}
@@ -156,7 +145,6 @@ export default async function Home() {
               listings: (
                 <ListingGrid
                   listings={byCity[name] ?? []}
-                  columns={3}
                   empty={`No cars listed in ${name} yet.`}
                   favoriteIds={favoriteIds}
                 />
@@ -200,7 +188,7 @@ export default async function Home() {
       </section>
 
       {/* Sell CTA */}
-      <section className={`${sectionClass} mb-20 md:mb-28`}>
+      <section className={`${sectionClass} mb-14 md:mb-20`}>
         <div className="relative isolate overflow-hidden rounded-2xl bg-forest-dark px-8 py-14 text-white md:px-14 md:py-20">
           {heroImage && (
             <Image src={heroImage.url} alt="" fill sizes="(min-width: 72rem) 72rem, 100vw" className="-z-20 object-cover opacity-30" />
@@ -249,21 +237,6 @@ function TrustBand({ items }: { items: [LucideIcon, string, string][] }) {
         </li>
       ))}
     </ul>
-  );
-}
-
-function Stats({ items }: { items: [number | string, string][] }) {
-  return (
-    <dl className="mt-10 grid grid-cols-2 gap-y-8 md:grid-cols-4">
-      {items.map(([value, label]) => (
-        <div key={label} className="flex flex-col items-center text-center md:border-l md:border-line md:first:border-l-0">
-          <dt className="order-2 mt-1.5 text-eyebrow font-semibold tracking-[0.25em] text-muted-foreground uppercase">
-            {label}
-          </dt>
-          <dd className="font-display text-4xl font-semibold tracking-tight text-brand md:text-5xl">{value}</dd>
-        </div>
-      ))}
-    </dl>
   );
 }
 
