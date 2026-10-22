@@ -119,7 +119,15 @@ export default async function ListingPage({ params }: PageProps<"/listings/[id]"
       <section className="relative overflow-hidden bg-charcoal text-white">
         {cover && (
           <div className="absolute inset-y-0 right-0 hidden w-[62%] [mask-image:linear-gradient(90deg,transparent,#000_30%)] md:block">
-            <Image src={cover.url} alt="" fill sizes="62vw" className="object-cover" />
+            <Image
+              src={cover.url}
+              alt=""
+              fill
+              loading="eager"
+              fetchPriority="high"
+              sizes="62vw"
+              className="object-cover"
+            />
           </div>
         )}
         <div className="absolute inset-0 bg-[linear-gradient(90deg,#1b2125_0%,#1b2125_36%,rgba(27,33,37,.55)_48%,rgba(27,33,37,0)_62%)]" />

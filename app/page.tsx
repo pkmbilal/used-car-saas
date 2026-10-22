@@ -55,7 +55,7 @@ export default async function Home() {
       <section className="relative isolate overflow-hidden bg-forest-dark">
         <div className="absolute inset-0 -z-20 bg-[radial-gradient(ellipse_at_top_right,rgba(31,125,60,.28),transparent_60%)]" />
         {heroImage && (
-          <Image src={heroImage.url} alt="" fill priority sizes="100vw" className="-z-20 object-cover" />
+          <Image src={heroImage.url} alt="" fill preload sizes="100vw" className="-z-20 object-cover" />
         )}
         <div className="absolute inset-0 -z-10 bg-forest-dark/75 md:hidden" />
         <div className="absolute inset-0 -z-10 hidden bg-[linear-gradient(90deg,rgba(15,34,25,.97)_0%,rgba(15,34,25,.88)_35%,rgba(15,34,25,.4)_68%,rgba(15,34,25,.15)_100%)] md:block" />

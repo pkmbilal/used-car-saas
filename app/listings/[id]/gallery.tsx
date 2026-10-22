@@ -42,7 +42,7 @@ export function Gallery({ title, photos, featured = false }: Props) {
           src={current.url}
           alt={`${title}, photo ${index + 1} of ${count}`}
           fill
-          priority
+          preload
           sizes="(min-width: 1024px) 700px, 100vw"
           className="object-cover"
         />
