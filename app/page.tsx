@@ -30,7 +30,7 @@ import {
   parseListingFilters,
 } from "@/lib/listings";
 import { isMake } from "@/lib/makes";
-import { BrandLogo } from "./brand-logo";
+import { BrandCard } from "./brand-card";
 import { CityBrowser } from "./city-browser";
 
 // Shown when too few makes have listings to fill the row.
@@ -122,29 +122,12 @@ export default async function Home() {
         <SectionHeading
           eyebrow="QUICK BROWSE"
           title="Popular Brands"
-          link={{ href: "/listings", label: "All Cars" }}
+          link={{ href: "/brands", label: "All Brands" }}
         />
         <div className="mt-6 grid grid-cols-2 gap-3.5 sm:grid-cols-4 lg:grid-cols-8">
-          {makes.map((make) => {
-            const count = facets.makes.get(make) ?? 0;
-            return (
-              <Link
-                key={make}
-                href={`/listings?make=${encodeURIComponent(make)}`}
-                className="flex flex-col items-center gap-3 rounded-lg border border-line bg-white px-2.5 pt-5 pb-3.5 text-ink transition hover:-translate-y-0.5 hover:border-lime hover:text-ink hover:shadow-[0_8px_20px_rgba(20,30,25,.08)]"
-              >
-                <span className="flex h-12 items-center">
-                  <BrandLogo make={make} />
-                </span>
-                <span className="text-center">
-                  <span className="block text-xs font-semibold">{make}</span>
-                  <span className="mt-0.5 block text-eyebrow text-muted-foreground">
-                    {count} {count === 1 ? "car" : "cars"}
-                  </span>
-                </span>
-              </Link>
-            );
-          })}
+          {makes.map((make) => (
+            <BrandCard key={make} make={make} count={facets.makes.get(make) ?? 0} />
+          ))}
         </div>
         <div className="mt-5 flex flex-wrap items-center gap-2.5">
           <span className="mr-1.5 text-caption font-semibold text-ink/70">Fuel Type</span>
