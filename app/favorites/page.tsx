@@ -5,7 +5,7 @@ import { requireUser } from "@/lib/auth";
 import { getFavoriteListings } from "@/lib/favorites";
 
 export const metadata: Metadata = {
-  title: "Saved cars | DriveLoop",
+  title: "Saved cars | KarSouq",
 };
 
 export default async function FavoritesPage() {

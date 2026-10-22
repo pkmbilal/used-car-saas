@@ -41,7 +41,7 @@ export async function GET(request: Request) {
   return new Response(csv, {
     headers: {
       "Content-Type": "text/csv; charset=utf-8",
-      "Content-Disposition": `attachment; filename="driveloop-listings-${days}d-${today}.csv"`,
+      "Content-Disposition": `attachment; filename="karsouq-listings-${days}d-${today}.csv"`,
       "Cache-Control": "no-store",
     },
   });

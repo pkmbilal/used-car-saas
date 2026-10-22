@@ -8,8 +8,8 @@ import { PlanCard, type PlanCta } from "./plan-card";
 import { UsageBanner } from "./usage-banner";
 
 export const metadata: Metadata = {
-  title: "Pricing | DriveLoop",
-  description: "Plans for private sellers and car dealers on DriveLoop.",
+  title: "Pricing | KarSouq",
+  description: "Plans for private sellers and car dealers on KarSouq.",
 };
 
 function signupHref(next: string): string {
@@ -57,7 +57,7 @@ export default async function PricingPage() {
       ])
     : [null, null];
   const applicationPending = latest?.status === "pending";
-  const salesUrl = salesWhatsappUrl("Hi, I have a question about DriveLoop plans.");
+  const salesUrl = salesWhatsappUrl("Hi, I have a question about KarSouq plans.");
 
   return (
     <main className="light bg-canvas text-ink">

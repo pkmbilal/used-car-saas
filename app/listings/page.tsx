@@ -30,7 +30,7 @@ import { RememberSearch } from "./remember-search";
 import { SortSelect } from "./sort-select";
 
 export const metadata: Metadata = {
-  title: "Browse used cars | DriveLoop",
+  title: "Browse used cars | KarSouq",
 };
 
 const numberFormatter = new Intl.NumberFormat("en-US");

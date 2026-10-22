@@ -226,7 +226,7 @@ async function ExpiringPlans() {
                       <a
                         href={whatsappUrl(
                           profile.phone,
-                          `Hi, your DriveLoop ${PLAN_LABELS[profile.plan]} plan ends on ${endsOn}.`,
+                          `Hi, your KarSouq ${PLAN_LABELS[profile.plan]} plan ends on ${endsOn}.`,
                         )}
                         target="_blank"
                         rel="noreferrer"

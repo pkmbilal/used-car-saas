@@ -56,7 +56,7 @@ export function SiteFooter() {
       </div>
       <div className="border-t border-white/10">
         <div className="mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-5 text-caption text-white/55 sm:px-6">
-          <p>© {new Date().getFullYear()} DriveLoop. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} KarSouq. All rights reserved.</p>
           <nav className="flex gap-4">
             <Link href="/privacy" className="hover:text-lime">
               Privacy Policy

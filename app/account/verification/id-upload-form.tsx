@@ -101,7 +101,7 @@ export function IdUploadForm() {
           className="mt-0.5"
         />
         <span>
-          I consent to DriveLoop storing these documents privately and reviewing them to verify my identity, as
+          I consent to KarSouq storing these documents privately and reviewing them to verify my identity, as
           described in the{" "}
           <Link href="/privacy" className="font-medium underline">
             Privacy Policy

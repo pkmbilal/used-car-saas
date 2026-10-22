@@ -18,10 +18,10 @@ export default function GlobalError({
   return (
     <html lang="en">
       <body className="light flex min-h-screen flex-col items-center justify-center bg-canvas px-4 text-center font-sans text-ink">
-        <title>Something went wrong | DriveLoop</title>
+        <title>Something went wrong | KarSouq</title>
         <h1 className="text-2xl font-semibold tracking-tight">Something went wrong</h1>
         <p className="mt-2 max-w-sm text-sm text-muted-foreground">
-          DriveLoop is having trouble right now. Try again in a moment.
+          KarSouq is having trouble right now. Try again in a moment.
         </p>
         {error.digest && <p className="mt-2 text-caption text-muted-foreground">Reference: {error.digest}</p>}
         <button

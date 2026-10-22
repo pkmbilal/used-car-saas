@@ -2,12 +2,12 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { ArrowLeft, ShieldCheck } from "lucide-react";
-import { LogoMark } from "@/components/brand";
+import { Logo } from "@/components/brand";
 import { getCurrentUser, safeNext } from "@/lib/auth";
 import { AdminLoginForm } from "./admin-login-form";
 
 export const metadata: Metadata = {
-  title: "Admin sign in | DriveLoop",
+  title: "Admin sign in | KarSouq",
   robots: { index: false },
 };
 
@@ -33,7 +33,7 @@ export default async function AdminLoginPage({ searchParams }: PageProps<"/admin
               Sign in to admin
             </h1>
             <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-              Use your DriveLoop admin account.
+              Use your KarSouq admin account.
             </p>
             {current && (
               <p className="mt-4 rounded-lg bg-amber-50 px-3 py-2 text-caption text-amber-800 dark:bg-amber-950/40 dark:text-amber-300">
@@ -50,7 +50,7 @@ export default async function AdminLoginPage({ searchParams }: PageProps<"/admin
             className="mt-6 inline-flex items-center gap-1.5 text-sm font-medium text-zinc-600 hover:text-ink dark:text-zinc-400 dark:hover:text-zinc-100"
           >
             <ArrowLeft className="size-4" aria-hidden />
-            Back to DriveLoop
+            Back to KarSouq
           </Link>
         </div>
       </main>
@@ -60,12 +60,9 @@ export default async function AdminLoginPage({ searchParams }: PageProps<"/admin
 
 function Wordmark() {
   return (
-    <div className="flex items-center gap-3">
-      <LogoMark width={64} />
-      <div className="leading-none">
-        <p className="text-lg font-semibold">DriveLoop</p>
-        <p className="mt-1.5 text-eyebrow font-semibold tracking-[0.16em] text-lime">ADMIN CONSOLE</p>
-      </div>
+    <div className="flex items-center gap-4">
+      <Logo className="h-10 w-auto lg:h-12" />
+      <p className="border-l border-white/20 pl-4 text-eyebrow font-semibold tracking-[0.16em] text-lime">ADMIN CONSOLE</p>
     </div>
   );
 }

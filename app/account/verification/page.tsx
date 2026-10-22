@@ -7,7 +7,7 @@ import { getLatestIdVerificationRequest } from "@/lib/verification";
 import { IdUploadForm } from "./id-upload-form";
 
 export const metadata: Metadata = {
-  title: "Verification | DriveLoop",
+  title: "Verification | KarSouq",
 };
 
 const noticeClass = "rounded-md px-4 py-3 text-sm";
