@@ -1,5 +1,6 @@
-// Page loading state: the car from the KarSouq logo draws itself in, drives
-// off, and the "Buy • Sell • Drive" tagline lights up word by word. The car is
+// Full-screen page loading state, drawn over the header, footer and tab bar:
+// the car from the KarSouq logo draws itself in, drives off, and the
+// "Buy • Sell • Drive" tagline lights up word by word. The car is
 // traced from public/logo.png (800×288), so it lines up with the real logo.
 // Keyframes live in app/globals.css under `.ks-loader`.
 
@@ -37,7 +38,7 @@ export function BrandLoader({ label = "Loading", className = "" }: { label?: str
     <div
       role="status"
       aria-live="polite"
-      className={`ks-loader flex min-h-[60vh] flex-1 flex-col items-center justify-center gap-5 px-4 py-16 ${className}`}
+      className={`ks-loader pt-safe pb-safe fixed inset-0 z-[100] flex flex-col items-center justify-center gap-5 bg-canvas px-4 dark:bg-[#0a0a0a] ${className}`}
     >
       <svg
         viewBox="0 -10 720 165"

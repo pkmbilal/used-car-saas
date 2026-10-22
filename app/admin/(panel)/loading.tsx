@@ -1,6 +1,6 @@
 import { BrandLoader } from "@/components/brand-loader";
 
-// Inside the admin shell, so the sidebar stays put while a page loads.
+// Without this, navigating between admin pages blocks with no loader.
 export default function Loading() {
   return <BrandLoader />;
 }
