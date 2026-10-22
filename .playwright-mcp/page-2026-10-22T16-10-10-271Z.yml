@@ -1,0 +1,346 @@
+- generic [active] [ref=f2e1]:
+  - banner [ref=f2e2]:
+    - navigation [ref=f2e3]:
+      - link [ref=f2e4] [cursor=pointer]:
+        - /url: /
+        - img "KarSouq" [ref=f2e5]
+      - button "Menu" [ref=f2e7] [cursor=pointer]
+  - navigation "Main" [ref=f2e8]:
+    - list [ref=f2e9]:
+      - listitem [ref=f2e10]:
+        - link "Home" [ref=f2e11] [cursor=pointer]:
+          - /url: /
+      - listitem [ref=f2e15]:
+        - link "Buy" [ref=f2e16] [cursor=pointer]:
+          - /url: /listings
+      - listitem [ref=f2e20]:
+        - link [ref=f2e21] [cursor=pointer]:
+          - /url: /account/become-seller
+      - listitem [ref=f2e24]:
+        - link "Saved" [ref=f2e25] [cursor=pointer]:
+          - /url: /favorites
+      - listitem [ref=f2e28]:
+        - link "Sign in" [ref=f2e29] [cursor=pointer]:
+          - /url: /login
+  - main [ref=f2e34]:
+    - generic [ref=f2e39]:
+      - paragraph [ref=f2e40]: USED CARS IN SAUDI ARABIA
+      - heading "Find your next ride with confidence" [level=1] [ref=f2e42]
+      - paragraph [ref=f2e43]: Browse used cars from private sellers and dealers across the Kingdom, and talk to them directly.
+      - generic [ref=f2e44]:
+        - link "Browse Cars" [ref=f2e45] [cursor=pointer]:
+          - /url: /listings
+        - link "Sell Your Car" [ref=f2e46] [cursor=pointer]:
+          - /url: /account/become-seller
+      - list [ref=f2e47]:
+        - listitem [ref=f2e49]:
+          - generic [ref=f2e54]: Verified Sellers
+        - listitem [ref=f2e56]:
+          - generic [ref=f2e60]: Direct on WhatsApp
+    - generic [ref=f2e63]:
+      - generic [ref=f2e64]:
+        - generic [ref=f2e65]: FIND YOUR CAR
+        - generic [ref=f2e67]: 17 cars live
+      - generic [ref=f2e68]:
+        - generic [ref=f2e69]:
+          - generic [ref=f2e70]: Make
+          - combobox "Make" [ref=f2e74] [cursor=pointer]
+          - combobox [aria-hidden] [ref=f2e75]
+        - generic [ref=f2e76]:
+          - generic [ref=f2e77]: Model
+          - combobox "Model" [disabled] [ref=f2e82]:
+            - generic: Choose a make first
+          - combobox [disabled] [aria-hidden] [ref=f2e83]
+        - generic [ref=f2e84]:
+          - generic [ref=f2e85]: Max Price
+          - combobox "Max Price" [ref=f2e89] [cursor=pointer]
+          - combobox [aria-hidden] [ref=f2e90]
+        - generic [ref=f2e91]:
+          - generic [ref=f2e92]: Year
+          - combobox "Year" [ref=f2e95] [cursor=pointer]
+          - combobox [aria-hidden] [ref=f2e96]
+        - generic [ref=f2e97]:
+          - generic [ref=f2e98]: Location
+          - combobox "Location" [ref=f2e102] [cursor=pointer]
+          - combobox [aria-hidden] [ref=f2e103]
+        - button "Search Cars" [ref=f2e105] [cursor=pointer]
+    - generic [ref=f2e106]:
+      - generic [ref=f2e107]:
+        - generic [ref=f2e108]:
+          - paragraph [ref=f2e109]: QUICK BROWSE
+          - heading "Popular Brands" [level=2] [ref=f2e111]
+        - link "All Brands" [ref=f2e112] [cursor=pointer]:
+          - /url: /brands
+          - generic [ref=f2e113]: See all
+      - generic [ref=f2e116]:
+        - link "Toyota 4 cars" [ref=f2e117] [cursor=pointer]:
+          - /url: /listings?make=Toyota
+          - generic [ref=f2e119]:
+            - generic [ref=f2e120]: Toyota
+            - generic [ref=f2e121]: 4 cars
+        - link "Hyundai 2 cars" [ref=f2e122] [cursor=pointer]:
+          - /url: /listings?make=Hyundai
+          - generic [ref=f2e124]:
+            - generic [ref=f2e125]: Hyundai
+            - generic [ref=f2e126]: 2 cars
+        - link "Nissan 2 cars" [ref=f2e127] [cursor=pointer]:
+          - /url: /listings?make=Nissan
+          - generic [ref=f2e129]:
+            - generic [ref=f2e130]: Nissan
+            - generic [ref=f2e131]: 2 cars
+        - link "Kia 1 car" [ref=f2e132] [cursor=pointer]:
+          - /url: /listings?make=Kia
+          - generic [ref=f2e134]:
+            - generic [ref=f2e135]: Kia
+            - generic [ref=f2e136]: 1 car
+        - link "GMC 1 car" [ref=f2e137] [cursor=pointer]:
+          - /url: /listings?make=GMC
+          - generic [ref=f2e139]:
+            - generic [ref=f2e140]: GMC
+            - generic [ref=f2e141]: 1 car
+        - link "Chevrolet 1 car" [ref=f2e142] [cursor=pointer]:
+          - /url: /listings?make=Chevrolet
+          - generic [ref=f2e144]:
+            - generic [ref=f2e145]: Chevrolet
+            - generic [ref=f2e146]: 1 car
+        - link "Ford 1 car" [ref=f2e147] [cursor=pointer]:
+          - /url: /listings?make=Ford
+          - generic [ref=f2e149]:
+            - generic [ref=f2e150]: Ford
+            - generic [ref=f2e151]: 1 car
+        - link "Lexus 1 car" [ref=f2e152] [cursor=pointer]:
+          - /url: /listings?make=Lexus
+          - generic [ref=f2e154]:
+            - generic [ref=f2e155]: Lexus
+            - generic [ref=f2e156]: 1 car
+      - generic [ref=f2e157]:
+        - generic [ref=f2e158]: FUEL TYPE
+        - link "Petrol 14" [ref=f2e159] [cursor=pointer]:
+          - /url: /listings?fuel_type=petrol
+          - text: Petrol
+          - generic [ref=f2e160]: "14"
+        - link "Diesel 1" [ref=f2e161] [cursor=pointer]:
+          - /url: /listings?fuel_type=diesel
+          - text: Diesel
+          - generic [ref=f2e162]: "1"
+        - link "Hybrid 1" [ref=f2e163] [cursor=pointer]:
+          - /url: /listings?fuel_type=hybrid
+          - text: Hybrid
+          - generic [ref=f2e164]: "1"
+        - link "Electric 1" [ref=f2e165] [cursor=pointer]:
+          - /url: /listings?fuel_type=electric
+          - text: Electric
+          - generic [ref=f2e166]: "1"
+    - generic [ref=f2e168]:
+      - generic [ref=f2e169]:
+        - generic [ref=f2e170]:
+          - paragraph [ref=f2e171]: FEATURED CARS
+          - heading "Handpicked for You" [level=2] [ref=f2e173]
+        - link "View All Cars" [ref=f2e174] [cursor=pointer]:
+          - /url: /listings
+          - generic [ref=f2e175]: See all
+      - list [ref=f2e179]:
+        - listitem [ref=f2e180]:
+          - generic [ref=f2e181]:
+            - link "2022 Toyota Land Cruiser Featured Toyota Land Cruiser 2022 45,000 km Automatic SAR 335,000 SUV Petrol Jubail" [ref=f2e183] [cursor=pointer]:
+              - /url: /listings/ea953000-8b7b-45d1-b13e-31ea447dca45
+              - generic [ref=f2e184]:
+                - img "2022 Toyota Land Cruiser" [ref=f2e185]
+                - generic [ref=f2e186]: Featured
+              - generic [ref=f2e187]:
+                - paragraph [ref=f2e188]: Toyota Land Cruiser
+                - paragraph [ref=f2e189]:
+                  - generic [ref=f2e190]: "2022"
+                  - generic [aria-hidden] [ref=f2e191]: ·
+                  - generic [ref=f2e192]: 45,000 km
+                  - generic [aria-hidden] [ref=f2e193]: ·
+                  - generic [ref=f2e194]: Automatic
+                - paragraph [ref=f2e195]:
+                  - generic [ref=f2e196]:
+                    - generic [ref=f2e198]: SAR
+                    - text: 335,000
+                - generic [ref=f2e199]:
+                  - generic [ref=f2e200]: SUV
+                  - generic [ref=f2e205]: Petrol
+                  - generic [ref=f2e209]: Jubail
+            - button "Save this car" [ref=f2e216] [cursor=pointer]
+    - generic [ref=f2e217]:
+      - generic [ref=f2e218]:
+        - generic [ref=f2e219]:
+          - paragraph [ref=f2e220]: BROWSE BY LOCATION
+          - heading "Cars Near You" [level=2] [ref=f2e222]
+        - link "View All in Dammam" [ref=f2e223] [cursor=pointer]:
+          - /url: /locations/dammam
+          - generic [ref=f2e224]: See all
+      - tablist "Cities" [ref=f2e227]:
+        - tab "Dammam 6" [selected] [ref=f2e228] [cursor=pointer]:
+          - text: Dammam
+          - generic [ref=f2e229]: "6"
+        - tab "Jubail 5" [ref=f2e230] [cursor=pointer]:
+          - text: Jubail
+          - generic [ref=f2e231]: "5"
+        - tab "Khobar 4" [ref=f2e232] [cursor=pointer]:
+          - text: Khobar
+          - generic [ref=f2e233]: "4"
+        - tab "Al Ahsa 1" [ref=f2e234] [cursor=pointer]:
+          - text: Al Ahsa
+          - generic [ref=f2e235]: "1"
+        - tab "Dhahran 1" [ref=f2e236] [cursor=pointer]:
+          - text: Dhahran
+          - generic [ref=f2e237]: "1"
+        - tab "Riyadh 0" [ref=f2e238] [cursor=pointer]:
+          - text: Riyadh
+          - generic [ref=f2e239]: "0"
+      - tabpanel "Dammam 6" [ref=f2e240]:
+        - list [ref=f2e241]:
+          - listitem [ref=f2e242]:
+            - generic [ref=f2e243]:
+              - link "2019 Toyota Camry Toyota Camry 2019 142,000 km Automatic SAR 58,000 Sedan Petrol Dammam" [ref=f2e245] [cursor=pointer]:
+                - /url: /listings/49b92fab-c94a-4de1-947f-308845acd0c8
+                - img "2019 Toyota Camry" [ref=f2e247]
+                - generic [ref=f2e248]:
+                  - paragraph [ref=f2e249]: Toyota Camry
+                  - paragraph [ref=f2e250]:
+                    - generic [ref=f2e251]: "2019"
+                    - generic [aria-hidden] [ref=f2e252]: ·
+                    - generic [ref=f2e253]: 142,000 km
+                    - generic [aria-hidden] [ref=f2e254]: ·
+                    - generic [ref=f2e255]: Automatic
+                  - paragraph [ref=f2e256]:
+                    - generic [ref=f2e257]:
+                      - generic [ref=f2e259]: SAR
+                      - text: 58,000
+                  - generic [ref=f2e260]:
+                    - generic [ref=f2e261]: Sedan
+                    - generic [ref=f2e266]: Petrol
+                    - generic [ref=f2e270]: Dammam
+              - button "Save this car" [ref=f2e277] [cursor=pointer]
+          - listitem [ref=f2e278]:
+            - generic [ref=f2e279]:
+              - link "2017 Nissan Sunny Nissan Sunny 2017 186,000 km Automatic SAR 24,000 Sedan Petrol Dammam" [ref=f2e281] [cursor=pointer]:
+                - /url: /listings/f1fcc5b2-ce56-4df7-a699-410c2d3c07ed
+                - img "2017 Nissan Sunny" [ref=f2e283]
+                - generic [ref=f2e284]:
+                  - paragraph [ref=f2e285]: Nissan Sunny
+                  - paragraph [ref=f2e286]:
+                    - generic [ref=f2e287]: "2017"
+                    - generic [aria-hidden] [ref=f2e288]: ·
+                    - generic [ref=f2e289]: 186,000 km
+                    - generic [aria-hidden] [ref=f2e290]: ·
+                    - generic [ref=f2e291]: Automatic
+                  - paragraph [ref=f2e292]:
+                    - generic [ref=f2e293]:
+                      - generic [ref=f2e295]: SAR
+                      - text: 24,000
+                  - generic [ref=f2e296]:
+                    - generic [ref=f2e297]: Sedan
+                    - generic [ref=f2e302]: Petrol
+                    - generic [ref=f2e306]: Dammam
+              - button "Save this car" [ref=f2e313] [cursor=pointer]
+          - listitem [ref=f2e314]:
+            - generic [ref=f2e315]:
+              - link "2020 GMC Yukon GMC Yukon 2020 98,000 km Automatic SAR 189,000 SUV Petrol Dammam" [ref=f2e317] [cursor=pointer]:
+                - /url: /listings/0c502bfb-2b07-4884-9a3d-d72b599bc586
+                - img "2020 GMC Yukon" [ref=f2e319]
+                - generic [ref=f2e320]:
+                  - paragraph [ref=f2e321]: GMC Yukon
+                  - paragraph [ref=f2e322]:
+                    - generic [ref=f2e323]: "2020"
+                    - generic [aria-hidden] [ref=f2e324]: ·
+                    - generic [ref=f2e325]: 98,000 km
+                    - generic [aria-hidden] [ref=f2e326]: ·
+                    - generic [ref=f2e327]: Automatic
+                  - paragraph [ref=f2e328]:
+                    - generic [ref=f2e329]:
+                      - generic [ref=f2e331]: SAR
+                      - text: 189,000
+                  - generic [ref=f2e332]:
+                    - generic [ref=f2e333]: SUV
+                    - generic [ref=f2e338]: Petrol
+                    - generic [ref=f2e342]: Dammam
+              - button "Save this car" [ref=f2e349] [cursor=pointer]
+          - listitem [ref=f2e350]:
+            - generic [ref=f2e351]:
+              - link "2023 Lexus LX 600 Lexus LX 600 2023 18,000 km Automatic SAR 520,000 SUV Petrol Dammam" [ref=f2e353] [cursor=pointer]:
+                - /url: /listings/73ca6cd7-a3e7-44a7-b8a2-0a826b26da4d
+                - img "2023 Lexus LX 600" [ref=f2e355]
+                - generic [ref=f2e356]:
+                  - paragraph [ref=f2e357]: Lexus LX 600
+                  - paragraph [ref=f2e358]:
+                    - generic [ref=f2e359]: "2023"
+                    - generic [aria-hidden] [ref=f2e360]: ·
+                    - generic [ref=f2e361]: 18,000 km
+                    - generic [aria-hidden] [ref=f2e362]: ·
+                    - generic [ref=f2e363]: Automatic
+                  - paragraph [ref=f2e364]:
+                    - generic [ref=f2e365]:
+                      - generic [ref=f2e367]: SAR
+                      - text: 520,000
+                  - generic [ref=f2e368]:
+                    - generic [ref=f2e369]: SUV
+                    - generic [ref=f2e374]: Petrol
+                    - generic [ref=f2e378]: Dammam
+              - button "Save this car" [ref=f2e385] [cursor=pointer]
+    - generic [ref=f2e386]:
+      - generic [ref=f2e388]:
+        - paragraph [ref=f2e389]: HOW IT WORKS
+        - heading "Simple Steps, Either Way" [level=2] [ref=f2e391]
+      - generic [ref=f2e392]:
+        - generic [ref=f2e393]:
+          - paragraph [ref=f2e394]: FOR BUYERS
+          - paragraph [ref=f2e396]: Find, compare and buy a used car without the guesswork.
+          - list [ref=f2e397]:
+            - listitem [ref=f2e398]:
+              - generic [ref=f2e399]: "01"
+              - paragraph [ref=f2e400]: Search
+              - paragraph [ref=f2e401]: Filter listings by make, price, year, fuel type and city.
+            - listitem [ref=f2e402]:
+              - generic [ref=f2e403]: "02"
+              - paragraph [ref=f2e404]: Compare
+              - paragraph [ref=f2e405]: Save cars you like and compare their specs, mileage and price.
+            - listitem [ref=f2e406]:
+              - generic [ref=f2e407]: "03"
+              - paragraph [ref=f2e408]: Contact Seller
+              - paragraph [ref=f2e409]: Message the seller on WhatsApp or call them to arrange a viewing.
+            - listitem [ref=f2e410]:
+              - generic [ref=f2e411]: "04"
+              - paragraph [ref=f2e412]: Buy Your Car
+              - paragraph [ref=f2e413]: Inspect the car, agree on a price and drive away.
+          - generic [ref=f2e414]:
+            - generic [ref=f2e415]: 17 cars available now
+            - link "Browse Cars" [ref=f2e416] [cursor=pointer]:
+              - /url: /listings
+        - generic [ref=f2e417]:
+          - paragraph [ref=f2e418]: FOR SELLERS
+          - paragraph [ref=f2e420]: List your car in minutes and reach buyers across Saudi Arabia.
+          - list [ref=f2e421]:
+            - listitem [ref=f2e422]:
+              - generic [ref=f2e423]: "01"
+              - paragraph [ref=f2e424]: Create Listing
+              - paragraph [ref=f2e425]: Sign up as a seller and start a listing.
+            - listitem [ref=f2e426]:
+              - generic [ref=f2e427]: "02"
+              - paragraph [ref=f2e428]: Add Details
+              - paragraph [ref=f2e429]: Upload photos and add mileage, condition and your asking price.
+            - listitem [ref=f2e430]:
+              - generic [ref=f2e431]: "03"
+              - paragraph [ref=f2e432]: Get Buyer Leads
+              - paragraph [ref=f2e433]: Buyers contact you directly by WhatsApp or phone.
+            - listitem [ref=f2e434]:
+              - generic [ref=f2e435]: "04"
+              - paragraph [ref=f2e436]: Sell Your Car
+              - paragraph [ref=f2e437]: Agree on a price, hand over the keys and mark it as sold.
+          - generic [ref=f2e438]:
+            - generic [ref=f2e439]: Free plan available. Dealer plans for bigger inventories.
+            - link "Start Listing" [ref=f2e440] [cursor=pointer]:
+              - /url: /account/become-seller
+    - generic [ref=f2e444]:
+      - generic [ref=f2e445]:
+        - paragraph [ref=f2e446]: READY TO SELL?
+        - paragraph [ref=f2e448]: Turn your car into cash
+        - paragraph [ref=f2e449]: List your car in minutes and reach buyers in Dammam, Jubail, Khobar and beyond.
+      - link "Sell Your Car" [ref=f2e450] [cursor=pointer]:
+        - /url: /account/become-seller
+  - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=f2e456] [cursor=pointer]
+  - alert [ref=f2e460]

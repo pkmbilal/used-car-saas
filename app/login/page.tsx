@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import { AuthShell } from "@/components/auth-shell";
 import { getCurrentUser, safeNext } from "@/lib/auth";
 import { LoginForm } from "./login-form";
 
@@ -7,9 +8,12 @@ export default async function LoginPage({ searchParams }: PageProps<"/login">) {
   if (await getCurrentUser()) redirect(next);
 
   return (
-    <main className="mx-auto w-full max-w-sm px-4 py-16">
-      <h1 className="mb-6 text-2xl font-semibold tracking-tight">Sign in</h1>
+    <AuthShell
+      eyebrow="WELCOME BACK"
+      title="Sign in to KarSouq"
+      subtitle="Pick up where you left off with your saved cars and listings."
+    >
       <LoginForm next={next} />
-    </main>
+    </AuthShell>
   );
 }

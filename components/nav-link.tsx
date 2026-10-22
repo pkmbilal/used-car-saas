@@ -20,11 +20,13 @@ export function NavLink({
     <Link
       href={href}
       aria-current={active ? "page" : undefined}
-      className={`relative py-2 hover:text-lime ${active ? "text-lime" : ""}`}
+      className={`relative whitespace-nowrap rounded-full px-3 py-1.5 transition-colors lg:px-3.5 ${
+        active ? "bg-white/10 text-white ring-1 ring-white/10" : "text-white/70 hover:bg-white/[0.06] hover:text-white"
+      }`}
     >
       {children}
       {active && (
-        <span className="absolute inset-x-0.5 -bottom-1 h-0.5 rounded-full bg-lime max-md:hidden" />
+        <span aria-hidden className="absolute bottom-0.5 left-1/2 size-1 -translate-x-1/2 rounded-full bg-lime" />
       )}
     </Link>
   );

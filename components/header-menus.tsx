@@ -32,7 +32,7 @@ export function UserMenu({ name, links }: { name: string; links: HeaderLink[] })
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="h-9 max-w-48 gap-1.5 px-3 text-label text-white hover:bg-white/10 hover:text-white aria-expanded:bg-white/10 aria-expanded:text-white">
+        <Button variant="ghost" className="h-9 max-w-48 gap-1.5 rounded-full px-3 text-label text-white hover:bg-white/10 hover:text-white aria-expanded:bg-white/10 aria-expanded:text-white">
           <span className="truncate">{name}</span>
           <ChevronDown className="size-3.5" />
         </Button>
@@ -92,14 +92,9 @@ export function MobileNav({ links, signedIn }: { links: HeaderLink[]; signedIn: 
               </Button>
             </SignOutForm>
           ) : (
-            <>
-              <Button asChild variant="outline" className={outlineButton}>
-                <Link href="/login">Sign in</Link>
-              </Button>
-              <Button asChild className={limeButton}>
-                <Link href="/signup">Sign up</Link>
-              </Button>
-            </>
+            <Button asChild className={`${limeButton} flex-1`}>
+              <Link href="/login">Sign in</Link>
+            </Button>
           )}
         </div>
       </SheetContent>

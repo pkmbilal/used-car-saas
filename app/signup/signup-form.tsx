@@ -2,7 +2,15 @@
 
 import Link from "next/link";
 import { useActionState } from "react";
-import { CodeStep, Field, FormMessages, primaryButtonClass } from "@/components/auth-fields";
+import { Mail } from "lucide-react";
+import {
+  authLinkClass,
+  CodeStep,
+  Field,
+  FormMessages,
+  PasswordField,
+  SubmitButton,
+} from "@/components/auth-fields";
 import { MIN_PASSWORD_LENGTH } from "@/lib/auth-validation";
 import { signupAction, type SignupState } from "./actions";
 
@@ -13,7 +21,7 @@ export function SignupForm({ next }: { next: string }) {
   const loginHref = next === "/" ? "/login" : `/login?next=${encodeURIComponent(next)}`;
 
   return (
-    <form action={formAction} className="flex flex-col gap-3">
+    <form action={formAction} className="flex flex-col gap-4">
       <input type="hidden" name="next" value={next} />
 
       {state.step === "details" ? (
@@ -22,41 +30,42 @@ export function SignupForm({ next }: { next: string }) {
             id="email"
             label="Email"
             type="email"
+            icon={Mail}
             autoComplete="email"
+            placeholder="you@example.com"
             defaultValue={state.email}
           />
-          <Field
+          <PasswordField
             id="password"
             label="Password"
-            type="password"
             autoComplete="new-password"
             minLength={MIN_PASSWORD_LENGTH}
+            placeholder={`At least ${MIN_PASSWORD_LENGTH} characters`}
           />
-          <Field
+          <PasswordField
             id="confirm_password"
             label="Confirm password"
-            type="password"
             autoComplete="new-password"
             minLength={MIN_PASSWORD_LENGTH}
           />
           <FormMessages error={state.error} notice={state.notice} />
-          <button type="submit" name="intent" value="register" disabled={pending} className={primaryButtonClass}>
-            {pending ? "Creating account…" : "Create account"}
-          </button>
-          <p className="text-xs text-zinc-600 dark:text-zinc-400">
+          <SubmitButton intent="register" pending={pending} pendingLabel="Creating account…">
+            Create account
+          </SubmitButton>
+          <p className="text-center text-xs text-zinc-500">
             By creating an account you agree to our{" "}
-            <Link href="/terms" className="font-medium underline">
+            <Link href="/terms" className="font-medium text-ink underline underline-offset-2">
               Terms of Use
             </Link>{" "}
             and{" "}
-            <Link href="/privacy" className="font-medium underline">
+            <Link href="/privacy" className="font-medium text-ink underline underline-offset-2">
               Privacy Policy
             </Link>
             .
           </p>
-          <p className="text-sm text-zinc-600 dark:text-zinc-400">
+          <p className="mt-1 border-t border-line pt-5 text-center text-sm text-zinc-600">
             Already have an account?{" "}
-            <Link href={loginHref} className="font-medium underline">
+            <Link href={loginHref} className={authLinkClass}>
               Sign in
             </Link>
           </p>

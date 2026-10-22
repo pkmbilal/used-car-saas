@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { useActionState } from "react";
-import { CodeStep, Field, FormMessages, primaryButtonClass } from "@/components/auth-fields";
+import { ArrowLeft, Mail } from "lucide-react";
+import { CodeStep, Field, FormMessages, PasswordField, SubmitButton } from "@/components/auth-fields";
 import { MIN_PASSWORD_LENGTH } from "@/lib/auth-validation";
 import { resetAction, type ResetState } from "./actions";
 
@@ -12,27 +13,30 @@ export function ResetForm({ next }: { next: string }) {
   const [state, formAction, pending] = useActionState(resetAction, initialState);
 
   return (
-    <form action={formAction} className="flex flex-col gap-3">
+    <form action={formAction} className="flex flex-col gap-4">
       <input type="hidden" name="next" value={next} />
 
       {state.step === "email" && (
         <>
-          <p className="text-sm text-zinc-600 dark:text-zinc-400">
-            Enter your email and we&apos;ll send you a code to choose a new password.
-          </p>
           <Field
             id="email"
             label="Email"
             type="email"
+            icon={Mail}
             autoComplete="email"
+            placeholder="you@example.com"
             defaultValue={state.email}
           />
           <FormMessages error={state.error} notice={state.notice} />
-          <button type="submit" name="intent" value="request" disabled={pending} className={primaryButtonClass}>
-            {pending ? "Sending…" : "Send code"}
-          </button>
-          <Link href="/login" className="text-sm text-zinc-600 dark:text-zinc-400">
-            ← Back to sign in
+          <SubmitButton intent="request" pending={pending} pendingLabel="Sending…">
+            Send code
+          </SubmitButton>
+          <Link
+            href="/login"
+            className="mt-1 inline-flex items-center justify-center gap-1.5 text-sm font-medium text-zinc-600 hover:text-ink"
+          >
+            <ArrowLeft className="size-4" aria-hidden />
+            Back to sign in
           </Link>
         </>
       )}
@@ -47,31 +51,24 @@ export function ResetForm({ next }: { next: string }) {
       {state.step === "password" && (
         <>
           <input type="hidden" name="email" value={state.email} />
-          <Field
+          <PasswordField
             id="password"
             label="New password"
-            type="password"
             autoComplete="new-password"
             minLength={MIN_PASSWORD_LENGTH}
+            placeholder={`At least ${MIN_PASSWORD_LENGTH} characters`}
             autoFocus
           />
-          <Field
+          <PasswordField
             id="confirm_password"
             label="Confirm new password"
-            type="password"
             autoComplete="new-password"
             minLength={MIN_PASSWORD_LENGTH}
           />
           <FormMessages error={state.error} notice={state.notice} />
-          <button
-            type="submit"
-            name="intent"
-            value="set_password"
-            disabled={pending}
-            className={primaryButtonClass}
-          >
-            {pending ? "Saving…" : "Save password"}
-          </button>
+          <SubmitButton intent="set_password" pending={pending} pendingLabel="Saving…">
+            Save password
+          </SubmitButton>
         </>
       )}
     </form>
