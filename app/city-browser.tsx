@@ -48,7 +48,7 @@ export function CityBrowser({ cities }: { cities: City[] }) {
         role="tablist"
         aria-label="Cities"
         onKeyDown={onKeyDown}
-        className="-mx-4 mt-8 flex gap-7 overflow-x-auto border-b border-line px-4 [scrollbar-width:none] sm:mx-0 sm:px-0"
+        className="-mx-4 mt-6 flex gap-7 overflow-x-auto border-b border-line px-4 [scrollbar-width:none] sm:mx-0 sm:mt-8 sm:px-0"
       >
         {cities.map((city, i) => {
           const active = i === currentIndex;

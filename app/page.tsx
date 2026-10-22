@@ -98,7 +98,7 @@ export default async function Home() {
       {/* Popular brands */}
       <section className={sectionClass}>
         <SectionHeading eyebrow="QUICK BROWSE" title="Popular Brands" link={{ href: "/brands", label: "All Brands" }} />
-        <div className="mt-8 grid grid-cols-2 gap-3.5 sm:grid-cols-4 lg:grid-cols-8">
+        <div className="mt-6 grid grid-cols-2 gap-3.5 sm:mt-8 sm:grid-cols-4 lg:grid-cols-8">
           {makes.map((make) => (
             <BrandCard key={make} make={make} count={facets.makes.get(make) ?? 0} />
           ))}
@@ -129,7 +129,7 @@ export default async function Home() {
             title={featured.length > 0 ? "Handpicked for You" : "Latest Cars"}
             link={{ href: "/listings", label: "View All Cars" }}
           />
-          <div className="mt-8">
+          <div className="mt-6 sm:mt-8">
             <ListingGrid listings={showcase} empty="No cars listed yet." favoriteIds={favoriteIds} />
           </div>
         </div>
@@ -157,7 +157,7 @@ export default async function Home() {
       {/* How it works */}
       <section className={sectionClass}>
         <SectionHeading eyebrow="HOW IT WORKS" title="Simple Steps, Either Way" />
-        <div className="mt-10 grid gap-12 lg:grid-cols-2 lg:gap-0 lg:divide-x lg:divide-line">
+        <div className="mt-8 grid gap-12 sm:mt-10 lg:grid-cols-2 lg:gap-0 lg:divide-x lg:divide-line">
           <HowItWorksColumn
             tag="FOR BUYERS"
             intro="Find, compare and buy a used car without the guesswork."
