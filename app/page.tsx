@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, MessageCircle, ShieldCheck } from "lucide-react";
+import { ArrowRight, MessageCircle, ShieldCheck, type LucideIcon } from "lucide-react";
 import { ListingGrid } from "@/components/listing-card";
 import { SearchBar } from "@/components/search-bar";
 import { Badge } from "@/components/ui/badge";
@@ -58,7 +58,7 @@ export default async function Home() {
         <div className="absolute inset-0 -z-10 bg-forest-dark/75 md:hidden" />
         <div className="absolute inset-0 -z-10 hidden bg-[linear-gradient(90deg,rgba(15,34,25,.97)_0%,rgba(15,34,25,.88)_35%,rgba(15,34,25,.4)_68%,rgba(15,34,25,.15)_100%)] md:block" />
         <div className="absolute inset-x-0 bottom-0 -z-10 h-48 bg-gradient-to-t from-forest-dark to-transparent" />
-        <div className="mx-auto flex min-h-[34rem] w-full max-w-6xl flex-col justify-center px-4 pt-16 pb-36 sm:px-6 md:min-h-[40rem] md:pb-40">
+        <div className="mx-auto flex min-h-[34rem] w-full max-w-6xl flex-col justify-end px-4 pt-16 pb-30 sm:px-6 md:min-h-[40rem]">
           <Eyebrow tone="dark">USED CARS IN SAUDI ARABIA</Eyebrow>
           <h1 className="mt-5 max-w-2xl font-display text-5xl leading-[1.05] font-medium tracking-tight text-white md:text-7xl">
             Find your next ride with <span className="font-bold text-lime">confidence</span>
@@ -83,22 +83,17 @@ export default async function Home() {
               <Link href="/account/become-seller">Sell Your Car</Link>
             </Button>
           </div>
-          <div className="mt-10 flex flex-wrap items-center gap-x-5 gap-y-2 text-caption tracking-wide text-white/65">
-            <span className="flex items-center gap-2">
-              <ShieldCheck className="size-4 text-lime" strokeWidth={1.6} />
-              Verified seller badges
-            </span>
-            <span aria-hidden className="h-3 w-px bg-white/20 max-sm:hidden" />
-            <span className="flex items-center gap-2">
-              <MessageCircle className="size-4 text-lime" strokeWidth={1.6} />
-              Contact sellers on WhatsApp
-            </span>
-          </div>
+          <TrustBand
+            items={[
+              [ShieldCheck, "Verified Sellers", "Phone & ID-verified badges"],
+              [MessageCircle, "Direct on WhatsApp", "Talk to sellers, no middlemen"],
+            ]}
+          />
         </div>
       </section>
 
       <div className="relative mx-auto -mt-20 w-full max-w-6xl px-4 sm:px-6">
-        <SearchBar className="rounded-2xl shadow-[0_30px_60px_-20px_rgba(15,34,25,.3)] ring-1 ring-black/5" />
+        <SearchBar variant="hero" total={facets.total} />
         {facets.total > 0 && (
           <Stats
             items={[
@@ -234,6 +229,26 @@ export default async function Home() {
         </div>
       </section>
     </main>
+  );
+}
+
+function TrustBand({ items }: { items: [LucideIcon, string, string][] }) {
+  return (
+    <ul className="relative mt-10 grid w-full max-w-lg grid-cols-2 divide-x divide-white/10 overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] shadow-[inset_0_1px_0_rgba(255,255,255,.06),0_20px_40px_-20px_rgba(0,0,0,.5)] backdrop-blur-md">
+      {/* Hairline highlight along the top edge */}
+      <span aria-hidden className="absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-lime/50 to-transparent" />
+      {items.map(([Icon, title, desc]) => (
+        <li key={title} className="flex items-center gap-3 px-4 py-3.5 sm:gap-3.5 sm:px-5 sm:py-4">
+          <span className="grid size-9 shrink-0 place-items-center rounded-full bg-gradient-to-b from-lime/25 to-lime/5 ring-1 ring-lime/30 sm:size-10">
+            <Icon className="size-4 text-lime sm:size-[1.125rem]" strokeWidth={1.8} />
+          </span>
+          <span className="min-w-0">
+            <span className="block text-caption font-semibold tracking-wide text-white max-sm:text-xs">{title}</span>
+            <span className="mt-0.5 block text-eyebrow leading-snug text-white/55 max-sm:hidden">{desc}</span>
+          </span>
+        </li>
+      ))}
+    </ul>
   );
 }
 
