@@ -68,18 +68,19 @@ function SectionHeading({
 }
 
 export default async function Home() {
-  const [featured, latest, facets, favoriteIds] = await Promise.all([
+  const [featured, latest, facets, favoriteIds, byCity] = await Promise.all([
     getFeaturedListings(parseListingFilters({}), 4),
     getLatestListings(4),
     getActiveFacetCounts(),
     getViewerFavoriteIds(),
+    // Runs while the queries above are in flight.
+    getActiveFacetCounts().then((counts) => getLatestByCities(topKeys(counts.cities, CITIES, 6), 3)),
   ]);
 
   const showcase = featured.length > 0 ? featured : latest;
   const heroImage = showcase.find((listing) => listing.images[0])?.images[0];
   const makes = topKeys(facets.makes, DEFAULT_MAKES.filter(isMake), 8);
   const cityNames = topKeys(facets.cities, CITIES, 6);
-  const byCity = await getLatestByCities(cityNames, 3);
 
   return (
     <main className="light bg-canvas text-ink">

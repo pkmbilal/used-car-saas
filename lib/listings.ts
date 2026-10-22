@@ -567,16 +567,16 @@ export async function getSimilarListings(
       .order("created_at", { ascending: false })
       .limit(limit);
 
-  const { data: sameMake, error } = await base().eq("make", listing.make);
+  // Both run at once; the price-band results only fill what same-make leaves.
+  const [{ data: sameMake, error }, { data: samePrice }] = await Promise.all([
+    base().eq("make", listing.make),
+    base()
+      .neq("make", listing.make)
+      .gte("price", Math.floor(listing.price * 0.75))
+      .lte("price", Math.ceil(listing.price * 1.25)),
+  ]);
   if (error) return [];
-  const similar = sameMake.map(withImageUrls);
-  if (similar.length >= limit) return similar;
-
-  const { data: samePrice } = await base()
-    .neq("make", listing.make)
-    .gte("price", Math.floor(listing.price * 0.75))
-    .lte("price", Math.ceil(listing.price * 1.25));
-  return [...similar, ...(samePrice ?? []).map(withImageUrls)].slice(0, limit);
+  return [...sameMake, ...(samePrice ?? [])].slice(0, limit).map(withImageUrls);
 }
 
 // Active listings for everyone; drafts/sold only for their owner (via RLS).

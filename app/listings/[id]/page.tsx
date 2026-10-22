@@ -58,8 +58,13 @@ export async function generateMetadata({
 
 export default async function ListingPage({ params }: PageProps<"/listings/[id]">) {
   const { id } = await params;
-  const [listing, current] = await Promise.all([getListing(id), getCurrentUser()]);
+  // Each query starts as soon as what it needs is known, rather than in rounds.
+  const currentPromise = getCurrentUser();
+  const favoritesPromise = currentPromise.then((c) => (c ? getFavoriteIds(c.user.id) : new Set<string>()));
+  const listing = await getListing(id);
   if (!listing) notFound();
+  const similarPromise = getSimilarListings(listing, 4);
+  const current = await currentPromise;
 
   const name = `${listing.make} ${listing.model}`;
   const title = `${listing.year} ${name}`;
@@ -69,8 +74,8 @@ export default async function ListingPage({ params }: PageProps<"/listings/[id]"
   const featured = isFeatured(listing);
   const [stats, favoriteIds, similar] = await Promise.all([
     isOwner ? getListingStats(listing.id) : null,
-    current ? getFavoriteIds(current.user.id) : new Set<string>(),
-    getSimilarListings(listing, 4),
+    favoritesPromise,
+    similarPromise,
   ]);
   const whatsappText = `Hi, I'm interested in your ${title} listed for ${formatSAR(listing.price)}: ${await listingUrl(listing.id)}`;
   const cover = listing.images[0];
