@@ -6,22 +6,24 @@ import type { Database } from "@/lib/supabase/database.types";
 
 export type Profile = Database["public"]["Tables"]["profiles"]["Row"];
 
-// Cached per request so the header and the page share one lookup.
+// Cached per request so the header and the page share one lookup. getClaims()
+// verifies the JWT locally (with asymmetric signing keys) instead of calling
+// the Auth server like getUser(); proxy.ts keeps the session fresh. Suspension
+// lives on the profile, so the profile lookup still gates access.
 export const getCurrentUser = cache(async () => {
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) return null;
+  const { data } = await supabase.auth.getClaims();
+  const claims = data?.claims;
+  if (!claims?.sub) return null;
 
   const { data: profile } = await supabase
     .from("profiles")
     .select("*")
-    .eq("id", user.id)
+    .eq("id", claims.sub)
     .single();
   if (!profile) return null;
 
-  return { user, profile };
+  return { user: { id: claims.sub, email: claims.email ?? null }, profile };
 });
 
 export async function requireUser(next?: string, loginPath = "/login") {
