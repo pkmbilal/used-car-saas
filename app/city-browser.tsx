@@ -1,9 +1,9 @@
 "use client";
 
-import Link from "next/link";
 import { useState, type ReactNode } from "react";
-import { ArrowRight, ChevronRight, MapPin } from "lucide-react";
+import { ChevronRight, MapPin } from "lucide-react";
 import { cityHref, isCity } from "@/lib/cities";
+import { SectionHeading } from "./section-heading";
 
 type City = { name: string; count: number; listings: ReactNode };
 
@@ -16,24 +16,19 @@ export function CityBrowser({ cities }: { cities: City[] }) {
 
   return (
     <>
-      <div className="flex items-end justify-between gap-4">
-        <div>
-          <p className="text-caption font-bold tracking-[0.2em] text-brand-600">BROWSE BY LOCATION</p>
-          <h2 className="mt-2 text-2xl font-semibold tracking-tight">Cars Near You</h2>
-        </div>
-        <Link
-          href={isCity(current.name) ? cityHref(current.name) : `/listings?city=${encodeURIComponent(current.name)}`}
-          className="mb-1 flex shrink-0 items-center gap-2 text-caption font-semibold text-brand"
-        >
-          View All in {current.name}
-          <ArrowRight className="size-3" strokeWidth={2.4} />
-        </Link>
-      </div>
-      <div className="mt-6 grid gap-5 lg:grid-cols-[16.25rem_minmax(0,1fr)]">
+      <SectionHeading
+        eyebrow="BROWSE BY LOCATION"
+        title="Cars Near You"
+        link={{
+          href: isCity(current.name) ? cityHref(current.name) : `/listings?city=${encodeURIComponent(current.name)}`,
+          label: `View All in ${current.name}`,
+        }}
+      />
+      <div className="mt-8 grid gap-5 lg:grid-cols-[16.25rem_minmax(0,1fr)]">
         <div
           role="tablist"
           aria-label="Cities"
-          className="flex gap-1 overflow-x-auto rounded-xl bg-gradient-to-br from-forest to-[#11261d] p-2.5 lg:flex-col"
+          className="flex gap-1 overflow-x-auto rounded-2xl bg-gradient-to-br from-forest to-forest-dark p-2.5 lg:flex-col"
         >
           {cities.map((city) => {
             const active = city.name === current.name;

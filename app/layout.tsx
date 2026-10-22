@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Figtree } from "next/font/google";
+import { Figtree, Poppins } from "next/font/google";
 import { HideOnAdmin } from "@/components/hide-on-admin";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
@@ -11,6 +11,13 @@ import "./globals.css";
 const figtree = Figtree({
   variable: "--font-sans",
   subsets: ["latin"],
+});
+
+// Rounded display face for large headings.
+const poppins = Poppins({
+  variable: "--font-poppins",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
@@ -28,7 +35,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={cn("h-full font-sans antialiased", figtree.variable)}>
+    <html lang="en" className={cn("h-full font-sans antialiased", figtree.variable, poppins.variable)}>
       <body className="min-h-full flex flex-col">
         <HideOnAdmin>
           <SiteHeader />
