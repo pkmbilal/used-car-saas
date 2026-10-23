@@ -3,11 +3,11 @@
 import Image from "next/image";
 import { useState } from "react";
 
-// Logos come from the public car-logos-dataset; fall back to the initial when a
-// make isn't in it.
+// Logos are self-hosted in public/brands (trimmed copies from the car-logos-dataset);
+// fall back to the initial when a make has no file.
 function logoUrl(make: string): string {
   const slug = make.toLowerCase().replace(/\s+/g, "-");
-  return `https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/${slug}.png`;
+  return `/brands/${slug}.png`;
 }
 
 export function BrandLogo({ make }: { make: string }) {

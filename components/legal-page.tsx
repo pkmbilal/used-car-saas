@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
+import { SUPPORT_EMAIL } from "@/lib/contact";
 
-// TODO(legal): replace with the real support address before launch.
-export const LEGAL_CONTACT_EMAIL = "support@karsouq.com";
+export const LEGAL_CONTACT_EMAIL = SUPPORT_EMAIL;
 
 export function LegalPage({ title, updated, children }: { title: string; updated: string; children: ReactNode }) {
   return (

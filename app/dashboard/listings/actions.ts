@@ -51,20 +51,14 @@ export async function createListing(
   const parsed = parseListing(formData);
   if ("error" in parsed) return { error: parsed.error };
 
-  // Friendly early check; the database trigger is what actually enforces it.
-  const quota = await getListingQuota();
-  if (quota?.remaining === 0) return { error: quotaExceededMessage(quota) };
-
   // Starts as a draft: photos need the listing id before it can go live.
+  // Drafts are free; the quota is charged on first publish.
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("listings")
     .insert({ ...parsed.data, seller_id: user.id, status: "draft" })
     .select("id")
     .single();
-  if (error?.message === QUOTA_EXCEEDED_DB_MESSAGE && quota) {
-    return { error: quotaExceededMessage(quota) };
-  }
   if (error) return { error: "Could not create the listing. Try again." };
 
   revalidateDashboard();
@@ -109,12 +103,21 @@ export async function setListingStatus(
     return { error: "Add at least one photo before publishing." };
   }
 
+  // A listing's first publish uses a monthly listing; relisting doesn't.
+  // Friendly early check; the database trigger is what actually enforces it.
+  const charged = status === "active" && listing.first_published_at === null;
+  const quota = charged ? await getListingQuota() : null;
+  if (quota?.remaining === 0) return { error: quotaExceededMessage(quota) };
+
   const supabase = await createClient();
   const { error } = await supabase
     .from("listings")
     .update({ status })
     .eq("id", listingId)
     .eq("seller_id", user.id);
+  if (error?.message === QUOTA_EXCEEDED_DB_MESSAGE && quota) {
+    return { error: quotaExceededMessage(quota) };
+  }
   if (error) return { error: "Could not update the listing. Try again." };
 
   revalidateDashboard();

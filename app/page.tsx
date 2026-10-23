@@ -41,13 +41,15 @@ export default async function Home() {
     getActiveFacetCounts(),
     getViewerFavoriteIds(),
     // Runs while the queries above are in flight.
-    getActiveFacetCounts().then((counts) => getLatestByCities(topKeys(counts.cities, CITIES, 6), 4)),
+    getActiveFacetCounts().then((counts) => getLatestByCities(topKeys(counts.cities, [], 6), 4)),
   ]);
 
   const showcase = featured.length > 0 ? featured : latest;
   const heroImage = showcase.find((listing) => listing.images[0])?.images[0];
   const makes = topKeys(facets.makes, DEFAULT_MAKES.filter(isMake), 8);
-  const cityNames = topKeys(facets.cities, CITIES, 6);
+  // Only cities with cars get a tab; the sell CTA copy still names major cities.
+  const cityNames = topKeys(facets.cities, [], 6);
+  const ctaCities = topKeys(facets.cities, CITIES, 3);
 
   return (
     <main className="light bg-canvas text-ink">
@@ -89,7 +91,7 @@ export default async function Home() {
           </div>
           <TrustBand
             items={[
-              [ShieldCheck, "Verified Sellers", "Phone & ID-verified badges"],
+              [ShieldCheck, "Verified Sellers", "ID-verified seller badges"],
               [MessageCircle, "Direct on WhatsApp", "Talk to sellers, no middlemen"],
             ]}
           />
@@ -141,7 +143,7 @@ export default async function Home() {
       </section>
 
       {/* Cars near you */}
-      {facets.total > 0 && (
+      {cityNames.length > 0 && (
         <section className={sectionClass}>
           <CityBrowser
             cities={cityNames.map((name) => ({
@@ -165,11 +167,11 @@ export default async function Home() {
         <div className="mt-8 grid gap-4 sm:mt-10 lg:grid-cols-2 lg:gap-6">
           <HowItWorksColumn
             tag="FOR BUYERS"
-            intro="Find, compare and buy a used car without the guesswork."
+            intro="Find and buy a used car without the guesswork."
             cta={{ href: "/listings", label: "Browse Cars" }}
             steps={[
               ["Search", "Filter listings by make, price, year, fuel type and city."],
-              ["Compare", "Save cars you like and compare their specs, mileage and price."],
+              ["Shortlist", "Save cars you like to your favorites and come back to them anytime."],
               ["Contact Seller", "Message the seller on WhatsApp or call them to arrange a viewing."],
               ["Buy Your Car", "Inspect the car, agree on a price and drive away."],
             ]}
@@ -205,7 +207,7 @@ export default async function Home() {
                 Turn your car into <span className="font-bold text-lime">cash</span>
               </p>
               <p className="mt-4 max-w-md text-xs leading-relaxed text-white/70 max-sm:text-sm">
-                List your car in minutes and reach buyers in {cityNames.slice(0, 3).join(", ")} and beyond.
+                List your car in minutes and reach buyers in {ctaCities.join(", ")} and beyond.
               </p>
             </div>
             <Button asChild className={`shrink-0 ${limeCtaClass}`}>

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { LEGAL_CONTACT_EMAIL, LegalPage } from "@/components/legal-page";
+import { COMPANY_NAME } from "@/lib/contact";
 
 export const metadata: Metadata = {
   title: "Privacy Policy | KarSouq",
@@ -10,9 +11,10 @@ export const metadata: Metadata = {
 // reviewed by a lawyer before launch.
 export default function PrivacyPage() {
   return (
-    <LegalPage title="Privacy Policy" updated="18 October 2026">
+    <LegalPage title="Privacy Policy" updated="23 October 2026">
       <p>
-        KarSouq (&quot;we&quot;) runs a marketplace for used cars in the Kingdom of Saudi Arabia. This policy
+        KarSouq is a marketplace for used cars in the Kingdom of Saudi Arabia, operated by {COMPANY_NAME}{" "}
+        (&quot;we&quot;), the controller of your personal data. This policy
         explains what personal data we collect, why, and the rights you have under the Personal Data Protection Law
         (PDPL).
       </p>

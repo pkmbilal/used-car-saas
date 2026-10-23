@@ -16,6 +16,7 @@ import {
   type Transmission,
 } from "@/lib/listing-options";
 import { isMake, MAKES, modelsFor } from "@/lib/makes";
+import { isDealerPlan, type Plan } from "@/lib/plans";
 import { publicUrl } from "@/lib/r2";
 import { createClient } from "@/lib/supabase/server";
 import type { Database } from "@/lib/supabase/database.types";
@@ -171,9 +172,25 @@ export function parseListing(
   });
 }
 
+export type SellerType = "dealer" | "private";
+
 export type ListingWithImages = Listing & {
   images: (ListingImage & { url: string })[];
+  // Set by public card queries (LISTING_CARD_SELECT); shown as a badge.
+  sellerType?: SellerType;
 };
+
+// Public listing cards: photos plus the seller's plan, for the dealer/private badge.
+export const LISTING_CARD_SELECT = "*, listing_images(*), seller:profiles!listings_seller_id_fkey(plan)";
+
+export function toListingCard<
+  T extends Listing & { listing_images: ListingImage[]; seller: { plan: Plan } | null },
+>({ seller, ...listing }: T): ListingWithImages {
+  return {
+    ...withImageUrls(listing),
+    sellerType: seller ? (isDealerPlan(seller.plan) ? "dealer" : "private") : undefined,
+  };
+}
 
 export function withImageUrls<
   T extends Listing & { listing_images: ListingImage[]; search_vector?: unknown },
@@ -413,7 +430,7 @@ export async function searchListings(
 ): Promise<{ listings: ListingWithImages[]; total: number }> {
   const supabase = await createClient();
   let query = applyListingFilters(
-    supabase.from("listings").select("*, listing_images(*)", { count: "exact" }),
+    supabase.from("listings").select(LISTING_CARD_SELECT, { count: "exact" }),
     filters,
   );
 
@@ -431,7 +448,7 @@ export async function searchListings(
   const { data, count, error } = await query.range(from, from + PAGE_SIZE - 1);
   // Out-of-range pages error in PostgREST; treat them as empty.
   if (error) return { listings: [], total: count ?? 0 };
-  return { listings: data.map(withImageUrls), total: count ?? 0 };
+  return { listings: data.map(toListingCard), total: count ?? 0 };
 }
 
 export function isFeatured(listing: Pick<Listing, "featured_until">): boolean {
@@ -446,26 +463,26 @@ export async function getFeaturedListings(
 ): Promise<ListingWithImages[]> {
   const supabase = await createClient();
   const { data, error } = await applyListingFilters(
-    supabase.from("listings").select("*, listing_images(*)"),
+    supabase.from("listings").select(LISTING_CARD_SELECT),
     filters,
   )
     .gt("featured_until", new Date().toISOString())
     .order("featured_until", { ascending: false })
     .limit(limit);
   if (error) return [];
-  return data.map(withImageUrls);
+  return data.map(toListingCard);
 }
 
 // Every active listing's id and last edit, for the sitemap. Paged because the
 // API returns at most 1,000 rows per request; Google caps a sitemap at 50,000.
-export async function getSitemapListings(): Promise<Pick<Listing, "id" | "updated_at">[]> {
+export async function getSitemapListings(): Promise<Pick<Listing, "id" | "updated_at" | "city">[]> {
   const supabase = await createClient();
   const pageSize = 1000;
-  const rows: Pick<Listing, "id" | "updated_at">[] = [];
+  const rows: Pick<Listing, "id" | "updated_at" | "city">[] = [];
   while (rows.length < 45000) {
     const { data, error } = await supabase
       .from("listings")
-      .select("id, updated_at")
+      .select("id, updated_at, city")
       .eq("status", "active")
       .order("id")
       .range(rows.length, rows.length + pageSize - 1);
@@ -480,12 +497,12 @@ export async function getLatestListings(limit: number): Promise<ListingWithImage
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("listings")
-    .select("*, listing_images(*)")
+    .select(LISTING_CARD_SELECT)
     .eq("status", "active")
     .order("created_at", { ascending: false })
     .limit(limit);
   if (error) throw error;
-  return data.map(withImageUrls);
+  return data.map(toListingCard);
 }
 
 export type FacetCounts = {
@@ -538,7 +555,7 @@ export async function getLatestByCities(
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("listings")
-    .select("*, listing_images(*)")
+    .select(LISTING_CARD_SELECT)
     .eq("status", "active")
     .in("city", cities)
     .order("created_at", { ascending: false })
@@ -547,7 +564,7 @@ export async function getLatestByCities(
 
   for (const listing of data) {
     const bucket = result[listing.city];
-    if (bucket && bucket.length < perCity) bucket.push(withImageUrls(listing));
+    if (bucket && bucket.length < perCity) bucket.push(toListingCard(listing));
   }
   return result;
 }
@@ -561,7 +578,7 @@ export async function getSimilarListings(
   const base = () =>
     supabase
       .from("listings")
-      .select("*, listing_images(*)")
+      .select(LISTING_CARD_SELECT)
       .eq("status", "active")
       .neq("id", listing.id)
       .order("created_at", { ascending: false })
@@ -576,7 +593,7 @@ export async function getSimilarListings(
       .lte("price", Math.ceil(listing.price * 1.25)),
   ]);
   if (error) return [];
-  return [...sameMake, ...(samePrice ?? [])].slice(0, limit).map(withImageUrls);
+  return [...sameMake, ...(samePrice ?? [])].slice(0, limit).map(toListingCard);
 }
 
 // Active listings for everyone; drafts/sold only for their owner (via RLS).
@@ -584,7 +601,7 @@ export async function getPublicListing(listingId: string) {
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("listings")
-    .select("*, listing_images(*), seller:profiles!listings_seller_id_fkey(id, full_name, phone, city, created_at, email_verified_at, id_verified_at, plan, business_name, about, logo_key, showroom_address)")
+    .select("*, listing_images(*), seller:profiles!listings_seller_id_fkey(id, full_name, has_phone, city, created_at, email_verified_at, id_verified_at, plan, business_name, about, logo_key, showroom_address)")
     .eq("id", listingId)
     .maybeSingle();
   // A failed query would otherwise look like a missing listing (404).
@@ -597,7 +614,7 @@ export async function getSellerProfile(sellerId: string) {
   const { data: profile } = await supabase
     .from("profiles")
     .select(
-      "id, full_name, phone, city, created_at, email_verified_at, id_verified_at, plan, business_name, about, logo_key, showroom_address",
+      "id, full_name, has_phone, city, created_at, email_verified_at, id_verified_at, plan, business_name, about, logo_key, showroom_address",
     )
     .eq("id", sellerId)
     .eq("role", "seller")

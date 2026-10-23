@@ -1,6 +1,6 @@
 import "server-only";
 import { getCurrentUser } from "@/lib/auth";
-import { withImageUrls, type ListingWithImages } from "@/lib/listings";
+import { toListingCard, type ListingWithImages } from "@/lib/listings";
 import { createClient } from "@/lib/supabase/server";
 
 // RLS limits favorites to the signed-in user's own rows.
@@ -24,13 +24,13 @@ export async function getFavoriteListings(userId: string): Promise<ListingWithIm
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("favorites")
-    .select("listing:listings(*, listing_images(*))")
+    .select("listing:listings(*, listing_images(*), seller:profiles!listings_seller_id_fkey(plan))")
     .eq("user_id", userId)
     .order("created_at", { ascending: false });
   if (error) throw error;
 
   // Listings RLS hides sold/draft cars from non-owners, so those joins are null.
   return data.flatMap(({ listing }) =>
-    listing && listing.status === "active" ? [withImageUrls(listing)] : [],
+    listing && listing.status === "active" ? [toListingCard(listing)] : [],
   );
 }

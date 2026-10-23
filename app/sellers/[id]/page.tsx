@@ -1,14 +1,13 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { MessageCircle, Phone } from "lucide-react";
 import { cache } from "react";
+import { ContactButtons } from "@/app/listings/[id]/contact-buttons";
 import { DealerBadge, DealerLogo } from "@/components/dealer-logo";
 import { ListingGrid } from "@/components/listing-card";
 import { VerificationBadges } from "@/components/verification-badges";
-import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { getViewerFavoriteIds } from "@/lib/favorites";
-import { formatMonthYear, whatsappUrl } from "@/lib/format";
+import { formatMonthYear } from "@/lib/format";
 import { getSellerProfile, isFeatured } from "@/lib/listings";
 import { getStorefront } from "@/lib/storefront";
 
@@ -63,21 +62,12 @@ export default async function SellerPage({ params }: PageProps<"/sellers/[id]">)
               {storefront.about && (
                 <p className="mt-4 max-w-2xl whitespace-pre-line text-sm">{storefront.about}</p>
               )}
-              {profile.phone && (
-                <div className="mt-4 flex flex-wrap gap-3">
-                  <Button asChild className="hover:bg-brand-dark hover:text-white">
-                    <a href={whatsappUrl(profile.phone, `Hi ${storefront.name}, I found you on KarSouq.`)} target="_blank" rel="noopener noreferrer">
-                      <MessageCircle className="size-4" />
-                      WhatsApp dealer
-                    </a>
-                  </Button>
-                  <Button asChild variant="outline" className="border-brand text-ink hover:bg-mint">
-                    <a href={`tel:${profile.phone}`}>
-                      <Phone className="size-4" />
-                      Call dealer
-                    </a>
-                  </Button>
-                </div>
+              {profile.has_phone && (
+                <ContactButtons
+                  sellerId={profile.id}
+                  whatsappText={`Hi ${storefront.name}, I found you on KarSouq.`}
+                  variant="dealer"
+                />
               )}
             </div>
           </Card>
