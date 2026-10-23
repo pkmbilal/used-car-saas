@@ -1,6 +1,6 @@
 import type { NextConfig } from "next";
 
-// Listing photos are served from the R2 public URL (r2.dev or custom domain).
+// Listing photos are served from R2_PUBLIC_URL (the custom domain media.karsouq.com).
 const r2PublicUrl = process.env.R2_PUBLIC_URL ? new URL(process.env.R2_PUBLIC_URL) : null;
 
 const nextConfig: NextConfig = {
@@ -29,12 +29,6 @@ const nextConfig: NextConfig = {
             },
           ]
         : []),
-      // Make logos on the home page's brand tiles.
-      {
-        protocol: "https",
-        hostname: "raw.githubusercontent.com",
-        pathname: "/filippofilip95/car-logos-dataset/**",
-      },
     ],
   },
 };

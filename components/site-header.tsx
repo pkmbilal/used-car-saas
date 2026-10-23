@@ -33,7 +33,11 @@ export async function SiteHeader() {
   // On phones the bottom tab bar covers Home, Buy, Sell, Saved and Account;
   // the menu keeps the rest.
   const tabHrefs = ["/", "/listings", "/dashboard", "/account/become-seller", "/favorites", "/account"];
-  const menuLinks = [...mainLinks, ...accountLinks].filter((link) => !tabHrefs.includes(link.href));
+  // The footer (with Contact) is hidden on phones, so the menu links it instead.
+  const menuLinks = [
+    ...[...mainLinks, ...accountLinks].filter((link) => !tabHrefs.includes(link.href)),
+    { href: "/contact", label: "Contact" },
+  ];
 
   return (
     <>

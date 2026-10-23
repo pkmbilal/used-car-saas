@@ -1,17 +1,20 @@
 import type { Metadata } from "next";
 import { LEGAL_CONTACT_EMAIL, LegalPage } from "@/components/legal-page";
+import { COMPANY_NAME } from "@/lib/contact";
 
 export const metadata: Metadata = {
   title: "Terms of Use | KarSouq",
   description: "The rules for buying and selling cars on KarSouq.",
 };
 
-// TODO(legal): draft only. Have it reviewed by a lawyer before launch.
+// TODO(legal): draft only. Have it reviewed by a lawyer before launch, and add
+// CodeSudio's CR number and registered address.
 export default function TermsPage() {
   return (
-    <LegalPage title="Terms of Use" updated="18 October 2026">
+    <LegalPage title="Terms of Use" updated="23 October 2026">
       <p>
-        By creating an account or using KarSouq you agree to these terms. They are governed by the laws of the
+        KarSouq is operated by {COMPANY_NAME} (&quot;we&quot;). By creating an account or using KarSouq you agree to
+        these terms. They are governed by the laws of the
         Kingdom of Saudi Arabia.
       </p>
 

@@ -92,7 +92,7 @@ export default async function PricingPage() {
           ))}
         </ul>
         <p className="mt-6 text-center text-xs text-muted-foreground">
-          Prices are in Saudi Riyals.
+          Prices are in Saudi Riyals and include 15% VAT.
           {salesUrl && (
             <>
               {" "}

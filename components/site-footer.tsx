@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { BrandLink } from "@/components/brand";
 import { cityHref, type City } from "@/lib/cities";
+import { COMPANY_NAME } from "@/lib/contact";
 
 const TOP_MAKES = ["Toyota", "Hyundai", "Nissan", "Lexus"];
 const TOP_CITIES: City[] = ["Riyadh", "Jeddah", "Dammam", "Khobar"];
@@ -56,8 +57,11 @@ export function SiteFooter() {
       </div>
       <div className="border-t border-white/10">
         <div className="mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-5 text-caption text-white/55 sm:px-6">
-          <p>© {new Date().getFullYear()} KarSouq. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} KarSouq, a {COMPANY_NAME} product. All rights reserved.</p>
           <nav className="flex gap-4">
+            <Link href="/contact" className="hover:text-lime">
+              Contact
+            </Link>
             <Link href="/privacy" className="hover:text-lime">
               Privacy Policy
             </Link>

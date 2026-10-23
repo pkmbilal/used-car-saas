@@ -39,6 +39,15 @@ export function ListingCard({ listing, favorited, sizes }: CardProps) {
                 className="object-cover"
               />
             )}
+            {listing.sellerType && (
+              <Badge
+                className={`absolute bottom-3 left-3 text-caption font-semibold ${
+                  listing.sellerType === "dealer" ? "bg-charcoal text-lime" : "bg-white/90 text-ink"
+                }`}
+              >
+                {listing.sellerType === "dealer" ? "Dealer" : "Private seller"}
+              </Badge>
+            )}
             {isFeatured(listing) && (
               <Badge className="absolute top-3 left-3 bg-lime text-caption font-semibold text-on-lime">
                 Featured

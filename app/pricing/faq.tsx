@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import Link from "next/link";
 import { Plus } from "lucide-react";
 
 // Keep the answers in sync with how plans work: admin-granted dealer plans,
@@ -54,7 +55,9 @@ export function PricingFaq({ salesUrl }: { salesUrl: string | null }) {
       contact us on WhatsApp
     </a>
   ) : (
-    "contact us"
+    <Link href="/contact" className="font-medium text-brand underline">
+      contact us
+    </Link>
   );
 
   return (

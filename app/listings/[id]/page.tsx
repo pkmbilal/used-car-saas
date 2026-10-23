@@ -23,6 +23,7 @@ import {
 } from "lucide-react";
 import { ListingGrid } from "@/components/listing-card";
 import { ReportListingButton } from "@/components/report-listing-button";
+import { SafetyTips } from "@/components/safety-tips";
 import { VerificationBadges } from "@/components/verification-badges";
 import { RiyalPrice } from "@/components/riyal-price";
 import { Badge } from "@/components/ui/badge";
@@ -33,7 +34,9 @@ import { getCurrentUser } from "@/lib/auth";
 import { getFavoriteIds } from "@/lib/favorites";
 import { formatDay, formatKm, formatMonthYear, formatListingStats, formatSAR, whatsappUrl } from "@/lib/format";
 import { bodyTypeLabel, capitalize } from "@/lib/listing-options";
+import { jsonLdScript, listingDescription, listingJsonLd } from "@/lib/listing-seo";
 import { getListingStats, getPublicListing, getSimilarListings, isFeatured } from "@/lib/listings";
+import { siteUrl } from "@/lib/site";
 import { getStorefront } from "@/lib/storefront";
 import { BackLink } from "./back-link";
 import { ContactLink } from "./contact-link";
@@ -51,8 +54,14 @@ export async function generateMetadata({
   const { id } = await params;
   const listing = await getListing(id);
   if (!listing) return { title: "Listing not found" };
+  const title = `${listing.year} ${listing.make} ${listing.model} — ${formatSAR(listing.price)} | KarSouq`;
+  const description = listingDescription(listing);
+  const cover = listing.images[0];
   return {
-    title: `${listing.year} ${listing.make} ${listing.model} — ${formatSAR(listing.price)} | KarSouq`,
+    title,
+    description,
+    alternates: { canonical: `/listings/${listing.id}` },
+    openGraph: { title, description, url: `/listings/${listing.id}`, ...(cover && { images: [cover.url] }) },
   };
 }
 
@@ -100,6 +109,14 @@ export default async function ListingPage({ params }: PageProps<"/listings/[id]"
   return (
     <main className={`light bg-canvas text-ink ${contactPhone ? "max-lg:pb-[calc(5rem+env(safe-area-inset-bottom))]" : ""}`}>
       {!isOwner && listing.status === "active" && <ViewTracker listingId={listing.id} />}
+      {listing.status === "active" && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: jsonLdScript(listingJsonLd(listing, new URL(`/listings/${listing.id}`, siteUrl()).toString())),
+          }}
+        />
+      )}
       {isOwner && listing.status !== "active" && (
         <div className="bg-amber-50 text-sm text-amber-900">
           <div className="mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between gap-2 px-4 py-3 sm:px-6">
@@ -225,7 +242,7 @@ export default async function ListingPage({ params }: PageProps<"/listings/[id]"
                       {storefront?.name ?? seller.full_name ?? "Seller"}
                     </p>
                     <div className="mt-1 flex flex-wrap items-center gap-1.5">
-                      {storefront && <DealerBadge />}
+                      {storefront ? <DealerBadge /> : <Badge variant="outline">Private seller</Badge>}
                       <VerificationBadges profile={seller} />
                     </div>
                   </div>
@@ -257,6 +274,8 @@ export default async function ListingPage({ params }: PageProps<"/listings/[id]"
               </>
             )}
           </Card>
+
+          {!isOwner && <SafetyTips />}
 
           {!isOwner && listing.status === "active" && (
             <div className="px-1">

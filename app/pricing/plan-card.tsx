@@ -34,7 +34,7 @@ export function PlanCard({ plan, details, cta }: { plan: Plan; details: PlanDeta
         ) : (
           <>
             <RiyalPrice amount={details.price} className="text-3xl font-semibold tracking-tight" />
-            <span className="text-label text-muted-foreground">/ month</span>
+            <span className="text-label text-muted-foreground">/ month incl. VAT</span>
           </>
         )}
       </p>
