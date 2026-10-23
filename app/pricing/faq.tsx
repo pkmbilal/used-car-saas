@@ -22,7 +22,7 @@ function faqs(contact: ReactNode): { q: string; a: ReactNode }[] {
     },
     {
       q: "What counts as a listing?",
-      a: "Every listing you create, drafts included, uses one of your monthly listings. Deleting a listing doesn't give it back.",
+      a: "A listing counts when you first publish it. Drafts are free, and relisting or republishing the same car doesn't count again. Deleting a published listing doesn't give it back.",
     },
     {
       q: "When does my limit reset?",
@@ -30,7 +30,7 @@ function faqs(contact: ReactNode): { q: string; a: ReactNode }[] {
     },
     {
       q: "What happens if I reach my limit?",
-      a: "Your existing listings stay live. You can add new ones again next month, or right away if you upgrade.",
+      a: "Your existing listings stay live and you can keep saving drafts. You can publish new ones again next month, or right away if you upgrade.",
     },
     {
       q: "How do featured listings work?",

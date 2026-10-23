@@ -32,6 +32,7 @@ export type Database = {
           about: string | null;
           logo_key: string | null;
           showroom_address: string | null;
+          has_phone: boolean | null;
           created_at: string;
         };
         Insert: {
@@ -50,6 +51,7 @@ export type Database = {
           about?: string | null;
           logo_key?: string | null;
           showroom_address?: string | null;
+          has_phone?: never;
           created_at?: string;
         };
         Update: {
@@ -68,6 +70,7 @@ export type Database = {
           about?: string | null;
           logo_key?: string | null;
           showroom_address?: string | null;
+          has_phone?: never;
           created_at?: string;
         };
         Relationships: [];
@@ -92,6 +95,7 @@ export type Database = {
           status: "draft" | "active" | "sold" | "removed";
           removed_reason: string | null;
           featured_until: string | null;
+          first_published_at: string | null;
           created_at: string;
           updated_at: string;
           search_vector: unknown;
@@ -115,6 +119,7 @@ export type Database = {
           status?: "draft" | "active" | "sold" | "removed";
           removed_reason?: string | null;
           featured_until?: string | null;
+          first_published_at?: string | null;
           created_at?: string;
           updated_at?: string;
           search_vector?: unknown;
@@ -138,6 +143,7 @@ export type Database = {
           status?: "draft" | "active" | "sold" | "removed";
           removed_reason?: string | null;
           featured_until?: string | null;
+          first_published_at?: string | null;
           created_at?: string;
           updated_at?: string;
           search_vector?: unknown;
@@ -533,6 +539,35 @@ export type Database = {
           },
         ];
       };
+      contact_reveals: {
+        Row: {
+          id: number;
+          ip_hash: string;
+          seller_id: string;
+          created_at: string;
+        };
+        Insert: {
+          id?: never;
+          ip_hash: string;
+          seller_id: string;
+          created_at?: string;
+        };
+        Update: {
+          id?: never;
+          ip_hash?: string;
+          seller_id?: string;
+          created_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "contact_reveals_seller_id_fkey";
+            columns: ["seller_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       listing_view_counts: {
         Row: {
           listing_id: string;
@@ -742,6 +777,10 @@ export type Database = {
         Args: { p_listing_id: string };
         Returns: string;
       };
+      get_own_profile: {
+        Args: Record<PropertyKey, never>;
+        Returns: Database["public"]["Tables"]["profiles"]["Row"][];
+      };
       increment_listing_contact: {
         Args: { p_listing_id: string; p_kind: string };
         Returns: undefined;
@@ -749,6 +788,10 @@ export type Database = {
       increment_listing_view: {
         Args: { p_listing_id: string };
         Returns: undefined;
+      };
+      reveal_seller_phone: {
+        Args: { p_seller_id: string; p_ip_hash: string };
+        Returns: string;
       };
       set_plan: {
         Args: {

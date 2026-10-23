@@ -16,11 +16,8 @@ export const getCurrentUser = cache(async () => {
   const claims = data?.claims;
   if (!claims?.sub) return null;
 
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("*")
-    .eq("id", claims.sub)
-    .single();
+  // phone isn't publicly readable; this RPC returns the caller's full row.
+  const { data: profile } = await supabase.rpc("get_own_profile").maybeSingle();
   if (!profile) return null;
 
   return { user: { id: claims.sub, email: claims.email ?? null }, profile };

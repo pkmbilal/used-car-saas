@@ -15,9 +15,7 @@ import {
   Fuel,
   Gauge,
   MapPin,
-  MessageCircle,
   Palette,
-  Phone,
   ShieldCheck,
   Sparkles,
 } from "lucide-react";
@@ -32,14 +30,14 @@ import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { getCurrentUser } from "@/lib/auth";
 import { getFavoriteIds } from "@/lib/favorites";
-import { formatDay, formatKm, formatMonthYear, formatListingStats, formatSAR, whatsappUrl } from "@/lib/format";
+import { formatDay, formatKm, formatMonthYear, formatListingStats, formatSAR } from "@/lib/format";
 import { bodyTypeLabel, capitalize } from "@/lib/listing-options";
 import { jsonLdScript, listingDescription, listingJsonLd } from "@/lib/listing-seo";
 import { getListingStats, getPublicListing, getSimilarListings, isFeatured } from "@/lib/listings";
 import { siteUrl } from "@/lib/site";
 import { getStorefront } from "@/lib/storefront";
 import { BackLink } from "./back-link";
-import { ContactLink } from "./contact-link";
+import { ContactButtons } from "./contact-buttons";
 import { Gallery } from "./gallery";
 import { ListingDescription, ListingFeatures, SpecGrid } from "./listing-details";
 import { ShareButton } from "./share-button";
@@ -89,7 +87,7 @@ export default async function ListingPage({ params }: PageProps<"/listings/[id]"
   const whatsappText = `Hi, I'm interested in your ${title} listed for ${formatSAR(listing.price)}: ${await listingUrl(listing.id)}`;
   const cover = listing.images[0];
   const transmission = listing.transmission ? capitalize(listing.transmission) : null;
-  const contactPhone = !isOwner && seller?.phone ? seller.phone : null;
+  const showContact = !isOwner && !!seller?.has_phone;
 
   const specIcon = { className: "size-4", strokeWidth: 1.8 };
   const specs = [
@@ -107,7 +105,7 @@ export default async function ListingPage({ params }: PageProps<"/listings/[id]"
   ];
 
   return (
-    <main className={`light bg-canvas text-ink ${contactPhone ? "max-lg:pb-[calc(5rem+env(safe-area-inset-bottom))]" : ""}`}>
+    <main className={`light bg-canvas text-ink ${showContact ? "max-lg:pb-[calc(5rem+env(safe-area-inset-bottom))]" : ""}`}>
       {!isOwner && listing.status === "active" && <ViewTracker listingId={listing.id} />}
       {listing.status === "active" && (
         <script
@@ -199,27 +197,8 @@ export default async function ListingPage({ params }: PageProps<"/listings/[id]"
               </p>
             )}
 
-            {contactPhone && (
-              <div className="mt-4 flex flex-col gap-2.5">
-                <Button asChild className="h-11 text-label font-semibold hover:bg-brand-dark hover:text-white">
-                  <ContactLink listingId={listing.id} kind="call" href={`tel:${contactPhone}`}>
-                    <Phone className="size-4" />
-                    Call Seller
-                  </ContactLink>
-                </Button>
-                <Button asChild variant="outline" className="h-11 border-brand text-label font-semibold text-ink hover:bg-mint">
-                  <ContactLink
-                    listingId={listing.id}
-                    kind="whatsapp"
-                    href={whatsappUrl(contactPhone, whatsappText)}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <MessageCircle className="size-4 text-brand" />
-                    WhatsApp
-                  </ContactLink>
-                </Button>
-              </div>
+            {showContact && seller && (
+              <ContactButtons sellerId={seller.id} listingId={listing.id} whatsappText={whatsappText} variant="sidebar" />
             )}
             <div className={`grid gap-2.5 ${isOwner ? "mt-4 grid-cols-1" : "mt-3 grid-cols-2"}`}>
               {!isOwner && <FavoriteButton listingId={listing.id} favorited={favoriteIds.has(listing.id)} variant="label" />}
@@ -303,30 +282,15 @@ export default async function ListingPage({ params }: PageProps<"/listings/[id]"
       )}
 
       {/* On mobile the sidebar sits below the gallery and specs, so keep contact one tap away. */}
-      {contactPhone && (
+      {showContact && (
         <div className="pb-safe fixed inset-x-0 bottom-0 z-40 border-t border-line bg-white/95 backdrop-blur lg:hidden">
           <div className="mx-auto flex w-full max-w-6xl items-center gap-2.5 px-4 py-3 sm:px-6">
             <p className="mr-auto min-w-0 truncate text-base font-bold text-brand">
               <RiyalPrice amount={listing.price} />
             </p>
-            <Button asChild size="sm" className="h-10 px-4 text-xs max-sm:text-sm font-semibold">
-              <ContactLink listingId={listing.id} kind="call" href={`tel:${contactPhone}`}>
-                <Phone className="size-4" />
-                Call
-              </ContactLink>
-            </Button>
-            <Button asChild size="sm" variant="outline" className="h-10 border-brand px-4 text-xs max-sm:text-sm font-semibold text-ink">
-              <ContactLink
-                listingId={listing.id}
-                kind="whatsapp"
-                href={whatsappUrl(contactPhone, whatsappText)}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <MessageCircle className="size-4 text-brand" />
-                WhatsApp
-              </ContactLink>
-            </Button>
+            {seller && (
+              <ContactButtons sellerId={seller.id} listingId={listing.id} whatsappText={whatsappText} variant="bar" />
+            )}
           </div>
         </div>
       )}

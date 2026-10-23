@@ -48,29 +48,20 @@ export default async function DashboardPage() {
             </p>
           )}
         </div>
-        {quota?.remaining === 0 ? (
-          <span
-            aria-disabled="true"
-            title="You've reached this month's listing limit"
-            className={`${newListingClass} cursor-not-allowed opacity-50`}
-          >
-            New listing
-          </span>
-        ) : (
-          <div className="flex shrink-0 items-center gap-2 max-sm:w-full">
-            {isDealerPlan(profile.plan) && (
-              <Link
-                href="/dashboard/listings/import"
-                className="rounded-md border border-zinc-300 px-4 py-2.5 text-center text-sm max-sm:flex-1 sm:py-2 dark:border-zinc-700"
-              >
-                Import CSV
-              </Link>
-            )}
-            <Link href="/dashboard/listings/new" className={newListingClass}>
-              New listing
+        {/* Drafts are free, so new listings stay open at the limit; publishing is what's capped. */}
+        <div className="flex shrink-0 items-center gap-2 max-sm:w-full">
+          {isDealerPlan(profile.plan) && (
+            <Link
+              href="/dashboard/listings/import"
+              className="rounded-md border border-zinc-300 px-4 py-2.5 text-center text-sm max-sm:flex-1 sm:py-2 dark:border-zinc-700"
+            >
+              Import CSV
             </Link>
-          </div>
-        )}
+          )}
+          <Link href="/dashboard/listings/new" className={newListingClass}>
+            New listing
+          </Link>
+        </div>
       </div>
 
       {quota?.planExpiresAt && isPlanExpiringSoon(quota) && (

@@ -21,8 +21,8 @@ export function UsageBanner({
         </p>
         <p className="mt-1 text-label text-muted-foreground">
           {quota.limit === null
-            ? `Unlimited listings · ${quota.used} created this month`
-            : `${quota.used} of ${quota.limit} listings used this month`}
+            ? `Unlimited listings · ${quota.used} published this month`
+            : `${quota.used} of ${quota.limit} listings published this month`}
           {quota.featuredAllowance !== null &&
             ` · ${quota.featuredUsed} of ${quota.featuredAllowance} featured listings used`}
         </p>

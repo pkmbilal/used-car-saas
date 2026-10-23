@@ -3,13 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { requireSeller } from "@/lib/auth";
 import { MAX_IMPORT_BYTES, parseListingCsv, type ImportRowError } from "@/lib/listing-import";
-import {
-  getListingQuota,
-  isDealerPlan,
-  PLAN_LABELS,
-  QUOTA_EXCEEDED_DB_MESSAGE,
-  quotaExceededMessage,
-} from "@/lib/plans";
+import { isDealerPlan } from "@/lib/plans";
 import { createClient } from "@/lib/supabase/server";
 
 export type ImportFormState = {
@@ -45,24 +39,12 @@ export async function importListings(
     };
   }
 
-  // Friendly early check; the database trigger is what actually enforces it.
-  const quota = await getListingQuota();
-  if (quota?.remaining === 0) return { error: quotaExceededMessage(quota) };
-  if (quota?.remaining != null && parsed.rows.length > quota.remaining) {
-    return {
-      error: `The file has ${parsed.rows.length} listings, but you have ${quota.remaining} left this month on the ${PLAN_LABELS[quota.plan]} plan. Nothing was imported.`,
-    };
-  }
-
-  // One statement, so the quota trigger failing on any row rolls back all of
-  // them. Drafts, because a listing needs photos before it can go live.
+  // Drafts, because a listing needs photos before it can go live. Drafts don't
+  // use the monthly quota; each listing is charged when first published.
   const supabase = await createClient();
   const { error } = await supabase
     .from("listings")
     .insert(parsed.rows.map((row) => ({ ...row, seller_id: user.id, status: "draft" as const })));
-  if (error?.message === QUOTA_EXCEEDED_DB_MESSAGE && quota) {
-    return { error: quotaExceededMessage(quota) };
-  }
   if (error) return { error: "Could not import the listings. Nothing was imported. Try again." };
 
   revalidatePath("/dashboard", "layout");

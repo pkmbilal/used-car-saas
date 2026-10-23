@@ -4,7 +4,7 @@ import { CITIES } from "@/lib/cities";
 import { BODY_TYPES, CONDITIONS, FEATURE_VALUES, FUEL_TYPES, TRANSMISSIONS } from "@/lib/listing-options";
 import { IMPORT_COLUMNS, MAX_IMPORT_ROWS } from "@/lib/listing-import";
 import { MAKES } from "@/lib/makes";
-import { getListingQuota, isDealerPlan, quotaExceededMessage, quotaSummary } from "@/lib/plans";
+import { getListingQuota, isDealerPlan, quotaReachedNote, quotaSummary } from "@/lib/plans";
 import { ImportForm } from "./import-form";
 
 const COLUMN_HINTS: Record<(typeof IMPORT_COLUMNS)[number], string> = {
@@ -41,13 +41,6 @@ export default async function ImportListingsPage() {
             See dealer plans
           </Link>
         </p>
-      ) : quota?.remaining === 0 ? (
-        <p className="mt-6 rounded-md bg-amber-50 px-4 py-3 text-sm text-amber-900 dark:bg-amber-950 dark:text-amber-200">
-          {quotaExceededMessage(quota)}{" "}
-          <Link href="/pricing" className="font-medium underline">
-            See plans
-          </Link>
-        </p>
       ) : (
         <>
           <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
@@ -56,6 +49,14 @@ export default async function ImportListingsPage() {
           </p>
           {quota && (
             <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">{quotaSummary(quota)}</p>
+          )}
+          {quota?.remaining === 0 && (
+            <p className="mt-6 rounded-md bg-amber-50 px-4 py-3 text-sm text-amber-900 dark:bg-amber-950 dark:text-amber-200">
+              {quotaReachedNote(quota)}{" "}
+              <Link href="/pricing" className="font-medium underline">
+                See plans
+              </Link>
+            </p>
           )}
 
           <div className="mt-8">

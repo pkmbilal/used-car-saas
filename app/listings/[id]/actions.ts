@@ -1,6 +1,7 @@
 "use server";
 
 import { getCurrentUser } from "@/lib/auth";
+import { revealSellerPhone, type RevealResult } from "@/lib/contact-reveal";
 import { isContactKind, recordListingContact, recordListingView } from "@/lib/listings";
 import { parseReport } from "@/lib/moderation";
 import { createClient } from "@/lib/supabase/server";
@@ -42,4 +43,10 @@ export async function recordView(listingId: string): Promise<void> {
 export async function recordContact(listingId: string, kind: string): Promise<void> {
   if (!UUID.test(listingId) || !isContactKind(kind)) return;
   await recordListingContact(listingId, kind);
+}
+
+// Click-to-reveal for seller numbers; rate limited per IP in the database.
+export async function revealPhone(sellerId: string): Promise<RevealResult> {
+  if (!UUID.test(sellerId)) return { error: "unavailable" };
+  return revealSellerPhone(sellerId);
 }

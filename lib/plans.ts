@@ -193,7 +193,12 @@ export async function featureOwnListing(listingId: string): Promise<{ error?: st
 export const QUOTA_EXCEEDED_DB_MESSAGE = "listing_quota_exceeded";
 
 export function quotaExceededMessage(quota: Pick<ListingQuota, "plan" | "limit">): string {
-  return `You've used all ${quota.limit} listings for this month on the ${PLAN_LABELS[quota.plan]} plan. See the Pricing page to upgrade for more listings.`;
+  return `You've published all ${quota.limit} listings for this month on the ${PLAN_LABELS[quota.plan]} plan. Your draft is saved: publish it next month, or see the Pricing page to upgrade.`;
+}
+
+// Shown on the new-listing and import pages: drafts can still be saved.
+export function quotaReachedNote(quota: Pick<ListingQuota, "plan" | "limit">): string {
+  return `You've published all ${quota.limit} listings for this month on the ${PLAN_LABELS[quota.plan]} plan. You can still save drafts and publish them next month, or upgrade for more.`;
 }
 
 export function quotaSummary(quota: ListingQuota): string {
@@ -202,7 +207,7 @@ export function quotaSummary(quota: ListingQuota): string {
     : `${PLAN_LABELS[quota.plan]} plan`;
   return quota.limit === null
     ? `${plan} · Unlimited listings`
-    : `${plan} · ${quota.used} of ${quota.limit} listings used this month`;
+    : `${plan} · ${quota.used} of ${quota.limit} listings published this month`;
 }
 
 // Monthly SAR price per plan, for prefilling recorded payments.

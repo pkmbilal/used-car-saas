@@ -601,7 +601,7 @@ export async function getPublicListing(listingId: string) {
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("listings")
-    .select("*, listing_images(*), seller:profiles!listings_seller_id_fkey(id, full_name, phone, city, created_at, email_verified_at, id_verified_at, plan, business_name, about, logo_key, showroom_address)")
+    .select("*, listing_images(*), seller:profiles!listings_seller_id_fkey(id, full_name, has_phone, city, created_at, email_verified_at, id_verified_at, plan, business_name, about, logo_key, showroom_address)")
     .eq("id", listingId)
     .maybeSingle();
   // A failed query would otherwise look like a missing listing (404).
@@ -614,7 +614,7 @@ export async function getSellerProfile(sellerId: string) {
   const { data: profile } = await supabase
     .from("profiles")
     .select(
-      "id, full_name, phone, city, created_at, email_verified_at, id_verified_at, plan, business_name, about, logo_key, showroom_address",
+      "id, full_name, has_phone, city, created_at, email_verified_at, id_verified_at, plan, business_name, about, logo_key, showroom_address",
     )
     .eq("id", sellerId)
     .eq("role", "seller")
