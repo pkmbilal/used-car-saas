@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/locale-link";
 import { BrandLink } from "@/components/brand";
 import { cityHref, type City } from "@/lib/cities";
 import { COMPANY_NAME } from "@/lib/contact";

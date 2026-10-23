@@ -1,9 +1,10 @@
 "use client";
 
-import Link from "next/link";
+import Link, { useLocale } from "@/components/locale-link";
 import { ChevronDown, Menu } from "lucide-react";
 import { BrandLink } from "@/components/brand";
 import { limeButton, outlineButton } from "@/components/header-styles";
+import { LanguageSwitcher } from "@/components/language-switcher";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -15,6 +16,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Separator } from "@/components/ui/separator";
 import { Sheet, SheetClose, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { dir } from "@/lib/i18n";
 
 export type HeaderLink = { href: string; label: string };
 
@@ -61,6 +63,8 @@ export function UserMenu({ name, links }: { name: string; links: HeaderLink[] })
 // Slide-over navigation for small screens.
 export function MobileNav({ links, signedIn }: { links: HeaderLink[]; signedIn: boolean }) {
   const linkClass = "rounded-md px-3 py-3 text-base font-medium text-white hover:bg-white/10 hover:text-lime";
+  // The menu slides in from the end side: right in English, left in Arabic.
+  const side = dir(useLocale()) === "rtl" ? "left" : "right";
 
   return (
     <Sheet>
@@ -69,7 +73,7 @@ export function MobileNav({ links, signedIn }: { links: HeaderLink[]; signedIn: 
           <Menu className="size-5" />
         </Button>
       </SheetTrigger>
-      <SheetContent className="light pt-safe pb-safe w-72 border-white/10 bg-charcoal text-white [&>[data-slot=sheet-close]]:text-white">
+      <SheetContent side={side} className="light pt-safe pb-safe w-72 border-white/10 bg-charcoal text-white [&>[data-slot=sheet-close]]:text-white">
         <SheetTitle className="sr-only">Menu</SheetTitle>
         <div className="p-4">
           <BrandLink />
@@ -82,6 +86,7 @@ export function MobileNav({ links, signedIn }: { links: HeaderLink[]; signedIn: 
               </Link>
             </SheetClose>
           ))}
+          <LanguageSwitcher className={linkClass} />
         </nav>
         <Separator className="bg-white/10" />
         <div className="flex gap-3 px-4">

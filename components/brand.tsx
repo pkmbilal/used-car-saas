@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Link from "next/link";
+import Link from "@/components/locale-link";
 
 // Trimmed from public/Logo.svg. logo-light.png swaps the navy for white so it
 // reads on the dark header, footer and admin panels.

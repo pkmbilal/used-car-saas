@@ -6,6 +6,8 @@ import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { CITIES } from "@/lib/cities";
 import { formatSAR } from "@/lib/format";
+import { localizePath } from "@/lib/i18n";
+import { requestLocale } from "@/lib/i18n-server";
 import type { ListingFilters } from "@/lib/listings";
 import { cn } from "@/lib/utils";
 
@@ -26,8 +28,8 @@ type Variant = "default" | "hero";
 
 const styles = {
   default: {
-    form: "grid gap-4 p-5 sm:grid-cols-2 lg:grid-cols-[repeat(5,minmax(0,1fr))_auto] lg:items-end lg:gap-3 lg:pl-7",
-    field: "flex min-w-0 flex-col gap-2 lg:border-r lg:border-line lg:pr-3",
+    form: "grid gap-4 p-5 sm:grid-cols-2 lg:grid-cols-[repeat(5,minmax(0,1fr))_auto] lg:items-end lg:gap-3 lg:ps-7",
+    field: "flex min-w-0 flex-col gap-2 lg:border-e lg:border-line lg:pe-3",
     label: "text-caption font-semibold text-ink",
     trigger: undefined,
   },
@@ -81,7 +83,7 @@ const yearLabel = (year: number) => `${year} & newer`;
 
 // Quick search card. A GET form, so the results page stays shareable.
 // The "hero" variant is the larger, segmented version on the home page.
-export function SearchBar({
+export async function SearchBar({
   filters,
   className,
   variant = "default",
@@ -92,6 +94,7 @@ export function SearchBar({
 }) {
   const hero = variant === "hero";
   const style = styles[variant];
+  const action = localizePath(await requestLocale(), "/listings");
 
   return (
     <Card
@@ -111,7 +114,7 @@ export function SearchBar({
           </span>
         </div>
       )}
-      <form method="get" action="/listings" className={style.form}>
+      <form method="get" action={action} className={style.form}>
         {filters?.sort && filters.sort !== "newest" && <input type="hidden" name="sort" value={filters.sort} />}
         <MakeModelSelects
           make={filters?.make}

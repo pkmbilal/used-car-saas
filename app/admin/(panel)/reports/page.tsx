@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Car, Flag, ShieldCheck } from "lucide-react";
 import { RiyalPrice } from "@/components/riyal-price";
-import { StatusBadge } from "@/app/dashboard/listings/status-badge";
+import { StatusBadge } from "@/app/[lang]/dashboard/listings/status-badge";
 import { getOpenReports } from "@/lib/admin";
 import { formatDay } from "@/lib/format";
 import { REPORT_REASONS, type ReportReason } from "@/lib/moderation";

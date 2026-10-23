@@ -1,12 +1,13 @@
 "use client";
 
 import { useActionState, useEffect, useState } from "react";
-import Link from "next/link";
+import Link, { useLocale } from "@/components/locale-link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { saveSearchAction, type SaveSearchState } from "@/app/saved-searches/actions";
+import { saveSearchAction, type SaveSearchState } from "@/app/[lang]/saved-searches/actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { localizePath } from "@/lib/i18n";
 
 type Props = {
   // The validated filters as query params (see listingFiltersToParams).
@@ -27,6 +28,7 @@ export function SaveSearchButton({
   loginHref,
 }: Props) {
   const router = useRouter();
+  const locale = useLocale();
   const [open, setOpen] = useState(false);
   const [state, formAction, pending] = useActionState<SaveSearchState, FormData>(
     saveSearchAction,
@@ -35,8 +37,8 @@ export function SaveSearchButton({
 
   // The session may have expired since the page rendered.
   useEffect(() => {
-    if (state.error === "signin") router.push(loginHref);
-  }, [state.error, router, loginHref]);
+    if (state.error === "signin") router.push(localizePath(locale, loginHref));
+  }, [state.error, router, locale, loginHref]);
 
   useEffect(() => {
     if (state.saved) toast.success("Search saved");
@@ -59,7 +61,7 @@ export function SaveSearchButton({
         type="button"
         variant="outline"
         size="sm"
-        onClick={() => (signedIn ? setOpen(true) : router.push(loginHref))}
+        onClick={() => (signedIn ? setOpen(true) : router.push(localizePath(locale, loginHref)))}
         className="border-brand bg-white text-xs font-semibold text-brand hover:bg-mint hover:text-brand"
       >
         Save this search

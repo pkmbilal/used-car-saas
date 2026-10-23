@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/locale-link";
 import { ArrowRight, MapPin } from "lucide-react";
 import { DealerBadge, DealerLogo } from "@/components/dealer-logo";
 import { VerificationBadges } from "@/components/verification-badges";
@@ -33,7 +33,7 @@ export function DealerCard({ dealer }: { dealer: DealerSummary }) {
             </span>
           )}
           <span>Since {formatMonthYear(profile.created_at)}</span>
-          <span className="ml-auto font-semibold text-ink">
+          <span className="ms-auto font-semibold text-ink">
             {activeListings === 1 ? "1 car" : `${activeListings} cars`}
           </span>
           <span className="flex size-5 items-center justify-center rounded-full border border-ink/80 transition group-hover:border-brand group-hover:bg-brand group-hover:text-white">

@@ -3,7 +3,8 @@
 import { useActionState, useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { Flag } from "lucide-react";
-import { reportListing, type ReportState } from "@/app/listings/[id]/actions";
+import { reportListing, type ReportState } from "@/app/[lang]/listings/[id]/actions";
+import { useLocale } from "@/components/locale-link";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -17,6 +18,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
+import { localizePath } from "@/lib/i18n";
 import { MAX_REPORT_DETAILS, REPORT_REASONS } from "@/lib/moderation";
 
 type Props = {
@@ -27,7 +29,7 @@ type Props = {
 export function ReportListingButton({ listingId, signedIn }: Props) {
   const router = useRouter();
   const pathname = usePathname();
-  const loginHref = `/login?next=${encodeURIComponent(pathname)}`;
+  const loginHref = localizePath(useLocale(), `/login?next=${encodeURIComponent(pathname)}`);
   const [open, setOpen] = useState(false);
   const [state, formAction, pending] = useActionState<ReportState, FormData>(
     reportListing.bind(null, listingId),

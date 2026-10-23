@@ -1,7 +1,8 @@
 "use client";
 
-import Link from "next/link";
+import Link from "@/components/locale-link";
 import { usePathname } from "next/navigation";
+import { stripLocale } from "@/lib/i18n";
 
 // Header link that highlights itself on its own section of the site.
 export function NavLink({
@@ -13,7 +14,7 @@ export function NavLink({
   exact?: boolean;
   children: React.ReactNode;
 }) {
-  const pathname = usePathname();
+  const pathname = stripLocale(usePathname());
   const active = exact ? pathname === href : pathname === href || pathname.startsWith(`${href}/`);
 
   return (

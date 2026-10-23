@@ -39,8 +39,8 @@ export function AuthShell({
 export function RoadLines() {
   return (
     <div aria-hidden className="pointer-events-none absolute inset-0">
-      <div className="absolute -top-24 -right-24 size-80 rounded-full bg-lime/10 blur-3xl" />
-      <div className="absolute -bottom-32 -left-16 size-96 rounded-full bg-brand/30 blur-3xl" />
+      <div className="absolute -top-24 -end-24 size-80 rounded-full bg-lime/10 blur-3xl" />
+      <div className="absolute -bottom-32 -start-16 size-96 rounded-full bg-brand/30 blur-3xl" />
       <svg className="absolute inset-0 hidden size-full lg:block" preserveAspectRatio="none" viewBox="0 0 400 800">
         <g stroke="white" strokeOpacity="0.06" strokeWidth="1.5" fill="none">
           <path d="M200 380 L-40 800" />

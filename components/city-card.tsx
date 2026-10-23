@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/locale-link";
 import { ArrowRight, MapPin } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { cityHref, type City } from "@/lib/cities";

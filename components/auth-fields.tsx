@@ -41,9 +41,9 @@ export function Field({ id, label, icon: Icon, aside, className, ...input }: Inp
       <Label id={id} label={label} aside={aside} />
       <div className="relative">
         {Icon && (
-          <Icon className="pointer-events-none absolute top-1/2 left-3.5 size-[18px] -translate-y-1/2 text-zinc-400" aria-hidden />
+          <Icon className="pointer-events-none absolute top-1/2 start-3.5 size-[18px] -translate-y-1/2 text-zinc-400" aria-hidden />
         )}
-        <input id={id} name={id} required className={cn(inputClass, Icon && "pl-10", className)} {...input} />
+        <input id={id} name={id} required className={cn(inputClass, Icon && "ps-10", className)} {...input} />
       </div>
     </div>
   );
@@ -56,13 +56,13 @@ export function PasswordField({ id, label, aside, ...input }: Omit<InputProps, "
     <div className="flex flex-col gap-1.5">
       <Label id={id} label={label} aside={aside} />
       <div className="relative">
-        <Lock className="pointer-events-none absolute top-1/2 left-3.5 size-[18px] -translate-y-1/2 text-zinc-400" aria-hidden />
+        <Lock className="pointer-events-none absolute top-1/2 start-3.5 size-[18px] -translate-y-1/2 text-zinc-400" aria-hidden />
         <input
           id={id}
           name={id}
           required
           type={shown ? "text" : "password"}
-          className={cn(inputClass, "pr-12 pl-10")}
+          className={cn(inputClass, "pe-12 ps-10")}
           {...input}
         />
         <button
@@ -70,7 +70,7 @@ export function PasswordField({ id, label, aside, ...input }: Omit<InputProps, "
           onClick={() => setShown((s) => !s)}
           aria-label={shown ? "Hide password" : "Show password"}
           aria-pressed={shown}
-          className="absolute top-1/2 right-1.5 grid size-9 -translate-y-1/2 place-items-center rounded-lg text-zinc-500 hover:bg-zinc-100 hover:text-ink"
+          className="absolute top-1/2 end-1.5 grid size-9 -translate-y-1/2 place-items-center rounded-lg text-zinc-500 hover:bg-zinc-100 hover:text-ink"
         >
           {shown ? <EyeOff className="size-[18px]" aria-hidden /> : <Eye className="size-[18px]" aria-hidden />}
         </button>

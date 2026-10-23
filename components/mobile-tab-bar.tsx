@@ -1,14 +1,15 @@
 "use client";
 
-import Link from "next/link";
+import Link from "@/components/locale-link";
 import { usePathname } from "next/navigation";
+import { stripLocale } from "@/lib/i18n";
 import { Car, Heart, House, Plus, Search, UserRound, type LucideIcon } from "lucide-react";
 
 type Tab = { href: string; label: string; icon: LucideIcon; exact?: boolean; primary?: boolean };
 
 // Phone-only app-style navigation, fixed to the bottom of the screen.
 export function MobileTabBar({ signedIn, isSeller }: { signedIn: boolean; isSeller: boolean }) {
-  const pathname = usePathname();
+  const pathname = stripLocale(usePathname());
 
   // A listing's own page has its fixed Call/WhatsApp bar instead.
   if (/^\/listings\/[^/]+$/.test(pathname)) return null;

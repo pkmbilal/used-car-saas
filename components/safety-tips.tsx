@@ -14,7 +14,7 @@ export function SafetyTips() {
         <ShieldAlert className="size-4 text-brand" />
         Stay safe when buying
       </h2>
-      <ul className="mt-2.5 flex list-disc flex-col gap-1.5 pl-5 text-caption leading-relaxed text-ink/75">
+      <ul className="mt-2.5 flex list-disc flex-col gap-1.5 ps-5 text-caption leading-relaxed text-ink/75">
         {TIPS.map((tip) => (
           <li key={tip}>{tip}</li>
         ))}

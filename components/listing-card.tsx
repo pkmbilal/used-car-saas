@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Link from "next/link";
+import Link from "@/components/locale-link";
 import { FavoriteButton } from "@/components/favorite-button";
 import { ArrowRight, Car, Fuel, MapPin } from "lucide-react";
 import { RiyalPrice } from "@/components/riyal-price";
@@ -41,7 +41,7 @@ export function ListingCard({ listing, favorited, sizes }: CardProps) {
             )}
             {listing.sellerType && (
               <Badge
-                className={`absolute bottom-3 left-3 text-caption font-semibold ${
+                className={`absolute bottom-3 start-3 text-caption font-semibold ${
                   listing.sellerType === "dealer" ? "bg-charcoal text-lime" : "bg-white/90 text-ink"
                 }`}
               >
@@ -49,7 +49,7 @@ export function ListingCard({ listing, favorited, sizes }: CardProps) {
               </Badge>
             )}
             {isFeatured(listing) && (
-              <Badge className="absolute top-3 left-3 bg-lime text-caption font-semibold text-on-lime">
+              <Badge className="absolute top-3 start-3 bg-lime text-caption font-semibold text-on-lime">
                 Featured
               </Badge>
             )}
@@ -87,7 +87,7 @@ export function ListingCard({ listing, favorited, sizes }: CardProps) {
                 <MapPin className="size-3.5 sm:size-3" />
                 {listing.city}
               </span>
-              <span className="ml-auto flex size-5 items-center justify-center rounded-full border border-ink/80 transition group-hover:border-brand group-hover:bg-brand group-hover:text-white">
+              <span className="ms-auto flex size-5 items-center justify-center rounded-full border border-ink/80 transition group-hover:border-brand group-hover:bg-brand group-hover:text-white">
                 <ArrowRight className="size-2.5" strokeWidth={2.6} />
               </span>
             </div>
@@ -98,7 +98,7 @@ export function ListingCard({ listing, favorited, sizes }: CardProps) {
         <FavoriteButton
           listingId={listing.id}
           favorited={favorited}
-          className="absolute top-2.5 right-2.5"
+          className="absolute top-2.5 end-2.5"
         />
       )}
     </div>

@@ -3,8 +3,10 @@
 import { useOptimistic, useState, useTransition } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { Heart } from "lucide-react";
-import { toggleFavorite } from "@/app/favorites/actions";
+import { toggleFavorite } from "@/app/[lang]/favorites/actions";
+import { useLocale } from "@/components/locale-link";
 import { Button } from "@/components/ui/button";
+import { localizePath } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 
 type Props = {
@@ -18,6 +20,7 @@ type Props = {
 export function FavoriteButton({ listingId, favorited, variant = "icon", className = "" }: Props) {
   const router = useRouter();
   const pathname = usePathname();
+  const locale = useLocale();
   const [saved, setSaved] = useState(favorited);
   const [optimistic, setOptimistic] = useOptimistic(saved);
   const [pending, startTransition] = useTransition();
@@ -30,7 +33,7 @@ export function FavoriteButton({ listingId, favorited, variant = "icon", classNa
       setOptimistic(next);
       const result = await toggleFavorite(listingId, next);
       if (result.error === "signin") {
-        router.push(`/login?next=${encodeURIComponent(pathname)}`);
+        router.push(localizePath(locale, `/login?next=${encodeURIComponent(pathname)}`));
       } else if (result.error) {
         setError(result.error);
       } else {

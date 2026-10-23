@@ -3,9 +3,11 @@ import { NextResponse, type NextRequest } from "next/server";
 import type { Database } from "./database.types";
 
 // Refreshes the Supabase auth session on every matched request so Server
-// Components always see a valid session cookie.
-export async function updateSession(request: NextRequest) {
-  let response = NextResponse.next({ request });
+// Components always see a valid session cookie. requestHeaders replaces the
+// incoming headers for the rest of the request (proxy.ts adds the locale).
+export async function updateSession(request: NextRequest, requestHeaders: Headers = request.headers) {
+  const next = () => NextResponse.next({ request: { headers: requestHeaders } });
+  let response = next();
 
   const supabase = createServerClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -19,7 +21,10 @@ export async function updateSession(request: NextRequest) {
           cookiesToSet.forEach(({ name, value }) =>
             request.cookies.set(name, value),
           );
-          response = NextResponse.next({ request });
+          // request.cookies writes through to request.headers' cookie line;
+          // carry it over so the page sees the refreshed session.
+          requestHeaders.set("cookie", request.headers.get("cookie") ?? "");
+          response = next();
           cookiesToSet.forEach(({ name, value, options }) =>
             response.cookies.set(name, value, options),
           );

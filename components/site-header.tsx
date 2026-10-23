@@ -1,8 +1,9 @@
-import Link from "next/link";
+import Link from "@/components/locale-link";
 import { Car } from "lucide-react";
 import { BrandLink } from "@/components/brand";
 import { MobileNav, UserMenu, type HeaderLink } from "@/components/header-menus";
 import { HeaderShell } from "@/components/header-shell";
+import { LanguageSwitcher } from "@/components/language-switcher";
 import { outlineButton, sellButton } from "@/components/header-styles";
 import { MobileTabBar } from "@/components/mobile-tab-bar";
 import { NavLink } from "@/components/nav-link";
@@ -51,7 +52,8 @@ export async function SiteHeader() {
               </NavLink>
             ))}
           </div>
-          <div className="ml-auto hidden items-center gap-3 md:flex">
+          <div className="ms-auto hidden items-center gap-3 md:flex">
+            <LanguageSwitcher className="rounded-full px-2 text-label font-medium text-white/70 transition-colors hover:text-white" />
             {current ? (
               <UserMenu name={current.profile.full_name || current.user.email || "Account"} links={accountLinks} />
             ) : (
@@ -66,7 +68,7 @@ export async function SiteHeader() {
               </Link>
             </Button>
           </div>
-          <div className="ml-auto md:hidden">
+          <div className="ms-auto md:hidden">
             <MobileNav links={menuLinks} signedIn={!!current} />
           </div>
         </nav>
