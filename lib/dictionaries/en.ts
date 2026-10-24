@@ -624,6 +624,18 @@ export const en = {
     intro: "Find used cars from every major make, sold by private sellers and dealers across the Kingdom.",
     count: plural({ one: "{count} Brand", other: "{count} Brands" }),
     forSale: plural({ one: "{count} car for sale", other: "{count} cars for sale" }),
+    makeNotFound: "Brand not found",
+    makeMetaTitle: "Used {make} cars for sale in Saudi Arabia | KarSouq",
+    makeMetaDescription:
+      "Browse used {make} cars for sale across Saudi Arabia from private sellers and dealers, and contact them directly.",
+    brands: "Brands",
+    makeTitleStart: "Used",
+    makeTitleEnd: "Cars",
+    noCars: "No {make} cars listed yet.",
+    refine: "Refine with filters",
+    moreEyebrow: "MORE BRANDS",
+    otherBrands: "Other Brands",
+    allBrands: "All Brands",
   },
   locations: {
     metaTitle: "Used cars by city | KarSouq",

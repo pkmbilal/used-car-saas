@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 import { CITIES, cityHref } from "@/lib/cities";
 import { DEFAULT_LOCALE, LOCALES, localizePath } from "@/lib/i18n";
 import { getSitemapListings } from "@/lib/listings";
+import { MAKES, makeHref } from "@/lib/makes";
 import { siteUrl } from "@/lib/site";
 import { getDealerStorefronts } from "@/lib/storefront";
 
@@ -13,6 +14,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const [listings, dealers] = await Promise.all([getSitemapListings(), getDealerStorefronts()]);
   // Empty city pages are thin content; only list cities with active listings.
   const listedCities = new Set(listings.map((listing) => listing.city));
+  const listedMakes = new Set(listings.map((listing) => listing.make));
 
   const entries: Entry[] = [
     { path: "/", changeFrequency: "daily", priority: 1 },
@@ -25,6 +27,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { path: "/privacy", changeFrequency: "yearly", priority: 0.1 },
     { path: "/terms", changeFrequency: "yearly", priority: 0.1 },
     ...CITIES.filter((city) => listedCities.has(city)).map((city) => ({ path: cityHref(city), changeFrequency: "daily" as const, priority: 0.7 })),
+    ...MAKES.filter((make) => make !== "Other" && listedMakes.has(make)).map((make) => ({
+      path: makeHref(make),
+      changeFrequency: "daily" as const,
+      priority: 0.7,
+    })),
     ...dealers.map((dealer) => ({ path: `/sellers/${dealer.id}`, changeFrequency: "weekly" as const, priority: 0.5 })),
     ...listings.map((listing) => ({
       path: `/listings/${listing.id}`,

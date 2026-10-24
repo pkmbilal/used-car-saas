@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { Analytics } from "@vercel/analytics/next";
 import { notFound } from "next/navigation";
 import { DirectionProvider } from "@/components/direction-provider";
 import { I18nProvider } from "@/components/i18n-provider";
@@ -54,6 +55,7 @@ export default async function RootLayout({ children, params }: LayoutProps<"/[la
             />
           </I18nProvider>
         </DirectionProvider>
+        <Analytics />
       </body>
     </html>
   );

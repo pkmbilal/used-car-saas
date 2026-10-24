@@ -1,16 +1,28 @@
 import Link from "@/components/locale-link";
 import { BrandLink } from "@/components/brand";
 import { makeName } from "@/lib/car-names";
-import { cityHref, type City } from "@/lib/cities";
+import { citiesByCount, cityHref } from "@/lib/cities";
 import { COMPANY_NAME } from "@/lib/contact";
 import { cityName, fmt } from "@/lib/dictionary";
 import { getDictionary } from "@/lib/i18n-server";
+import { getActiveFacetCounts } from "@/lib/listings";
+import { makeHref, type Make } from "@/lib/makes";
 
-const TOP_MAKES = ["Toyota", "Hyundai", "Nissan", "Lexus"];
-const TOP_CITIES: City[] = ["Riyadh", "Jeddah", "Dammam", "Khobar"];
+const TOP_MAKES: Make[] = ["Toyota", "Hyundai", "Nissan", "Lexus"];
 
 export async function SiteFooter() {
-  const { t, locale } = await getDictionary();
+  const [{ t, locale }, cityCounts] = await Promise.all([
+    getDictionary(),
+    // The footer is on every page, so a failed count shouldn't break the page.
+    getActiveFacetCounts().then(
+      (facets) => facets.cities,
+      () => new Map<string, number>(),
+    ),
+  ]);
+  // Link only cities that have cars; an empty city page is a dead end.
+  const topCities = citiesByCount(cityCounts)
+    .filter((city) => cityCounts.has(city))
+    .slice(0, 4);
   const columns: { title: string; links: [string, string][] }[] = [
     {
       title: t.footer.buy,
@@ -22,12 +34,12 @@ export async function SiteFooter() {
     },
     {
       title: t.footer.popularMakes,
-      links: TOP_MAKES.map((make) => [makeName(locale, make), `/listings?make=${encodeURIComponent(make)}`]),
+      links: TOP_MAKES.map((make) => [makeName(locale, make), makeHref(make)]),
     },
     {
       title: t.footer.cities,
       links: [
-        ...TOP_CITIES.map((city): [string, string] => [cityName(t, city), cityHref(city)]),
+        ...topCities.map((city): [string, string] => [cityName(t, city), cityHref(city)]),
         [t.footer.allCities, "/locations"],
       ],
     },

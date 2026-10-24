@@ -37,6 +37,20 @@ export function isMake(value: unknown): value is Make {
   return typeof value === "string" && (MAKES as readonly string[]).includes(value);
 }
 
+// URL slug for a make's brand page, e.g. "Land Rover" -> "land-rover".
+export function makeSlug(make: Make): string {
+  return make.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+}
+
+// "Other" is a catch-all, not a brand, so it has no page.
+export function makeFromSlug(slug: string): Make | undefined {
+  return MAKES.find((make) => make !== "Other" && makeSlug(make) === slug);
+}
+
+export function makeHref(make: Make): string {
+  return `/brands/${makeSlug(make)}`;
+}
+
 // Current and recent-past models sold in KSA/GCC, alphabetical per make.
 export const MODELS_BY_MAKE: Record<Make, readonly string[]> = {
   Audi: [
