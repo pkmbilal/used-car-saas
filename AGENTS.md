@@ -152,6 +152,8 @@ Goal: growth loops and stickiness.
     not `ml-`/`pr-`/`left-`/`text-left`).
   - Stored values (cities, fuel types, …) stay English; show them through
     `cityName()` / `optionLabel()`.
+  - Car makes/models are shown through `makeName()` / `modelName()` /
+    `carName()` (`lib/car-names.ts`); add Arabic names there for new models.
 - Currency is SAR; format with `Intl.NumberFormat('ar-SA', { style: 'currency', currency: 'SAR' })`
   or an equivalent helper — don't hardcode "$" anywhere.
 

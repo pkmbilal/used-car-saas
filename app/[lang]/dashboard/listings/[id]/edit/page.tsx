@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "@/components/locale-link";
 import { notFound } from "next/navigation";
 import { requireSeller } from "@/lib/auth";
+import { carName } from "@/lib/car-names";
 import { getDictionary } from "@/lib/i18n-server";
 import { getSellerListing } from "@/lib/listings";
 import { updateListing } from "../../actions";
@@ -22,7 +23,7 @@ export default async function EditListingPage({
   const { user } = await requireSeller(`/dashboard/listings/${id}/edit`);
   const listing = await getSellerListing(user.id, id);
   if (!listing) notFound();
-  const { t } = await getDictionary();
+  const { t, locale } = await getDictionary();
   const p = t.dashboard.editPage;
 
   return (
@@ -33,7 +34,7 @@ export default async function EditListingPage({
       <div className="mt-2 flex flex-wrap items-start justify-between gap-4">
         <div className="flex items-center gap-3">
           <h1 className="text-2xl font-semibold tracking-tight">
-            {listing.year} {listing.make} {listing.model}
+            {carName(locale, listing.make, listing.model, listing.year)}
           </h1>
           <StatusBadge status={listing.status} />
         </div>

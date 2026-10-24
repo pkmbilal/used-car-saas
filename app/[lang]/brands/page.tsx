@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { makeName } from "@/lib/car-names";
 import { count } from "@/lib/dictionary";
 import { getDictionary, localeAlternates } from "@/lib/i18n-server";
 import { getActiveFacetCounts } from "@/lib/listings";
@@ -18,9 +19,11 @@ export default async function BrandsPage() {
   const facets = await getActiveFacetCounts();
   const { t, locale } = await getDictionary();
   const b = t.brands;
-  // Most listings first, then alphabetical.
+  // Most listings first, then alphabetical by the displayed name.
   const brands = MAKES.filter((make) => make !== "Other").sort(
-    (a, b) => (facets.makes.get(b) ?? 0) - (facets.makes.get(a) ?? 0) || a.localeCompare(b),
+    (x, y) =>
+      (facets.makes.get(y) ?? 0) - (facets.makes.get(x) ?? 0) ||
+      makeName(locale, x).localeCompare(makeName(locale, y), locale),
   );
 
   return (

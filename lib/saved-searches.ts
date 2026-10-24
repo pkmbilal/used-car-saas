@@ -1,6 +1,7 @@
 import "server-only";
+import { makeName, modelName } from "@/lib/car-names";
 import { cityName, fmt, optionLabel } from "@/lib/dictionary";
-import { type Dictionary } from "@/lib/dictionaries";
+import type { Dictionary } from "@/lib/dictionaries";
 import type { Locale } from "@/lib/i18n";
 import {
   applyListingFilters,
@@ -64,8 +65,8 @@ export function describeFilters(filters: ListingFilters, t: Dictionary, locale: 
 
   return [
     filters.q ? `“${filters.q}”` : null,
-    filters.make ?? null,
-    filters.model ?? null,
+    filters.make ? makeName(locale, filters.make) : null,
+    filters.model ? modelName(locale, filters.make ?? "", filters.model) : null,
     filters.city ? cityName(t, filters.city) : null,
     joined(filters.conditions.map((value) => optionLabel(t.options.condition, value))),
     joined(filters.bodyTypes.map((value) => optionLabel(t.options.bodyType, value))),

@@ -5,6 +5,7 @@ import { FormSelect } from "@/components/form-select";
 import { useDictionary } from "@/components/i18n-provider";
 import { Label } from "@/components/ui/label";
 import { Select, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { makeName, modelName } from "@/lib/car-names";
 import { MAKES, modelsFor } from "@/lib/makes";
 import { cn } from "@/lib/utils";
 
@@ -37,7 +38,7 @@ export function MakeModelSelects({
   makeLabel?: React.ReactNode;
   modelLabel?: React.ReactNode;
 }) {
-  const { t } = useDictionary();
+  const { t, locale } = useDictionary();
   const [make, setMake] = useState(initialMake);
   const models = make ? modelsFor(make) : [];
 
@@ -52,7 +53,7 @@ export function MakeModelSelects({
           name="make"
           defaultValue={initialMake}
           placeholder={makePlaceholder}
-          options={MAKES.map((option) => ({ value: option, label: option }))}
+          options={MAKES.map((option) => ({ value: option, label: makeName(locale, option) }))}
           onValueChange={setMake}
           className={triggerClassName}
         />
@@ -68,7 +69,7 @@ export function MakeModelSelects({
             name="model"
             defaultValue={make === initialMake ? initialModel : undefined}
             placeholder={modelPlaceholder}
-            options={models.map((option) => ({ value: option, label: option }))}
+            options={models.map((option) => ({ value: option, label: modelName(locale, make ?? "", option) }))}
             className={triggerClassName}
           />
         ) : (

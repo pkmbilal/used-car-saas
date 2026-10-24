@@ -1,5 +1,6 @@
 import Link from "@/components/locale-link";
 import { BrandLink } from "@/components/brand";
+import { makeName } from "@/lib/car-names";
 import { cityHref, type City } from "@/lib/cities";
 import { COMPANY_NAME } from "@/lib/contact";
 import { cityName, fmt } from "@/lib/dictionary";
@@ -9,7 +10,7 @@ const TOP_MAKES = ["Toyota", "Hyundai", "Nissan", "Lexus"];
 const TOP_CITIES: City[] = ["Riyadh", "Jeddah", "Dammam", "Khobar"];
 
 export async function SiteFooter() {
-  const { t } = await getDictionary();
+  const { t, locale } = await getDictionary();
   const columns: { title: string; links: [string, string][] }[] = [
     {
       title: t.footer.buy,
@@ -21,7 +22,7 @@ export async function SiteFooter() {
     },
     {
       title: t.footer.popularMakes,
-      links: TOP_MAKES.map((make) => [make, `/listings?make=${encodeURIComponent(make)}`]),
+      links: TOP_MAKES.map((make) => [makeName(locale, make), `/listings?make=${encodeURIComponent(make)}`]),
     },
     {
       title: t.footer.cities,

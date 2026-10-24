@@ -1,5 +1,6 @@
+import { makeName, modelName } from "@/lib/car-names";
 import { cityName, fmt, optionLabel } from "@/lib/dictionary";
-import { type Dictionary } from "@/lib/dictionaries";
+import type { Dictionary } from "@/lib/dictionaries";
 import { formatKm, formatSAR } from "@/lib/format";
 import type { Locale } from "@/lib/i18n";
 import { bodyTypeLabel, capitalize } from "@/lib/listing-options";
@@ -33,8 +34,8 @@ export function listingDescription(listing: SeoListing, t: Dictionary, locale: L
     .join(t.list.separator);
   return fmt(t.seo.listingDescription, {
     year: listing.year,
-    make: listing.make,
-    model: listing.model,
+    make: makeName(locale, listing.make),
+    model: modelName(locale, listing.make, listing.model),
     city: cityName(t, listing.city),
     specs,
     price: formatSAR(listing.price, locale),

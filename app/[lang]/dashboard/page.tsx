@@ -4,6 +4,7 @@ import Link from "@/components/locale-link";
 import type { Metadata } from "next";
 import { rich } from "@/components/rich-text";
 import { requireSeller } from "@/lib/auth";
+import { carName } from "@/lib/car-names";
 import { cityName, fmt } from "@/lib/dictionary";
 import { getDictionary } from "@/lib/i18n-server";
 import { formatDay, formatKm, formatListingStats } from "@/lib/format";
@@ -120,7 +121,7 @@ export default async function DashboardPage() {
                 <div className="min-w-0 flex-1 max-sm:basis-[calc(100%-8rem)]">
                   <div className="flex items-center gap-2">
                     <Link href={editHref} className="truncate font-medium">
-                      {listing.year} {listing.make} {listing.model}
+                      {carName(locale, listing.make, listing.model, listing.year)}
                     </Link>
                     <StatusBadge status={listing.status} />
                   </div>

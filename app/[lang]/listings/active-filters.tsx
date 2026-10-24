@@ -1,5 +1,6 @@
 import Link from "@/components/locale-link";
 import { X } from "lucide-react";
+import { makeName, modelName } from "@/lib/car-names";
 import { cityName, fmt, optionLabel } from "@/lib/dictionary";
 import type { Dictionary } from "@/lib/dictionaries";
 import { formatKm, formatSAR } from "@/lib/format";
@@ -33,8 +34,8 @@ function chipsFor(filters: ListingFilters, t: Dictionary, locale: Locale): Chip[
 
   if (filters.q) chips.push({ key: "q", label: `“${filters.q}”`, without: { q: undefined } });
   // Removing the make drops the model too; a model only counts alongside its make.
-  if (filters.make) chips.push({ key: "make", label: filters.make, without: { make: undefined, model: undefined } });
-  if (filters.model) chips.push({ key: "model", label: filters.model, without: { model: undefined } });
+  if (filters.make) chips.push({ key: "make", label: makeName(locale, filters.make), without: { make: undefined, model: undefined } });
+  if (filters.model) chips.push({ key: "model", label: modelName(locale, filters.make ?? "", filters.model), without: { model: undefined } });
   if (filters.city) chips.push({ key: "city", label: cityName(t, filters.city), without: { city: undefined } });
   if (filters.minPrice !== undefined || filters.maxPrice !== undefined) {
     chips.push({

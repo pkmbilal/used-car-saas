@@ -5,6 +5,7 @@ import { ArrowRight, Car, Fuel, MapPin } from "lucide-react";
 import { RiyalPrice } from "@/components/riyal-price";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
+import { carName } from "@/lib/car-names";
 import { formatKm } from "@/lib/format";
 import { getDictionary } from "@/lib/i18n-server";
 import { isFeatured, type ListingWithImages } from "@/lib/listings";
@@ -32,7 +33,7 @@ export async function ListingCard({ listing, favorited, sizes }: CardProps) {
             {cover && (
               <Image
                 src={cover.url}
-                alt={`${listing.year} ${listing.make} ${listing.model}`}
+                alt={carName(locale, listing.make, listing.model, listing.year)}
                 fill
                 sizes={
                   sizes ??
@@ -58,7 +59,7 @@ export async function ListingCard({ listing, favorited, sizes }: CardProps) {
           </div>
           <div className="flex flex-1 flex-col px-4 pt-3.5 pb-4">
             <p className="truncate text-sm font-semibold">
-              {listing.make} {listing.model}
+              {carName(locale, listing.make, listing.model)}
             </p>
             <p className="mt-2 flex flex-wrap gap-x-2 text-caption text-muted-foreground">
               <span>{listing.year}</span>

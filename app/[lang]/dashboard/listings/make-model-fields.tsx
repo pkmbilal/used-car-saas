@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useDictionary } from "@/components/i18n-provider";
+import { makeName, modelName } from "@/lib/car-names";
 import { MAKES, modelsFor } from "@/lib/makes";
 import { Field, inputClass } from "./form-fields";
 
@@ -21,7 +22,7 @@ export function MakeModelFields({
   make?: string;
   model?: string;
 }) {
-  const { t } = useDictionary();
+  const { t, locale } = useDictionary();
   const f = t.dashboard.form;
   const [make, setMake] = useState(initialMake ?? "");
   const known = initialModel ? findModel(make, initialModel) : undefined;
@@ -51,7 +52,7 @@ export function MakeModelFields({
           </option>
           {MAKES.map((option) => (
             <option key={option} value={option}>
-              {option}
+              {makeName(locale, option)}
             </option>
           ))}
         </select>
@@ -71,7 +72,7 @@ export function MakeModelFields({
             </option>
             {models.map((option) => (
               <option key={option} value={option}>
-                {option}
+                {modelName(locale, make, option)}
               </option>
             ))}
             <option value={TYPE_MODEL}>{f.otherModel}</option>

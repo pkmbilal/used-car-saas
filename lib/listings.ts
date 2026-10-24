@@ -1,5 +1,6 @@
 import "server-only";
 import { cache } from "react";
+import { arabicToStoredNames } from "@/lib/car-names";
 import { CITIES, isCity } from "@/lib/cities";
 import {
   BODY_TYPES,
@@ -406,7 +407,8 @@ export function applyListingFilters<Q extends ListingFilterQuery>(
   filters: ListingFilters,
 ): Q {
   query = query.eq("status", "active");
-  const tsQuery = filters.q ? toPrefixTsQuery(filters.q) : null;
+  // Arabic make/model names match their stored English spelling.
+  const tsQuery = filters.q ? toPrefixTsQuery(arabicToStoredNames(filters.q)) : null;
   if (tsQuery) query = query.textSearch("search_vector", tsQuery, { config: "simple" });
   if (filters.make) query = query.eq("make", filters.make);
   // Case-insensitive exact match; known model names contain no % or _.

@@ -29,6 +29,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { getCurrentUser } from "@/lib/auth";
+import { carName, makeName, modelName } from "@/lib/car-names";
 import { cityName, fmt, optionLabel } from "@/lib/dictionary";
 import { getFavoriteIds } from "@/lib/favorites";
 import { localizePath } from "@/lib/i18n";
@@ -58,8 +59,8 @@ export async function generateMetadata({
   if (!listing) return { title: t.listingPage.notFoundTitle };
   const title = fmt(t.listingPage.metaTitle, {
     year: listing.year,
-    make: listing.make,
-    model: listing.model,
+    make: makeName(locale, listing.make),
+    model: modelName(locale, listing.make, listing.model),
     price: formatSAR(listing.price, locale),
   });
   const description = listingDescription(listing, t, locale);
@@ -84,7 +85,7 @@ export default async function ListingPage({ params }: PageProps<"/[lang]/listing
   const similarPromise = getSimilarListings(listing, 4);
   const current = await currentPromise;
 
-  const name = `${listing.make} ${listing.model}`;
+  const name = carName(locale, listing.make, listing.model);
   const title = `${listing.year} ${name}`;
   const isOwner = current?.user.id === listing.seller_id;
   const seller = listing.seller;
@@ -108,8 +109,8 @@ export default async function ListingPage({ params }: PageProps<"/[lang]/listing
 
   const specIcon = { className: "size-4", strokeWidth: 1.8 };
   const specs = [
-    { label: p.specs.make, value: listing.make, icon: <BadgeCheck {...specIcon} /> },
-    { label: p.specs.model, value: listing.model, icon: <Car {...specIcon} /> },
+    { label: p.specs.make, value: makeName(locale, listing.make), icon: <BadgeCheck {...specIcon} /> },
+    { label: p.specs.model, value: modelName(locale, listing.make, listing.model), icon: <Car {...specIcon} /> },
     { label: p.specs.year, value: String(listing.year), icon: <CalendarDays {...specIcon} /> },
     { label: p.specs.mileage, value: formatKm(listing.mileage, locale), icon: <Gauge {...specIcon} /> },
     { label: p.specs.fuelType, value: fuel, icon: <Fuel {...specIcon} /> },

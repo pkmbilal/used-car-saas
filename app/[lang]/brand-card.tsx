@@ -1,4 +1,5 @@
 import Link from "@/components/locale-link";
+import { makeName } from "@/lib/car-names";
 import { count as countLabel } from "@/lib/dictionary";
 import { getDictionary } from "@/lib/i18n-server";
 import { BrandLogo } from "./brand-logo";
@@ -14,7 +15,7 @@ export async function BrandCard({ make, count }: { make: string; count: number }
         <BrandLogo make={make} />
       </span>
       <span className="text-center">
-        <span className="block text-xs font-semibold">{make}</span>
+        <span className="block text-xs font-semibold">{makeName(locale, make)}</span>
         <span className="mt-0.5 block text-eyebrow text-muted-foreground">
           {countLabel(locale, count, t.common.cars)}
         </span>
