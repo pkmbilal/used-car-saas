@@ -1,0 +1,129 @@
+"use client";
+
+import { useDictionary } from "@/components/i18n-provider";
+import Link from "@/components/locale-link";
+import { rich } from "@/components/rich-text";
+import { useState, useTransition } from "react";
+import {
+  ID_DOC_TYPES,
+  isIdDocType,
+  MAX_ID_DOC_BYTES,
+  MAX_ID_DOCS,
+} from "@/lib/verification-options";
+import { fmt, translateMessage } from "@/lib/dictionary";
+import { requestIdDocUploadAction, submitIdVerificationAction } from "./actions";
+
+export function IdUploadForm() {
+  const [files, setFiles] = useState<File[]>([]);
+  const [pending, startTransition] = useTransition();
+  const [progress, setProgress] = useState<string>();
+  const [error, setError] = useState<string>();
+  const [consented, setConsented] = useState(false);
+  const { t } = useDictionary();
+  const v = t.account.verification;
+  const d = t.account.dealer;
+
+  // Uploads one file: presign → PUT straight to the private bucket.
+  async function uploadFile(file: File): Promise<{ key: string } | { error: string }> {
+    const presigned = await requestIdDocUploadAction(file.type, file.size);
+    if ("error" in presigned) return { error: translateMessage(t, presigned.error) };
+
+    const response = await fetch(presigned.url, {
+      method: "PUT",
+      headers: { "Content-Type": file.type },
+      body: file,
+    });
+    if (!response.ok) return { error: fmt(d.uploadFailed, { name: file.name }) };
+    return { key: presigned.key };
+  }
+
+  function handleSelect(fileList: FileList | null) {
+    setError(undefined);
+    const selected = Array.from(fileList ?? []);
+    if (selected.length > MAX_ID_DOCS) {
+      setError(fmt(v.tooMany, { n: MAX_ID_DOCS }));
+      return;
+    }
+    const invalid = selected.find((file) => !isIdDocType(file.type));
+    if (invalid) return setError(fmt(d.fileType, { name: invalid.name }));
+    const tooBig = selected.find((file) => file.size > MAX_ID_DOC_BYTES);
+    if (tooBig) return setError(fmt(d.fileSize, { name: tooBig.name }));
+    setFiles(selected);
+  }
+
+  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (files.length === 0) return setError(v.chooseFirst);
+    if (!consented) return setError(v.tickConsent);
+    setError(undefined);
+
+    startTransition(async () => {
+      const keys: string[] = [];
+      for (const [index, file] of files.entries()) {
+        setProgress(fmt(d.uploading, { index: index + 1, count: files.length }));
+        const uploaded = await uploadFile(file).catch(() => ({
+          error: fmt(d.uploadFailed, { name: file.name }),
+        }));
+        if ("error" in uploaded) {
+          setProgress(undefined);
+          setError(uploaded.error);
+          return;
+        }
+        keys.push(uploaded.key);
+      }
+
+      setProgress(d.submitting);
+      const result = await submitIdVerificationAction(keys);
+      setProgress(undefined);
+      if (result.error) setError(translateMessage(t, result.error));
+    });
+  }
+
+  return (
+    <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+      <div className="flex flex-col gap-1">
+        <label htmlFor="id_docs" className="text-sm font-medium">
+          {v.docsLabel}
+        </label>
+        <input
+          id="id_docs"
+          type="file"
+          accept={Object.keys(ID_DOC_TYPES).join(",")}
+          multiple
+          disabled={pending}
+          onChange={(event) => handleSelect(event.target.files)}
+          className="text-sm"
+        />
+        <p className="text-xs text-zinc-600 dark:text-zinc-400">
+          {v.docsHint}
+        </p>
+      </div>
+      <label className="flex items-start gap-2 text-xs text-zinc-600 dark:text-zinc-400">
+        <input
+          type="checkbox"
+          checked={consented}
+          disabled={pending}
+          onChange={(event) => setConsented(event.target.checked)}
+          className="mt-0.5"
+        />
+        <span>
+          {rich(v.consent, {
+            privacy: (
+              <Link href="/privacy" className="font-medium underline">
+                {v.privacy}
+              </Link>
+            ),
+          })}
+        </span>
+      </label>
+      <button
+        type="submit"
+        disabled={pending || files.length === 0 || !consented}
+        className="self-start rounded-md bg-zinc-900 px-4 py-2 text-sm font-medium text-white disabled:opacity-50 dark:bg-zinc-100 dark:text-zinc-900"
+      >
+        {progress ?? v.submit}
+      </button>
+      {error && <p className="text-sm text-red-600">{error}</p>}
+    </form>
+  );
+}

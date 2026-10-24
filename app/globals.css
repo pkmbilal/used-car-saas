@@ -139,6 +139,16 @@
       font-size: 106.25%;
     }
   }
+  /* Arabic pages: Plex Sans Arabic (which also covers Latin) everywhere,
+     including the display headings that use Poppins in English. */
+  html[lang="ar"] {
+    --font-poppins: var(--font-sans);
+  }
+  /* Directional icons point the way the page reads. `scale` (not transform)
+     leaves Tailwind's translate utilities working. */
+  [dir="rtl"] :is(.lucide-arrow-left, .lucide-arrow-right, .lucide-chevron-left, .lucide-chevron-right) {
+    scale: -1 1;
+  }
   /* Phones: keep page content clear of the fixed bottom tab bar. */
   @media (width < 48rem) {
     body:has([data-tab-bar]) {
@@ -268,4 +278,10 @@
 }
 @keyframes ks-pulse {
   50% { opacity: 0.55; }
+}
+
+/* Arabic letters join, so letter-spacing breaks the words apart. Unlayered,
+   so it wins over the tracking-* utilities used on English eyebrows. */
+html[lang="ar"] :not(input)[class*="tracking-"] {
+  letter-spacing: normal;
 }

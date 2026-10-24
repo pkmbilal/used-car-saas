@@ -1,12 +1,15 @@
-import Link from "next/link";
+import Link from "@/components/locale-link";
 import { ArrowRight, MapPin } from "lucide-react";
 import { DealerBadge, DealerLogo } from "@/components/dealer-logo";
 import { VerificationBadges } from "@/components/verification-badges";
 import { Card } from "@/components/ui/card";
+import { cityName, count, fmt } from "@/lib/dictionary";
 import { formatMonthYear } from "@/lib/format";
+import { getDictionary } from "@/lib/i18n-server";
 import type { DealerSummary } from "@/lib/storefront";
 
-export function DealerCard({ dealer }: { dealer: DealerSummary }) {
+export async function DealerCard({ dealer }: { dealer: DealerSummary }) {
+  const { t, locale } = await getDictionary();
   const { storefront, profile, activeListings } = dealer;
 
   return (
@@ -29,12 +32,12 @@ export function DealerCard({ dealer }: { dealer: DealerSummary }) {
           {profile.city && (
             <span className="flex items-center gap-1.5">
               <MapPin className="size-3" />
-              {profile.city}
+              {cityName(t, profile.city)}
             </span>
           )}
-          <span>Since {formatMonthYear(profile.created_at)}</span>
-          <span className="ml-auto font-semibold text-ink">
-            {activeListings === 1 ? "1 car" : `${activeListings} cars`}
+          <span>{fmt(t.common.since, { date: formatMonthYear(profile.created_at, locale) })}</span>
+          <span className="ms-auto font-semibold text-ink">
+            {count(locale, activeListings, t.common.cars)}
           </span>
           <span className="flex size-5 items-center justify-center rounded-full border border-ink/80 transition group-hover:border-brand group-hover:bg-brand group-hover:text-white">
             <ArrowRight className="size-2.5" strokeWidth={2.6} />

@@ -5,7 +5,10 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { CITIES } from "@/lib/cities";
+import { cityName, fmt } from "@/lib/dictionary";
 import { formatSAR } from "@/lib/format";
+import { localizePath } from "@/lib/i18n";
+import { getDictionary } from "@/lib/i18n-server";
 import type { ListingFilters } from "@/lib/listings";
 import { cn } from "@/lib/utils";
 
@@ -26,8 +29,8 @@ type Variant = "default" | "hero";
 
 const styles = {
   default: {
-    form: "grid gap-4 p-5 sm:grid-cols-2 lg:grid-cols-[repeat(5,minmax(0,1fr))_auto] lg:items-end lg:gap-3 lg:pl-7",
-    field: "flex min-w-0 flex-col gap-2 lg:border-r lg:border-line lg:pr-3",
+    form: "grid gap-4 p-5 sm:grid-cols-2 lg:grid-cols-[repeat(5,minmax(0,1fr))_auto] lg:items-end lg:gap-3 lg:ps-7",
+    field: "flex min-w-0 flex-col gap-2 lg:border-e lg:border-line lg:pe-3",
     label: "text-caption font-semibold text-ink",
     trigger: undefined,
   },
@@ -76,12 +79,10 @@ function Field({
   );
 }
 
-const priceLabel = (price: number) => `Up to ${formatSAR(price)}`;
-const yearLabel = (year: number) => `${year} & newer`;
 
 // Quick search card. A GET form, so the results page stays shareable.
 // The "hero" variant is the larger, segmented version on the home page.
-export function SearchBar({
+export async function SearchBar({
   filters,
   className,
   variant = "default",
@@ -92,6 +93,10 @@ export function SearchBar({
 }) {
   const hero = variant === "hero";
   const style = styles[variant];
+  const { t, locale } = await getDictionary();
+  const action = localizePath(locale, "/listings");
+  const priceLabel = (price: number) => fmt(t.search.upTo, { price: formatSAR(price, locale) });
+  const yearLabel = (year: number) => fmt(t.search.yearAndNewer, { year });
 
   return (
     <Card
@@ -107,35 +112,35 @@ export function SearchBar({
         <div className="flex items-center justify-between gap-4 border-b border-line px-5 py-3.5">
           <span className="flex items-center gap-2 text-eyebrow font-semibold tracking-[0.2em] text-ink">
             <span aria-hidden className="size-1.5 rounded-full bg-lime" />
-            FIND YOUR CAR
+            {t.search.findYourCar}
           </span>
         </div>
       )}
-      <form method="get" action="/listings" className={style.form}>
+      <form method="get" action={action} className={style.form}>
         {filters?.sort && filters.sort !== "newest" && <input type="hidden" name="sort" value={filters.sort} />}
         <MakeModelSelects
           make={filters?.make}
           model={filters?.model}
           makeId="search-make"
           modelId="search-model"
-          makePlaceholder="Any Make"
-          modelPlaceholder="Any Model"
+          makePlaceholder={t.search.anyMake}
+          modelPlaceholder={t.search.anyModel}
           fieldClassName={style.field}
           labelClassName={style.label}
           triggerClassName={style.trigger}
-          makeLabel={hero ? <FieldLabel icon={CarFront}>Make</FieldLabel> : undefined}
-          modelLabel={hero ? <FieldLabel icon={Car}>Model</FieldLabel> : undefined}
+          makeLabel={hero ? <FieldLabel icon={CarFront}>{t.search.make}</FieldLabel> : undefined}
+          modelLabel={hero ? <FieldLabel icon={Car}>{t.search.model}</FieldLabel> : undefined}
         />
         <Field
           id="search-price"
-          label={hero ? <FieldLabel icon={Wallet}>Max Price</FieldLabel> : "Max Price"}
+          label={hero ? <FieldLabel icon={Wallet}>{t.search.maxPrice}</FieldLabel> : t.search.maxPrice}
           variant={variant}
         >
           <FormSelect
             id="search-price"
             name="max_price"
             defaultValue={filters?.maxPrice?.toString()}
-            placeholder="Any Price"
+            placeholder={t.search.anyPrice}
             options={withCurrent(
               MAX_PRICES.map((price) => ({ value: String(price), label: priceLabel(price) })),
               filters?.maxPrice,
@@ -146,14 +151,14 @@ export function SearchBar({
         </Field>
         <Field
           id="search-year"
-          label={hero ? <FieldLabel icon={CalendarDays}>Year</FieldLabel> : "Year"}
+          label={hero ? <FieldLabel icon={CalendarDays}>{t.search.year}</FieldLabel> : t.search.year}
           variant={variant}
         >
           <FormSelect
             id="search-year"
             name="min_year"
             defaultValue={filters?.minYear?.toString()}
-            placeholder="Any Year"
+            placeholder={t.search.anyYear}
             options={withCurrent(
               minYears().map((year) => ({ value: String(year), label: yearLabel(year) })),
               filters?.minYear,
@@ -164,7 +169,7 @@ export function SearchBar({
         </Field>
         <Field
           id="search-city"
-          label={hero ? <FieldLabel icon={MapPin}>Location</FieldLabel> : "Location"}
+          label={hero ? <FieldLabel icon={MapPin}>{t.search.location}</FieldLabel> : t.search.location}
           variant={variant}
           className={hero ? "sm:col-span-2 lg:col-span-1" : undefined}
         >
@@ -172,8 +177,8 @@ export function SearchBar({
             id="search-city"
             name="city"
             defaultValue={filters?.city}
-            placeholder="Any Location"
-            options={CITIES.map((city) => ({ value: city, label: city }))}
+            placeholder={t.search.anyLocation}
+            options={CITIES.map((city) => ({ value: city, label: cityName(t, city) }))}
             icon={hero ? undefined : <MapPin className="size-3.5 text-muted-foreground" />}
             className={style.trigger}
           />
@@ -186,13 +191,13 @@ export function SearchBar({
               className="h-12 w-full rounded-xl bg-forest-dark px-7 text-sm font-semibold text-white hover:bg-brand lg:h-full lg:min-h-14"
             >
               <Search className="size-4 text-lime" strokeWidth={2.4} />
-              Search Cars
+              {t.search.searchCars}
             </Button>
           </div>
         ) : (
           <Button type="submit" size="lg" className="h-11 px-6 text-xs max-sm:text-sm font-semibold sm:col-span-2 lg:col-span-1">
             <Search className="size-4" />
-            Search Cars
+            {t.search.searchCars}
           </Button>
         )}
       </form>

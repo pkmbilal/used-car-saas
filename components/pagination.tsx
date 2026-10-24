@@ -7,6 +7,8 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import { localizePath } from "@/lib/i18n";
+import { getDictionary } from "@/lib/i18n-server";
 
 // Page numbers to show: first, last, and a window around the current page.
 function pageItems(page: number, pageCount: number): (number | "gap")[] {
@@ -20,7 +22,7 @@ function pageItems(page: number, pageCount: number): (number | "gap")[] {
 
 const disabled = "pointer-events-none opacity-40";
 
-export function Pagination({
+export async function Pagination({
   page,
   pageCount,
   hrefFor,
@@ -30,13 +32,18 @@ export function Pagination({
   hrefFor: (page: number) => string;
 }) {
   if (pageCount <= 1) return null;
+  const { t, locale } = await getDictionary();
+  // Plain <a> links, so they need the locale prefix themselves.
+  const href = (p: number) => localizePath(locale, hrefFor(p));
 
   return (
-    <PaginationRoot className="mt-8">
+    <PaginationRoot className="mt-8" aria-label={t.pagination.label}>
       <PaginationContent className="flex-wrap justify-center">
         <PaginationItem>
           <PaginationPrevious
-            href={hrefFor(Math.max(1, page - 1))}
+            href={href(Math.max(1, page - 1))}
+            text={t.pagination.previous}
+            aria-label={t.pagination.previousPage}
             aria-disabled={page === 1}
             tabIndex={page === 1 ? -1 : undefined}
             className={page === 1 ? disabled : undefined}
@@ -48,7 +55,7 @@ export function Pagination({
               <PaginationEllipsis />
             ) : (
               <PaginationLink
-                href={hrefFor(item)}
+                href={href(item)}
                 isActive={item === page}
                 className={
                   item === page
@@ -63,7 +70,9 @@ export function Pagination({
         ))}
         <PaginationItem>
           <PaginationNext
-            href={hrefFor(Math.min(pageCount, page + 1))}
+            href={href(Math.min(pageCount, page + 1))}
+            text={t.pagination.next}
+            aria-label={t.pagination.nextPage}
             aria-disabled={page === pageCount}
             tabIndex={page === pageCount ? -1 : undefined}
             className={page === pageCount ? disabled : undefined}

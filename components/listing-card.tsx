@@ -1,13 +1,15 @@
 import Image from "next/image";
-import Link from "next/link";
+import Link from "@/components/locale-link";
 import { FavoriteButton } from "@/components/favorite-button";
 import { ArrowRight, Car, Fuel, MapPin } from "lucide-react";
 import { RiyalPrice } from "@/components/riyal-price";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
+import { carName } from "@/lib/car-names";
 import { formatKm } from "@/lib/format";
-import { bodyTypeLabel, capitalize } from "@/lib/listing-options";
+import { getDictionary } from "@/lib/i18n-server";
 import { isFeatured, type ListingWithImages } from "@/lib/listings";
+import { cityName, optionLabel } from "@/lib/dictionary";
 
 type CardProps = {
   listing: ListingWithImages;
@@ -16,7 +18,8 @@ type CardProps = {
   sizes?: string;
 };
 
-export function ListingCard({ listing, favorited, sizes }: CardProps) {
+export async function ListingCard({ listing, favorited, sizes }: CardProps) {
+  const { t, locale } = await getDictionary();
   const cover = listing.images[0];
 
   return (
@@ -30,7 +33,7 @@ export function ListingCard({ listing, favorited, sizes }: CardProps) {
             {cover && (
               <Image
                 src={cover.url}
-                alt={`${listing.year} ${listing.make} ${listing.model}`}
+                alt={carName(locale, listing.make, listing.model, listing.year)}
                 fill
                 sizes={
                   sizes ??
@@ -41,31 +44,31 @@ export function ListingCard({ listing, favorited, sizes }: CardProps) {
             )}
             {listing.sellerType && (
               <Badge
-                className={`absolute bottom-3 left-3 text-caption font-semibold ${
+                className={`absolute bottom-3 start-3 text-caption font-semibold ${
                   listing.sellerType === "dealer" ? "bg-charcoal text-lime" : "bg-white/90 text-ink"
                 }`}
               >
-                {listing.sellerType === "dealer" ? "Dealer" : "Private seller"}
+                {listing.sellerType === "dealer" ? t.common.dealer : t.common.privateSeller}
               </Badge>
             )}
             {isFeatured(listing) && (
-              <Badge className="absolute top-3 left-3 bg-lime text-caption font-semibold text-on-lime">
-                Featured
+              <Badge className="absolute top-3 start-3 bg-lime text-caption font-semibold text-on-lime">
+                {t.common.featured}
               </Badge>
             )}
           </div>
           <div className="flex flex-1 flex-col px-4 pt-3.5 pb-4">
             <p className="truncate text-sm font-semibold">
-              {listing.make} {listing.model}
+              {carName(locale, listing.make, listing.model)}
             </p>
             <p className="mt-2 flex flex-wrap gap-x-2 text-caption text-muted-foreground">
               <span>{listing.year}</span>
               <span aria-hidden>·</span>
-              <span>{formatKm(listing.mileage)}</span>
+              <span>{formatKm(listing.mileage, locale)}</span>
               {listing.transmission && (
                 <>
                   <span aria-hidden>·</span>
-                  <span>{capitalize(listing.transmission)}</span>
+                  <span>{optionLabel(t.options.transmission, listing.transmission)}</span>
                 </>
               )}
             </p>
@@ -76,18 +79,18 @@ export function ListingCard({ listing, favorited, sizes }: CardProps) {
               {listing.body_type && (
                 <span className="flex items-center gap-1.5">
                   <Car className="size-3.5 sm:size-3" />
-                  {bodyTypeLabel(listing.body_type)}
+                  {optionLabel(t.options.bodyType, listing.body_type)}
                 </span>
               )}
               <span className="flex items-center gap-1.5">
                 <Fuel className="size-3.5 sm:size-3" />
-                {capitalize(listing.fuel_type)}
+                {optionLabel(t.options.fuel, listing.fuel_type)}
               </span>
               <span className="flex items-center gap-1.5">
                 <MapPin className="size-3.5 sm:size-3" />
-                {listing.city}
+                {cityName(t, listing.city)}
               </span>
-              <span className="ml-auto flex size-5 items-center justify-center rounded-full border border-ink/80 transition group-hover:border-brand group-hover:bg-brand group-hover:text-white">
+              <span className="ms-auto flex size-5 items-center justify-center rounded-full border border-ink/80 transition group-hover:border-brand group-hover:bg-brand group-hover:text-white">
                 <ArrowRight className="size-2.5" strokeWidth={2.6} />
               </span>
             </div>
@@ -98,7 +101,7 @@ export function ListingCard({ listing, favorited, sizes }: CardProps) {
         <FavoriteButton
           listingId={listing.id}
           favorited={favorited}
-          className="absolute top-2.5 right-2.5"
+          className="absolute top-2.5 end-2.5"
         />
       )}
     </div>
@@ -115,9 +118,9 @@ const gridSizes = {
   4: "(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw",
 } as const;
 
-export function ListingGrid({
+export async function ListingGrid({
   listings,
-  empty = "No cars match your search.",
+  empty,
   favoriteIds,
   columns = 4,
 }: {
@@ -128,9 +131,10 @@ export function ListingGrid({
   columns?: keyof typeof gridColumns;
 }) {
   if (listings.length === 0) {
-    return empty ? (
-      <p className="py-12 text-center text-muted-foreground">{empty}</p>
-    ) : null;
+    // Pass "" to render nothing.
+    const { t } = await getDictionary();
+    const message = empty ?? t.listing.noMatches;
+    return message ? <p className="py-12 text-center text-muted-foreground">{message}</p> : null;
   }
 
   return (

@@ -1,8 +1,9 @@
 import "server-only";
 import { cache } from "react";
-import { notFound, redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import type { Database } from "@/lib/supabase/database.types";
+import { localeRedirect } from "@/lib/i18n-server";
 
 export type Profile = Database["public"]["Tables"]["profiles"]["Row"];
 
@@ -26,7 +27,7 @@ export const getCurrentUser = cache(async () => {
 export async function requireUser(next?: string, loginPath = "/login") {
   const current = await getCurrentUser();
   if (!current) {
-    redirect(next ? `${loginPath}?next=${encodeURIComponent(next)}` : loginPath);
+    return localeRedirect(next ? `${loginPath}?next=${encodeURIComponent(next)}` : loginPath);
   }
   return current;
 }
@@ -34,7 +35,7 @@ export async function requireUser(next?: string, loginPath = "/login") {
 export async function requireSeller(next = "/dashboard") {
   const current = await requireUser(next);
   if (current.profile.role !== "seller") {
-    redirect("/account/become-seller");
+    return localeRedirect("/account/become-seller");
   }
   return current;
 }

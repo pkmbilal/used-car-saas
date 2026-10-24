@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Car, CircleCheck, Download, MapPin, MessageCircle, Users } from "lucide-react";
 import { RiyalPrice } from "@/components/riyal-price";
-import { StatusBadge } from "@/app/dashboard/listings/status-badge";
+import { StatusBadge } from "@/app/[lang]/dashboard/listings/status-badge";
 import { DASHBOARD_RANGES, EXPIRING_WINDOW_DAYS, getDashboard, isDashboardRange } from "@/lib/admin";
 import { formatCount, formatDay, formatKm } from "@/lib/format";
 import { isFeatured } from "@/lib/listings";
@@ -174,7 +174,7 @@ export default async function AdminOverviewPage({ searchParams }: PageProps<"/ad
                             {listing.year} {listing.make} {listing.model}
                           </p>
                           <p className="mt-0.5 text-xs text-zinc-500 capitalize">
-                            {formatKm(listing.mileage)} · {listing.fuel_type}
+                            {formatKm(listing.mileage, "en")} · {listing.fuel_type}
                             {featured && <span className="ml-1.5 normal-case text-amber-700 dark:text-amber-400">· Featured</span>}
                           </p>
                         </div>
@@ -207,7 +207,7 @@ export default async function AdminOverviewPage({ searchParams }: PageProps<"/ad
                       <StatusBadge status={listing.status} />
                     </td>
                     <td data-label="Added" className={cn(table.td, table.tdDetail, "text-zinc-600 dark:text-zinc-400")}>
-                      {formatDay(listing.created_at)}
+                      {formatDay(listing.created_at, "en")}
                     </td>
                     <td className={`${table.td} text-right ${table.tdActions}`}>
                       <ListingRowActions

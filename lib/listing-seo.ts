@@ -1,4 +1,8 @@
+import { makeName, modelName } from "@/lib/car-names";
+import { cityName, fmt, optionLabel } from "@/lib/dictionary";
+import type { Dictionary } from "@/lib/dictionaries";
 import { formatKm, formatSAR } from "@/lib/format";
+import type { Locale } from "@/lib/i18n";
 import { bodyTypeLabel, capitalize } from "@/lib/listing-options";
 import type { ListingWithImages } from "@/lib/listings";
 
@@ -20,20 +24,32 @@ type SeoListing = Pick<
 >;
 
 // Meta description for a listing page, built from its specs.
-export function listingDescription(listing: SeoListing): string {
-  const specs = [formatKm(listing.mileage), listing.transmission && capitalize(listing.transmission), capitalize(listing.fuel_type)]
+export function listingDescription(listing: SeoListing, t: Dictionary, locale: Locale): string {
+  const specs = [
+    formatKm(listing.mileage, locale),
+    listing.transmission && optionLabel(t.options.transmission, listing.transmission),
+    optionLabel(t.options.fuel, listing.fuel_type),
+  ]
     .filter(Boolean)
-    .join(", ");
-  return `Used ${listing.year} ${listing.make} ${listing.model} for sale in ${listing.city}: ${specs}, ${formatSAR(listing.price)}. Contact the seller directly on KarSouq.`;
+    .join(t.list.separator);
+  return fmt(t.seo.listingDescription, {
+    year: listing.year,
+    make: makeName(locale, listing.make),
+    model: modelName(locale, listing.make, listing.model),
+    city: cityName(t, listing.city),
+    specs,
+    price: formatSAR(listing.price, locale),
+  });
 }
 
-// schema.org Car + Offer structured data for search results.
-export function listingJsonLd(listing: SeoListing, url: string) {
+// schema.org Car + Offer structured data for search results. Spec values stay
+// in English; the description is in the page's language.
+export function listingJsonLd(listing: SeoListing, url: string, description: string) {
   return {
     "@context": "https://schema.org",
     "@type": "Car",
     name: `${listing.year} ${listing.make} ${listing.model}`,
-    description: listingDescription(listing),
+    description,
     url,
     image: listing.images.map((image) => image.url),
     brand: { "@type": "Brand", name: listing.make },

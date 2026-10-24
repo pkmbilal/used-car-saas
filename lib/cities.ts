@@ -128,8 +128,14 @@ export function isCitySort(value: unknown): value is CitySort {
   return typeof value === "string" && Object.hasOwn(CITY_SORTS, value);
 }
 
-// Every city in the given order; count ties keep the CITIES order.
-export function sortCities(counts: Map<string, number>, sort: CitySort): City[] {
+// Every city in the given order; count ties keep the CITIES order. Name sorts
+// use the displayed (possibly translated) names.
+export function sortCities(
+  counts: Map<string, number>,
+  sort: CitySort,
+  name: (city: City) => string = (city) => city,
+  locale = "en",
+): City[] {
   const count = (city: City) => counts.get(city) ?? 0;
   switch (sort) {
     case "most":
@@ -137,8 +143,8 @@ export function sortCities(counts: Map<string, number>, sort: CitySort): City[] 
     case "fewest":
       return [...CITIES].sort((a, b) => count(a) - count(b));
     case "name_asc":
-      return [...CITIES].sort((a, b) => a.localeCompare(b, "en"));
+      return [...CITIES].sort((a, b) => name(a).localeCompare(name(b), locale));
     case "name_desc":
-      return [...CITIES].sort((a, b) => b.localeCompare(a, "en"));
+      return [...CITIES].sort((a, b) => name(b).localeCompare(name(a), locale));
   }
 }

@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Car, Search } from "lucide-react";
 import { RiyalPrice } from "@/components/riyal-price";
-import { StatusBadge } from "@/app/dashboard/listings/status-badge";
+import { StatusBadge } from "@/app/[lang]/dashboard/listings/status-badge";
 import { getAllListings, type FeaturedStatus } from "@/lib/admin";
 import { formatDay, formatKm } from "@/lib/format";
 import { isFeatured, type ListingStatus } from "@/lib/listings";
@@ -35,7 +35,7 @@ function FeaturedCell({ listing }: { listing: { status: ListingStatus; featured_
   return (
     <div className="flex flex-col items-start gap-1">
       {isFeatured(listing) && listing.featured_until ? (
-        <Pill tone="amber">Until {formatDay(listing.featured_until)}</Pill>
+        <Pill tone="amber">Until {formatDay(listing.featured_until, "en")}</Pill>
       ) : (
         <span className="text-zinc-500">Not featured</span>
       )}
@@ -139,7 +139,7 @@ export default async function AdminListingsPage({ searchParams }: PageProps<"/ad
                               <span className="block truncate font-medium">{title}</span>
                             )}
                             <span className="mt-0.5 block text-xs text-zinc-500">
-                              {formatKm(listing.mileage)}, {listing.city}
+                              {formatKm(listing.mileage, "en")}, {listing.city}
                             </span>
                             {listing.removed_reason && (
                               <span className="mt-0.5 block max-w-64 truncate text-xs text-red-700 dark:text-red-400" title={listing.removed_reason}>
@@ -171,7 +171,7 @@ export default async function AdminListingsPage({ searchParams }: PageProps<"/ad
                         <FeaturedCell listing={listing} />
                       </td>
                       <td data-label="Listed" className={cn(table.td, table.tdDetail, "whitespace-nowrap text-zinc-600 dark:text-zinc-400")}>
-                        {formatDay(listing.created_at)}
+                        {formatDay(listing.created_at, "en")}
                       </td>
                       <td className={`${table.td} text-right ${table.tdActions}`}>
                         <ListingRowActions

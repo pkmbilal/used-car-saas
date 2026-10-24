@@ -1,33 +1,36 @@
-import Link from "next/link";
+import Link from "@/components/locale-link";
 import { Car } from "lucide-react";
 import { BrandLink } from "@/components/brand";
 import { MobileNav, UserMenu, type HeaderLink } from "@/components/header-menus";
 import { HeaderShell } from "@/components/header-shell";
+import { LanguageSwitcher } from "@/components/language-switcher";
 import { outlineButton, sellButton } from "@/components/header-styles";
 import { MobileTabBar } from "@/components/mobile-tab-bar";
 import { NavLink } from "@/components/nav-link";
 import { Button } from "@/components/ui/button";
 import { getCurrentUser } from "@/lib/auth";
+import { getDictionary } from "@/lib/i18n-server";
 
 export async function SiteHeader() {
   const current = await getCurrentUser();
+  const { t } = await getDictionary();
   const isSeller = current?.profile.role === "seller";
 
   const mainLinks: HeaderLink[] = [
-    { href: "/", label: "Home" },
-    { href: "/listings", label: "Buy Cars" },
-    { href: "/dealers", label: "Dealers" },
-    { href: "/locations", label: "Locations" },
-    { href: "/pricing", label: "Pricing" },
-    ...(isSeller ? [{ href: "/dashboard", label: "My Listings" }] : []),
+    { href: "/", label: t.nav.home },
+    { href: "/listings", label: t.nav.buyCars },
+    { href: "/dealers", label: t.nav.dealers },
+    { href: "/locations", label: t.nav.locations },
+    { href: "/pricing", label: t.nav.pricing },
+    ...(isSeller ? [{ href: "/dashboard", label: t.nav.myListings }] : []),
   ];
   const sellHref = isSeller ? "/dashboard/listings/new" : "/account/become-seller";
   const accountLinks: HeaderLink[] = current
     ? [
-        { href: "/favorites", label: "Saved cars" },
-        { href: "/saved-searches", label: "Saved searches" },
-        ...(current.profile.is_admin ? [{ href: "/admin", label: "Admin" }] : []),
-        { href: "/account", label: "Account" },
+        { href: "/favorites", label: t.nav.savedCars },
+        { href: "/saved-searches", label: t.nav.savedSearches },
+        ...(current.profile.is_admin ? [{ href: "/admin", label: t.nav.admin }] : []),
+        { href: "/account", label: t.nav.account },
       ]
     : [];
   // On phones the bottom tab bar covers Home, Buy, Sell, Saved and Account;
@@ -36,7 +39,7 @@ export async function SiteHeader() {
   // The footer (with Contact) is hidden on phones, so the menu links it instead.
   const menuLinks = [
     ...[...mainLinks, ...accountLinks].filter((link) => !tabHrefs.includes(link.href)),
-    { href: "/contact", label: "Contact" },
+    { href: "/contact", label: t.nav.contact },
   ];
 
   return (
@@ -51,22 +54,23 @@ export async function SiteHeader() {
               </NavLink>
             ))}
           </div>
-          <div className="ml-auto hidden items-center gap-3 md:flex">
+          <div className="ms-auto hidden items-center gap-3 md:flex">
+            <LanguageSwitcher className="rounded-full px-2 text-label font-medium text-white/70 transition-colors hover:text-white" />
             {current ? (
-              <UserMenu name={current.profile.full_name || current.user.email || "Account"} links={accountLinks} />
+              <UserMenu name={current.profile.full_name || current.user.email || t.nav.account} links={accountLinks} />
             ) : (
               <Button asChild variant="outline" className={outlineButton}>
-                <Link href="/login">Sign in</Link>
+                <Link href="/login">{t.nav.signIn}</Link>
               </Button>
             )}
             <Button asChild className={sellButton}>
               <Link href={sellHref}>
                 <Car className="size-4" />
-                Sell your car
+                {t.nav.sellYourCar}
               </Link>
             </Button>
           </div>
-          <div className="ml-auto md:hidden">
+          <div className="ms-auto md:hidden">
             <MobileNav links={menuLinks} signedIn={!!current} />
           </div>
         </nav>

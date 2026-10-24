@@ -1,0 +1,33 @@
+- generic [active] [ref=f3e1]:
+  - banner [ref=f3e2]:
+    - navigation [ref=f3e3]:
+      - link [ref=f3e4] [cursor=pointer]:
+        - /url: /ar
+        - img "KarSouq" [ref=f3e5]
+      - button "Menu" [ref=f3e7] [cursor=pointer]
+  - navigation "Main" [ref=f3e8]:
+    - list [ref=f3e9]:
+      - listitem [ref=f3e10]:
+        - link "Home" [ref=f3e11] [cursor=pointer]:
+          - /url: /ar
+      - listitem [ref=f3e15]:
+        - link "Buy" [ref=f3e16] [cursor=pointer]:
+          - /url: /ar/listings
+      - listitem [ref=f3e20]:
+        - link [ref=f3e21] [cursor=pointer]:
+          - /url: /ar/account/become-seller
+      - listitem [ref=f3e24]:
+        - link "Saved" [ref=f3e25] [cursor=pointer]:
+          - /url: /ar/favorites
+      - listitem [ref=f3e28]:
+        - link "Sign in" [ref=f3e29] [cursor=pointer]:
+          - /url: /ar/login
+  - status [ref=f3e34]:
+    - paragraph [aria-hidden] [ref=f3e47]:
+      - generic [ref=f3e48]: Buy
+      - generic [ref=f3e50]: Sell
+      - generic [ref=f3e53]: Drive
+    - generic [ref=f3e56]: Loading cars…
+  - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=f3e62] [cursor=pointer]
+  - alert [ref=f3e66]

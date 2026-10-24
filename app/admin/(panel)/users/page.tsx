@@ -89,7 +89,7 @@ export default async function AdminUsersPage({ searchParams }: PageProps<"/admin
                           <>
                             <span className="block font-medium">{PLAN_LABELS[user.plan]}</span>
                             <span className="text-xs text-zinc-500">
-                              {user.plan_expires_at ? `Until ${formatDay(user.plan_expires_at)}` : "No end date"}
+                              {user.plan_expires_at ? `Until ${formatDay(user.plan_expires_at, "en")}` : "No end date"}
                             </span>
                           </>
                         ) : (
@@ -98,7 +98,7 @@ export default async function AdminUsersPage({ searchParams }: PageProps<"/admin
                       </td>
                       <td data-label="Listings" className={cn(table.td, table.tdDetail, "tabular-nums")}>{isSeller ? user.listingCount : <span className="text-zinc-400">—</span>}</td>
                       <td data-label="Joined" className={cn(table.td, table.tdDetail, "whitespace-nowrap text-zinc-600 dark:text-zinc-400")}>
-                        {formatMonthYear(user.created_at)}
+                        {formatMonthYear(user.created_at, "en")}
                       </td>
                       <td className={`${table.td} text-right ${table.tdActions}`}>
                         <UserRowActions

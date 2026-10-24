@@ -48,7 +48,7 @@ export default async function AdminDealersPage() {
                   ) : (
                     "a deleted user"
                   )}{" "}
-                  on {formatDay(application.created_at)}
+                  on {formatDay(application.created_at, "en")}
                 </p>
               </div>
             </div>
@@ -81,7 +81,7 @@ export default async function AdminDealersPage() {
                     { label: "City", value: application.user?.city },
                     {
                       label: "Member since",
-                      value: application.user && formatMonthYear(application.user.created_at),
+                      value: application.user && formatMonthYear(application.user.created_at, "en"),
                     },
                   ]}
                 />

@@ -1,34 +1,37 @@
 "use client";
 
-import Link from "next/link";
+import Link from "@/components/locale-link";
 import { usePathname } from "next/navigation";
+import { useDictionary } from "@/components/i18n-provider";
+import { stripLocale } from "@/lib/i18n";
 import { Car, Heart, House, Plus, Search, UserRound, type LucideIcon } from "lucide-react";
 
 type Tab = { href: string; label: string; icon: LucideIcon; exact?: boolean; primary?: boolean };
 
 // Phone-only app-style navigation, fixed to the bottom of the screen.
 export function MobileTabBar({ signedIn, isSeller }: { signedIn: boolean; isSeller: boolean }) {
-  const pathname = usePathname();
+  const pathname = stripLocale(usePathname());
+  const { t } = useDictionary();
 
   // A listing's own page has its fixed Call/WhatsApp bar instead.
   if (/^\/listings\/[^/]+$/.test(pathname)) return null;
 
   const tabs: Tab[] = [
-    { href: "/", label: "Home", icon: House, exact: true },
-    { href: "/listings", label: "Buy", icon: Search, exact: true },
+    { href: "/", label: t.nav.tabs.home, icon: House, exact: true },
+    { href: "/listings", label: t.nav.tabs.buy, icon: Search, exact: true },
     isSeller
-      ? { href: "/dashboard", label: "My cars", icon: Car, primary: true }
-      : { href: "/account/become-seller", label: "Sell", icon: Plus, primary: true },
-    { href: "/favorites", label: "Saved", icon: Heart },
+      ? { href: "/dashboard", label: t.nav.tabs.myCars, icon: Car, primary: true }
+      : { href: "/account/become-seller", label: t.nav.tabs.sell, icon: Plus, primary: true },
+    { href: "/favorites", label: t.nav.tabs.saved, icon: Heart },
     signedIn
-      ? { href: "/account", label: "Account", icon: UserRound, exact: true }
-      : { href: "/login", label: "Sign in", icon: UserRound },
+      ? { href: "/account", label: t.nav.tabs.account, icon: UserRound, exact: true }
+      : { href: "/login", label: t.nav.tabs.signIn, icon: UserRound },
   ];
 
   return (
     <nav
       data-tab-bar
-      aria-label="Main"
+      aria-label={t.nav.main}
       className="light pb-safe fixed inset-x-0 bottom-0 z-40 border-t border-line bg-white/95 text-ink backdrop-blur md:hidden"
     >
       <ul className="mx-auto grid h-16 max-w-md grid-cols-5">
