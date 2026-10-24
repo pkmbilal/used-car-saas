@@ -7,25 +7,31 @@ import { DealerCard } from "@/components/dealer-card";
 import { ListingGrid } from "@/components/listing-card";
 import { Pagination } from "@/components/pagination";
 import { citiesByCount, cityFromSlug, cityHref } from "@/lib/cities";
+import { cityName, count, fmt } from "@/lib/dictionary";
 import { getViewerFavoriteIds } from "@/lib/favorites";
+import { getDictionary, localeAlternates } from "@/lib/i18n-server";
 import { getActiveFacetCounts, PAGE_SIZE, parseListingFilters, searchListings } from "@/lib/listings";
 import { getDealerStorefronts } from "@/lib/storefront";
 import { SortSelect } from "../../listings/sort-select";
 
-const numberFormatter = new Intl.NumberFormat("en-US");
-
 export async function generateMetadata({ params }: PageProps<"/[lang]/locations/[city]">): Promise<Metadata> {
   const city = cityFromSlug((await params).city);
-  if (!city) return { title: "City not found" };
+  const { t } = await getDictionary();
+  if (!city) return { title: t.locations.cityNotFound };
+  const name = cityName(t, city);
   return {
-    title: `Used cars for sale in ${city} | KarSouq`,
-    description: `Browse used cars for sale in ${city} from private sellers and dealers, and contact them directly.`,
+    title: fmt(t.locations.cityMetaTitle, { city: name }),
+    description: fmt(t.locations.cityMetaDescription, { city: name }),
+    alternates: await localeAlternates(cityHref(city)),
   };
 }
 
 export default async function CityPage({ params, searchParams }: PageProps<"/[lang]/locations/[city]">) {
   const city = cityFromSlug((await params).city);
   if (!city) notFound();
+  const { t, locale } = await getDictionary();
+  const l = t.locations;
+  const name = cityName(t, city);
 
   const query = await searchParams;
   // Only sort and page apply here; the full filter set lives on /listings.
@@ -55,22 +61,21 @@ export default async function CityPage({ params, searchParams }: PageProps<"/[la
   return (
     <main className="light bg-canvas text-ink">
       <section className="relative overflow-hidden bg-charcoal">
-        <div className="absolute inset-y-0 end-0 w-2/3 bg-[radial-gradient(ellipse_at_70%_60%,rgba(111,224,124,.16),transparent_60%)]" />
+        <div className="absolute inset-y-0 end-0 w-2/3 bg-[radial-gradient(ellipse_at_70%_60%,rgba(111,224,124,.16),transparent_60%)] rtl:bg-[radial-gradient(ellipse_at_30%_60%,rgba(111,224,124,.16),transparent_60%)]" />
         <div className="relative mx-auto w-full max-w-6xl px-4 pt-10 pb-14 sm:px-6">
-          <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-caption text-white/60">
+          <nav aria-label={l.breadcrumb} className="flex items-center gap-1.5 text-caption text-white/60">
             <Link href="/locations" className="text-white/60 hover:text-lime">
-              Locations
+              {l.locations}
             </Link>
             <ChevronRight className="size-3" />
-            <span className="text-white">{city}</span>
+            <span className="text-white">{name}</span>
           </nav>
           <h1 className="mt-3 max-w-md text-3xl leading-tight font-medium tracking-tight text-white md:text-4xl">
-            Used Cars in <span className="text-lime">{city}</span>
+            {l.cityTitleStart} <span className="text-lime">{name}</span>
           </h1>
           <p className="mt-3.5 text-label text-white/85">
-            {numberFormatter.format(total)} {total === 1 ? "car" : "cars"} for sale
-            {cityDealers.length > 0 &&
-              ` · ${cityDealers.length} ${cityDealers.length === 1 ? "dealer" : "dealers"}`}
+            {count(locale, total, t.brands.forSale)}
+            {cityDealers.length > 0 && ` · ${count(locale, cityDealers.length, l.dealersCount)}`}
           </p>
         </div>
       </section>
@@ -81,7 +86,7 @@ export default async function CityPage({ params, searchParams }: PageProps<"/[la
             href={`/listings?city=${encodeURIComponent(city)}`}
             className="flex items-center gap-2 text-caption font-semibold text-brand"
           >
-            Refine with filters
+            {l.refine}
             <ArrowRight className="size-3" strokeWidth={2.4} />
           </Link>
           <SortSelect value={filters.sort} />
@@ -91,7 +96,7 @@ export default async function CityPage({ params, searchParams }: PageProps<"/[la
             listings={listings}
             columns={3}
             favoriteIds={favoriteIds}
-            empty={`No cars listed in ${city} yet.`}
+            empty={fmt(t.home.noCarsInCity, { city: name })}
           />
         </div>
         <Pagination page={filters.page} pageCount={pageCount} hrefFor={pageHref} />
@@ -99,8 +104,8 @@ export default async function CityPage({ params, searchParams }: PageProps<"/[la
 
       {cityDealers.length > 0 && (
         <section className="mx-auto w-full max-w-6xl px-4 pb-10 sm:px-6">
-          <p className="text-caption font-bold tracking-[0.2em] text-brand-600">DEALERS</p>
-          <h2 className="mt-2 text-2xl font-semibold tracking-tight">Dealers in {city}</h2>
+          <p className="text-caption font-bold tracking-[0.2em] text-brand-600">{l.dealersEyebrow}</p>
+          <h2 className="mt-2 text-2xl font-semibold tracking-tight">{fmt(l.dealersIn, { city: name })}</h2>
           <ul className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-5">
             {cityDealers.map((dealer) => (
               <li key={dealer.id}>
@@ -114,14 +119,14 @@ export default async function CityPage({ params, searchParams }: PageProps<"/[la
       <section className="mx-auto w-full max-w-6xl px-4 sm:px-6">
         <div className="flex items-end justify-between gap-4">
           <div>
-            <p className="text-caption font-bold tracking-[0.2em] text-brand-600">MORE LOCATIONS</p>
-            <h2 className="mt-2 text-2xl font-semibold tracking-tight">Other Cities</h2>
+            <p className="text-caption font-bold tracking-[0.2em] text-brand-600">{l.moreEyebrow}</p>
+            <h2 className="mt-2 text-2xl font-semibold tracking-tight">{l.otherCities}</h2>
           </div>
           <Link
             href="/locations"
             className="mb-1 flex shrink-0 items-center gap-2 text-caption font-semibold text-brand"
           >
-            All Cities
+            {l.allCities}
             <ArrowRight className="size-3" strokeWidth={2.4} />
           </Link>
         </div>

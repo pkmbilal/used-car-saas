@@ -1,7 +1,9 @@
 "use client";
 
 import { useActionState } from "react";
+import { useDictionary } from "@/components/i18n-provider";
 import type { Profile } from "@/lib/auth";
+import { translateMessage } from "@/lib/dictionary";
 import {
   ABOUT_MAX,
   BUSINESS_NAME_MAX,
@@ -18,12 +20,15 @@ const inputClass =
 
 export function StorefrontForm({ profile }: Props) {
   const [state, formAction, pending] = useActionState(updateStorefront, {});
+  const { t } = useDictionary();
+  const s = t.account.storefront;
+  const optional = <span className="font-normal text-zinc-500">{t.account.optional}</span>;
 
   return (
     <form action={formAction} className="flex flex-col gap-4">
       <div className="flex flex-col gap-1">
         <label htmlFor="business_name" className="text-sm font-medium">
-          Business name
+          {t.account.dealer.businessName}
         </label>
         <input
           id="business_name"
@@ -38,7 +43,7 @@ export function StorefrontForm({ profile }: Props) {
       </div>
       <div className="flex flex-col gap-1">
         <label htmlFor="showroom_address" className="text-sm font-medium">
-          Showroom address <span className="font-normal text-zinc-500">(optional)</span>
+          {t.account.dealer.showroomAddress} {optional}
         </label>
         <input
           id="showroom_address"
@@ -51,26 +56,26 @@ export function StorefrontForm({ profile }: Props) {
       </div>
       <div className="flex flex-col gap-1">
         <label htmlFor="about" className="text-sm font-medium">
-          About <span className="font-normal text-zinc-500">(optional)</span>
+          {s.about} {optional}
         </label>
         <textarea
           id="about"
           name="about"
           rows={6}
           maxLength={ABOUT_MAX}
-          placeholder="What you sell, opening hours, warranty or financing you offer…"
+          placeholder={s.aboutPlaceholder}
           defaultValue={profile.about ?? ""}
           className={inputClass}
         />
       </div>
-      {state.error && <p className="text-sm text-red-600">{state.error}</p>}
-      {state.saved && <p className="text-sm text-green-700">Saved.</p>}
+      {state.error && <p className="text-sm text-red-600">{translateMessage(t, state.error)}</p>}
+      {state.saved && <p className="text-sm text-green-700">{t.account.saved}</p>}
       <button
         type="submit"
         disabled={pending}
         className="rounded-md bg-zinc-900 px-4 py-2 text-white disabled:opacity-50 dark:bg-zinc-100 dark:text-zinc-900"
       >
-        {pending ? "Saving…" : "Save storefront"}
+        {pending ? t.common.saving : s.save}
       </button>
     </form>
   );

@@ -6,8 +6,9 @@ import { RiyalPrice } from "@/components/riyal-price";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { formatKm } from "@/lib/format";
-import { bodyTypeLabel, capitalize } from "@/lib/listing-options";
+import { getDictionary } from "@/lib/i18n-server";
 import { isFeatured, type ListingWithImages } from "@/lib/listings";
+import { cityName, optionLabel } from "@/lib/dictionary";
 
 type CardProps = {
   listing: ListingWithImages;
@@ -16,7 +17,8 @@ type CardProps = {
   sizes?: string;
 };
 
-export function ListingCard({ listing, favorited, sizes }: CardProps) {
+export async function ListingCard({ listing, favorited, sizes }: CardProps) {
+  const { t, locale } = await getDictionary();
   const cover = listing.images[0];
 
   return (
@@ -45,12 +47,12 @@ export function ListingCard({ listing, favorited, sizes }: CardProps) {
                   listing.sellerType === "dealer" ? "bg-charcoal text-lime" : "bg-white/90 text-ink"
                 }`}
               >
-                {listing.sellerType === "dealer" ? "Dealer" : "Private seller"}
+                {listing.sellerType === "dealer" ? t.common.dealer : t.common.privateSeller}
               </Badge>
             )}
             {isFeatured(listing) && (
               <Badge className="absolute top-3 start-3 bg-lime text-caption font-semibold text-on-lime">
-                Featured
+                {t.common.featured}
               </Badge>
             )}
           </div>
@@ -61,11 +63,11 @@ export function ListingCard({ listing, favorited, sizes }: CardProps) {
             <p className="mt-2 flex flex-wrap gap-x-2 text-caption text-muted-foreground">
               <span>{listing.year}</span>
               <span aria-hidden>·</span>
-              <span>{formatKm(listing.mileage)}</span>
+              <span>{formatKm(listing.mileage, locale)}</span>
               {listing.transmission && (
                 <>
                   <span aria-hidden>·</span>
-                  <span>{capitalize(listing.transmission)}</span>
+                  <span>{optionLabel(t.options.transmission, listing.transmission)}</span>
                 </>
               )}
             </p>
@@ -76,16 +78,16 @@ export function ListingCard({ listing, favorited, sizes }: CardProps) {
               {listing.body_type && (
                 <span className="flex items-center gap-1.5">
                   <Car className="size-3.5 sm:size-3" />
-                  {bodyTypeLabel(listing.body_type)}
+                  {optionLabel(t.options.bodyType, listing.body_type)}
                 </span>
               )}
               <span className="flex items-center gap-1.5">
                 <Fuel className="size-3.5 sm:size-3" />
-                {capitalize(listing.fuel_type)}
+                {optionLabel(t.options.fuel, listing.fuel_type)}
               </span>
               <span className="flex items-center gap-1.5">
                 <MapPin className="size-3.5 sm:size-3" />
-                {listing.city}
+                {cityName(t, listing.city)}
               </span>
               <span className="ms-auto flex size-5 items-center justify-center rounded-full border border-ink/80 transition group-hover:border-brand group-hover:bg-brand group-hover:text-white">
                 <ArrowRight className="size-2.5" strokeWidth={2.6} />
@@ -115,9 +117,9 @@ const gridSizes = {
   4: "(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw",
 } as const;
 
-export function ListingGrid({
+export async function ListingGrid({
   listings,
-  empty = "No cars match your search.",
+  empty,
   favoriteIds,
   columns = 4,
 }: {
@@ -128,9 +130,10 @@ export function ListingGrid({
   columns?: keyof typeof gridColumns;
 }) {
   if (listings.length === 0) {
-    return empty ? (
-      <p className="py-12 text-center text-muted-foreground">{empty}</p>
-    ) : null;
+    // Pass "" to render nothing.
+    const { t } = await getDictionary();
+    const message = empty ?? t.listing.noMatches;
+    return message ? <p className="py-12 text-center text-muted-foreground">{message}</p> : null;
   }
 
   return (

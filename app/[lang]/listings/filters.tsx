@@ -1,6 +1,7 @@
 "use client";
 
-import Link, { useLocale } from "@/components/locale-link";
+import { useDictionary } from "@/components/i18n-provider";
+import Link from "@/components/locale-link";
 import { Search, SlidersHorizontal } from "lucide-react";
 import { FormSelect } from "@/components/form-select";
 import { MakeModelSelects } from "@/components/make-model-selects";
@@ -9,12 +10,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { CITIES } from "@/lib/cities";
+import { cityName, fmt, optionLabel } from "@/lib/dictionary";
+import type { Dictionary } from "@/lib/dictionaries";
 import { formatKm } from "@/lib/format";
-import { localizePath } from "@/lib/i18n";
+import { localizePath, type Locale } from "@/lib/i18n";
 import {
   BODY_TYPES,
-  bodyTypeLabel,
-  capitalize,
   CONDITIONS,
   FEATURES,
   FUEL_TYPES,
@@ -26,6 +27,7 @@ const inputClass = "h-9 bg-white text-xs max-sm:h-10 max-sm:text-base";
 const labelClass = "text-caption font-semibold text-ink";
 
 function Range({
+  t,
   label,
   hint,
   minName,
@@ -33,6 +35,7 @@ function Range({
   min,
   max,
 }: {
+  t: Dictionary;
   label: string;
   hint?: string;
   minName: string;
@@ -47,9 +50,9 @@ function Range({
         {hint && <span className="text-eyebrow text-muted-foreground">{hint}</span>}
       </legend>
       <div className="flex items-center gap-2">
-        <Input name={minName} type="number" min={0} placeholder="Min" aria-label={`${label} min`} defaultValue={min} className={inputClass} />
+        <Input name={minName} type="number" min={0} placeholder={t.listings.filters.min} aria-label={fmt(t.listings.filters.rangeMin, { label })} defaultValue={min} className={inputClass} />
         <span className="text-xs text-muted-foreground">–</span>
-        <Input name={maxName} type="number" min={0} placeholder="Max" aria-label={`${label} max`} defaultValue={max} className={inputClass} />
+        <Input name={maxName} type="number" min={0} placeholder={t.listings.filters.max} aria-label={fmt(t.listings.filters.rangeMax, { label })} defaultValue={max} className={inputClass} />
       </div>
     </fieldset>
   );
@@ -65,9 +68,9 @@ export type FilterCounts = {
 const MAX_MILEAGES = [20_000, 50_000, 100_000, 150_000, 200_000];
 
 // Keeps a custom value from the URL (e.g. max_mileage=80000) selectable.
-function mileageOptions(current: number | undefined) {
+function mileageOptions(t: Dictionary, locale: Locale, current: number | undefined) {
   const values = current === undefined || MAX_MILEAGES.includes(current) ? MAX_MILEAGES : [current, ...MAX_MILEAGES];
-  return values.map((km) => ({ value: String(km), label: `Up to ${formatKm(km)}` }));
+  return values.map((km) => ({ value: String(km), label: fmt(t.listings.filters.upTo, { value: formatKm(km, locale) }) }));
 }
 
 // Plain GET form: filters live in the URL. Client-side only for the Radix
@@ -83,7 +86,8 @@ export function Filters({
   // Filters render twice (sidebar and mobile sheet), so ids need a prefix.
   idPrefix?: string;
 }) {
-  const locale = useLocale();
+  const { t, locale } = useDictionary();
+  const f = t.listings.filters;
   const id = (name: string) => `${idPrefix}-${name}`;
   const groupProps = { idPrefix, legendClassName: labelClass };
 
@@ -92,21 +96,21 @@ export function Filters({
       {filters.sort !== "newest" && <input type="hidden" name="sort" value={filters.sort} />}
       <div className="flex items-center gap-2 border-b border-line pb-3">
         <SlidersHorizontal className="size-4 text-brand-600" />
-        <span className="text-sm font-bold">Filters</span>
+        <span className="text-sm font-bold">{f.title}</span>
         <Button asChild variant="link" size="sm" className="ms-auto h-auto p-0 max-sm:h-auto text-caption font-semibold text-brand">
-          <Link href="/listings">Clear All</Link>
+          <Link href="/listings">{f.clearAll}</Link>
         </Button>
       </div>
       <div className="flex flex-col gap-1.5">
         <Label htmlFor={id("q")} className={labelClass}>
-          Keyword
+          {f.keyword}
         </Label>
         <Input
           id={id("q")}
           name="q"
           type="search"
           maxLength={100}
-          placeholder="e.g. Camry 2020"
+          placeholder={f.keywordPlaceholder}
           defaultValue={filters.q}
           className={inputClass}
         />
@@ -116,75 +120,75 @@ export function Filters({
         model={filters.model}
         makeId={id("make")}
         modelId={id("model")}
-        makePlaceholder="Any"
-        modelPlaceholder="Any"
+        makePlaceholder={t.common.any}
+        modelPlaceholder={t.common.any}
         fieldClassName="flex flex-col gap-1.5"
         labelClassName={labelClass}
       />
       <div className="flex flex-col gap-1.5">
         <Label htmlFor={id("city")} className={labelClass}>
-          City
+          {f.city}
         </Label>
         <FormSelect
           id={id("city")}
           name="city"
           defaultValue={filters.city}
-          placeholder="Any"
-          options={CITIES.map((city) => ({ value: city, label: city }))}
+          placeholder={t.common.any}
+          options={CITIES.map((city) => ({ value: city, label: cityName(t, city) }))}
         />
       </div>
-      <Range label="Price Range" hint="SAR" minName="min_price" maxName="max_price" min={filters.minPrice} max={filters.maxPrice} />
-      <Range label="Year" minName="min_year" maxName="max_year" min={filters.minYear} max={filters.maxYear} />
+      <Range t={t} label={f.priceRange} hint={f.currency} minName="min_price" maxName="max_price" min={filters.minPrice} max={filters.maxPrice} />
+      <Range t={t} label={f.year} minName="min_year" maxName="max_year" min={filters.minYear} max={filters.maxYear} />
       <div className="flex flex-col gap-1.5">
         <Label htmlFor={id("mileage")} className={labelClass}>
-          Mileage
+          {f.mileage}
         </Label>
         <FormSelect
           id={id("mileage")}
           name="max_mileage"
           defaultValue={filters.maxMileage?.toString()}
-          placeholder="Any Mileage"
-          options={mileageOptions(filters.maxMileage)}
+          placeholder={f.anyMileage}
+          options={mileageOptions(t, locale, filters.maxMileage)}
         />
       </div>
       <CheckboxGroup
         {...groupProps}
-        title="Condition"
+        title={f.condition}
         name="condition"
         selected={filters.conditions}
-        options={CONDITIONS.map((value) => ({ value, label: capitalize(value), count: counts.conditions[value] ?? 0 }))}
+        options={CONDITIONS.map((value) => ({ value, label: optionLabel(t.options.condition, value), count: counts.conditions[value] ?? 0 }))}
       />
       <CheckboxGroup
         {...groupProps}
-        title="Body Style"
+        title={f.bodyStyle}
         name="body_type"
         selected={filters.bodyTypes}
-        options={BODY_TYPES.map((value) => ({ value, label: bodyTypeLabel(value), count: counts.bodyTypes[value] ?? 0 }))}
+        options={BODY_TYPES.map((value) => ({ value, label: optionLabel(t.options.bodyType, value), count: counts.bodyTypes[value] ?? 0 }))}
       />
       <CheckboxGroup
         {...groupProps}
-        title="Fuel Type"
+        title={f.fuelType}
         name="fuel_type"
         selected={filters.fuelTypes}
-        options={FUEL_TYPES.map((value) => ({ value, label: capitalize(value), count: counts.fuelTypes[value] ?? 0 }))}
+        options={FUEL_TYPES.map((value) => ({ value, label: optionLabel(t.options.fuel, value), count: counts.fuelTypes[value] ?? 0 }))}
       />
       <CheckboxGroup
         {...groupProps}
-        title="Transmission"
+        title={f.transmission}
         name="transmission"
         selected={filters.transmissions}
-        options={TRANSMISSIONS.map((value) => ({ value, label: capitalize(value), count: counts.transmissions[value] ?? 0 }))}
+        options={TRANSMISSIONS.map((value) => ({ value, label: optionLabel(t.options.transmission, value), count: counts.transmissions[value] ?? 0 }))}
       />
       <CheckboxGroup
         {...groupProps}
-        title="Features"
+        title={f.features}
         name="features"
         selected={filters.features}
-        options={FEATURES.map(({ value, label }) => ({ value, label }))}
+        options={FEATURES.map(({ value }) => ({ value, label: optionLabel(t.options.features, value) }))}
       />
       <Button type="submit" className="h-9 text-xs max-sm:text-sm font-semibold">
         <Search className="size-3.5" />
-        Apply Filters
+        {f.apply}
       </Button>
     </form>
   );

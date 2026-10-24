@@ -1,6 +1,9 @@
 "use client";
 
+import { useDictionary } from "@/components/i18n-provider";
 import Link from "@/components/locale-link";
+import { rich } from "@/components/rich-text";
+import { count, translateMessage } from "@/lib/dictionary";
 import { useActionState } from "react";
 import { importListings, type ImportFormState } from "./actions";
 
@@ -9,6 +12,8 @@ export function ImportForm() {
     importListings,
     {},
   );
+  const { t, locale } = useDictionary();
+  const p = t.dashboard.import;
 
   return (
     <div>
@@ -25,34 +30,35 @@ export function ImportForm() {
           disabled={pending}
           className="rounded-md bg-zinc-900 px-4 py-2 text-sm text-white disabled:opacity-50 dark:bg-zinc-100 dark:text-zinc-900"
         >
-          {pending ? "Importing…" : "Import listings"}
+          {pending ? p.importing : p.submit}
         </button>
       </form>
 
       {state.imported !== undefined && (
         <p className="mt-4 rounded-md bg-green-50 px-4 py-3 text-sm text-green-900 dark:bg-green-950 dark:text-green-200">
-          Imported {state.imported} draft {state.imported === 1 ? "listing" : "listings"}. Add
-          photos and publish each one from{" "}
-          <Link href="/dashboard" className="font-medium underline">
-            your listings
-          </Link>
-          .
+          {rich(count(locale, state.imported, p.imported), {
+            link: (
+              <Link href="/dashboard" className="font-medium underline">
+                {p.yourListings}
+              </Link>
+            ),
+          })}
         </p>
       )}
-      {state.error && <p className="mt-4 text-sm text-red-600">{state.error}</p>}
+      {state.error && <p className="mt-4 text-sm text-red-600">{translateMessage(t, state.error)}</p>}
       {state.rowErrors && (
         <table className="mt-4 w-full text-start text-sm">
           <thead className="text-zinc-600 dark:text-zinc-400">
             <tr>
-              <th className="py-2 pe-4 font-medium">Row</th>
-              <th className="py-2 font-medium">Problem</th>
+              <th className="py-2 pe-4 font-medium">{p.row}</th>
+              <th className="py-2 font-medium">{p.problem}</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-zinc-200 dark:divide-zinc-800">
             {state.rowErrors.map(({ row, message }) => (
               <tr key={row}>
                 <td className="py-2 pe-4 align-top tabular-nums">{row}</td>
-                <td className="py-2">{message}</td>
+                <td className="py-2">{translateMessage(t, message)}</td>
               </tr>
             ))}
           </tbody>

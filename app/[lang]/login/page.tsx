@@ -1,17 +1,25 @@
+import type { Metadata } from "next";
 import { AuthShell } from "@/components/auth-shell";
 import { getCurrentUser, safeNext } from "@/lib/auth";
 import { LoginForm } from "./login-form";
-import { localeRedirect } from "@/lib/i18n-server";
+import { getDictionary, localeRedirect } from "@/lib/i18n-server";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const { t } = await getDictionary();
+  return { title: t.authPages.login.metaTitle };
+}
 
 export default async function LoginPage({ searchParams }: PageProps<"/[lang]/login">) {
   const next = safeNext((await searchParams).next);
   if (await getCurrentUser()) return localeRedirect(next);
+  const { t } = await getDictionary();
+  const p = t.authPages.login;
 
   return (
     <AuthShell
-      eyebrow="WELCOME BACK"
-      title="Sign in to KarSouq"
-      subtitle="Pick up where you left off with your saved cars and listings."
+      eyebrow={p.eyebrow}
+      title={p.title}
+      subtitle={p.subtitle}
     >
       <LoginForm next={next} />
     </AuthShell>

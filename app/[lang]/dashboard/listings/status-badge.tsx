@@ -1,3 +1,4 @@
+import { getDictionary } from "@/lib/i18n-server";
 import type { ListingStatus } from "@/lib/listings";
 
 const styles: Record<ListingStatus, string> = {
@@ -7,17 +8,12 @@ const styles: Record<ListingStatus, string> = {
   removed: "bg-red-100 text-red-800 dark:bg-red-950 dark:text-red-300",
 };
 
-const labels: Record<ListingStatus, string> = {
-  draft: "Draft",
-  active: "Live",
-  sold: "Sold",
-  removed: "Removed",
-};
-
-export function StatusBadge({ status }: { status: ListingStatus }) {
+// Also used by the admin panel, which gets the English labels.
+export async function StatusBadge({ status }: { status: ListingStatus }) {
+  const { t } = await getDictionary();
   return (
     <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${styles[status]}`}>
-      {labels[status]}
+      {t.dashboard.status[status]}
     </span>
   );
 }

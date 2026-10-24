@@ -94,7 +94,7 @@ export default async function AdminReportsPage() {
                       <li key={report.id} className="rounded-lg bg-canvas px-3 py-2 text-sm dark:bg-zinc-800/60">
                         <p>“{report.details}”</p>
                         <p className="mt-1 text-xs text-zinc-500">
-                          {REPORT_REASONS[report.reason]}, {formatDay(report.created_at)}
+                          {REPORT_REASONS[report.reason]}, {formatDay(report.created_at, "en")}
                         </p>
                       </li>
                     ))}

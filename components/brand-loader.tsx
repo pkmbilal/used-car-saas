@@ -33,7 +33,17 @@ const STREAKS = [
 
 const TAGLINE = ["Buy", "Sell", "Drive"];
 
-export function BrandLoader({ label = "Loading", className = "" }: { label?: string; className?: string }) {
+// Site pages pass their language's label and tagline; the admin panel uses
+// the English defaults.
+export function BrandLoader({
+  label = "Loading",
+  tagline = TAGLINE,
+  className = "",
+}: {
+  label?: string;
+  tagline?: readonly string[];
+  className?: string;
+}) {
   return (
     <div
       role="status"
@@ -99,7 +109,7 @@ export function BrandLoader({ label = "Loading", className = "" }: { label?: str
       </svg>
 
       <p className="flex items-center gap-3 text-caption font-medium tracking-[0.3em] uppercase" aria-hidden>
-        {TAGLINE.map((word, index) => (
+        {tagline.map((word, index) => (
           <span key={word} className="flex items-center gap-3">
             {index > 0 && <span className="size-1.5 rounded-full bg-brand-600" />}
             <span className="ks-loader-word" style={{ animationDelay: `${index * 0.8}s` }}>

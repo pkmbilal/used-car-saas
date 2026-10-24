@@ -2,15 +2,21 @@ import type { Metadata } from "next";
 import { getCurrentUser, type Profile } from "@/lib/auth";
 import { getLatestDealerApplication } from "@/lib/dealer-application";
 import { salesWhatsappUrl } from "@/lib/contact";
+import type { Dictionary } from "@/lib/dictionaries";
+import { getDictionary, localeAlternates } from "@/lib/i18n-server";
 import { getListingQuota, PLAN_DETAILS, PLANS, type Plan } from "@/lib/plans";
 import { PricingFaq } from "./faq";
 import { PlanCard, type PlanCta } from "./plan-card";
 import { UsageBanner } from "./usage-banner";
 
-export const metadata: Metadata = {
-  title: "Pricing | KarSouq",
-  description: "Plans for private sellers and car dealers on KarSouq.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const { t } = await getDictionary();
+  return {
+    title: t.pricing.metaTitle,
+    description: t.pricing.metaDescription,
+    alternates: await localeAlternates("/pricing"),
+  };
+}
 
 function signupHref(next: string): string {
   return `/signup?next=${encodeURIComponent(next)}`;
@@ -19,6 +25,7 @@ function signupHref(next: string): string {
 // Billing isn't wired up, so upgrades go through the dealer application and a
 // moderator grants the plan.
 function planCta(
+  t: Dictionary,
   plan: Plan,
   profile: Pick<Profile, "role" | "plan"> | null,
   applicationPending: boolean,
@@ -27,21 +34,21 @@ function planCta(
 
   if (!profile) {
     return {
-      label: "Sign up",
+      label: t.pricing.signUp,
       href: signupHref(isFree ? "/account/become-seller" : `/account/become-seller?type=dealer&plan=${plan}`),
     };
   }
 
   const isSeller = profile.role === "seller";
   if (isFree && !isSeller) {
-    return { label: "Start selling", href: "/account/become-seller?type=individual" };
+    return { label: t.pricing.startSelling, href: "/account/become-seller?type=individual" };
   }
-  if (plan === profile.plan) return { label: "Current plan", disabled: true };
+  if (plan === profile.plan) return { label: t.pricing.currentPlan, disabled: true };
   if (PLANS.indexOf(plan) < PLANS.indexOf(profile.plan)) return null;
-  if (applicationPending) return { label: "Application under review", disabled: true };
+  if (applicationPending) return { label: t.pricing.underReview, disabled: true };
 
   return {
-    label: "Upgrade",
+    label: t.pricing.upgrade,
     href: isSeller
       ? `/account/dealer-application?plan=${plan}`
       : `/account/become-seller?type=dealer&plan=${plan}`,
@@ -49,6 +56,7 @@ function planCta(
 }
 
 export default async function PricingPage() {
+  const { t } = await getDictionary();
   const current = await getCurrentUser();
   const [latest, quota] = current
     ? await Promise.all([
@@ -57,19 +65,19 @@ export default async function PricingPage() {
       ])
     : [null, null];
   const applicationPending = latest?.status === "pending";
-  const salesUrl = salesWhatsappUrl("Hi, I have a question about KarSouq plans.");
+  const salesUrl = salesWhatsappUrl(t.pricing.salesMessage);
 
   return (
     <main className="light bg-canvas text-ink">
       <section className="relative overflow-hidden bg-charcoal">
-        <div className="absolute inset-y-0 end-0 w-2/3 bg-[radial-gradient(ellipse_at_70%_60%,rgba(111,224,124,.16),transparent_60%)]" />
+        <div className="absolute inset-y-0 end-0 w-2/3 bg-[radial-gradient(ellipse_at_70%_60%,rgba(111,224,124,.16),transparent_60%)] rtl:bg-[radial-gradient(ellipse_at_30%_60%,rgba(111,224,124,.16),transparent_60%)]" />
         <div className="relative mx-auto w-full max-w-6xl px-4 pt-10 pb-14 sm:px-6">
-          <p className="text-eyebrow font-bold tracking-[0.24em] text-[#5fd06e]">PRICING</p>
+          <p className="text-eyebrow font-bold tracking-[0.24em] text-[#5fd06e]">{t.pricing.eyebrow}</p>
           <h1 className="mt-2.5 max-w-md text-3xl leading-tight font-medium tracking-tight text-white md:text-4xl">
-            Plans For <span className="text-lime">Every Seller</span>
+            {t.pricing.titleStart} <span className="text-lime">{t.pricing.titleHighlight}</span>
           </h1>
           <p className="mt-3.5 max-w-sm text-label leading-relaxed text-white/85">
-            List your car for free, or grow your showroom with a dealer plan.
+            {t.pricing.intro}
           </p>
         </div>
       </section>
@@ -86,19 +94,19 @@ export default async function PricingPage() {
               <PlanCard
                 plan={plan}
                 details={PLAN_DETAILS[plan]}
-                cta={planCta(plan, current?.profile ?? null, applicationPending)}
+                cta={planCta(t, plan, current?.profile ?? null, applicationPending)}
               />
             </li>
           ))}
         </ul>
         <p className="mt-6 text-center text-xs text-muted-foreground">
-          Prices are in Saudi Riyals and include 15% VAT.
+          {t.pricing.vatNote}
           {salesUrl && (
             <>
               {" "}
-              Questions?{" "}
+              {t.pricing.questions}{" "}
               <a href={salesUrl} target="_blank" rel="noopener noreferrer" className="font-semibold text-brand underline">
-                Talk to sales on WhatsApp
+                {t.pricing.talkToSales}
               </a>
             </>
           )}

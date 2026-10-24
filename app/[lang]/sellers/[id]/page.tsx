@@ -7,7 +7,9 @@ import { ListingGrid } from "@/components/listing-card";
 import { VerificationBadges } from "@/components/verification-badges";
 import { Card } from "@/components/ui/card";
 import { getViewerFavoriteIds } from "@/lib/favorites";
+import { cityName, count, fmt } from "@/lib/dictionary";
 import { formatMonthYear } from "@/lib/format";
+import { getDictionary, localeAlternates } from "@/lib/i18n-server";
 import { getSellerProfile, isFeatured } from "@/lib/listings";
 import { getStorefront } from "@/lib/storefront";
 
@@ -17,25 +19,30 @@ export async function generateMetadata({
   params,
 }: PageProps<"/[lang]/sellers/[id]">): Promise<Metadata> {
   const { id } = await params;
+  const { t } = await getDictionary();
   const seller = await getSeller(id);
-  if (!seller) return { title: "Seller not found" };
+  if (!seller) return { title: t.seller.notFound };
 
   const storefront = getStorefront(seller.profile);
-  const name = storefront?.name ?? seller.profile.full_name ?? "Seller";
+  const name = storefront?.name ?? seller.profile.full_name ?? t.seller.seller;
   return {
-    title: `${name} | KarSouq`,
+    title: fmt(t.meta.titleSuffix, { title: name }),
     description: storefront?.about?.slice(0, 160),
+    alternates: await localeAlternates(`/sellers/${id}`),
   };
 }
 
 export default async function SellerPage({ params }: PageProps<"/[lang]/sellers/[id]">) {
   const { id } = await params;
+  const { t, locale } = await getDictionary();
+  const s = t.seller;
   const [seller, favoriteIds] = await Promise.all([getSeller(id), getViewerFavoriteIds()]);
   if (!seller) notFound();
 
   const { profile, listings } = seller;
   const storefront = getStorefront(profile);
-  const memberSince = `${profile.city ? `${profile.city} · ` : ""}Member since ${formatMonthYear(profile.created_at)}`;
+  const since = fmt(s.memberSince, { date: formatMonthYear(profile.created_at, locale) });
+  const memberSince = profile.city ? `${cityName(t, profile.city)} · ${since}` : since;
 
   // Dealers get their boosted cars pinned above the rest.
   const featured = storefront ? listings.filter(isFeatured) : [];
@@ -56,7 +63,7 @@ export default async function SellerPage({ params }: PageProps<"/[lang]/sellers/
               <p className="mt-1 text-sm text-muted-foreground">{memberSince}</p>
               {storefront.showroomAddress && (
                 <p className="mt-1 text-sm text-muted-foreground">
-                  Showroom: {storefront.showroomAddress}
+                  {fmt(s.showroom, { address: storefront.showroomAddress })}
                 </p>
               )}
               {storefront.about && (
@@ -65,7 +72,7 @@ export default async function SellerPage({ params }: PageProps<"/[lang]/sellers/
               {profile.has_phone && (
                 <ContactButtons
                   sellerId={profile.id}
-                  whatsappText={`Hi ${storefront.name}, I found you on KarSouq.`}
+                  whatsappText={fmt(s.whatsappText, { name: storefront.name })}
                   variant="dealer"
                 />
               )}
@@ -74,7 +81,7 @@ export default async function SellerPage({ params }: PageProps<"/[lang]/sellers/
         ) : (
           <>
             <div className="flex flex-wrap items-center gap-3">
-              <h1 className="text-2xl font-semibold tracking-tight">{profile.full_name ?? "Seller"}</h1>
+              <h1 className="text-2xl font-semibold tracking-tight">{profile.full_name ?? s.seller}</h1>
               <VerificationBadges profile={profile} />
             </div>
             <p className="mt-1 text-sm text-muted-foreground">{memberSince}</p>
@@ -83,21 +90,17 @@ export default async function SellerPage({ params }: PageProps<"/[lang]/sellers/
 
         {featured.length > 0 && (
           <>
-            <h2 className="mt-10 mb-4 text-lg font-semibold">Featured</h2>
+            <h2 className="mt-10 mb-4 text-lg font-semibold">{s.featured}</h2>
             <ListingGrid listings={featured} empty="" favoriteIds={favoriteIds} />
           </>
         )}
 
         <h2 className="mt-10 mb-4 text-lg font-semibold">
-          {featured.length > 0
-            ? "More cars for sale"
-            : listings.length === 1
-              ? "1 car for sale"
-              : `${listings.length} cars for sale`}
+          {featured.length > 0 ? s.moreCars : count(locale, listings.length, s.carsForSale)}
         </h2>
         <ListingGrid
           listings={others}
-          empty={featured.length > 0 ? "No other cars for sale right now." : "No cars for sale right now."}
+          empty={featured.length > 0 ? s.noOtherCars : s.noCars}
           favoriteIds={favoriteIds}
         />
       </div>

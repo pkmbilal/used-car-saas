@@ -11,13 +11,19 @@ import {
   PasswordField,
   SubmitButton,
 } from "@/components/auth-fields";
+import { useDictionary } from "@/components/i18n-provider";
+import { rich } from "@/components/rich-text";
 import { MIN_PASSWORD_LENGTH } from "@/lib/auth-validation";
+import { fmt } from "@/lib/dictionary";
 import { signupAction, type SignupState } from "./actions";
 
 const initialState: SignupState = { step: "details", email: "" };
 
 export function SignupForm({ next }: { next: string }) {
   const [state, formAction, pending] = useActionState(signupAction, initialState);
+  const { t } = useDictionary();
+  const a = t.authPages;
+  const p = a.signup;
   const loginHref = next === "/" ? "/login" : `/login?next=${encodeURIComponent(next)}`;
 
   return (
@@ -28,52 +34,55 @@ export function SignupForm({ next }: { next: string }) {
         <>
           <Field
             id="email"
-            label="Email"
+            label={a.email}
             type="email"
             icon={Mail}
             autoComplete="email"
-            placeholder="you@example.com"
+            placeholder={a.emailPlaceholder}
             defaultValue={state.email}
           />
           <PasswordField
             id="password"
-            label="Password"
+            label={a.password}
             autoComplete="new-password"
             minLength={MIN_PASSWORD_LENGTH}
-            placeholder={`At least ${MIN_PASSWORD_LENGTH} characters`}
+            placeholder={fmt(a.passwordHint, { n: MIN_PASSWORD_LENGTH })}
           />
           <PasswordField
             id="confirm_password"
-            label="Confirm password"
+            label={p.confirmPassword}
             autoComplete="new-password"
             minLength={MIN_PASSWORD_LENGTH}
           />
           <FormMessages error={state.error} notice={state.notice} />
-          <SubmitButton intent="register" pending={pending} pendingLabel="Creating account…">
-            Create account
+          <SubmitButton intent="register" pending={pending} pendingLabel={p.creating}>
+            {p.create}
           </SubmitButton>
           <p className="text-center text-xs text-zinc-500">
-            By creating an account you agree to our{" "}
-            <Link href="/terms" className="font-medium text-ink underline underline-offset-2">
-              Terms of Use
-            </Link>{" "}
-            and{" "}
-            <Link href="/privacy" className="font-medium text-ink underline underline-offset-2">
-              Privacy Policy
-            </Link>
-            .
+            {rich(p.agree, {
+              terms: (
+                <Link href="/terms" className="font-medium text-ink underline underline-offset-2">
+                  {p.terms}
+                </Link>
+              ),
+              privacy: (
+                <Link href="/privacy" className="font-medium text-ink underline underline-offset-2">
+                  {p.privacy}
+                </Link>
+              ),
+            })}
           </p>
           <p className="mt-1 border-t border-line pt-5 text-center text-sm text-zinc-600">
-            Already have an account?{" "}
+            {p.haveAccount}{" "}
             <Link href={loginHref} className={authLinkClass}>
-              Sign in
+              {p.signIn}
             </Link>
           </p>
         </>
       ) : (
         <>
           <FormMessages error={state.error} notice={state.notice} />
-          <CodeStep email={state.email} pending={pending} submitLabel="Confirm account" />
+          <CodeStep email={state.email} pending={pending} submitLabel={p.confirm} />
         </>
       )}
     </form>

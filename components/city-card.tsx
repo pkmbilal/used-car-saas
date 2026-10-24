@@ -2,8 +2,11 @@ import Link from "@/components/locale-link";
 import { ArrowRight, MapPin } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { cityHref, type City } from "@/lib/cities";
+import { cityName, count as countLabel } from "@/lib/dictionary";
+import { getDictionary } from "@/lib/i18n-server";
 
-export function CityCard({ city, count }: { city: City; count: number }) {
+export async function CityCard({ city, count }: { city: City; count: number }) {
+  const { t, locale } = await getDictionary();
   const empty = count === 0;
 
   return (
@@ -21,9 +24,9 @@ export function CityCard({ city, count }: { city: City; count: number }) {
           <MapPin className="size-4" />
         </span>
         <span className="min-w-0 flex-1">
-          <span className="block truncate text-sm font-semibold">{city}</span>
+          <span className="block truncate text-sm font-semibold">{cityName(t, city)}</span>
           <span className="mt-0.5 block text-caption text-muted-foreground">
-            {count} {count === 1 ? "car" : "cars"}
+            {countLabel(locale, count, t.common.cars)}
           </span>
         </span>
         <span className="flex size-5 shrink-0 items-center justify-center rounded-full border border-ink/80 transition group-hover:border-brand group-hover:bg-brand group-hover:text-white">

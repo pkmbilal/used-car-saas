@@ -1,13 +1,17 @@
 import "server-only";
 import { createClient } from "@/lib/supabase/server";
 import type { Database } from "@/lib/supabase/database.types";
+import { fmt } from "@/lib/dictionary";
+import type { Dictionary } from "@/lib/dictionaries";
 import { formatDay } from "@/lib/format";
+import type { Locale } from "@/lib/i18n";
 
 // Limits live in the database (plan_monthly_listing_limit); this file only
 // knows how to name plans and read the signed-in seller's usage.
 
 export type Plan = Database["public"]["Tables"]["profiles"]["Row"]["plan"];
 
+// English names for the admin panel; the site's are in the dictionaries.
 export const PLAN_LABELS: Record<Plan, string> = {
   free: "Free",
   dealer: "Dealer",
@@ -20,60 +24,17 @@ export const PLANS = Object.keys(PLAN_LABELS) as Plan[];
 
 export type PlanDetails = {
   price: number; // SAR per month; billing isn't wired up, a moderator grants plans
-  tagline: string;
-  features: string[];
   highlighted?: boolean;
 };
 
-// Marketing copy for /pricing. The listing limits must match
-// plan_monthly_listing_limit (latest in the showroom_plan migration).
+// Prices for /pricing; the marketing copy is in the dictionaries
+// (plans.details), whose listing limits must match plan_monthly_listing_limit
+// (latest in the showroom_plan migration).
 export const PLAN_DETAILS: Record<Plan, PlanDetails> = {
-  free: {
-    price: 0,
-    tagline: "For individuals selling their own car.",
-    features: [
-      "3 listings a month",
-      "Seller profile page",
-      "Buyers contact you by phone or WhatsApp",
-      "Views and contact stats on your dashboard",
-    ],
-  },
-  dealer: {
-    price: 199,
-    tagline: "For showrooms getting started online.",
-    features: [
-      "30 listings a month",
-      "Branded dealer storefront",
-      "Listed in the dealers directory",
-      "Bulk upload from CSV",
-      "Everything in Free",
-    ],
-  },
-  dealer_pro: {
-    price: 449,
-    tagline: "For established dealers growing their sales.",
-    features: [
-      "100 listings a month",
-      "Dealer mini-site with its own link, in Arabic and English",
-      "WhatsApp lead routing to the right salesperson",
-      "3 featured listings a month",
-      "Bulk upload from Excel or CSV",
-      "Everything in Dealer",
-    ],
-    highlighted: true,
-  },
-  showroom: {
-    price: 899,
-    tagline: "For showrooms with multiple branches and teams.",
-    features: [
-      "Unlimited listings",
-      "Multiple branches and staff accounts",
-      "Custom domain for your mini-site",
-      "10 featured listings a month",
-      "Priority support and a monthly performance report",
-      "Everything in Pro",
-    ],
-  },
+  free: { price: 0 },
+  dealer: { price: 199 },
+  dealer_pro: { price: 449, highlighted: true },
+  showroom: { price: 899 },
 };
 
 // Featured listings included per month; null = none included, admins feature
@@ -168,46 +129,50 @@ export async function getListingQuota(): Promise<ListingQuota | null> {
   };
 }
 
+const FEATURE_ERRORS = [
+  "listing_not_active",
+  "featured_not_included",
+  "featured_already_used",
+  "featured_allowance_exceeded",
+] as const;
+
+export type FeatureError = (typeof FEATURE_ERRORS)[number] | "failed";
+
 // Spends one of the seller's featured slots on their own listing (RLS-scoped
 // client; feature_own_listing checks ownership and the allowance itself).
-export async function featureOwnListing(listingId: string): Promise<{ error?: string }> {
+// Errors come back as keys of the dictionary's plans.featureErrors.
+export async function featureOwnListing(listingId: string): Promise<{ error?: FeatureError }> {
   const supabase = await createClient();
   const { error } = await supabase.rpc("feature_own_listing", { p_listing_id: listingId });
   if (!error) return {};
-
-  switch (error.message) {
-    case "listing_not_active":
-      return { error: "Only live listings can be featured." };
-    case "featured_not_included":
-      return { error: "Your plan doesn't include featured listings. See the Pricing page to upgrade." };
-    case "featured_already_used":
-      return { error: "This listing has already been featured this month." };
-    case "featured_allowance_exceeded":
-      return { error: "You've used all your featured listings for this month." };
-    default:
-      return { error: "Could not feature the listing. Try again." };
-  }
+  const known = FEATURE_ERRORS.find((code) => code === error.message);
+  return { error: known ?? "failed" };
 }
 
 // Raised by the enforce_listing_quota trigger.
 export const QUOTA_EXCEEDED_DB_MESSAGE = "listing_quota_exceeded";
 
-export function quotaExceededMessage(quota: Pick<ListingQuota, "plan" | "limit">): string {
-  return `You've published all ${quota.limit} listings for this month on the ${PLAN_LABELS[quota.plan]} plan. Your draft is saved: publish it next month, or see the Pricing page to upgrade.`;
+function namedPlan(t: Dictionary, plan: Plan): string {
+  return fmt(t.plans.named, { plan: t.plans.labels[plan] });
+}
+
+export function quotaExceededMessage(t: Dictionary, quota: Pick<ListingQuota, "plan" | "limit">): string {
+  return fmt(t.plans.quotaExceeded, { limit: quota.limit ?? "", plan: namedPlan(t, quota.plan) });
 }
 
 // Shown on the new-listing and import pages: drafts can still be saved.
-export function quotaReachedNote(quota: Pick<ListingQuota, "plan" | "limit">): string {
-  return `You've published all ${quota.limit} listings for this month on the ${PLAN_LABELS[quota.plan]} plan. You can still save drafts and publish them next month, or upgrade for more.`;
+export function quotaReachedNote(t: Dictionary, quota: Pick<ListingQuota, "plan" | "limit">): string {
+  return fmt(t.plans.quotaReached, { limit: quota.limit ?? "", plan: namedPlan(t, quota.plan) });
 }
 
-export function quotaSummary(quota: ListingQuota): string {
+export function quotaSummary(t: Dictionary, locale: Locale, quota: ListingQuota): string {
+  const name = t.plans.labels[quota.plan];
   const plan = quota.planExpiresAt
-    ? `${PLAN_LABELS[quota.plan]} plan until ${formatDay(quota.planExpiresAt)}`
-    : `${PLAN_LABELS[quota.plan]} plan`;
+    ? fmt(t.plans.summaryPlanUntil, { plan: name, date: formatDay(quota.planExpiresAt, locale) })
+    : fmt(t.plans.summaryPlan, { plan: name });
   return quota.limit === null
-    ? `${plan} · Unlimited listings`
-    : `${plan} · ${quota.used} of ${quota.limit} listings published this month`;
+    ? `${plan} · ${t.plans.unlimited}`
+    : `${plan} · ${fmt(t.plans.usedOf, { used: quota.used, limit: quota.limit })}`;
 }
 
 // Monthly SAR price per plan, for prefilling recorded payments.

@@ -1,20 +1,30 @@
+import type { Metadata } from "next";
 import Link from "@/components/locale-link";
 import { VerificationBadges } from "@/components/verification-badges";
 import { requireUser } from "@/lib/auth";
+import { fmt } from "@/lib/dictionary";
 import { formatMonthYear } from "@/lib/format";
+import { getDictionary } from "@/lib/i18n-server";
 import { isDealerPlan } from "@/lib/plans";
 import { updateProfile } from "./actions";
 import { ProfileForm } from "./profile-form";
 
+export async function generateMetadata(): Promise<Metadata> {
+  const { t } = await getDictionary();
+  return { title: t.account.metaTitle };
+}
+
 export default async function AccountPage({ searchParams }: PageProps<"/[lang]/account">) {
   const { user, profile } = await requireUser("/account");
   const welcome = (await searchParams).welcome === "1";
+  const { t, locale } = await getDictionary();
+  const a = t.account;
 
   return (
     <main className="mx-auto w-full max-w-md px-4 py-12">
-      <h1 className="text-2xl font-semibold tracking-tight">Your account</h1>
+      <h1 className="text-2xl font-semibold tracking-tight">{a.title}</h1>
       <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-        {user.email} · Member since {formatMonthYear(profile.created_at)}
+        {fmt(a.memberSince, { email: user.email ?? "", date: formatMonthYear(profile.created_at, locale) })}
       </p>
       <div className="mt-3">
         <VerificationBadges profile={profile} />
@@ -22,46 +32,46 @@ export default async function AccountPage({ searchParams }: PageProps<"/[lang]/a
 
       {welcome && (
         <p className="mt-6 rounded-md bg-green-50 px-4 py-3 text-sm text-green-900 dark:bg-green-950 dark:text-green-200">
-          Welcome! Your account is confirmed. Add your name, phone and city below.
+          {a.welcome}
         </p>
       )}
 
       <div className="mt-8">
-        <ProfileForm profile={profile} action={updateProfile} submitLabel="Save" />
+        <ProfileForm profile={profile} action={updateProfile} submitLabel={a.save} />
       </div>
 
       {profile.role === "seller" && isDealerPlan(profile.plan) && (
         <p className="mt-8 text-sm">
-          Add your business name, logo and showroom details.{" "}
+          {a.storefrontPrompt}{" "}
           <Link href="/account/storefront" className="font-medium underline">
-            Edit storefront
+            {a.editStorefront}
           </Link>
         </p>
       )}
 
       {profile.role === "seller" && profile.plan === "free" && (
         <p className="mt-8 text-sm">
-          Selling as a business?{" "}
+          {a.businessPrompt}{" "}
           <Link href="/pricing" className="font-medium underline">
-            See dealer plans
+            {a.seeDealerPlans}
           </Link>
         </p>
       )}
 
       {profile.role === "seller" && !profile.id_verified_at && (
         <p className="mt-8 text-sm">
-          Build buyer trust with an ID-verified badge.{" "}
+          {a.trustPrompt}{" "}
           <Link href="/account/verification" className="font-medium underline">
-            Get verified
+            {a.getVerified}
           </Link>
         </p>
       )}
 
       {profile.role !== "seller" && (
         <p className="mt-8 text-sm">
-          Want to sell a car?{" "}
+          {a.sellPrompt}{" "}
           <Link href="/account/become-seller" className="font-medium underline">
-            Become a seller
+            {a.becomeSeller}
           </Link>
         </p>
       )}

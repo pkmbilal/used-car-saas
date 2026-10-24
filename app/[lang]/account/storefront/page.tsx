@@ -1,25 +1,30 @@
 import type { Metadata } from "next";
 import Link from "@/components/locale-link";
 import { requireSeller } from "@/lib/auth";
-import { isDealerPlan, PLAN_LABELS } from "@/lib/plans";
+import { fmt } from "@/lib/dictionary";
+import { getDictionary } from "@/lib/i18n-server";
+import { isDealerPlan } from "@/lib/plans";
 import { publicUrl } from "@/lib/r2";
 import { LogoUploader } from "./logo-uploader";
 import { StorefrontForm } from "./storefront-form";
 
-export const metadata: Metadata = {
-  title: "Storefront | KarSouq",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const { t } = await getDictionary();
+  return { title: t.account.storefront.metaTitle };
+}
 
 export default async function StorefrontPage() {
   const { user, profile } = await requireSeller("/account/storefront");
+  const { t } = await getDictionary();
+  const s = t.account.storefront;
 
   return (
     <main className="mx-auto w-full max-w-md px-4 py-12">
-      <h1 className="text-2xl font-semibold tracking-tight">Dealer storefront</h1>
+      <h1 className="text-2xl font-semibold tracking-tight">{s.title}</h1>
       <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-        Your branding on your public seller page.{" "}
+        {s.intro}{" "}
         <Link href={`/sellers/${user.id}`} className="font-medium underline">
-          View storefront
+          {s.view}
         </Link>
       </p>
 
@@ -30,10 +35,9 @@ export default async function StorefrontPage() {
         </div>
       ) : (
         <p className="mt-8 rounded-md bg-zinc-100 px-4 py-3 text-sm dark:bg-zinc-800">
-          Storefronts with your business name, logo and showroom details are part of the{" "}
-          {PLAN_LABELS.dealer} plans. You&apos;re on the {PLAN_LABELS[profile.plan]} plan.{" "}
+          {fmt(s.upsell, { plan: fmt(t.plans.named, { plan: t.plans.labels[profile.plan] }) })}{" "}
           <Link href="/pricing" className="font-medium underline">
-            See dealer plans
+            {s.seePlans}
           </Link>
         </p>
       )}

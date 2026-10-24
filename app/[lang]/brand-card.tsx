@@ -1,7 +1,10 @@
 import Link from "@/components/locale-link";
+import { count as countLabel } from "@/lib/dictionary";
+import { getDictionary } from "@/lib/i18n-server";
 import { BrandLogo } from "./brand-logo";
 
-export function BrandCard({ make, count }: { make: string; count: number }) {
+export async function BrandCard({ make, count }: { make: string; count: number }) {
+  const { t, locale } = await getDictionary();
   return (
     <Link
       href={`/listings?make=${encodeURIComponent(make)}`}
@@ -13,7 +16,7 @@ export function BrandCard({ make, count }: { make: string; count: number }) {
       <span className="text-center">
         <span className="block text-xs font-semibold">{make}</span>
         <span className="mt-0.5 block text-eyebrow text-muted-foreground">
-          {count} {count === 1 ? "car" : "cars"}
+          {countLabel(locale, count, t.common.cars)}
         </span>
       </span>
     </Link>

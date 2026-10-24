@@ -2,6 +2,7 @@
 
 import { useState, useSyncExternalStore, useTransition } from "react";
 import { MessageCircle, Phone } from "lucide-react";
+import { useDictionary } from "@/components/i18n-provider";
 import { Button } from "@/components/ui/button";
 import { whatsappUrl } from "@/lib/format";
 import type { ContactKind } from "@/lib/listings";
@@ -31,27 +32,27 @@ const VARIANTS = {
     size: "default",
     primary: "h-11 text-label font-semibold hover:bg-brand-dark hover:text-white",
     outline: "h-11 border-brand text-label font-semibold text-ink hover:bg-mint",
-    reveal: "Show phone number",
-    call: "Call Seller",
-    whatsapp: "WhatsApp",
+    reveal: "showPhone",
+    call: "callSeller",
+    whatsapp: "whatsapp",
   },
   bar: {
     wrap: "flex items-center gap-2.5",
     size: "sm",
     primary: "h-10 px-4 text-xs max-sm:text-sm font-semibold",
     outline: "h-10 border-brand px-4 text-xs max-sm:text-sm font-semibold text-ink",
-    reveal: "Show number",
-    call: "Call",
-    whatsapp: "WhatsApp",
+    reveal: "showNumber",
+    call: "call",
+    whatsapp: "whatsapp",
   },
   dealer: {
     wrap: "mt-4 flex flex-wrap items-center gap-3",
     size: "default",
     primary: "hover:bg-brand-dark hover:text-white",
     outline: "border-brand text-ink hover:bg-mint",
-    reveal: "Show phone number",
-    call: "Call dealer",
-    whatsapp: "WhatsApp dealer",
+    reveal: "showPhone",
+    call: "callDealer",
+    whatsapp: "whatsappDealer",
   },
 } as const;
 
@@ -70,6 +71,8 @@ export function ContactButtons({
   variant: keyof typeof VARIANTS;
 }) {
   const style = VARIANTS[variant];
+  const { t } = useDictionary();
+  const c = t.listingPage.contact;
   const phone = useSyncExternalStore(
     subscribe,
     () => revealed.get(sellerId) ?? null,
@@ -84,11 +87,7 @@ export function ContactButtons({
       const result = await revealPhone(sellerId);
       if ("phone" in result) remember(sellerId, result.phone);
       else
-        setError(
-          result.error === "rate_limited"
-            ? "Too many numbers viewed. Try again in a little while."
-            : "This number isn't available right now.",
-        );
+        setError(result.error === "rate_limited" ? c.rateLimited : c.unavailable);
     });
   }
 
@@ -97,7 +96,7 @@ export function ContactButtons({
       <div className={style.wrap}>
         <Button size={style.size} className={style.primary} onClick={reveal} disabled={pending}>
           <Phone className="size-4" />
-          {pending ? "Loading…" : style.reveal}
+          {pending ? c.loading : c[style.reveal]}
         </Button>
         {error && (
           <p role="alert" className="text-xs text-destructive">
@@ -113,7 +112,14 @@ export function ContactButtons({
       <Button asChild size={style.size} className={style.primary}>
         <TrackedLink listingId={listingId} kind="call" href={`tel:${phone}`}>
           <Phone className="size-4" />
-          {variant === "bar" ? style.call : `${style.call} · ${phone}`}
+          {c[style.call]}
+          {/* Phone numbers read left to right on Arabic pages too. */}
+          {variant !== "bar" && (
+            <>
+              {" · "}
+              <span dir="ltr">{phone}</span>
+            </>
+          )}
         </TrackedLink>
       </Button>
       <Button asChild size={style.size} variant="outline" className={style.outline}>
@@ -125,7 +131,7 @@ export function ContactButtons({
           rel="noopener noreferrer"
         >
           <MessageCircle className="size-4 text-brand" />
-          {style.whatsapp}
+          {c[style.whatsapp]}
         </TrackedLink>
       </Button>
     </div>

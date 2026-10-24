@@ -1,11 +1,13 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { useDictionary } from "@/components/i18n-provider";
 import type { Profile } from "@/lib/auth";
 import { CITIES } from "@/lib/cities";
+import { cityName, fmt, translateMessage } from "@/lib/dictionary";
 import {
   DEALER_DOC_TYPES,
-  DEALER_DOCS,
+  DEALER_PLANS,
   REGISTRATION_NUMBER_MAX,
   type DealerDoc,
   type DealerPlan,
@@ -22,19 +24,11 @@ type Props = {
 const inputClass =
   "rounded-md border border-zinc-300 px-3 py-2 dark:border-zinc-700 dark:bg-zinc-900";
 
-const optional = <span className="font-normal text-zinc-500">(optional)</span>;
-
-const NUMBER_FIELDS: { name: string; label: string; doc: DealerDoc }[] = [
-  { name: "cr_number", label: "CR number", doc: "cr" },
-  { name: "vat_number", label: "VAT number", doc: "vat" },
-  { name: "muroor_number", label: "Muroor certificate number", doc: "muroor" },
-];
-
-const PLAN_CHOICES = [
-  { value: "dealer", label: "Dealer", note: "30 listings a month, storefront, CSV import" },
-  { value: "dealer_pro", label: "Pro", note: "100 listings a month, storefront, CSV import, featured listings" },
-  { value: "showroom", label: "Showroom", note: "Unlimited listings, storefront, CSV import, featured listings" },
-] as const;
+const NUMBER_FIELDS = [
+  { name: "cr_number", doc: "cr" },
+  { name: "vat_number", doc: "vat" },
+  { name: "muroor_number", doc: "muroor" },
+] as const satisfies readonly { name: string; doc: DealerDoc }[];
 
 function Field({
   id,
@@ -56,6 +50,10 @@ function Field({
 }
 
 export function DealerApplicationForm({ profile, defaultPlan = "dealer" }: Props) {
+  const { t } = useDictionary();
+  const d = t.account.dealer;
+  const f = t.account.form;
+  const optional = <span className="font-normal text-zinc-500">{t.account.optional}</span>;
   const [files, setFiles] = useState<Partial<Record<DealerDoc, File>>>({});
   const [pending, startTransition] = useTransition();
   const [progress, setProgress] = useState<string>();
@@ -64,10 +62,10 @@ export function DealerApplicationForm({ profile, defaultPlan = "dealer" }: Props
   function handleSelect(doc: DealerDoc, file: File | undefined) {
     setError(undefined);
     if (file && !isIdDocType(file.type)) {
-      return setError(`${file.name}: use a JPEG, PNG, WebP or PDF file.`);
+      return setError(fmt(d.fileType, { name: file.name }));
     }
     if (file && file.size > MAX_ID_DOC_BYTES) {
-      return setError(`${file.name}: files must be under 10 MB.`);
+      return setError(fmt(d.fileSize, { name: file.name }));
     }
     setFiles((current) => ({ ...current, [doc]: file }));
   }
@@ -75,14 +73,14 @@ export function DealerApplicationForm({ profile, defaultPlan = "dealer" }: Props
   // Uploads one document: presign → PUT straight to the private bucket.
   async function uploadFile(file: File): Promise<{ key: string } | { error: string }> {
     const presigned = await requestDealerDocUploadAction(file.type, file.size);
-    if ("error" in presigned) return { error: presigned.error };
+    if ("error" in presigned) return { error: translateMessage(t, presigned.error) };
 
     const response = await fetch(presigned.url, {
       method: "PUT",
       headers: { "Content-Type": file.type },
       body: file,
     });
-    if (!response.ok) return { error: `${file.name}: upload failed.` };
+    if (!response.ok) return { error: fmt(d.uploadFailed, { name: file.name }) };
     return { key: presigned.key };
   }
 
@@ -99,9 +97,9 @@ export function DealerApplicationForm({ profile, defaultPlan = "dealer" }: Props
 
       const keys: Partial<Record<DealerDoc, string>> = {};
       for (const [index, { doc, file }] of chosen.entries()) {
-        setProgress(`Uploading ${index + 1} of ${chosen.length}…`);
+        setProgress(fmt(d.uploading, { index: index + 1, count: chosen.length }));
         const uploaded = await uploadFile(file).catch(() => ({
-          error: `${file.name}: upload failed.`,
+          error: fmt(d.uploadFailed, { name: file.name }),
         }));
         if ("error" in uploaded) {
           setProgress(undefined);
@@ -111,18 +109,18 @@ export function DealerApplicationForm({ profile, defaultPlan = "dealer" }: Props
         keys[doc] = uploaded.key;
       }
 
-      setProgress("Submitting…");
+      setProgress(d.submitting);
       const result = await submitDealerApplicationAction(formData, keys);
       setProgress(undefined);
-      if (result?.error) setError(result.error);
+      if (result?.error) setError(translateMessage(t, result.error));
     });
   }
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-8">
       <fieldset className="flex flex-col gap-4" disabled={pending}>
-        <legend className="mb-4 text-lg font-medium">Contact person</legend>
-        <Field id="full_name" label="Full name">
+        <legend className="mb-4 text-lg font-medium">{d.contactPerson}</legend>
+        <Field id="full_name" label={f.fullName}>
           <input
             id="full_name"
             name="full_name"
@@ -132,19 +130,20 @@ export function DealerApplicationForm({ profile, defaultPlan = "dealer" }: Props
             className={inputClass}
           />
         </Field>
-        <Field id="phone" label="Mobile number">
+        <Field id="phone" label={f.mobile}>
           <input
             id="phone"
             name="phone"
             type="tel"
             required
             autoComplete="tel"
+            dir="ltr"
             placeholder="05XXXXXXXX"
             defaultValue={profile.phone ?? ""}
             className={inputClass}
           />
         </Field>
-        <Field id="city" label="City">
+        <Field id="city" label={f.city}>
           <select
             id="city"
             name="city"
@@ -153,11 +152,11 @@ export function DealerApplicationForm({ profile, defaultPlan = "dealer" }: Props
             className={inputClass}
           >
             <option value="" disabled>
-              Choose a city
+              {f.chooseCity}
             </option>
             {CITIES.map((city) => (
               <option key={city} value={city}>
-                {city}
+                {cityName(t, city)}
               </option>
             ))}
           </select>
@@ -165,8 +164,8 @@ export function DealerApplicationForm({ profile, defaultPlan = "dealer" }: Props
       </fieldset>
 
       <fieldset className="flex flex-col gap-4" disabled={pending}>
-        <legend className="mb-4 text-lg font-medium">Business</legend>
-        <Field id="business_name" label="Business name">
+        <legend className="mb-4 text-lg font-medium">{d.business}</legend>
+        <Field id="business_name" label={d.businessName}>
           <input
             id="business_name"
             name="business_name"
@@ -178,7 +177,7 @@ export function DealerApplicationForm({ profile, defaultPlan = "dealer" }: Props
             className={inputClass}
           />
         </Field>
-        <Field id="showroom_address" label={<>Showroom address {optional}</>}>
+        <Field id="showroom_address" label={<>{d.showroomAddress} {optional}</>}>
           <input
             id="showroom_address"
             name="showroom_address"
@@ -191,14 +190,13 @@ export function DealerApplicationForm({ profile, defaultPlan = "dealer" }: Props
       </fieldset>
 
       <fieldset className="flex flex-col gap-4" disabled={pending}>
-        <legend className="mb-1 text-lg font-medium">Registration {optional}</legend>
+        <legend className="mb-1 text-lg font-medium">{d.registration} {optional}</legend>
         <p className="text-sm text-zinc-600 dark:text-zinc-400">
-          Documents help us approve you faster. JPEG, PNG, WebP or PDF, up to 10 MB each. Only our
-          team can see them.
+          {d.registrationHint}
         </p>
-        {NUMBER_FIELDS.map(({ name, label, doc }) => (
+        {NUMBER_FIELDS.map(({ name, doc }) => (
           <div key={name} className="flex flex-col gap-3 rounded-md border border-zinc-200 p-4 dark:border-zinc-800">
-            <Field id={name} label={label}>
+            <Field id={name} label={d.numbers[name]}>
               <input
                 id={name}
                 name={name}
@@ -206,7 +204,7 @@ export function DealerApplicationForm({ profile, defaultPlan = "dealer" }: Props
                 className={inputClass}
               />
             </Field>
-            <Field id={`${doc}_doc`} label={DEALER_DOCS[doc]}>
+            <Field id={`${doc}_doc`} label={d.docs[doc]}>
               <input
                 id={`${doc}_doc`}
                 type="file"
@@ -220,28 +218,27 @@ export function DealerApplicationForm({ profile, defaultPlan = "dealer" }: Props
       </fieldset>
 
       <fieldset className="flex flex-col gap-3" disabled={pending}>
-        <legend className="mb-4 text-lg font-medium">Plan</legend>
-        {PLAN_CHOICES.map((plan) => (
+        <legend className="mb-4 text-lg font-medium">{d.plan}</legend>
+        {DEALER_PLANS.map((plan) => (
           <label
-            key={plan.value}
+            key={plan}
             className="flex cursor-pointer items-start gap-3 rounded-md border border-zinc-200 p-4 has-[:checked]:border-zinc-900 dark:border-zinc-800 dark:has-[:checked]:border-zinc-100"
           >
             <input
               type="radio"
               name="requested_plan"
-              value={plan.value}
-              defaultChecked={plan.value === defaultPlan}
+              value={plan}
+              defaultChecked={plan === defaultPlan}
               className="mt-1"
             />
             <span>
-              <span className="block text-sm font-medium">{plan.label}</span>
-              <span className="block text-sm text-zinc-600 dark:text-zinc-400">{plan.note}</span>
+              <span className="block text-sm font-medium">{t.plans.labels[plan]}</span>
+              <span className="block text-sm text-zinc-600 dark:text-zinc-400">{d.planNotes[plan]}</span>
             </span>
           </label>
         ))}
         <p className="text-xs text-zinc-600 dark:text-zinc-400">
-          Our team reviews your application and contacts you about payment. You can list cars on
-          the free plan in the meantime.
+          {d.planHint}
         </p>
       </fieldset>
 
@@ -251,7 +248,7 @@ export function DealerApplicationForm({ profile, defaultPlan = "dealer" }: Props
         disabled={pending}
         className="rounded-md bg-zinc-900 px-4 py-2 text-white disabled:opacity-50 dark:bg-zinc-100 dark:text-zinc-900"
       >
-        {progress ?? "Submit dealer application"}
+        {progress ?? d.submit}
       </button>
     </form>
   );

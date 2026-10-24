@@ -1,22 +1,32 @@
 import Image from "next/image";
 import { RiyalPrice } from "@/components/riyal-price";
 import Link from "@/components/locale-link";
+import type { Metadata } from "next";
+import { rich } from "@/components/rich-text";
 import { requireSeller } from "@/lib/auth";
+import { cityName, fmt } from "@/lib/dictionary";
+import { getDictionary } from "@/lib/i18n-server";
 import { formatDay, formatKm, formatListingStats } from "@/lib/format";
 import { getSellerListings, isFeatured } from "@/lib/listings";
 import {
   getListingQuota,
   isDealerPlan,
   isPlanExpiringSoon,
-  PLAN_LABELS,
   quotaSummary,
   SELF_FEATURE_DAYS,
 } from "@/lib/plans";
 import { ListingActions } from "./listings/listing-actions";
 import { StatusBadge } from "./listings/status-badge";
 
+export async function generateMetadata(): Promise<Metadata> {
+  const { t } = await getDictionary();
+  return { title: t.dashboard.metaTitle };
+}
+
 export default async function DashboardPage() {
   const { user, profile } = await requireSeller();
+  const { t, locale } = await getDictionary();
+  const d = t.dashboard;
   const [listings, quota] = await Promise.all([getSellerListings(user.id), getListingQuota()]);
   const newListingClass =
     "rounded-md bg-zinc-900 px-4 py-2.5 text-center text-sm text-white max-sm:flex-1 sm:py-2 dark:bg-zinc-100 dark:text-zinc-900";
@@ -25,15 +35,15 @@ export default async function DashboardPage() {
     <main className="mx-auto w-full max-w-5xl px-4 py-6 sm:py-12">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Your listings</h1>
+          <h1 className="text-2xl font-semibold tracking-tight">{d.title}</h1>
           {quota && (
             <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-              {quotaSummary(quota)}
+              {quotaSummary(t, locale, quota)}
               {quota.plan !== "showroom" && (
                 <>
                   {" · "}
                   <Link href="/pricing" className="underline">
-                    Upgrade
+                    {d.upgrade}
                   </Link>
                 </>
               )}
@@ -41,7 +51,7 @@ export default async function DashboardPage() {
                 <>
                   {" · "}
                   <Link href="/account/storefront" className="underline">
-                    Edit storefront
+                    {d.editStorefront}
                   </Link>
                 </>
               )}
@@ -55,39 +65,42 @@ export default async function DashboardPage() {
               href="/dashboard/listings/import"
               className="rounded-md border border-zinc-300 px-4 py-2.5 text-center text-sm max-sm:flex-1 sm:py-2 dark:border-zinc-700"
             >
-              Import CSV
+              {d.importCsv}
             </Link>
           )}
           <Link href="/dashboard/listings/new" className={newListingClass}>
-            New listing
+            {d.newListing}
           </Link>
         </div>
       </div>
 
       {quota?.planExpiresAt && isPlanExpiringSoon(quota) && (
         <p className="mt-6 rounded-md bg-amber-50 px-4 py-3 text-sm text-amber-900 dark:bg-amber-950 dark:text-amber-200">
-          Your {PLAN_LABELS[quota.plan]} plan ends on {formatDay(quota.planExpiresAt)}. After that
-          you&apos;ll be on the Free plan.{" "}
+          {fmt(d.planEnding, {
+            plan: fmt(t.plans.named, { plan: t.plans.labels[quota.plan] }),
+            date: formatDay(quota.planExpiresAt, locale),
+          })}{" "}
           <Link href="/pricing" className="font-medium underline">
-            Renew your plan
+            {d.renew}
           </Link>
         </p>
       )}
 
       {profile.suspended_at && (
         <p className="mt-6 rounded-md bg-red-50 px-4 py-3 text-sm text-red-900 dark:bg-red-950 dark:text-red-200">
-          Your account is suspended. Your listings are hidden from buyers and you can&apos;t
-          publish new ones.
+          {d.suspended}
         </p>
       )}
 
       {listings.length === 0 ? (
         <p className="mt-8 text-zinc-600 dark:text-zinc-400">
-          You haven&apos;t listed a car yet.{" "}
-          <Link href="/dashboard/listings/new" className="font-medium underline">
-            Create your first listing
-          </Link>
-          .
+          {rich(d.empty, {
+            link: (
+              <Link href="/dashboard/listings/new" className="font-medium underline">
+                {d.createFirst}
+              </Link>
+            ),
+          })}
         </p>
       ) : (
         <ul className="mt-8 divide-y divide-zinc-200 dark:divide-zinc-800">
@@ -112,17 +125,17 @@ export default async function DashboardPage() {
                     <StatusBadge status={listing.status} />
                   </div>
                   <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-                    <RiyalPrice amount={listing.price} /> · {formatKm(listing.mileage)} ·{" "}
-                    {listing.city} · {formatListingStats(listing.stats)}
+                    <RiyalPrice amount={listing.price} /> · {formatKm(listing.mileage, locale)} ·{" "}
+                    {cityName(t, listing.city)} · {formatListingStats(locale, listing.stats, t.common.stats)}
                   </p>
                   {listing.status === "active" && listing.featured_until && isFeatured(listing) && (
                     <p className="mt-1 text-sm text-amber-700 dark:text-amber-400">
-                      Featured until {formatDay(listing.featured_until)}
+                      {fmt(d.featuredUntil, { date: formatDay(listing.featured_until, locale) })}
                     </p>
                   )}
                   {listing.status === "removed" && listing.removed_reason && (
                     <p className="mt-1 text-sm text-red-700 dark:text-red-400">
-                      Removed by moderators: {listing.removed_reason}
+                      {fmt(d.removedReason, { reason: listing.removed_reason })}
                     </p>
                   )}
                 </div>

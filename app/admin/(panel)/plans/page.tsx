@@ -110,7 +110,7 @@ async function PlanChanges({ params, page }: ListProps) {
                       {change.note && <span className="mt-1 block max-w-72 text-xs text-zinc-500">{change.note}</span>}
                     </td>
                     <td data-label="Ends" className={`${table.td} whitespace-nowrap`}>
-                      {change.expires_at ? formatDay(change.expires_at) : <span className="text-zinc-400">No end date</span>}
+                      {change.expires_at ? formatDay(change.expires_at, "en") : <span className="text-zinc-400">No end date</span>}
                     </td>
                     <td data-label="Source" className={table.td}>
                       <span className="block">{PLAN_CHANGE_SOURCES[change.source]}</span>
@@ -119,7 +119,7 @@ async function PlanChanges({ params, page }: ListProps) {
                       )}
                     </td>
                     <td data-label="Date" className={`${table.td} whitespace-nowrap text-zinc-600 dark:text-zinc-400`}>
-                      {formatDay(change.created_at)}
+                      {formatDay(change.created_at, "en")}
                     </td>
                   </tr>
                 ))}
@@ -169,7 +169,7 @@ async function FeaturedGrants({ params, page }: ListProps) {
                       <UserCell id={grant.seller?.id ?? null} name={grant.seller?.full_name} />
                     </td>
                     <td data-label="Length" className={`${table.td} tabular-nums`}>{grant.days} days</td>
-                    <td data-label="Featured until" className={`${table.td} whitespace-nowrap`}>{formatDay(grant.featured_until)}</td>
+                    <td data-label="Featured until" className={`${table.td} whitespace-nowrap`}>{formatDay(grant.featured_until, "en")}</td>
                     <td data-label="Granted" className={table.td}>
                       <span className="block">
                         {grant.self_serve ? (
@@ -178,7 +178,7 @@ async function FeaturedGrants({ params, page }: ListProps) {
                           `By ${grant.granted_by_profile?.full_name ?? "admin"}`
                         )}
                       </span>
-                      <span className="text-xs text-zinc-500">{formatDay(grant.created_at)}</span>
+                      <span className="text-xs text-zinc-500">{formatDay(grant.created_at, "en")}</span>
                     </td>
                   </tr>
                 ))}
@@ -206,7 +206,7 @@ async function ExpiringPlans() {
       ) : (
         <ul className={table.body}>
           {profiles.map((profile) => {
-            const endsOn = profile.plan_expires_at ? formatDay(profile.plan_expires_at) : "";
+            const endsOn = profile.plan_expires_at ? formatDay(profile.plan_expires_at, "en") : "";
             const { daysLeft } = profile;
             const name = profile.business_name ?? profile.full_name;
             return (
@@ -291,7 +291,7 @@ async function Payments({ params, page }: ListProps) {
                           <Pill tone="brand">{PLAN_LABELS[payment.plan_change.to_plan]}</Pill>
                           {payment.plan_change.expires_at && (
                             <span className="mt-1 block text-xs text-zinc-500">
-                              Until {formatDay(payment.plan_change.expires_at)}
+                              Until {formatDay(payment.plan_change.expires_at, "en")}
                             </span>
                           )}
                         </>
@@ -300,7 +300,7 @@ async function Payments({ params, page }: ListProps) {
                       )}
                     </td>
                     <td data-label="Recorded" className={table.td}>
-                      <span className="block whitespace-nowrap">{formatDay(payment.created_at)}</span>
+                      <span className="block whitespace-nowrap">{formatDay(payment.created_at, "en")}</span>
                       {payment.recorded_by_profile?.full_name && (
                         <span className="text-xs text-zinc-500">By {payment.recorded_by_profile.full_name}</span>
                       )}

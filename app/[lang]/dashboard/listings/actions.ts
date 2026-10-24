@@ -17,7 +17,7 @@ import {
 } from "@/lib/plans";
 import { deleteObjects, presignPut } from "@/lib/r2";
 import { createClient } from "@/lib/supabase/server";
-import { localeRedirect, revalidateLocalized } from "@/lib/i18n-server";
+import { getDictionary, localeRedirect, revalidateLocalized } from "@/lib/i18n-server";
 
 export type ListingFormState = {
   error?: string;
@@ -37,8 +37,12 @@ function revalidateDashboard() {
 export async function featureListing(listingId: string): Promise<ActionResult> {
   await requireSeller();
   const result = await featureOwnListing(listingId);
-  if (!result.error) revalidatePath("/", "layout");
-  return result;
+  if (!result.error) {
+    revalidatePath("/", "layout");
+    return {};
+  }
+  const { t } = await getDictionary();
+  return { error: t.plans.featureErrors[result.error] };
 }
 
 export async function createListing(
@@ -107,7 +111,8 @@ export async function setListingStatus(
   // Friendly early check; the database trigger is what actually enforces it.
   const charged = status === "active" && listing.first_published_at === null;
   const quota = charged ? await getListingQuota() : null;
-  if (quota?.remaining === 0) return { error: quotaExceededMessage(quota) };
+  const { t } = await getDictionary();
+  if (quota?.remaining === 0) return { error: quotaExceededMessage(t, quota) };
 
   const supabase = await createClient();
   const { error } = await supabase
@@ -116,7 +121,7 @@ export async function setListingStatus(
     .eq("id", listingId)
     .eq("seller_id", user.id);
   if (error?.message === QUOTA_EXCEEDED_DB_MESSAGE && quota) {
-    return { error: quotaExceededMessage(quota) };
+    return { error: quotaExceededMessage(t, quota) };
   }
   if (error) return { error: "Could not update the listing. Try again." };
 

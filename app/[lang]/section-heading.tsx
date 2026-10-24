@@ -1,3 +1,6 @@
+"use client";
+
+import { useDictionary } from "@/components/i18n-provider";
 import Link from "@/components/locale-link";
 import type { ReactNode } from "react";
 import { ArrowRight } from "lucide-react";
@@ -26,6 +29,7 @@ export function SectionHeading({
   // shortLabel replaces label on phones, where the full one squeezes the title.
   link?: { href: string; label: string; shortLabel?: string };
 }) {
+  const { t } = useDictionary();
   return (
     <div className="flex items-start justify-between gap-4 sm:items-end">
       <div className="min-w-0">
@@ -40,7 +44,7 @@ export function SectionHeading({
           aria-label={link.label}
           className="group flex shrink-0 items-center gap-2 text-caption font-semibold text-brand underline-offset-4 hover:text-brand hover:underline max-sm:mt-[1.85rem] sm:mb-1.5"
         >
-          <span className="sm:hidden">{link.shortLabel ?? "See all"}</span>
+          <span className="sm:hidden">{link.shortLabel ?? t.home.seeAll}</span>
           <span className="max-sm:hidden">{link.label}</span>
           <ArrowRight className="size-3 transition group-hover:translate-x-0.5 rtl:group-hover:-translate-x-0.5" strokeWidth={2.4} />
         </Link>

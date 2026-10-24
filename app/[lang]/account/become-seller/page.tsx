@@ -1,23 +1,16 @@
+import type { Metadata } from "next";
 import Link from "@/components/locale-link";
 import { requireUser } from "@/lib/auth";
 import { isDealerPlanChoice } from "@/lib/dealer-application-options";
 import { becomeSeller } from "../actions";
 import { DealerApplicationForm } from "../dealer-application/dealer-application-form";
 import { ProfileForm } from "../profile-form";
-import { localeRedirect } from "@/lib/i18n-server";
+import { getDictionary, localeRedirect } from "@/lib/i18n-server";
 
-const SELLER_TYPES = [
-  {
-    type: "individual",
-    title: "Individual seller",
-    description: "Selling your own car. List up to 3 cars a month for free.",
-  },
-  {
-    type: "dealer",
-    title: "Dealer / showroom",
-    description: "Selling as a business. Get a branded storefront, CSV import and higher limits.",
-  },
-] as const;
+export async function generateMetadata(): Promise<Metadata> {
+  const { t } = await getDictionary();
+  return { title: t.account.becomeSellerPage.metaTitle };
+}
 
 export default async function BecomeSellerPage({
   searchParams,
@@ -25,17 +18,22 @@ export default async function BecomeSellerPage({
   const { profile } = await requireUser("/account/become-seller");
   if (profile.role === "seller") return localeRedirect("/dashboard");
   const { type, plan } = await searchParams;
+  const { t } = await getDictionary();
+  const p = t.account.becomeSellerPage;
+  const sellerTypes = [
+    { type: "individual", title: p.individualTitle, description: p.individualDescription },
+    { type: "dealer", title: p.dealerTitle, description: p.dealerDescription },
+  ];
 
   if (type === "dealer") {
     return (
       <main className="mx-auto w-full max-w-md px-4 py-12">
         <Link href="/account/become-seller" className="text-sm text-zinc-600 dark:text-zinc-400">
-          ← Seller type
+          {p.backToType}
         </Link>
-        <h1 className="mt-4 text-2xl font-semibold tracking-tight">Sell as a dealer</h1>
+        <h1 className="mt-4 text-2xl font-semibold tracking-tight">{p.dealerHeading}</h1>
         <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
-          Tell us about your business. Our team reviews your application and upgrades your
-          account once approved.
+          {p.dealerIntro}
         </p>
         <div className="mt-8">
           <DealerApplicationForm
@@ -51,14 +49,14 @@ export default async function BecomeSellerPage({
     return (
       <main className="mx-auto w-full max-w-md px-4 py-12">
         <Link href="/account/become-seller" className="text-sm text-zinc-600 dark:text-zinc-400">
-          ← Seller type
+          {p.backToType}
         </Link>
-        <h1 className="mt-4 text-2xl font-semibold tracking-tight">Sell your car</h1>
+        <h1 className="mt-4 text-2xl font-semibold tracking-tight">{p.individualHeading}</h1>
         <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
-          Buyers will contact you using these details, so make sure they&apos;re correct.
+          {p.individualIntro}
         </p>
         <div className="mt-8">
-          <ProfileForm profile={profile} action={becomeSeller} submitLabel="Start selling" />
+          <ProfileForm profile={profile} action={becomeSeller} submitLabel={p.startSelling} />
         </div>
       </main>
     );
@@ -66,12 +64,12 @@ export default async function BecomeSellerPage({
 
   return (
     <main className="mx-auto w-full max-w-md px-4 py-12">
-      <h1 className="text-2xl font-semibold tracking-tight">How are you selling?</h1>
+      <h1 className="text-2xl font-semibold tracking-tight">{p.chooseHeading}</h1>
       <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
-        Choose the account that fits you. Individuals can apply for a dealer account later.
+        {p.chooseIntro}
       </p>
       <ul className="mt-8 flex flex-col gap-3">
-        {SELLER_TYPES.map(({ type, title, description }) => (
+        {sellerTypes.map(({ type, title, description }) => (
           <li key={type}>
             <Link
               href={`/account/become-seller?type=${type}`}

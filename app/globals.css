@@ -279,3 +279,9 @@
 @keyframes ks-pulse {
   50% { opacity: 0.55; }
 }
+
+/* Arabic letters join, so letter-spacing breaks the words apart. Unlayered,
+   so it wins over the tracking-* utilities used on English eyebrows. */
+html[lang="ar"] :not(input)[class*="tracking-"] {
+  letter-spacing: normal;
+}

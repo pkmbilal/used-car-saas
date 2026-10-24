@@ -11,6 +11,7 @@ import {
   PasswordField,
   SubmitButton,
 } from "@/components/auth-fields";
+import { useDictionary } from "@/components/i18n-provider";
 import { loginAction, type LoginState } from "./actions";
 
 const initialState: LoginState = { step: "credentials", email: "" };
@@ -21,6 +22,9 @@ function withNext(path: string, next: string) {
 
 export function LoginForm({ next }: { next: string }) {
   const [state, formAction, pending] = useActionState(loginAction, initialState);
+  const { t } = useDictionary();
+  const a = t.authPages;
+  const p = a.login;
 
   return (
     <form action={formAction} className="flex flex-col gap-4">
@@ -30,38 +34,38 @@ export function LoginForm({ next }: { next: string }) {
         <>
           <Field
             id="email"
-            label="Email"
+            label={a.email}
             type="email"
             icon={Mail}
             autoComplete="email"
-            placeholder="you@example.com"
+            placeholder={a.emailPlaceholder}
             defaultValue={state.email}
           />
           <PasswordField
             id="password"
-            label="Password"
+            label={a.password}
             autoComplete="current-password"
             aside={
               <Link href={withNext("/forgot-password", next)} className={`text-caption ${authLinkClass}`}>
-                Forgot password?
+                {p.forgot}
               </Link>
             }
           />
           <FormMessages error={state.error} notice={state.notice} />
-          <SubmitButton intent="signin" pending={pending} pendingLabel="Signing in…">
-            Sign in
+          <SubmitButton intent="signin" pending={pending} pendingLabel={p.signingIn}>
+            {p.signIn}
           </SubmitButton>
           <p className="mt-2 border-t border-line pt-5 text-center text-sm text-zinc-600">
-            New here?{" "}
+            {p.newHere}{" "}
             <Link href={withNext("/signup", next)} className={authLinkClass}>
-              Create an account
+              {p.createAccount}
             </Link>
           </p>
         </>
       ) : (
         <>
           <FormMessages error={state.error} notice={state.notice} />
-          <CodeStep email={state.email} pending={pending} submitLabel="Confirm and sign in" />
+          <CodeStep email={state.email} pending={pending} submitLabel={p.confirm} />
         </>
       )}
     </form>

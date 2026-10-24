@@ -2,10 +2,12 @@
 
 import { Share2 } from "lucide-react";
 import { toast } from "sonner";
+import { useDictionary } from "@/components/i18n-provider";
 import { Button } from "@/components/ui/button";
 
 // Native share sheet where available (mobile), otherwise copy the link.
 export function ShareButton({ title }: { title: string }) {
+  const { t } = useDictionary();
   async function share() {
     const url = window.location.href;
     if (navigator.share) {
@@ -18,16 +20,16 @@ export function ShareButton({ title }: { title: string }) {
     }
     try {
       await navigator.clipboard.writeText(url);
-      toast.success("Link copied");
+      toast.success(t.listingPage.linkCopied);
     } catch {
-      toast.error("Couldn't copy the link");
+      toast.error(t.listingPage.copyFailed);
     }
   }
 
   return (
     <Button type="button" variant="outline" onClick={share} className="h-10 w-full bg-white text-xs max-sm:text-sm font-medium">
       <Share2 className="size-3.5" />
-      Share
+      {t.listingPage.share}
     </Button>
   );
 }

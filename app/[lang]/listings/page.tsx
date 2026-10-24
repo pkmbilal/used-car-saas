@@ -8,7 +8,9 @@ import { SearchBar } from "@/components/search-bar";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { getCurrentUser } from "@/lib/auth";
+import { count, fmt } from "@/lib/dictionary";
 import { getViewerFavoriteIds } from "@/lib/favorites";
+import { getDictionary, localeAlternates } from "@/lib/i18n-server";
 import {
   getActiveFacetCounts,
   getFeaturedListings,
@@ -29,14 +31,14 @@ import { MobileFilters } from "./mobile-filters";
 import { RememberSearch } from "./remember-search";
 import { SortSelect } from "./sort-select";
 
-export const metadata: Metadata = {
-  title: "Browse used cars | KarSouq",
-};
-
-const numberFormatter = new Intl.NumberFormat("en-US");
+export async function generateMetadata(): Promise<Metadata> {
+  const { t } = await getDictionary();
+  return { title: t.listings.metaTitle, alternates: await localeAlternates("/listings") };
+}
 
 export default async function ListingsPage({ searchParams }: PageProps<"/[lang]/listings">) {
   const params = await searchParams;
+  const { t, locale } = await getDictionary();
   const filters = parseListingFilters(params);
   const [{ listings, total }, featured, favoriteIds, current, facets] = await Promise.all([
     searchListings(filters),
@@ -78,14 +80,14 @@ export default async function ListingsPage({ searchParams }: PageProps<"/[lang]/
     <main className="light bg-canvas text-ink">
       <RememberSearch href={pageHref(filters.page)} />
       <section className="relative overflow-hidden bg-charcoal">
-        <div className="absolute inset-y-0 end-0 w-2/3 bg-[radial-gradient(ellipse_at_70%_60%,rgba(111,224,124,.16),transparent_60%)]" />
+        <div className="absolute inset-y-0 end-0 w-2/3 bg-[radial-gradient(ellipse_at_70%_60%,rgba(111,224,124,.16),transparent_60%)] rtl:bg-[radial-gradient(ellipse_at_30%_60%,rgba(111,224,124,.16),transparent_60%)]" />
         <div className="relative mx-auto w-full max-w-6xl px-4 pt-10 pb-20 sm:px-6">
-          <p className="text-eyebrow font-bold tracking-[0.24em] text-[#5fd06e]">USED CARS FOR SALE</p>
+          <p className="text-eyebrow font-bold tracking-[0.24em] text-[#5fd06e]">{t.listings.eyebrow}</p>
           <h1 className="mt-2.5 max-w-md text-3xl leading-tight font-medium tracking-tight text-white md:text-4xl">
-            Find Your <span className="text-lime">Perfect Car</span> With Easy Filters
+            {t.listings.titleStart} <span className="text-lime">{t.listings.titleHighlight}</span> {t.listings.titleEnd}
           </h1>
           <p className="mt-3.5 max-w-sm text-label leading-relaxed text-white/85">
-            Set your preferences, find the right match, and contact the seller directly.
+            {t.listings.intro}
           </p>
         </div>
       </section>
@@ -105,15 +107,15 @@ export default async function ListingsPage({ searchParams }: PageProps<"/[lang]/
         <section>
           <div className="flex flex-wrap items-center justify-between gap-3">
             <p className="text-label font-semibold">
-              {numberFormatter.format(total)} {total === 1 ? "Car" : "Cars"} Found
-              {filters.q && <span className="font-normal text-muted-foreground"> matching “{filters.q}”</span>}
+              {count(locale, total, t.listings.found)}
+              {filters.q && <span className="font-normal text-muted-foreground">{fmt(t.listings.matching, { q: filters.q })}</span>}
             </p>
             <div className="flex flex-wrap items-center gap-3">
               {filtered && (
                 <SaveSearchButton
                   key={searchHref}
                   params={searchParamsForSave}
-                  defaultName={defaultSearchName(filters)}
+                  defaultName={defaultSearchName(filters, t, locale)}
                   maxNameLength={MAX_SAVED_SEARCH_NAME}
                   signedIn={current !== null}
                   loginHref={`/login?next=${encodeURIComponent(searchHref)}`}
@@ -127,15 +129,13 @@ export default async function ListingsPage({ searchParams }: PageProps<"/[lang]/
           {noResults && (
             <Card className="mt-4 items-center gap-2 rounded-lg px-6 py-12 text-center shadow-[0_2px_10px_rgba(20,30,25,.05)] ring-0">
               <SearchX className="size-8 text-brand-600" strokeWidth={1.6} />
-              <p className="mt-1 text-sm font-semibold">No cars match these filters</p>
+              <p className="mt-1 text-sm font-semibold">{t.listings.noMatchTitle}</p>
               <p className="max-w-sm text-xs text-muted-foreground">
-                {filtered
-                  ? "Try removing a filter or widening your price and year range. Save this search to hear when a match is listed."
-                  : "There are no cars for sale right now. Check back soon."}
+                {filtered ? t.listings.noMatchFiltered : t.listings.noMatchEmpty}
               </p>
               {filtered && (
                 <Button asChild size="sm" className="mt-3 text-xs max-sm:text-sm font-semibold">
-                  <Link href="/listings">Clear all filters</Link>
+                  <Link href="/listings">{t.listings.clearAllFilters}</Link>
                 </Button>
               )}
             </Card>
@@ -143,7 +143,7 @@ export default async function ListingsPage({ searchParams }: PageProps<"/[lang]/
 
           {featured.length > 0 && (
             <div className="mt-4 mb-8 border-b border-line pb-8">
-              <p className="mb-3 text-caption font-bold tracking-[0.2em] text-brand-600">FEATURED</p>
+              <p className="mb-3 text-caption font-bold tracking-[0.2em] text-brand-600">{t.listings.featured}</p>
               <ListingGrid listings={featured} favoriteIds={favoriteIds} columns={3} />
             </div>
           )}
@@ -151,7 +151,7 @@ export default async function ListingsPage({ searchParams }: PageProps<"/[lang]/
             <ListingGrid
               listings={results}
               // The no-results card covers page 1; otherwise this is a page past the end.
-              empty={noResults || featured.length > 0 ? "" : "No cars on this page."}
+              empty={noResults || featured.length > 0 ? "" : t.listings.emptyPage}
               favoriteIds={favoriteIds} columns={3} />
           </div>
           <Pagination page={filters.page} pageCount={pageCount} hrefFor={pageHref} />

@@ -1,8 +1,10 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import Link, { useLocale } from "@/components/locale-link";
+import { useDictionary } from "@/components/i18n-provider";
+import Link from "@/components/locale-link";
 import { useRouter } from "next/navigation";
+import { fmt, translateMessage } from "@/lib/dictionary";
 import { localizePath } from "@/lib/i18n";
 import type { ListingStatus } from "@/lib/listings";
 import { deleteListing, featureListing, setListingStatus, type ActionResult } from "./actions";
@@ -26,7 +28,8 @@ export function ListingActions({
   featureDays,
 }: Props) {
   const router = useRouter();
-  const locale = useLocale();
+  const { t, locale } = useDictionary();
+  const a = t.dashboard.actions;
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string>();
 
@@ -34,7 +37,7 @@ export function ListingActions({
     setError(undefined);
     startTransition(async () => {
       const result = await action();
-      if (result.error) setError(result.error);
+      if (result.error) setError(translateMessage(t, result.error));
       else after?.();
     });
   }
@@ -43,11 +46,11 @@ export function ListingActions({
     <div className="flex flex-col items-end gap-1">
       <div className="flex flex-wrap items-center justify-end gap-3">
         <Link href={`/listings/${listingId}`} className={buttonClass}>
-          View
+          {a.view}
         </Link>
         {showEdit && (
           <Link href={`/dashboard/listings/${listingId}/edit`} className={buttonClass}>
-            Edit
+            {a.edit}
           </Link>
         )}
         {(status === "draft" || status === "sold") && (
@@ -57,7 +60,7 @@ export function ListingActions({
             className={`${buttonClass} text-green-700 dark:text-green-400`}
             onClick={() => run(() => setListingStatus(listingId, "active"))}
           >
-            {status === "sold" ? "Relist" : "Publish"}
+            {status === "sold" ? a.relist : a.publish}
           </button>
         )}
         {status === "active" && (
@@ -67,7 +70,7 @@ export function ListingActions({
             className={buttonClass}
             onClick={() => run(() => setListingStatus(listingId, "sold"))}
           >
-            Mark as sold
+            {a.markSold}
           </button>
         )}
         {status === "active" && featureSlots > 0 && (
@@ -77,7 +80,7 @@ export function ListingActions({
             className={`${buttonClass} text-amber-700 dark:text-amber-400`}
             onClick={() => run(() => featureListing(listingId))}
           >
-            Feature for {featureDays} days ({featureSlots} left)
+            {fmt(a.feature, { days: featureDays ?? "", slots: featureSlots })}
           </button>
         )}
         <button
@@ -85,14 +88,14 @@ export function ListingActions({
           disabled={pending}
           className={`${buttonClass} text-red-600`}
           onClick={() => {
-            if (!window.confirm("Delete this listing and its photos? This can't be undone.")) return;
+            if (!window.confirm(a.confirmDelete)) return;
             run(
               () => deleteListing(listingId),
               () => router.push(localizePath(locale, "/dashboard")),
             );
           }}
         >
-          Delete
+          {a.delete}
         </button>
       </div>
       {error && <p className="text-sm text-red-600">{error}</p>}

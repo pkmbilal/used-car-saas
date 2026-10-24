@@ -1,26 +1,24 @@
 "use client";
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useDictionary } from "@/components/i18n-provider";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-const listingSortLabels = {
-  newest: "Newest First",
-  price_asc: "Price: Low to High",
-  price_desc: "Price: High to Low",
-  mileage_asc: "Mileage: Lowest First",
-  year_desc: "Year: Newest First",
-} as const;
+type ListingSort = "newest" | "price_asc" | "price_desc" | "mileage_asc" | "year_desc";
 
 // Changing the sort keeps the filters but starts again from page 1. The first
 // option is the default and is left out of the URL.
-export function SortSelect<T extends string = keyof typeof listingSortLabels>({
+// Without options it offers the listing sorts.
+export function SortSelect<T extends string = ListingSort>({
   value,
-  options = listingSortLabels as Record<T, string>,
+  options: givenOptions,
 }: {
   value: T;
   options?: Record<T, string>;
 }) {
+  const { t } = useDictionary();
+  const options = givenOptions ?? (t.listings.sort as Record<T, string>);
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -38,7 +36,7 @@ export function SortSelect<T extends string = keyof typeof listingSortLabels>({
   return (
     <div className="flex items-center gap-3">
       <Label htmlFor="sort" className="text-caption font-normal text-ink/70">
-        Sort by
+        {t.listings.sortBy}
       </Label>
       <Select value={value} onValueChange={change}>
         <SelectTrigger id="sort" className="h-8 min-w-40 bg-white text-xs max-sm:h-10 max-sm:text-sm">

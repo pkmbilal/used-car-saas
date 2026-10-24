@@ -72,7 +72,7 @@ export function ActionList({ actions, empty }: { actions: AdminActionRow[]; empt
                     </>
                   )}
                 </p>
-                <p className="text-xs whitespace-nowrap text-zinc-500">{formatDay(action.created_at)}</p>
+                <p className="text-xs whitespace-nowrap text-zinc-500">{formatDay(action.created_at, "en")}</p>
               </div>
               {action.reason && (
                 <p className="mt-2 rounded-lg bg-canvas px-3 py-2 text-sm text-zinc-700 dark:bg-zinc-800/60 dark:text-zinc-300">

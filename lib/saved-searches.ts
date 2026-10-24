@@ -1,5 +1,7 @@
 import "server-only";
-import { bodyTypeLabel, capitalize, featureLabel } from "@/lib/listing-options";
+import { cityName, fmt, optionLabel } from "@/lib/dictionary";
+import { type Dictionary } from "@/lib/dictionaries";
+import type { Locale } from "@/lib/i18n";
 import {
   applyListingFilters,
   listingFiltersToParams,
@@ -43,44 +45,41 @@ export function hasActiveFilters(filters: ListingFilters): boolean {
   return Object.keys(listingFiltersToParams(filters)).length > 0;
 }
 
-function priceRange(min?: number, max?: number): string | null {
-  if (min !== undefined && max !== undefined) return `${formatSAR(min)} – ${formatSAR(max)}`;
-  if (min !== undefined) return `From ${formatSAR(min)}`;
-  if (max !== undefined) return `Up to ${formatSAR(max)}`;
-  return null;
-}
-
-function yearRange(min?: number, max?: number): string | null {
-  if (min !== undefined && max !== undefined) return min === max ? `${min}` : `${min}–${max}`;
-  if (min !== undefined) return `${min} or newer`;
-  if (max !== undefined) return `${max} or older`;
-  return null;
-}
-
-function joined(labels: string[]): string | null {
-  return labels.length ? labels.join(", ") : null;
-}
-
 // Human-readable parts, e.g. ["“camry”", "Toyota", "Riyadh", "Up to SAR 80,000"].
-export function describeFilters(filters: ListingFilters): string[] {
+export function describeFilters(filters: ListingFilters, t: Dictionary, locale: Locale): string[] {
+  const s = t.filtersSummary;
+  const sar = (amount: number) => formatSAR(amount, locale);
+  const joined = (labels: string[]) => (labels.length ? labels.join(t.list.separator) : null);
+  const { minPrice, maxPrice, minYear, maxYear } = filters;
+
+  let price: string | null = null;
+  if (minPrice !== undefined && maxPrice !== undefined) price = fmt(s.priceRange, { min: sar(minPrice), max: sar(maxPrice) });
+  else if (minPrice !== undefined) price = fmt(s.priceFrom, { price: sar(minPrice) });
+  else if (maxPrice !== undefined) price = fmt(s.priceUpTo, { price: sar(maxPrice) });
+
+  let year: string | null = null;
+  if (minYear !== undefined && maxYear !== undefined) year = minYear === maxYear ? `${minYear}` : fmt(s.yearRange, { min: minYear, max: maxYear });
+  else if (minYear !== undefined) year = fmt(s.yearMin, { year: minYear });
+  else if (maxYear !== undefined) year = fmt(s.yearMax, { year: maxYear });
+
   return [
     filters.q ? `“${filters.q}”` : null,
     filters.make ?? null,
     filters.model ?? null,
-    filters.city ?? null,
-    joined(filters.conditions.map(capitalize)),
-    joined(filters.bodyTypes.map(bodyTypeLabel)),
-    joined(filters.fuelTypes.map(capitalize)),
-    joined(filters.transmissions.map(capitalize)),
-    joined(filters.features.map(featureLabel)),
-    priceRange(filters.minPrice, filters.maxPrice),
-    yearRange(filters.minYear, filters.maxYear),
-    filters.maxMileage !== undefined ? `Up to ${formatKm(filters.maxMileage)}` : null,
+    filters.city ? cityName(t, filters.city) : null,
+    joined(filters.conditions.map((value) => optionLabel(t.options.condition, value))),
+    joined(filters.bodyTypes.map((value) => optionLabel(t.options.bodyType, value))),
+    joined(filters.fuelTypes.map((value) => optionLabel(t.options.fuel, value))),
+    joined(filters.transmissions.map((value) => optionLabel(t.options.transmission, value))),
+    joined(filters.features.map((value) => optionLabel(t.options.features, value))),
+    price,
+    year,
+    filters.maxMileage !== undefined ? fmt(s.mileageUpTo, { km: formatKm(filters.maxMileage, locale) }) : null,
   ].filter((part): part is string => part !== null);
 }
 
-export function defaultSearchName(filters: ListingFilters): string {
-  return describeFilters(filters).join(" · ").slice(0, MAX_SAVED_SEARCH_NAME) || "My search";
+export function defaultSearchName(filters: ListingFilters, t: Dictionary, locale: Locale): string {
+  return describeFilters(filters, t, locale).join(" · ").slice(0, MAX_SAVED_SEARCH_NAME) || t.filtersSummary.myFirstSearch;
 }
 
 // RLS limits rows to the signed-in user's own searches.

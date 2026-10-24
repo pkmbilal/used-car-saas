@@ -2,6 +2,9 @@
 
 import Image from "next/image";
 import { useRef, useState, useTransition } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useDictionary } from "@/components/i18n-provider";
+import { fmt, translateMessage } from "@/lib/dictionary";
 import {
   IMAGE_TYPES,
   MAX_IMAGE_BYTES,
@@ -26,6 +29,8 @@ const buttonClass =
   "rounded bg-white/90 px-2 py-0.5 text-xs font-medium text-zinc-900 disabled:opacity-40";
 
 export function PhotoManager({ listingId, photos }: Props) {
+  const { t } = useDictionary();
+  const p = t.dashboard.photos;
   const inputRef = useRef<HTMLInputElement>(null);
   const [pending, startTransition] = useTransition();
   const [progress, setProgress] = useState<string>();
@@ -34,21 +39,21 @@ export function PhotoManager({ listingId, photos }: Props) {
 
   // Uploads one file: presign → PUT straight to R2 → confirm.
   async function uploadFile(file: File): Promise<string | undefined> {
-    if (!(file.type in IMAGE_TYPES)) return `${file.name}: use a JPEG, PNG or WebP photo.`;
-    if (file.size > MAX_IMAGE_BYTES) return `${file.name}: photos must be under 10 MB.`;
+    if (!(file.type in IMAGE_TYPES)) return fmt(p.fileType, { name: file.name });
+    if (file.size > MAX_IMAGE_BYTES) return fmt(p.fileSize, { name: file.name });
 
     const presigned = await requestImageUpload(listingId, file.type, file.size);
-    if ("error" in presigned) return presigned.error;
+    if ("error" in presigned) return translateMessage(t, presigned.error);
 
     const response = await fetch(presigned.url, {
       method: "PUT",
       headers: { "Content-Type": file.type },
       body: file,
     });
-    if (!response.ok) return `${file.name}: upload failed.`;
+    if (!response.ok) return fmt(p.uploadFailed, { name: file.name });
 
     const confirmed = await confirmImageUpload(listingId, presigned.key);
-    return confirmed.error;
+    return confirmed.error && translateMessage(t, confirmed.error);
   }
 
   function handleFiles(fileList: FileList | null) {
@@ -60,8 +65,8 @@ export function PhotoManager({ listingId, photos }: Props) {
     startTransition(async () => {
       const errors: string[] = [];
       for (const [index, file] of files.entries()) {
-        setProgress(`Uploading ${index + 1} of ${files.length}…`);
-        const uploadError = await uploadFile(file).catch(() => `${file.name}: upload failed.`);
+        setProgress(fmt(p.uploading, { index: index + 1, count: files.length }));
+        const uploadError = await uploadFile(file).catch(() => fmt(p.uploadFailed, { name: file.name }));
         if (uploadError) errors.push(uploadError);
       }
       setProgress(undefined);
@@ -74,7 +79,7 @@ export function PhotoManager({ listingId, photos }: Props) {
     setError(undefined);
     startTransition(async () => {
       const result = await action();
-      if (result.error) setError(result.error);
+      if (result.error) setError(translateMessage(t, result.error));
     });
   }
 
@@ -89,35 +94,35 @@ export function PhotoManager({ listingId, photos }: Props) {
             >
               <Image
                 src={photo.url}
-                alt={`Photo ${index + 1}`}
+                alt={fmt(p.alt, { index: index + 1 })}
                 fill
                 sizes="(min-width: 640px) 33vw, 50vw"
                 className="object-cover"
               />
               {index === 0 && (
                 <span className="absolute start-2 top-2 rounded bg-zinc-900/80 px-2 py-0.5 text-xs text-white">
-                  Cover
+                  {p.cover}
                 </span>
               )}
               <div className="absolute inset-x-2 bottom-2 flex justify-between gap-1">
                 <div className="flex gap-1">
                   <button
                     type="button"
-                    aria-label="Move earlier"
+                    aria-label={p.moveEarlier}
                     disabled={pending || index === 0}
                     className={buttonClass}
                     onClick={() => run(() => moveImage(listingId, photo.id, "up"))}
                   >
-                    ←
+                    <ChevronLeft className="size-3.5" aria-hidden />
                   </button>
                   <button
                     type="button"
-                    aria-label="Move later"
+                    aria-label={p.moveLater}
                     disabled={pending || index === photos.length - 1}
                     className={buttonClass}
                     onClick={() => run(() => moveImage(listingId, photo.id, "down"))}
                   >
-                    →
+                    <ChevronRight className="size-3.5" aria-hidden />
                   </button>
                 </div>
                 <button
@@ -126,7 +131,7 @@ export function PhotoManager({ listingId, photos }: Props) {
                   className={`${buttonClass} text-red-600`}
                   onClick={() => run(() => deleteImage(listingId, photo.id))}
                 >
-                  Remove
+                  {p.remove}
                 </button>
               </div>
             </li>
@@ -134,7 +139,7 @@ export function PhotoManager({ listingId, photos }: Props) {
         </ul>
       ) : (
         <p className="text-sm text-zinc-600 dark:text-zinc-400">
-          No photos yet. Add at least one to publish. The first photo is the cover.
+          {p.empty}
         </p>
       )}
 
@@ -144,7 +149,7 @@ export function PhotoManager({ listingId, photos }: Props) {
             pending || remaining <= 0 ? "pointer-events-none opacity-50" : ""
           }`}
         >
-          Add photos
+          {p.add}
           <input
             ref={inputRef}
             type="file"
@@ -156,7 +161,7 @@ export function PhotoManager({ listingId, photos }: Props) {
           />
         </label>
         <span className="text-sm text-zinc-600 dark:text-zinc-400">
-          {progress ?? `${photos.length} / ${MAX_IMAGES_PER_LISTING} photos`}
+          {progress ?? fmt(p.count, { count: photos.length, max: MAX_IMAGES_PER_LISTING })}
         </span>
       </div>
       {error && <p className="text-sm text-red-600">{error}</p>}

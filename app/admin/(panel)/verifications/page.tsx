@@ -42,7 +42,7 @@ export default async function AdminVerificationsPage() {
                   )}
                   {request.user?.suspended_at && <Pill tone="red">Suspended</Pill>}
                 </div>
-                <p className="mt-0.5 text-sm text-zinc-500">Submitted {formatDay(request.created_at)}</p>
+                <p className="mt-0.5 text-sm text-zinc-500">Submitted {formatDay(request.created_at, "en")}</p>
               </div>
             </div>
 
@@ -51,7 +51,7 @@ export default async function AdminVerificationsPage() {
                 items={[
                   { label: "Phone", value: request.user?.phone },
                   { label: "City", value: request.user?.city },
-                  { label: "Member since", value: request.user && formatMonthYear(request.user.created_at) },
+                  { label: "Member since", value: request.user && formatMonthYear(request.user.created_at, "en") },
                   { label: "Documents", value: request.docs.length },
                 ]}
               />

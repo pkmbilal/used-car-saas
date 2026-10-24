@@ -4,12 +4,15 @@ import { limeButton } from "@/components/header-styles";
 import { RiyalPrice } from "@/components/riyal-price";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { PLAN_LABELS, type Plan, type PlanDetails } from "@/lib/plans";
+import { getDictionary } from "@/lib/i18n-server";
+import type { Plan, PlanDetails } from "@/lib/plans";
 import { cn } from "@/lib/utils";
 
 export type PlanCta = { label: string; href: string } | { label: string; disabled: true } | null;
 
-export function PlanCard({ plan, details, cta }: { plan: Plan; details: PlanDetails; cta: PlanCta }) {
+export async function PlanCard({ plan, details, cta }: { plan: Plan; details: PlanDetails; cta: PlanCta }) {
+  const { t } = await getDictionary();
+  const copy = t.plans.details[plan];
   const buttonClass = "h-10 w-full text-label font-semibold";
 
   return (
@@ -20,27 +23,27 @@ export function PlanCard({ plan, details, cta }: { plan: Plan; details: PlanDeta
       )}
     >
       <div className="flex items-center justify-between gap-3">
-        <h2 className="text-base font-semibold">{PLAN_LABELS[plan]}</h2>
+        <h2 className="text-base font-semibold">{t.plans.labels[plan]}</h2>
         {details.highlighted && (
           <span className="rounded-full bg-brand px-2.5 py-0.5 text-caption font-bold tracking-wide text-white">
-            Most popular
+            {t.pricing.mostPopular}
           </span>
         )}
       </div>
-      <p className="mt-1 text-label text-muted-foreground">{details.tagline}</p>
+      <p className="mt-1 text-label text-muted-foreground">{copy.tagline}</p>
       <p className="mt-5 flex items-baseline gap-1.5">
         {details.price === 0 ? (
-          <span className="text-3xl font-semibold tracking-tight">Free</span>
+          <span className="text-3xl font-semibold tracking-tight">{t.pricing.free}</span>
         ) : (
           <>
             <RiyalPrice amount={details.price} className="text-3xl font-semibold tracking-tight" />
-            <span className="text-label text-muted-foreground">/ month incl. VAT</span>
+            <span className="text-label text-muted-foreground">{t.pricing.perMonth}</span>
           </>
         )}
       </p>
 
       <ul className="mt-6 flex flex-col gap-2.5 text-label">
-        {details.features.map((feature) => (
+        {copy.features.map((feature) => (
           <li key={feature} className="flex items-start gap-2">
             <Check className="mt-0.5 size-4 shrink-0 text-brand" strokeWidth={2.6} />
             {feature}

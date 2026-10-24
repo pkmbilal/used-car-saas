@@ -3,8 +3,10 @@
 import Image from "next/image";
 import { useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useDictionary } from "@/components/i18n-provider";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { fmt } from "@/lib/dictionary";
 
 type Props = {
   title: string;
@@ -16,6 +18,8 @@ const arrowClass =
   "absolute top-[calc(50%-18px)] size-9 rounded-full bg-white text-brand shadow-[0_2px_8px_rgba(0,0,0,.2)] hover:bg-mint";
 
 export function Gallery({ title, photos, featured = false }: Props) {
+  const { t } = useDictionary();
+  const g = t.listingPage.gallery;
   const [index, setIndex] = useState(0);
   const current = photos[index];
   const count = photos.length;
@@ -30,7 +34,7 @@ export function Gallery({ title, photos, featured = false }: Props) {
     <div
       className="flex flex-col gap-2.5 outline-none"
       tabIndex={count > 1 ? 0 : undefined}
-      aria-label={count > 1 ? "Photo gallery, use arrow keys to browse" : undefined}
+      aria-label={count > 1 ? g.label : undefined}
       onKeyDown={(event) => {
         if (count < 2) return;
         // On RTL pages the next photo is to the left.
@@ -42,21 +46,21 @@ export function Gallery({ title, photos, featured = false }: Props) {
       <div className="relative aspect-[2/1] overflow-hidden rounded-lg bg-charcoal">
         <Image
           src={current.url}
-          alt={`${title}, photo ${index + 1} of ${count}`}
+          alt={fmt(g.photoAlt, { title, index: index + 1, count })}
           fill
           preload
           sizes="(min-width: 1024px) 700px, 100vw"
           className="object-cover"
         />
         {featured && (
-          <Badge className="absolute top-3.5 start-3.5 h-6 bg-[#3fb85a] px-3 text-caption font-semibold">Featured</Badge>
+          <Badge className="absolute top-3.5 start-3.5 h-6 bg-[#3fb85a] px-3 text-caption font-semibold">{t.common.featured}</Badge>
         )}
         {count > 1 && (
           <>
-            <Button size="icon" variant="secondary" aria-label="Previous photo" onClick={() => go(-1)} className={`${arrowClass} start-3.5`}>
+            <Button size="icon" variant="secondary" aria-label={g.previous} onClick={() => go(-1)} className={`${arrowClass} start-3.5`}>
               <ChevronLeft strokeWidth={2.6} />
             </Button>
-            <Button size="icon" variant="secondary" aria-label="Next photo" onClick={() => go(1)} className={`${arrowClass} end-3.5`}>
+            <Button size="icon" variant="secondary" aria-label={g.next} onClick={() => go(1)} className={`${arrowClass} end-3.5`}>
               <ChevronRight strokeWidth={2.6} />
             </Button>
           </>
@@ -71,7 +75,7 @@ export function Gallery({ title, photos, featured = false }: Props) {
             <li key={photo.id}>
               <button
                 type="button"
-                aria-label={`Show photo ${i + 1}`}
+                aria-label={fmt(g.show, { index: i + 1 })}
                 aria-current={i === index}
                 onClick={() => setIndex(i)}
                 className={`relative block aspect-[127/75] w-full overflow-hidden rounded-md border-2 ${

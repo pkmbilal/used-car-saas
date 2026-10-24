@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { FormSelect } from "@/components/form-select";
+import { useDictionary } from "@/components/i18n-provider";
 import { Label } from "@/components/ui/label";
 import { Select, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { MAKES, modelsFor } from "@/lib/makes";
@@ -21,8 +22,8 @@ export function MakeModelSelects({
   fieldClassName,
   labelClassName,
   triggerClassName,
-  makeLabel = "Make",
-  modelLabel = "Model",
+  makeLabel,
+  modelLabel,
 }: {
   make?: string;
   model?: string;
@@ -36,6 +37,7 @@ export function MakeModelSelects({
   makeLabel?: React.ReactNode;
   modelLabel?: React.ReactNode;
 }) {
+  const { t } = useDictionary();
   const [make, setMake] = useState(initialMake);
   const models = make ? modelsFor(make) : [];
 
@@ -43,7 +45,7 @@ export function MakeModelSelects({
     <>
       <div className={fieldClassName}>
         <Label htmlFor={makeId} className={labelClassName}>
-          {makeLabel}
+          {makeLabel ?? t.select.make}
         </Label>
         <FormSelect
           id={makeId}
@@ -57,7 +59,7 @@ export function MakeModelSelects({
       </div>
       <div className={fieldClassName}>
         <Label htmlFor={modelId} className={labelClassName}>
-          {modelLabel}
+          {modelLabel ?? t.select.model}
         </Label>
         {models.length > 0 ? (
           <FormSelect
@@ -72,7 +74,7 @@ export function MakeModelSelects({
         ) : (
           <Select disabled>
             <SelectTrigger id={modelId} className={cn(triggerClass, triggerClassName)}>
-              <SelectValue placeholder={make ? modelPlaceholder : "Choose a make first"} />
+              <SelectValue placeholder={make ? modelPlaceholder : t.select.chooseMakeFirst} />
             </SelectTrigger>
           </Select>
         )}

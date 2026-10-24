@@ -1,7 +1,9 @@
 "use client";
 
 import { useActionState } from "react";
+import { useDictionary } from "@/components/i18n-provider";
 import { CITIES } from "@/lib/cities";
+import { cityName, translateMessage } from "@/lib/dictionary";
 import type { Profile } from "@/lib/auth";
 import type { ProfileFormState } from "./actions";
 
@@ -16,12 +18,14 @@ const inputClass =
 
 export function ProfileForm({ profile, action, submitLabel }: Props) {
   const [state, formAction, pending] = useActionState(action, {});
+  const { t } = useDictionary();
+  const f = t.account.form;
 
   return (
     <form action={formAction} className="flex flex-col gap-4">
       <div className="flex flex-col gap-1">
         <label htmlFor="full_name" className="text-sm font-medium">
-          Full name
+          {f.fullName}
         </label>
         <input
           id="full_name"
@@ -34,7 +38,7 @@ export function ProfileForm({ profile, action, submitLabel }: Props) {
       </div>
       <div className="flex flex-col gap-1">
         <label htmlFor="phone" className="text-sm font-medium">
-          Mobile number
+          {f.mobile}
         </label>
         <input
           id="phone"
@@ -42,6 +46,7 @@ export function ProfileForm({ profile, action, submitLabel }: Props) {
           type="tel"
           required
           autoComplete="tel"
+          dir="ltr"
           placeholder="05XXXXXXXX"
           defaultValue={profile.phone ?? ""}
           className={inputClass}
@@ -49,7 +54,7 @@ export function ProfileForm({ profile, action, submitLabel }: Props) {
       </div>
       <div className="flex flex-col gap-1">
         <label htmlFor="city" className="text-sm font-medium">
-          City
+          {f.city}
         </label>
         <select
           id="city"
@@ -59,23 +64,23 @@ export function ProfileForm({ profile, action, submitLabel }: Props) {
           className={inputClass}
         >
           <option value="" disabled>
-            Choose a city
+            {f.chooseCity}
           </option>
           {CITIES.map((city) => (
             <option key={city} value={city}>
-              {city}
+              {cityName(t, city)}
             </option>
           ))}
         </select>
       </div>
-      {state.error && <p className="text-sm text-red-600">{state.error}</p>}
-      {state.saved && <p className="text-sm text-green-700">Saved.</p>}
+      {state.error && <p className="text-sm text-red-600">{translateMessage(t, state.error)}</p>}
+      {state.saved && <p className="text-sm text-green-700">{t.account.saved}</p>}
       <button
         type="submit"
         disabled={pending}
         className="rounded-md bg-zinc-900 px-4 py-2 text-white disabled:opacity-50 dark:bg-zinc-100 dark:text-zinc-900"
       >
-        {pending ? "Saving…" : submitLabel}
+        {pending ? t.common.saving : submitLabel}
       </button>
     </form>
   );

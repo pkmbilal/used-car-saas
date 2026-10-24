@@ -93,7 +93,7 @@ export default async function AdminUserPage({ params }: PageProps<"/admin/users/
             <div className="mt-4 flex flex-wrap items-center gap-2">
               <Pill tone={isSeller ? "brand" : "neutral"}>{isSeller ? "Seller" : "Buyer"}</Pill>
               {profile.is_admin && <Pill tone="blue">Admin</Pill>}
-              {profile.suspended_at && <Pill tone="red">Suspended {formatDay(profile.suspended_at)}</Pill>}
+              {profile.suspended_at && <Pill tone="red">Suspended {formatDay(profile.suspended_at, "en")}</Pill>}
               <VerificationBadges profile={profile} />
             </div>
 
@@ -102,11 +102,11 @@ export default async function AdminUserPage({ params }: PageProps<"/admin/users/
                 items={[
                   { label: "Phone", value: profile.phone },
                   { label: "City", value: profile.city },
-                  { label: "Member since", value: formatMonthYear(profile.created_at) },
+                  { label: "Member since", value: formatMonthYear(profile.created_at, "en") },
                   {
                     label: "Plan",
                     value: isSeller
-                      ? `${PLAN_LABELS[profile.plan]}${profile.plan_expires_at ? ` until ${formatDay(profile.plan_expires_at)}` : ""}`
+                      ? `${PLAN_LABELS[profile.plan]}${profile.plan_expires_at ? ` until ${formatDay(profile.plan_expires_at, "en")}` : ""}`
                       : "—",
                   },
                 ]}
@@ -148,7 +148,7 @@ export default async function AdminUserPage({ params }: PageProps<"/admin/users/
                           </Link>
                           {listing.featuredNow && listing.featured_until && (
                             <span className="mt-1 block text-xs text-amber-700 dark:text-amber-400">
-                              Featured until {formatDay(listing.featured_until)}
+                              Featured until {formatDay(listing.featured_until, "en")}
                             </span>
                           )}
                           {listing.removed_reason && (
@@ -162,7 +162,7 @@ export default async function AdminUserPage({ params }: PageProps<"/admin/users/
                           <StatusBadge status={listing.status} />
                         </td>
                         <td data-label="Listed" className={`${table.td} whitespace-nowrap text-zinc-600 dark:text-zinc-400`}>
-                          {formatDay(listing.created_at)}
+                          {formatDay(listing.created_at, "en")}
                         </td>
                       </tr>
                     ))}
@@ -188,12 +188,12 @@ export default async function AdminUserPage({ params }: PageProps<"/admin/users/
                           <ArrowRight className="size-3.5 text-zinc-400" aria-label="to" />
                           <Pill tone="brand">{PLAN_LABELS[change.to_plan]}</Pill>
                         </span>
-                        <span className="text-xs text-zinc-500">{formatDay(change.created_at)}</span>
+                        <span className="text-xs text-zinc-500">{formatDay(change.created_at, "en")}</span>
                       </div>
                       <p className="mt-1 text-xs text-zinc-500">
                         {PLAN_CHANGE_SOURCES[change.source]}
                         {change.changed_by_profile?.full_name && `, ${change.changed_by_profile.full_name}`}
-                        {change.expires_at && `. Ends ${formatDay(change.expires_at)}`}
+                        {change.expires_at && `. Ends ${formatDay(change.expires_at, "en")}`}
                       </p>
                       {change.note && <p className="mt-1 text-sm">{change.note}</p>}
                     </li>
@@ -212,7 +212,7 @@ export default async function AdminUserPage({ params }: PageProps<"/admin/users/
                       <div className="min-w-0">
                         <p className="text-sm font-medium">{PAYMENT_METHODS[payment.method]}</p>
                         <p className="text-xs text-zinc-500">
-                          {formatDay(payment.created_at)}
+                          {formatDay(payment.created_at, "en")}
                           {payment.reference && `, ref ${payment.reference}`}
                           {payment.recorded_by_profile?.full_name && `, by ${payment.recorded_by_profile.full_name}`}
                         </p>
@@ -239,8 +239,8 @@ export default async function AdminUserPage({ params }: PageProps<"/admin/users/
                         <span className="text-sm text-zinc-500">Deleted listing</span>
                       )}
                       <p className="mt-0.5 text-xs text-zinc-500">
-                        {grant.days} days until {formatDay(grant.featured_until)}.{" "}
-                        {grant.self_serve ? "Self-serve" : "Granted by an admin"} on {formatDay(grant.created_at)}
+                        {grant.days} days until {formatDay(grant.featured_until, "en")}.{" "}
+                        {grant.self_serve ? "Self-serve" : "Granted by an admin"} on {formatDay(grant.created_at, "en")}
                       </p>
                     </li>
                   ))}
@@ -262,7 +262,7 @@ export default async function AdminUserPage({ params }: PageProps<"/admin/users/
                         <Pill tone={REPORT_STATUS[report.status].tone}>{REPORT_STATUS[report.status].label}</Pill>
                       </div>
                       <p className="mt-0.5 text-xs text-zinc-500">
-                        {REPORT_REASONS[report.reason]}, {formatDay(report.created_at)}
+                        {REPORT_REASONS[report.reason]}, {formatDay(report.created_at, "en")}
                       </p>
                       {report.details && <p className="mt-1 text-sm">{report.details}</p>}
                     </li>
@@ -282,7 +282,7 @@ export default async function AdminUserPage({ params }: PageProps<"/admin/users/
                 <li key={request.id} className="flex flex-wrap items-center justify-between gap-3 px-5 py-3">
                   <div className="min-w-0">
                     <p className="text-sm font-medium">ID verification</p>
-                    <p className="text-xs text-zinc-500">Submitted {formatDay(request.created_at)}</p>
+                    <p className="text-xs text-zinc-500">Submitted {formatDay(request.created_at, "en")}</p>
                     {request.reject_reason && <p className="mt-1 text-sm">{request.reject_reason}</p>}
                   </div>
                   <Pill tone={REVIEW_STATUS[request.status].tone}>{REVIEW_STATUS[request.status].label}</Pill>
@@ -293,7 +293,7 @@ export default async function AdminUserPage({ params }: PageProps<"/admin/users/
                   <div className="min-w-0">
                     <p className="text-sm font-medium">Dealer application: {application.business_name}</p>
                     <p className="text-xs text-zinc-500">
-                      Asked for {PLAN_LABELS[application.requested_plan]}, submitted {formatDay(application.created_at)}
+                      Asked for {PLAN_LABELS[application.requested_plan]}, submitted {formatDay(application.created_at, "en")}
                     </p>
                     {application.reject_reason && <p className="mt-1 text-sm">{application.reject_reason}</p>}
                   </div>
@@ -327,7 +327,7 @@ export default async function AdminUserPage({ params }: PageProps<"/admin/users/
             <div className="flex flex-col gap-4">
               {profile.id_verified_at && (
                 <div className="flex items-center justify-between gap-3">
-                  <p className={`text-sm ${muted}`}>Verified on {formatDay(profile.id_verified_at)}</p>
+                  <p className={`text-sm ${muted}`}>Verified on {formatDay(profile.id_verified_at, "en")}</p>
                   <AdminActionButton
                     label="Revoke ID badge"
                     tone="danger"

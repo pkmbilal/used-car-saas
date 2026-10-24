@@ -15,19 +15,22 @@ import {
   Sun,
   type LucideIcon,
 } from "lucide-react";
-import { featureLabel, type Feature } from "@/lib/listing-options";
+import { optionLabel } from "@/lib/dictionary";
+import { getDictionary } from "@/lib/i18n-server";
+import type { Feature } from "@/lib/listing-options";
 
 // Spec tiles, a features list and a free-text description for the listing
 // page. Features and description render nothing when the listing has none.
 
 export type Spec = { label: string; value: string | null | undefined; icon: ReactNode };
 
-export function SpecGrid({ specs }: { specs: Spec[] }) {
+export async function SpecGrid({ specs }: { specs: Spec[] }) {
+  const { t } = await getDictionary();
   const shown = specs.filter((spec): spec is Spec & { value: string } => Boolean(spec.value));
 
   return (
     <section>
-      <h2 className="text-lg font-semibold">Overview</h2>
+      <h2 className="text-lg font-semibold">{t.listingPage.overview}</h2>
       <dl className="mt-4 grid grid-cols-2 border-t border-line sm:grid-cols-4">
         {shown.map((spec) => (
           <div key={spec.label} className="flex items-center gap-3 border-b border-line py-4 pe-2.5">
@@ -65,12 +68,13 @@ function featureIcon(value: string): LucideIcon {
   return FEATURE_ICONS[value as Feature] ?? Check;
 }
 
-export function ListingFeatures({ features }: { features: readonly string[] }) {
+export async function ListingFeatures({ features }: { features: readonly string[] }) {
   if (!features.length) return null;
+  const { t } = await getDictionary();
 
   return (
     <section>
-      <h2 className="text-lg font-semibold">Features</h2>
+      <h2 className="text-lg font-semibold">{t.listingPage.features}</h2>
       <ul className="mt-4 grid gap-x-5 gap-y-3 sm:grid-cols-3">
         {features.map((feature) => {
           const Icon = featureIcon(feature);
@@ -79,7 +83,7 @@ export function ListingFeatures({ features }: { features: readonly string[] }) {
               <span className="flex size-6 shrink-0 items-center justify-center rounded-md bg-mint text-brand-600">
                 <Icon className="size-3.5" strokeWidth={1.8} />
               </span>
-              {featureLabel(feature)}
+              {optionLabel(t.options.features, feature)}
             </li>
           );
         })}
@@ -88,12 +92,13 @@ export function ListingFeatures({ features }: { features: readonly string[] }) {
   );
 }
 
-export function ListingDescription({ text }: { text?: string | null }) {
+export async function ListingDescription({ text }: { text?: string | null }) {
   if (!text?.trim()) return null;
+  const { t } = await getDictionary();
 
   return (
     <section>
-      <h2 className="text-lg font-semibold">Description</h2>
+      <h2 className="text-lg font-semibold">{t.listingPage.description}</h2>
       <p className="mt-3 max-w-xl text-label leading-relaxed whitespace-pre-line text-ink/75">{text}</p>
     </section>
   );

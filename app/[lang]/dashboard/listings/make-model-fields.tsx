@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useDictionary } from "@/components/i18n-provider";
 import { MAKES, modelsFor } from "@/lib/makes";
 import { Field, inputClass } from "./form-fields";
 
@@ -20,6 +21,8 @@ export function MakeModelFields({
   make?: string;
   model?: string;
 }) {
+  const { t } = useDictionary();
+  const f = t.dashboard.form;
   const [make, setMake] = useState(initialMake ?? "");
   const known = initialModel ? findModel(make, initialModel) : undefined;
   const [selected, setSelected] = useState(known ?? (initialModel ? TYPE_MODEL : ""));
@@ -30,7 +33,7 @@ export function MakeModelFields({
 
   return (
     <>
-      <Field id="make" label="Make">
+      <Field id="make" label={f.make}>
         <select
           id="make"
           name="make"
@@ -44,7 +47,7 @@ export function MakeModelFields({
           className={inputClass}
         >
           <option value="" disabled>
-            Choose a make
+            {f.chooseMake}
           </option>
           {MAKES.map((option) => (
             <option key={option} value={option}>
@@ -53,7 +56,7 @@ export function MakeModelFields({
           ))}
         </select>
       </Field>
-      <Field id="model" label="Model">
+      <Field id="model" label={f.model}>
         {models.length > 0 && (
           <select
             id={typing ? "model-choice" : "model"}
@@ -64,19 +67,19 @@ export function MakeModelFields({
             className={inputClass}
           >
             <option value="" disabled>
-              Choose a model
+              {f.chooseModel}
             </option>
             {models.map((option) => (
               <option key={option} value={option}>
                 {option}
               </option>
             ))}
-            <option value={TYPE_MODEL}>Other (type it)</option>
+            <option value={TYPE_MODEL}>{f.otherModel}</option>
           </select>
         )}
         {make === "" && (
           <select id="model" disabled value="" className={inputClass}>
-            <option value="">Choose a make first</option>
+            <option value="">{f.chooseMakeFirst}</option>
           </select>
         )}
         {typing && (
@@ -85,7 +88,7 @@ export function MakeModelFields({
             name="model"
             required
             maxLength={60}
-            placeholder="Type the model"
+            placeholder={f.typeModel}
             value={typed}
             onChange={(event) => setTyped(event.target.value)}
             className={inputClass}

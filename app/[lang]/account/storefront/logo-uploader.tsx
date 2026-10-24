@@ -2,6 +2,8 @@
 
 import Image from "next/image";
 import { useRef, useState, useTransition } from "react";
+import { useDictionary } from "@/components/i18n-provider";
+import { translateMessage } from "@/lib/dictionary";
 import { IMAGE_TYPES } from "@/lib/listing-options";
 import { MAX_LOGO_BYTES } from "@/lib/storefront-options";
 import { confirmLogoUpload, removeLogo, requestLogoUpload } from "./actions";
@@ -11,6 +13,8 @@ type Props = {
 };
 
 export function LogoUploader({ logoUrl }: Props) {
+  const { t } = useDictionary();
+  const s = t.account.storefront;
   const inputRef = useRef<HTMLInputElement>(null);
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string>();
@@ -39,7 +43,7 @@ export function LogoUploader({ logoUrl }: Props) {
     setError(undefined);
     startTransition(async () => {
       const uploadError = await uploadFile(file).catch(() => "Upload failed.");
-      if (uploadError) setError(uploadError);
+      if (uploadError) setError(translateMessage(t, uploadError));
       if (inputRef.current) inputRef.current.value = "";
     });
   }
@@ -48,20 +52,20 @@ export function LogoUploader({ logoUrl }: Props) {
     setError(undefined);
     startTransition(async () => {
       const result = await removeLogo();
-      if (result.error) setError(result.error);
+      if (result.error) setError(translateMessage(t, result.error));
     });
   }
 
   return (
     <div className="flex flex-col gap-2">
-      <span className="text-sm font-medium">Logo</span>
+      <span className="text-sm font-medium">{s.logo}</span>
       <div className="flex items-center gap-4">
         <div className="relative size-20 overflow-hidden rounded-lg border border-zinc-200 bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900">
           {logoUrl ? (
-            <Image src={logoUrl} alt="Your logo" fill sizes="80px" className="object-contain" />
+            <Image src={logoUrl} alt={s.logoAlt} fill sizes="80px" className="object-contain" />
           ) : (
             <span className="flex size-full items-center justify-center text-xs text-zinc-500">
-              No logo
+              {s.noLogo}
             </span>
           )}
         </div>
@@ -70,7 +74,7 @@ export function LogoUploader({ logoUrl }: Props) {
             pending ? "pointer-events-none opacity-50" : ""
           }`}
         >
-          {pending ? "Uploading…" : logoUrl ? "Replace" : "Upload"}
+          {pending ? s.uploading : logoUrl ? s.replace : s.upload}
           <input
             ref={inputRef}
             type="file"
@@ -87,11 +91,11 @@ export function LogoUploader({ logoUrl }: Props) {
             onClick={handleRemove}
             className="text-sm text-red-600 disabled:opacity-50"
           >
-            Remove
+            {s.remove}
           </button>
         )}
       </div>
-      <p className="text-xs text-zinc-500">Square image, JPEG, PNG or WebP, under 2 MB.</p>
+      <p className="text-xs text-zinc-500">{s.logoHint}</p>
       {error && <p className="text-sm text-red-600">{error}</p>}
     </div>
   );

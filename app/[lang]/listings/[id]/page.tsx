@@ -29,10 +29,12 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { getCurrentUser } from "@/lib/auth";
+import { cityName, fmt, optionLabel } from "@/lib/dictionary";
 import { getFavoriteIds } from "@/lib/favorites";
-import { localeAlternates } from "@/lib/i18n-server";
+import { localizePath } from "@/lib/i18n";
+import { getDictionary, localeAlternates } from "@/lib/i18n-server";
 import { formatDay, formatKm, formatMonthYear, formatListingStats, formatSAR } from "@/lib/format";
-import { bodyTypeLabel, capitalize } from "@/lib/listing-options";
+import { capitalize } from "@/lib/listing-options";
 import { jsonLdScript, listingDescription, listingJsonLd } from "@/lib/listing-seo";
 import { getListingStats, getPublicListing, getSimilarListings, isFeatured } from "@/lib/listings";
 import { siteUrl } from "@/lib/site";
@@ -51,21 +53,29 @@ export async function generateMetadata({
   params,
 }: PageProps<"/[lang]/listings/[id]">): Promise<Metadata> {
   const { id } = await params;
+  const { t, locale } = await getDictionary();
   const listing = await getListing(id);
-  if (!listing) return { title: "Listing not found" };
-  const title = `${listing.year} ${listing.make} ${listing.model} — ${formatSAR(listing.price)} | KarSouq`;
-  const description = listingDescription(listing);
+  if (!listing) return { title: t.listingPage.notFoundTitle };
+  const title = fmt(t.listingPage.metaTitle, {
+    year: listing.year,
+    make: listing.make,
+    model: listing.model,
+    price: formatSAR(listing.price, locale),
+  });
+  const description = listingDescription(listing, t, locale);
   const cover = listing.images[0];
   return {
     title,
     description,
     alternates: await localeAlternates(`/listings/${listing.id}`),
-    openGraph: { title, description, url: `/listings/${listing.id}`, ...(cover && { images: [cover.url] }) },
+    openGraph: { title, description, url: localizePath(locale, `/listings/${listing.id}`), ...(cover && { images: [cover.url] }) },
   };
 }
 
 export default async function ListingPage({ params }: PageProps<"/[lang]/listings/[id]">) {
   const { id } = await params;
+  const { t, locale } = await getDictionary();
+  const p = t.listingPage;
   // Each query starts as soon as what it needs is known, rather than in rounds.
   const currentPromise = getCurrentUser();
   const favoritesPromise = currentPromise.then((c) => (c ? getFavoriteIds(c.user.id) : new Set<string>()));
@@ -85,24 +95,35 @@ export default async function ListingPage({ params }: PageProps<"/[lang]/listing
     favoritesPromise,
     similarPromise,
   ]);
-  const whatsappText = `Hi, I'm interested in your ${title} listed for ${formatSAR(listing.price)}: ${await listingUrl(listing.id)}`;
+  const whatsappText = fmt(p.whatsappText, {
+    title,
+    price: formatSAR(listing.price, locale),
+    url: await listingUrl(localizePath(locale, `/listings/${listing.id}`)),
+  });
   const cover = listing.images[0];
-  const transmission = listing.transmission ? capitalize(listing.transmission) : null;
+  const transmission = listing.transmission ? optionLabel(t.options.transmission, listing.transmission) : null;
+  const fuel = optionLabel(t.options.fuel, listing.fuel_type);
+  const city = cityName(t, listing.city);
   const showContact = !isOwner && !!seller?.has_phone;
 
   const specIcon = { className: "size-4", strokeWidth: 1.8 };
   const specs = [
-    { label: "Make", value: listing.make, icon: <BadgeCheck {...specIcon} /> },
-    { label: "Model", value: listing.model, icon: <Car {...specIcon} /> },
-    { label: "Year", value: String(listing.year), icon: <CalendarDays {...specIcon} /> },
-    { label: "Mileage", value: formatKm(listing.mileage), icon: <Gauge {...specIcon} /> },
-    { label: "Fuel Type", value: capitalize(listing.fuel_type), icon: <Fuel {...specIcon} /> },
-    { label: "Condition", value: capitalize(listing.condition), icon: <Sparkles {...specIcon} /> },
-    { label: "Transmission", value: transmission, icon: <Cog {...specIcon} /> },
-    { label: "Body Style", value: listing.body_type && bodyTypeLabel(listing.body_type), icon: <Car {...specIcon} /> },
-    { label: "Color", value: listing.color && capitalize(listing.color), icon: <Palette {...specIcon} /> },
-    { label: "City", value: listing.city, icon: <MapPin {...specIcon} /> },
-    { label: "Listed", value: formatMonthYear(listing.created_at), icon: <Clock {...specIcon} /> },
+    { label: p.specs.make, value: listing.make, icon: <BadgeCheck {...specIcon} /> },
+    { label: p.specs.model, value: listing.model, icon: <Car {...specIcon} /> },
+    { label: p.specs.year, value: String(listing.year), icon: <CalendarDays {...specIcon} /> },
+    { label: p.specs.mileage, value: formatKm(listing.mileage, locale), icon: <Gauge {...specIcon} /> },
+    { label: p.specs.fuelType, value: fuel, icon: <Fuel {...specIcon} /> },
+    { label: p.specs.condition, value: optionLabel(t.options.condition, listing.condition), icon: <Sparkles {...specIcon} /> },
+    { label: p.specs.transmission, value: transmission, icon: <Cog {...specIcon} /> },
+    {
+      label: p.specs.bodyStyle,
+      value: listing.body_type && optionLabel(t.options.bodyType, listing.body_type),
+      icon: <Car {...specIcon} />,
+    },
+    // Free text from the seller, shown as typed.
+    { label: p.specs.color, value: listing.color && capitalize(listing.color), icon: <Palette {...specIcon} /> },
+    { label: p.specs.city, value: city, icon: <MapPin {...specIcon} /> },
+    { label: p.specs.listed, value: formatMonthYear(listing.created_at, locale), icon: <Clock {...specIcon} /> },
   ];
 
   return (
@@ -112,7 +133,13 @@ export default async function ListingPage({ params }: PageProps<"/[lang]/listing
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: jsonLdScript(listingJsonLd(listing, new URL(`/listings/${listing.id}`, siteUrl()).toString())),
+            __html: jsonLdScript(
+              listingJsonLd(
+                listing,
+                new URL(localizePath(locale, `/listings/${listing.id}`), siteUrl()).toString(),
+                listingDescription(listing, t, locale),
+              ),
+            ),
           }}
         />
       )}
@@ -121,11 +148,15 @@ export default async function ListingPage({ params }: PageProps<"/[lang]/listing
           <div className="mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between gap-2 px-4 py-3 sm:px-6">
             <span>
               {listing.status === "removed"
-                ? `This listing was removed by moderators${listing.removed_reason ? `: ${listing.removed_reason}` : ""}.`
-                : `This listing is ${listing.status === "draft" ? "a draft" : "marked as sold"} and is not visible to buyers.`}
+                ? listing.removed_reason
+                  ? fmt(p.removedByReason, { reason: listing.removed_reason })
+                  : p.removedBy
+                : listing.status === "draft"
+                  ? p.hiddenDraft
+                  : p.hiddenSold}
             </span>
             <Link href={`/dashboard/listings/${listing.id}/edit`} className="font-medium underline">
-              Edit listing
+              {p.editListing}
             </Link>
           </div>
         </div>
@@ -134,7 +165,7 @@ export default async function ListingPage({ params }: PageProps<"/[lang]/listing
       {/* Hero */}
       <section className="relative overflow-hidden bg-charcoal text-white">
         {cover && (
-          <div className="absolute inset-y-0 end-0 hidden w-[62%] [mask-image:linear-gradient(90deg,transparent,#000_30%)] md:block">
+          <div className="absolute inset-y-0 end-0 hidden w-[62%] [mask-image:linear-gradient(90deg,transparent,#000_30%)] rtl:[mask-image:linear-gradient(270deg,transparent,#000_30%)] md:block">
             <Image
               src={cover.url}
               alt=""
@@ -146,25 +177,25 @@ export default async function ListingPage({ params }: PageProps<"/[lang]/listing
             />
           </div>
         )}
-        <div className="absolute inset-0 bg-[linear-gradient(90deg,#1b2125_0%,#1b2125_36%,rgba(27,33,37,.55)_48%,rgba(27,33,37,0)_62%)]" />
+        <div className="absolute inset-0 bg-[linear-gradient(90deg,#1b2125_0%,#1b2125_36%,rgba(27,33,37,.55)_48%,rgba(27,33,37,0)_62%)] rtl:bg-[linear-gradient(270deg,#1b2125_0%,#1b2125_36%,rgba(27,33,37,.55)_48%,rgba(27,33,37,0)_62%)]" />
         <div className="relative mx-auto w-full max-w-6xl px-4 pt-7 pb-9 sm:px-6">
           <BackLink />
           <div className="mt-4 flex flex-wrap items-center gap-3.5">
             <h1 className="text-3xl font-semibold tracking-tight">{name}</h1>
             {featured && (
-              <Badge className="h-6 bg-[#4fc35f] px-3 text-caption font-semibold">Featured</Badge>
+              <Badge className="h-6 bg-[#4fc35f] px-3 text-caption font-semibold">{t.common.featured}</Badge>
             )}
           </div>
           <p className="mt-2.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-base sm:text-[0.9375rem]">
             <span>{listing.year}</span>
             <span className="opacity-60">·</span>
-            <span>{formatKm(listing.mileage)}</span>
+            <span>{formatKm(listing.mileage, locale)}</span>
             <span className="opacity-60">·</span>
-            <span>{transmission ?? capitalize(listing.fuel_type)}</span>
+            <span>{transmission ?? fuel}</span>
             <span className="opacity-60">·</span>
             <span className="flex items-center gap-1.5">
               <MapPin className="size-3.5" />
-              {listing.city}
+              {city}
             </span>
           </p>
           <p className="mt-4 text-3xl font-bold text-lime"><RiyalPrice amount={listing.price} /></p>
@@ -188,13 +219,13 @@ export default async function ListingPage({ params }: PageProps<"/[lang]/listing
             <p className="text-[1.6875rem] font-bold text-brand"><RiyalPrice amount={listing.price} /></p>
             {stats && (
               <p className="mt-1 text-xs text-muted-foreground">
-                {formatListingStats(stats)}
+                {formatListingStats(locale, stats, t.common.stats)}
               </p>
             )}
             {isOwner && featured && listing.featured_until && (
               <p className="mt-3 flex items-center gap-1.5 rounded-md bg-mint px-3 py-2 text-xs font-medium text-brand-600">
                 <Sparkles className="size-3.5" />
-                Featured until {formatDay(listing.featured_until)}
+                {fmt(p.featuredUntil, { date: formatDay(listing.featured_until, locale) })}
               </p>
             )}
 
@@ -219,10 +250,10 @@ export default async function ListingPage({ params }: PageProps<"/[lang]/listing
                   )}
                   <div className="min-w-0">
                     <p className="truncate text-base font-semibold sm:text-[0.9375rem]">
-                      {storefront?.name ?? seller.full_name ?? "Seller"}
+                      {storefront?.name ?? seller.full_name ?? p.seller}
                     </p>
                     <div className="mt-1 flex flex-wrap items-center gap-1.5">
-                      {storefront ? <DealerBadge /> : <Badge variant="outline">Private seller</Badge>}
+                      {storefront ? <DealerBadge /> : <Badge variant="outline">{t.common.privateSeller}</Badge>}
                       <VerificationBadges profile={seller} />
                     </div>
                   </div>
@@ -232,23 +263,23 @@ export default async function ListingPage({ params }: PageProps<"/[lang]/listing
                   <p className="flex items-start gap-3.5">
                     <MapPin className="mt-0.5 size-4 shrink-0 text-brand" />
                     <span>
-                      Location
+                      {p.location}
                       <br />
-                      {listing.city}, Saudi Arabia
+                      {fmt(p.locationValue, { city })}
                     </span>
                   </p>
                   <p className="flex items-start gap-3.5">
                     <CalendarDays className="mt-0.5 size-4 shrink-0 text-brand" />
                     <span>
-                      Member since
+                      {p.memberSince}
                       <br />
-                      {formatMonthYear(seller.created_at)}
+                      {formatMonthYear(seller.created_at, locale)}
                     </span>
                   </p>
                 </div>
                 <Button asChild variant="link" className="mt-3 h-auto justify-start max-sm:h-auto px-0 text-xs max-sm:text-sm font-semibold text-brand">
                   <Link href={`/sellers/${seller.id}`}>
-                    {storefront ? "Visit dealer storefront →" : "View seller’s listings →"}
+                    {storefront ? p.visitStorefront : p.viewSellerListings}
                   </Link>
                 </Button>
               </>
@@ -268,12 +299,12 @@ export default async function ListingPage({ params }: PageProps<"/[lang]/listing
       {similar.length > 0 && (
         <section className="mx-auto mt-14 w-full max-w-6xl px-4 sm:px-6">
           <div className="flex items-center justify-between">
-            <h2 className="text-lg font-semibold">Similar Cars You May Like</h2>
+            <h2 className="text-lg font-semibold">{p.similar}</h2>
             <Link
               href={`/listings?${new URLSearchParams({ make: listing.make, model: listing.model })}`}
               className="text-caption font-semibold text-brand"
             >
-              View All →
+              {p.viewAll}
             </Link>
           </div>
           <div className="mt-4">
@@ -300,9 +331,9 @@ export default async function ListingPage({ params }: PageProps<"/[lang]/listing
 }
 
 // Absolute link for the prefilled WhatsApp message, from the current request.
-async function listingUrl(id: string): Promise<string> {
+async function listingUrl(path: string): Promise<string> {
   const h = await headers();
   const host = h.get("x-forwarded-host") ?? h.get("host");
   const proto = h.get("x-forwarded-proto") ?? "https";
-  return host ? `${proto}://${host}/listings/${id}` : `/listings/${id}`;
+  return host ? `${proto}://${host}${path}` : path;
 }

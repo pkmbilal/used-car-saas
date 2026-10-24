@@ -1,7 +1,9 @@
 "use client";
 
 import { useId, useRef, useState, type KeyboardEvent, type ReactNode } from "react";
+import { useDictionary } from "@/components/i18n-provider";
 import { cityHref, isCity } from "@/lib/cities";
+import { cityName, fmt } from "@/lib/dictionary";
 import { SectionHeading } from "./section-heading";
 
 type City = { name: string; count: number; listings: ReactNode };
@@ -9,6 +11,7 @@ type City = { name: string; count: number; listings: ReactNode };
 // City tabs for the home page. Each city's cards are rendered on the server
 // and passed in, so switching cities needs no fetch.
 export function CityBrowser({ cities }: { cities: City[] }) {
+  const { t } = useDictionary();
   const id = useId();
   const tabs = useRef<(HTMLButtonElement | null)[]>([]);
   const [selected, setSelected] = useState(cities[0]?.name);
@@ -39,16 +42,16 @@ export function CityBrowser({ cities }: { cities: City[] }) {
   return (
     <>
       <SectionHeading
-        eyebrow="BROWSE BY LOCATION"
-        title="Cars Near You"
+        eyebrow={t.home.byLocation}
+        title={t.home.carsNearYou}
         link={{
           href: isCity(current.name) ? cityHref(current.name) : `/listings?city=${encodeURIComponent(current.name)}`,
-          label: `View All in ${current.name}`,
+          label: fmt(t.home.viewAllIn, { city: cityName(t, current.name) }),
         }}
       />
       <div
         role="tablist"
-        aria-label="Cities"
+        aria-label={t.home.citiesLabel}
         onKeyDown={onKeyDown}
         className="-mx-4 mt-6 flex gap-7 overflow-x-auto border-b border-line px-4 [scrollbar-width:none] sm:mx-0 sm:mt-8 sm:px-0"
       >
@@ -71,7 +74,7 @@ export function CityBrowser({ cities }: { cities: City[] }) {
                 active ? "border-brand text-ink" : "border-transparent text-muted-foreground hover:text-ink"
               }`}
             >
-              {city.name}
+              {cityName(t, city.name)}
               <span className="text-eyebrow font-medium opacity-60">{city.count}</span>
             </button>
           );

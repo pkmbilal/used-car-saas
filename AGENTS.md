@@ -137,8 +137,21 @@ Goal: growth loops and stickiness.
 
 - TypeScript strict mode — no `any` unless justified with a comment.
 - Prefer small, composable components over large page files.
-- Arabic/English bilingual support is a future consideration, not required
-  yet — don't add i18n scaffolding unless asked.
+- The site is bilingual: Arabic (default, RTL) and English, under `/ar/...`
+  and `/en/...` (`app/[lang]/`). The admin panel (`app/admin`) is English-only
+  and unprefixed. Conventions:
+  - All UI text goes in `lib/dictionaries/en.ts` and `ar.ts` (typecheck fails
+    on a missing Arabic key). Server code: `getDictionary()` from
+    `lib/i18n-server.ts`; client components: `useDictionary()`. Use `fmt`,
+    `count` (plurals) and `rich` (text with links) for placeholders.
+  - Server action errors stay English in code; add the Arabic to
+    `ar.messages` and show them with `translateMessage(t, error)`.
+  - Internal links: `Link` from `@/components/locale-link`; server redirects:
+    `localeRedirect()`; revalidation: `revalidateLocalized()`.
+  - Use logical Tailwind classes only (`ms-`/`pe-`/`start-`/`text-start`,
+    not `ml-`/`pr-`/`left-`/`text-left`).
+  - Stored values (cities, fuel types, …) stay English; show them through
+    `cityName()` / `optionLabel()`.
 - Currency is SAR; format with `Intl.NumberFormat('ar-SA', { style: 'currency', currency: 'SAR' })`
   or an equivalent helper — don't hardcode "$" anywhere.
 

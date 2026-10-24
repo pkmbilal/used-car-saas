@@ -7,7 +7,9 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { CITIES } from "@/lib/cities";
 import { getViewerFavoriteIds } from "@/lib/favorites";
-import { capitalize, FUEL_TYPES } from "@/lib/listing-options";
+import { cityName, fmt, optionLabel } from "@/lib/dictionary";
+import { getDictionary } from "@/lib/i18n-server";
+import { FUEL_TYPES } from "@/lib/listing-options";
 import {
   getActiveFacetCounts,
   getFeaturedListings,
@@ -35,6 +37,7 @@ const limeCtaClass =
   "group h-12 gap-3 rounded-full bg-gradient-to-b from-lime-light to-lime pe-2.5 ps-6 text-sm font-semibold text-on-lime shadow-[inset_0_1px_0_rgba(255,255,255,.45),0_10px_30px_-8px_rgba(111,224,124,.55)] transition-all hover:text-on-lime hover:shadow-[inset_0_1px_0_rgba(255,255,255,.45),0_14px_36px_-6px_rgba(111,224,124,.7)] focus-visible:ring-2 focus-visible:ring-lime/60 focus-visible:ring-offset-2 focus-visible:ring-offset-forest-dark motion-safe:hover:-translate-y-px";
 
 export default async function Home() {
+  const { t } = await getDictionary();
   const [featured, latest, facets, favoriteIds, byCity] = await Promise.all([
     getFeaturedListings(parseListingFilters({}), 4),
     getLatestListings(4),
@@ -55,25 +58,25 @@ export default async function Home() {
     <main className="light bg-canvas text-ink">
       {/* Hero */}
       <section className="relative isolate overflow-hidden bg-forest-dark">
-        <div className="absolute inset-0 -z-20 bg-[radial-gradient(ellipse_at_top_right,rgba(31,125,60,.28),transparent_60%)]" />
+        <div className="absolute inset-0 -z-20 bg-[radial-gradient(ellipse_at_top_right,rgba(31,125,60,.28),transparent_60%)] rtl:bg-[radial-gradient(ellipse_at_top_left,rgba(31,125,60,.28),transparent_60%)]" />
         {heroImage && (
           <Image src={heroImage.url} alt="" fill preload sizes="100vw" className="-z-20 object-cover" />
         )}
         <div className="absolute inset-0 -z-10 bg-forest-dark/75 md:hidden" />
-        <div className="absolute inset-0 -z-10 hidden bg-[linear-gradient(90deg,rgba(15,34,25,.97)_0%,rgba(15,34,25,.88)_35%,rgba(15,34,25,.4)_68%,rgba(15,34,25,.15)_100%)] md:block" />
+        <div className="absolute inset-0 -z-10 hidden bg-[linear-gradient(90deg,rgba(15,34,25,.97)_0%,rgba(15,34,25,.88)_35%,rgba(15,34,25,.4)_68%,rgba(15,34,25,.15)_100%)] rtl:bg-[linear-gradient(270deg,rgba(15,34,25,.97)_0%,rgba(15,34,25,.88)_35%,rgba(15,34,25,.4)_68%,rgba(15,34,25,.15)_100%)] md:block" />
         <div className="absolute inset-x-0 bottom-0 -z-10 h-48 bg-gradient-to-t from-forest-dark to-transparent" />
         <div className="mx-auto flex min-h-[34rem] w-full max-w-6xl flex-col justify-end px-4 pt-16 pb-30 sm:px-6 md:min-h-[40rem]">
-          <Eyebrow tone="dark">USED CARS IN SAUDI ARABIA</Eyebrow>
+          <Eyebrow tone="dark">{t.home.eyebrow}</Eyebrow>
           <h1 className="mt-5 max-w-2xl font-display text-5xl leading-[1.05] font-medium tracking-tight text-white md:text-7xl">
-            Find your next ride with <span className="font-bold text-lime">confidence</span>
+            {t.home.titleStart} <span className="font-bold text-lime">{t.home.titleHighlight}</span>
           </h1>
           <p className="mt-6 max-w-md text-base leading-relaxed text-white/70 sm:text-[0.9375rem]">
-            Browse used cars from private sellers and dealers across the Kingdom, and talk to them directly.
+            {t.home.intro}
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             <Button asChild className={limeCtaClass}>
               <Link href="/listings">
-                Browse Cars
+                {t.home.browseCars}
                 <CtaArrow />
               </Link>
             </Button>
@@ -85,14 +88,14 @@ export default async function Home() {
                 <span className="grid size-6 place-items-center rounded-full bg-gradient-to-b from-lime/25 to-lime/5 ring-1 ring-lime/30">
                   <Plus className="size-3.5 text-lime" strokeWidth={2.2} />
                 </span>
-                Sell Your Car
+                {t.home.sellYourCar}
               </Link>
             </Button>
           </div>
           <TrustBand
             items={[
-              [ShieldCheck, "Verified Sellers", "ID-verified seller badges"],
-              [MessageCircle, "Direct on WhatsApp", "Talk to sellers, no middlemen"],
+              [ShieldCheck, t.home.verifiedSellers, t.home.verifiedSellersDesc],
+              [MessageCircle, t.home.directWhatsapp, t.home.directWhatsappDesc],
             ]}
           />
         </div>
@@ -104,14 +107,14 @@ export default async function Home() {
 
       {/* Popular brands */}
       <section className={sectionClass}>
-        <SectionHeading eyebrow="QUICK BROWSE" title="Popular Brands" link={{ href: "/brands", label: "All Brands" }} />
+        <SectionHeading eyebrow={t.home.quickBrowse} title={t.home.popularBrands} link={{ href: "/brands", label: t.home.allBrands }} />
         <div className="mt-6 grid grid-cols-2 gap-3.5 sm:mt-8 sm:grid-cols-4 lg:grid-cols-8">
           {makes.map((make) => (
             <BrandCard key={make} make={make} count={facets.makes.get(make) ?? 0} />
           ))}
         </div>
         <div className="mt-6 flex flex-wrap items-center gap-2.5">
-          <span className="me-1.5 text-eyebrow font-semibold tracking-[0.2em] text-muted-foreground">FUEL TYPE</span>
+          <span className="me-1.5 text-eyebrow font-semibold tracking-[0.2em] text-muted-foreground">{t.home.fuelType}</span>
           {FUEL_TYPES.map((fuel) => (
             <Badge
               key={fuel}
@@ -120,7 +123,7 @@ export default async function Home() {
               className="h-8 gap-1.5 rounded-full border-line bg-transparent px-4 text-caption font-medium text-ink hover:border-brand hover:bg-brand hover:text-white"
             >
               <Link href={`/listings?fuel_type=${fuel}`}>
-                {capitalize(fuel)}
+                {optionLabel(t.options.fuel, fuel)}
                 <span className="text-eyebrow opacity-60">{facets.fuelTypes.get(fuel) ?? 0}</span>
               </Link>
             </Badge>
@@ -132,12 +135,12 @@ export default async function Home() {
       <section className="mt-14 bg-white py-12 md:mt-20 md:py-16">
         <div className="mx-auto w-full max-w-6xl px-4 sm:px-6">
           <SectionHeading
-            eyebrow={featured.length > 0 ? "FEATURED CARS" : "JUST LISTED"}
-            title={featured.length > 0 ? "Handpicked for You" : "Latest Cars"}
-            link={{ href: "/listings", label: "View All Cars" }}
+            eyebrow={featured.length > 0 ? t.home.featuredCars : t.home.justListed}
+            title={featured.length > 0 ? t.home.handpicked : t.home.latestCars}
+            link={{ href: "/listings", label: t.home.viewAllCars }}
           />
           <div className="mt-6 sm:mt-8">
-            <ListingGrid listings={showcase} empty="No cars listed yet." favoriteIds={favoriteIds} />
+            <ListingGrid listings={showcase} empty={t.home.noCarsYet} favoriteIds={favoriteIds} />
           </div>
         </div>
       </section>
@@ -152,7 +155,7 @@ export default async function Home() {
               listings: (
                 <ListingGrid
                   listings={byCity[name] ?? []}
-                  empty={`No cars listed in ${name} yet.`}
+                  empty={fmt(t.home.noCarsInCity, { city: cityName(t, name) })}
                   favoriteIds={favoriteIds}
                 />
               ),
@@ -163,31 +166,21 @@ export default async function Home() {
 
       {/* How it works */}
       <section className={sectionClass}>
-        <SectionHeading eyebrow="HOW IT WORKS" title="Simple Steps, Either Way" />
+        <SectionHeading eyebrow={t.home.howItWorks} title={t.home.simpleSteps} />
         <div className="mt-8 grid gap-4 sm:mt-10 lg:grid-cols-2 lg:gap-6">
           <HowItWorksColumn
-            tag="FOR BUYERS"
-            intro="Find and buy a used car without the guesswork."
-            cta={{ href: "/listings", label: "Browse Cars" }}
-            steps={[
-              ["Search", "Filter listings by make, price, year, fuel type and city."],
-              ["Shortlist", "Save cars you like to your favorites and come back to them anytime."],
-              ["Contact Seller", "Message the seller on WhatsApp or call them to arrange a viewing."],
-              ["Buy Your Car", "Inspect the car, agree on a price and drive away."],
-            ]}
+            tag={t.home.forBuyers}
+            intro={t.home.buyersIntro}
+            cta={{ href: "/listings", label: t.home.browseCars }}
+            steps={t.home.buyerSteps}
             className="border border-line bg-white"
           />
           <HowItWorksColumn
-            tag="FOR SELLERS"
-            intro="List your car in minutes and reach buyers across Saudi Arabia."
-            note="Free plan available. Dealer plans for bigger inventories."
-            cta={{ href: "/account/become-seller", label: "Start Listing" }}
-            steps={[
-              ["Create Listing", "Sign up as a seller and start a listing."],
-              ["Add Details", "Upload photos and add mileage, condition and your asking price."],
-              ["Get Buyer Leads", "Buyers contact you directly by WhatsApp or phone."],
-              ["Sell Your Car", "Agree on a price, hand over the keys and mark it as sold."],
-            ]}
+            tag={t.home.forSellers}
+            intro={t.home.sellersIntro}
+            note={t.home.sellersNote}
+            cta={{ href: "/account/become-seller", label: t.home.startListing }}
+            steps={t.home.sellerSteps}
             className="border border-transparent bg-mint"
           />
         </div>
@@ -199,20 +192,20 @@ export default async function Home() {
           {heroImage && (
             <Image src={heroImage.url} alt="" fill sizes="(min-width: 72rem) 72rem, 100vw" className="-z-20 object-cover opacity-30" />
           )}
-          <div className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(15,34,25,.95)_0%,rgba(15,34,25,.75)_55%,rgba(15,34,25,.4)_100%)]" />
+          <div className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(15,34,25,.95)_0%,rgba(15,34,25,.75)_55%,rgba(15,34,25,.4)_100%)] rtl:bg-[linear-gradient(270deg,rgba(15,34,25,.95)_0%,rgba(15,34,25,.75)_55%,rgba(15,34,25,.4)_100%)]" />
           <div className="flex flex-col items-start justify-between gap-8 sm:flex-row sm:items-end">
             <div>
-              <Eyebrow tone="dark">READY TO SELL?</Eyebrow>
+              <Eyebrow tone="dark">{t.home.readyToSell}</Eyebrow>
               <p className="mt-4 font-display text-4xl font-medium tracking-tight md:text-5xl">
-                Turn your car into <span className="font-bold text-lime">cash</span>
+                {t.home.ctaTitleStart} <span className="font-bold text-lime">{t.home.ctaTitleHighlight}</span>
               </p>
               <p className="mt-4 max-w-md text-xs leading-relaxed text-white/70 max-sm:text-sm">
-                List your car in minutes and reach buyers in {ctaCities.join(", ")} and beyond.
+                {fmt(t.home.ctaText, { cities: ctaCities.map((city) => cityName(t, city)).join(t.list.separator) })}
               </p>
             </div>
             <Button asChild className={`shrink-0 ${limeCtaClass}`}>
               <Link href="/account/become-seller">
-                Sell Your Car
+                {t.home.sellYourCar}
                 <CtaArrow />
               </Link>
             </Button>
@@ -263,7 +256,7 @@ function HowItWorksColumn({
   intro: string;
   note?: string;
   cta: { href: string; label: string };
-  steps: [string, string][];
+  steps: readonly (readonly [string, string])[];
   className?: string;
 }) {
   return (

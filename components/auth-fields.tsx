@@ -6,6 +6,8 @@
 
 import { useState } from "react";
 import { Eye, EyeOff, Loader2, Lock, type LucideIcon } from "lucide-react";
+import { useDictionary } from "@/components/i18n-provider";
+import { translateMessage } from "@/lib/dictionary";
 import { cn } from "@/lib/utils";
 
 // text-base keeps inputs at 16px+ on phones so iOS Safari doesn't zoom on focus.
@@ -51,6 +53,7 @@ export function Field({ id, label, icon: Icon, aside, className, ...input }: Inp
 
 export function PasswordField({ id, label, aside, ...input }: Omit<InputProps, "icon" | "type">) {
   const [shown, setShown] = useState(false);
+  const { t } = useDictionary();
 
   return (
     <div className="flex flex-col gap-1.5">
@@ -68,7 +71,7 @@ export function PasswordField({ id, label, aside, ...input }: Omit<InputProps, "
         <button
           type="button"
           onClick={() => setShown((s) => !s)}
-          aria-label={shown ? "Hide password" : "Show password"}
+          aria-label={shown ? t.auth.hidePassword : t.auth.showPassword}
           aria-pressed={shown}
           className="absolute top-1/2 end-1.5 grid size-9 -translate-y-1/2 place-items-center rounded-lg text-zinc-500 hover:bg-zinc-100 hover:text-ink"
         >
@@ -98,17 +101,19 @@ export function SubmitButton({
   );
 }
 
+// Server messages arrive in English; shown in the page's language.
 export function FormMessages({ error, notice }: { error?: string; notice?: string }) {
+  const { t } = useDictionary();
   return (
     <>
       {notice && (
         <p role="status" className="rounded-xl border border-brand/15 bg-mint px-3.5 py-2.5 text-sm text-forest">
-          {notice}
+          {translateMessage(t, notice)}
         </p>
       )}
       {error && (
         <p role="alert" className="rounded-xl border border-red-200 bg-red-50 px-3.5 py-2.5 text-sm text-red-700">
-          {error}
+          {translateMessage(t, error)}
         </p>
       )}
     </>
@@ -125,10 +130,11 @@ export function CodeStep({
   pending: boolean;
   submitLabel: string;
 }) {
+  const { t } = useDictionary();
   return (
     <>
       <p className="text-sm text-zinc-600">
-        Enter the 6-digit code we sent to{" "}
+        {t.auth.codeSentTo}{" "}
         <span className="inline-block max-w-full truncate rounded-md bg-mint px-1.5 align-bottom font-semibold text-forest">
           {email}
         </span>
@@ -136,7 +142,7 @@ export function CodeStep({
       <input type="hidden" name="email" value={email} />
       <Field
         id="code"
-        label="Verification code"
+        label={t.auth.verificationCode}
         inputMode="numeric"
         autoComplete="one-time-code"
         maxLength={6}
@@ -144,7 +150,7 @@ export function CodeStep({
         placeholder="••••••"
         className="h-14 text-center text-2xl font-semibold tracking-[0.5em] placeholder:tracking-[0.5em]"
       />
-      <SubmitButton intent="verify" pending={pending} pendingLabel="Checking…">
+      <SubmitButton intent="verify" pending={pending} pendingLabel={t.auth.checking}>
         {submitLabel}
       </SubmitButton>
       <div className="flex justify-between gap-4">
@@ -156,7 +162,7 @@ export function CodeStep({
           disabled={pending}
           className={linkButtonClass}
         >
-          Resend code
+          {t.auth.resendCode}
         </button>
         <button
           type="submit"
@@ -166,7 +172,7 @@ export function CodeStep({
           disabled={pending}
           className={linkButtonClass}
         >
-          Use a different email
+          {t.auth.differentEmail}
         </button>
       </div>
     </>

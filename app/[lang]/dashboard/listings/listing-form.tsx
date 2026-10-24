@@ -1,11 +1,11 @@
 "use client";
 
 import { useActionState } from "react";
+import { useDictionary } from "@/components/i18n-provider";
 import { CITIES } from "@/lib/cities";
+import { cityName, optionLabel, translateMessage } from "@/lib/dictionary";
 import {
   BODY_TYPES,
-  bodyTypeLabel,
-  capitalize,
   CONDITIONS,
   FEATURES,
   FUEL_TYPES,
@@ -53,12 +53,14 @@ function Select({
 
 export function ListingForm({ listing, action, submitLabel }: Props) {
   const [state, formAction, pending] = useActionState(action, {});
+  const { t } = useDictionary();
+  const f = t.dashboard.form;
   const maxYear = new Date().getFullYear() + 1;
 
   return (
     <form action={formAction} className="grid gap-4 sm:grid-cols-2">
       <MakeModelFields make={listing?.make} model={listing?.model} />
-      <Field id="year" label="Year">
+      <Field id="year" label={f.year}>
         <input
           id="year"
           name="year"
@@ -70,7 +72,7 @@ export function ListingForm({ listing, action, submitLabel }: Props) {
           className={inputClass}
         />
       </Field>
-      <Field id="mileage" label="Mileage (km)">
+      <Field id="mileage" label={f.mileage}>
         <input
           id="mileage"
           name="mileage"
@@ -81,7 +83,7 @@ export function ListingForm({ listing, action, submitLabel }: Props) {
           className={inputClass}
         />
       </Field>
-      <Field id="price" label="Price (SAR)">
+      <Field id="price" label={f.price}>
         <input
           id="price"
           name="price"
@@ -92,72 +94,78 @@ export function ListingForm({ listing, action, submitLabel }: Props) {
           className={inputClass}
         />
       </Field>
-      <Field id="city" label="City">
-        <Select id="city" options={CITIES} defaultValue={listing?.city} placeholder="Choose a city" />
+      <Field id="city" label={f.city}>
+        <Select
+          id="city"
+          options={CITIES}
+          defaultValue={listing?.city}
+          placeholder={f.chooseCity}
+          format={(city) => cityName(t, city)}
+        />
       </Field>
-      <Field id="condition" label="Condition">
+      <Field id="condition" label={f.condition}>
         <Select
           id="condition"
           options={CONDITIONS}
           defaultValue={listing?.condition}
-          placeholder="Choose the condition"
-          format={capitalize}
+          placeholder={f.chooseCondition}
+          format={(value) => optionLabel(t.options.condition, value)}
         />
       </Field>
-      <Field id="fuel_type" label="Fuel type">
+      <Field id="fuel_type" label={f.fuelType}>
         <Select
           id="fuel_type"
           options={FUEL_TYPES}
           defaultValue={listing?.fuel_type}
-          placeholder="Choose the fuel type"
-          format={capitalize}
+          placeholder={f.chooseFuel}
+          format={(value) => optionLabel(t.options.fuel, value)}
         />
       </Field>
-      <Field id="transmission" label="Transmission">
+      <Field id="transmission" label={f.transmission}>
         <Select
           id="transmission"
           options={TRANSMISSIONS}
           defaultValue={listing?.transmission ?? undefined}
-          placeholder="Choose the transmission"
-          format={capitalize}
+          placeholder={f.chooseTransmission}
+          format={(value) => optionLabel(t.options.transmission, value)}
         />
       </Field>
-      <Field id="body_type" label="Body style">
+      <Field id="body_type" label={f.bodyStyle}>
         <Select
           id="body_type"
           options={BODY_TYPES}
           defaultValue={listing?.body_type ?? undefined}
-          placeholder="Choose the body style"
-          format={bodyTypeLabel}
+          placeholder={f.chooseBody}
+          format={(value) => optionLabel(t.options.bodyType, value)}
         />
       </Field>
-      <Field id="color" label="Color (optional)">
+      <Field id="color" label={f.color}>
         <input
           id="color"
           name="color"
           maxLength={MAX_COLOR_LENGTH}
-          placeholder="e.g. Pearl white"
+          placeholder={f.colorPlaceholder}
           defaultValue={listing?.color ?? undefined}
           className={inputClass}
         />
       </Field>
       <div className="sm:col-span-2">
-        <Field id="description" label="Description (optional)">
+        <Field id="description" label={f.description}>
           <textarea
             id="description"
             name="description"
             rows={5}
             maxLength={MAX_DESCRIPTION_LENGTH}
-            placeholder="Service history, recent repairs, anything a buyer should know"
+            placeholder={f.descriptionPlaceholder}
             defaultValue={listing?.description ?? undefined}
             className={inputClass}
           />
         </Field>
       </div>
       <fieldset className="sm:col-span-2">
-        <legend className="text-sm font-medium">Features</legend>
+        <legend className="text-sm font-medium">{f.features}</legend>
         <div className="mt-2 grid grid-cols-2 gap-x-4 gap-y-2 sm:grid-cols-3">
-          {FEATURES.map(({ value, label }) => (
+          {FEATURES.map(({ value }) => (
             <label key={value} className="flex items-center gap-2 text-sm">
               <input
                 type="checkbox"
@@ -165,7 +173,7 @@ export function ListingForm({ listing, action, submitLabel }: Props) {
                 value={value}
                 defaultChecked={listing?.features.includes(value)}
               />
-              {label}
+              {optionLabel(t.options.features, value)}
             </label>
           ))}
         </div>
@@ -177,10 +185,10 @@ export function ListingForm({ listing, action, submitLabel }: Props) {
           disabled={pending}
           className="rounded-md bg-zinc-900 px-4 py-2 text-white disabled:opacity-50 dark:bg-zinc-100 dark:text-zinc-900"
         >
-          {pending ? "Saving…" : submitLabel}
+          {pending ? t.common.saving : submitLabel}
         </button>
-        {state.error && <p className="text-sm text-red-600">{state.error}</p>}
-        {state.saved && <p className="text-sm text-green-700">Saved.</p>}
+        {state.error && <p className="text-sm text-red-600">{translateMessage(t, state.error)}</p>}
+        {state.saved && <p className="text-sm text-green-700">{t.account.saved}</p>}
       </div>
     </form>
   );

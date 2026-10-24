@@ -4,8 +4,9 @@ import { useOptimistic, useState, useTransition } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { Heart } from "lucide-react";
 import { toggleFavorite } from "@/app/[lang]/favorites/actions";
-import { useLocale } from "@/components/locale-link";
+import { useDictionary } from "@/components/i18n-provider";
 import { Button } from "@/components/ui/button";
+import { translateMessage } from "@/lib/dictionary";
 import { localizePath } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 
@@ -20,7 +21,7 @@ type Props = {
 export function FavoriteButton({ listingId, favorited, variant = "icon", className = "" }: Props) {
   const router = useRouter();
   const pathname = usePathname();
-  const locale = useLocale();
+  const { t, locale } = useDictionary();
   const [saved, setSaved] = useState(favorited);
   const [optimistic, setOptimistic] = useOptimistic(saved);
   const [pending, startTransition] = useTransition();
@@ -35,14 +36,14 @@ export function FavoriteButton({ listingId, favorited, variant = "icon", classNa
       if (result.error === "signin") {
         router.push(localizePath(locale, `/login?next=${encodeURIComponent(pathname)}`));
       } else if (result.error) {
-        setError(result.error);
+        setError(translateMessage(t, result.error));
       } else {
         setSaved(next);
       }
     });
   }
 
-  const label = optimistic ? "Remove from saved cars" : "Save this car";
+  const label = optimistic ? t.listing.unsaveCar : t.listing.saveCar;
   const heart = <Heart className={optimistic ? "size-4 fill-brand stroke-brand" : "size-4"} />;
 
   if (variant === "label") {
@@ -57,7 +58,7 @@ export function FavoriteButton({ listingId, favorited, variant = "icon", classNa
           className="h-10 w-full bg-white text-xs font-medium"
         >
           {heart}
-          {optimistic ? "Saved" : "Save"}
+          {optimistic ? t.common.saved : t.common.save}
         </Button>
         {error && <p className="mt-1 text-sm text-destructive">{error}</p>}
       </div>

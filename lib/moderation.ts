@@ -4,6 +4,7 @@ import type { Database } from "@/lib/supabase/database.types";
 type ReportRow = Database["public"]["Tables"]["listing_reports"]["Row"];
 export type ReportReason = ReportRow["reason"];
 
+// English labels for the admin panel; the site's labels are in the dictionaries.
 export const REPORT_REASONS: Record<ReportReason, string> = {
   scam: "Scam or fraud",
   spam: "Spam or duplicate",
@@ -12,6 +13,8 @@ export const REPORT_REASONS: Record<ReportReason, string> = {
   offensive: "Offensive content",
   other: "Something else",
 };
+
+export const REPORT_REASON_VALUES = Object.keys(REPORT_REASONS) as ReportReason[];
 
 export const MAX_REPORT_DETAILS = 1000;
 
