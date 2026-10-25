@@ -517,7 +517,6 @@ export const ar: DictionaryShape<typeof en> = {
     viewSellerListings: "عرض إعلانات البائع ←",
     similar: "سيارات مشابهة قد تعجبك",
     viewAll: "عرض الكل ←",
-    backToSearch: "العودة إلى البحث",
     breadcrumbLabel: "مسار التنقل",
     breadcrumbListings: "سيارات للبيع",
     listedAgo: "نُشر {when}",

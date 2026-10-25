@@ -49,7 +49,6 @@ import { getListingStats, getPublicListing, getSimilarListings, isFeatured } fro
 import { getListingQuota, SELF_FEATURE_DAYS } from "@/lib/plans";
 import { siteUrl } from "@/lib/site";
 import { getStorefront } from "@/lib/storefront";
-import { BackLink } from "./back-link";
 import { Breadcrumbs, type Crumb } from "./breadcrumbs";
 import { ContactButtons } from "./contact-buttons";
 import { Gallery } from "./gallery";
@@ -211,7 +210,6 @@ export default async function ListingPage({ params }: PageProps<"/[lang]/listing
         )}
         <div className="absolute inset-0 bg-[linear-gradient(90deg,#1b2125_0%,#1b2125_36%,rgba(27,33,37,.55)_48%,rgba(27,33,37,0)_62%)] rtl:bg-[linear-gradient(270deg,#1b2125_0%,#1b2125_36%,rgba(27,33,37,.55)_48%,rgba(27,33,37,0)_62%)]" />
         <div className="relative mx-auto w-full max-w-6xl px-4 pt-7 pb-9 sm:px-6">
-          <BackLink />
           <Breadcrumbs crumbs={crumbs} label={p.breadcrumbLabel} />
           <div className="mt-3 flex flex-wrap items-center gap-3.5">
             <h1 className="text-3xl font-semibold tracking-tight">{name}</h1>

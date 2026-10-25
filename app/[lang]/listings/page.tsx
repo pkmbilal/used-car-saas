@@ -28,7 +28,6 @@ import {
 import { ActiveFilters } from "./active-filters";
 import { Filters } from "./filters";
 import { MobileFilters } from "./mobile-filters";
-import { RememberSearch } from "./remember-search";
 import { SortSelect } from "./sort-select";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -78,7 +77,6 @@ export default async function ListingsPage({ searchParams }: PageProps<"/[lang]/
 
   return (
     <main className="light bg-canvas text-ink">
-      <RememberSearch href={pageHref(filters.page)} />
       <section className="relative overflow-hidden bg-charcoal">
         <div className="absolute inset-y-0 end-0 w-2/3 bg-[radial-gradient(ellipse_at_70%_60%,rgba(111,224,124,.16),transparent_60%)] rtl:bg-[radial-gradient(ellipse_at_30%_60%,rgba(111,224,124,.16),transparent_60%)]" />
         <div className="relative mx-auto w-full max-w-6xl px-4 pt-10 pb-20 sm:px-6">

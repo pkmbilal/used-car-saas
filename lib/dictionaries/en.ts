@@ -484,7 +484,6 @@ export const en = {
     viewSellerListings: "View seller’s listings →",
     similar: "Similar Cars You May Like",
     viewAll: "View All →",
-    backToSearch: "Back to Search",
     breadcrumbLabel: "Breadcrumb",
     breadcrumbListings: "Cars for sale",
     listedAgo: "Listed {when}",

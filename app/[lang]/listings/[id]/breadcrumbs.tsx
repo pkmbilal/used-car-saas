@@ -7,7 +7,7 @@ export type Crumb = { name: string; href: string };
 // Listings › Make › Model trail in the hero, each step a filtered search.
 export function Breadcrumbs({ crumbs, label }: { crumbs: Crumb[]; label: string }) {
   return (
-    <nav aria-label={label} className="mt-3">
+    <nav aria-label={label}>
       <ol className="flex flex-wrap items-center gap-1.5 text-xs text-white/70">
         {crumbs.map((crumb, i) => (
           <Fragment key={crumb.href}>
