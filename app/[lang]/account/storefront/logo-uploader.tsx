@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useRef, useState, useTransition } from "react";
 import { useDictionary } from "@/components/i18n-provider";
+import { compressImage } from "@/lib/compress-image";
 import { translateMessage } from "@/lib/dictionary";
 import { IMAGE_TYPES } from "@/lib/listing-options";
 import { MAX_LOGO_BYTES } from "@/lib/storefront-options";
@@ -19,9 +20,10 @@ export function LogoUploader({ logoUrl }: Props) {
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string>();
 
-  // presign → PUT straight to R2 → confirm.
-  async function uploadFile(file: File): Promise<string | undefined> {
-    if (!(file.type in IMAGE_TYPES)) return "Use a JPEG, PNG or WebP image.";
+  // compress → presign → PUT straight to R2 → confirm.
+  async function uploadFile(original: File): Promise<string | undefined> {
+    if (!(original.type in IMAGE_TYPES)) return "Use a JPEG, PNG or WebP image.";
+    const file = await compressImage(original, { maxEdge: 512, quality: 0.85 });
     if (file.size > MAX_LOGO_BYTES) return "Logos must be under 2 MB.";
 
     const presigned = await requestLogoUpload(file.type, file.size);
