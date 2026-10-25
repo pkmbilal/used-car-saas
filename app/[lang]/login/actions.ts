@@ -1,6 +1,6 @@
 "use server";
 
-import { safeNext } from "@/lib/auth";
+import { isAdminAccount, safeNext } from "@/lib/auth";
 import {
   confirmSignup,
   describeAuthError,
@@ -44,8 +44,16 @@ export async function loginAction(_prev: LoginState, formData: FormData): Promis
       }
 
       const supabase = await createClient();
-      const { error } = await supabase.auth.signInWithPassword({ email, password });
-      if (!error) return localeRedirect(next);
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+      if (!error) {
+        // Same message as a wrong password, so this form never reveals which
+        // emails have admin access.
+        if (await isAdminAccount(data.user.id)) {
+          await supabase.auth.signOut();
+          return { step: "credentials", email, error: "Incorrect email or password." };
+        }
+        return localeRedirect(next);
+      }
 
       if (error.code === "email_not_confirmed") {
         const resendError = await resendSignupCode(email);

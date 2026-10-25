@@ -18,4 +18,5 @@ export const ADMIN_ACTION_LABELS: Record<AdminActionType, string> = {
   id_revoked: "Revoked ID badge of",
   dealer_approved: "Approved dealer application from",
   dealer_rejected: "Rejected dealer application from",
+  listing_auto_hidden: "Auto-hid reported listing",
 };

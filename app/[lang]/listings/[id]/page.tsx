@@ -30,7 +30,7 @@ import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { getCurrentUser } from "@/lib/auth";
 import { carName, makeName, modelName } from "@/lib/car-names";
-import { cityName, fmt, optionLabel } from "@/lib/dictionary";
+import { cityName, fmt, optionLabel, translateMessage } from "@/lib/dictionary";
 import { getFavoriteIds } from "@/lib/favorites";
 import { localizePath } from "@/lib/i18n";
 import { getDictionary, localeAlternates } from "@/lib/i18n-server";
@@ -150,7 +150,7 @@ export default async function ListingPage({ params }: PageProps<"/[lang]/listing
             <span>
               {listing.status === "removed"
                 ? listing.removed_reason
-                  ? fmt(p.removedByReason, { reason: listing.removed_reason })
+                  ? fmt(p.removedByReason, { reason: translateMessage(t, listing.removed_reason) })
                   : p.removedBy
                 : listing.status === "draft"
                   ? p.hiddenDraft

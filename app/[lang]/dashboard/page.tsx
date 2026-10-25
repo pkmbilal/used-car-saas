@@ -5,7 +5,7 @@ import type { Metadata } from "next";
 import { rich } from "@/components/rich-text";
 import { requireSeller } from "@/lib/auth";
 import { carName } from "@/lib/car-names";
-import { cityName, fmt } from "@/lib/dictionary";
+import { cityName, fmt, translateMessage } from "@/lib/dictionary";
 import { getDictionary } from "@/lib/i18n-server";
 import { formatDay, formatKm, formatListingStats } from "@/lib/format";
 import { getSellerListings, isFeatured } from "@/lib/listings";
@@ -142,7 +142,7 @@ export default async function DashboardPage() {
                   )}
                   {listing.status === "removed" && listing.removed_reason && (
                     <p className="mt-1 text-sm text-red-700 dark:text-red-400">
-                      {fmt(d.removedReason, { reason: listing.removed_reason })}
+                      {fmt(d.removedReason, { reason: translateMessage(t, listing.removed_reason) })}
                     </p>
                   )}
                 </div>

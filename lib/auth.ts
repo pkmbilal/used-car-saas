@@ -47,6 +47,18 @@ export async function requireAdmin() {
   return current;
 }
 
+// Admins sign in at /admin/login only; the public auth flows use this to turn
+// them away.
+export async function isAdminAccount(userId: string): Promise<boolean> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("profiles")
+    .select("is_admin")
+    .eq("id", userId)
+    .maybeSingle();
+  return !!data?.is_admin;
+}
+
 // Only allow same-site relative paths as post-login redirects.
 export function safeNext(next: unknown): string {
   return typeof next === "string" && next.startsWith("/") && !next.startsWith("//")

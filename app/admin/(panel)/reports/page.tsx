@@ -1,11 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Car, Flag, ShieldCheck } from "lucide-react";
+import { Car, EyeOff, Flag, ShieldCheck } from "lucide-react";
 import { RiyalPrice } from "@/components/riyal-price";
 import { StatusBadge } from "@/app/[lang]/dashboard/listings/status-badge";
 import { getOpenReports } from "@/lib/admin";
 import { formatDay } from "@/lib/format";
-import { REPORT_REASONS, type ReportReason } from "@/lib/moderation";
+import { AUTO_HIDE_REASON, REPORT_REASONS, type ReportReason } from "@/lib/moderation";
 import { dismissReportsAction } from "../actions";
 import { AdminActionButton, RemoveListingButton } from "../admin-buttons";
 import { EmptyState, linkClass, muted, Panel, Pill } from "../ui";
@@ -42,6 +42,7 @@ export default async function AdminReportsPage() {
         const cover = listing.images[0];
         const title = `${listing.year} ${listing.make} ${listing.model}`;
         const details = reports.filter((report) => report.details);
+        const autoHidden = listing.status === "removed" && listing.removed_reason === AUTO_HIDE_REASON;
         return (
           <Panel key={listing.id}>
             <div className="flex flex-col gap-5 md:flex-row">
@@ -80,6 +81,12 @@ export default async function AdminReportsPage() {
                     <Flag className="size-3" aria-hidden />
                     {reports.length === 1 ? "1 report" : `${reports.length} reports`}
                   </Pill>
+                  {autoHidden && (
+                    <Pill tone="red">
+                      <EyeOff className="size-3" aria-hidden />
+                      Auto-hidden
+                    </Pill>
+                  )}
                   {reasonCounts(reports.map((r) => r.reason)).map(([reason, count]) => (
                     <Pill key={reason}>
                       {REPORT_REASONS[reason]}
@@ -104,10 +111,12 @@ export default async function AdminReportsPage() {
               </div>
 
               <div className="flex shrink-0 flex-row flex-wrap gap-2 md:flex-col md:items-stretch">
-                {listing.status === "active" && <RemoveListingButton listingId={listing.id} />}
+                {(listing.status === "active" || autoHidden) && (
+                  <RemoveListingButton listingId={listing.id} autoHidden={autoHidden} />
+                )}
                 <AdminActionButton
-                  label="Dismiss reports"
-                  success="Reports dismissed"
+                  label={autoHidden ? "Restore & dismiss" : "Dismiss reports"}
+                  success={autoHidden ? "Listing restored" : "Reports dismissed"}
                   action={dismissReportsAction.bind(null, listing.id)}
                 />
               </div>

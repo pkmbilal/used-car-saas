@@ -21,6 +21,11 @@ export const MAX_REPORT_DETAILS = 1000;
 // Admin removals triggered by a suspension; unsuspending restores only these.
 export const SUSPENSION_REMOVAL_REASON = "Seller account suspended";
 
+// A live listing is hidden once this many users report it. Both must match
+// public.auto_hide_reported_listing().
+export const AUTO_HIDE_REPORT_THRESHOLD = 5;
+export const AUTO_HIDE_REASON = "Hidden for review after multiple reports";
+
 function isReason(value: unknown): value is ReportReason {
   return typeof value === "string" && Object.hasOwn(REPORT_REASONS, value);
 }
