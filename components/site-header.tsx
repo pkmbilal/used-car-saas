@@ -10,6 +10,7 @@ import { NavLink } from "@/components/nav-link";
 import { Button } from "@/components/ui/button";
 import { getCurrentUser } from "@/lib/auth";
 import { getDictionary } from "@/lib/i18n-server";
+import { publicUrl } from "@/lib/r2";
 
 export async function SiteHeader() {
   const current = await getCurrentUser();
@@ -41,6 +42,7 @@ export async function SiteHeader() {
   const user: HeaderUser | null = current
     ? {
         name: current.profile.full_name || current.user.email || t.nav.account,
+        avatarUrl: current.profile.avatar_key ? publicUrl(current.profile.avatar_key) : null,
         email: current.user.email ?? null,
         role: current.profile.role,
         plan: current.profile.plan,

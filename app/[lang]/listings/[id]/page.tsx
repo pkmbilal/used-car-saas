@@ -47,6 +47,7 @@ import { capitalize } from "@/lib/listing-options";
 import { breadcrumbJsonLd, jsonLdScript, listingDescription, listingJsonLd } from "@/lib/listing-seo";
 import { getListingStats, getPublicListing, getSimilarListings, isFeatured } from "@/lib/listings";
 import { getListingQuota, SELF_FEATURE_DAYS } from "@/lib/plans";
+import { publicUrl } from "@/lib/r2";
 import { siteUrl } from "@/lib/site";
 import { getStorefront } from "@/lib/storefront";
 import { Breadcrumbs, type Crumb } from "./breadcrumbs";
@@ -287,6 +288,10 @@ export default async function ListingPage({ params }: PageProps<"/[lang]/listing
                 <div className="flex items-center gap-3 pt-5">
                   {storefront ? (
                     <DealerLogo name={storefront.name} logoUrl={storefront.logoUrl} size="sm" />
+                  ) : seller.avatar_key ? (
+                    <span className="relative size-11 shrink-0 overflow-hidden rounded-full bg-canvas">
+                      <Image src={publicUrl(seller.avatar_key)} alt="" fill sizes="44px" className="object-cover" />
+                    </span>
                   ) : (
                     <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-charcoal text-lime">
                       <ShieldCheck className="size-5" strokeWidth={1.8} />

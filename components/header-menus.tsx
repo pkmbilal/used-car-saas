@@ -52,6 +52,7 @@ function SignOutForm({ children }: { children: React.ReactNode }) {
 
 export type HeaderUser = {
   name: string;
+  avatarUrl: string | null;
   email: string | null;
   role: Profile["role"];
   plan: Profile["plan"];
@@ -82,7 +83,7 @@ function UserCard({ user }: { user: HeaderUser }) {
     <div className="bg-gradient-to-br from-forest via-forest to-brand px-4 pt-4 pb-5 text-white">
       <div className="flex items-center gap-3">
         <span className="rounded-full ring-2 ring-white/30">
-          <Avatar name={user.name} size="lg" />
+          <Avatar name={user.name} src={user.avatarUrl} size="lg" />
         </span>
         <div className="min-w-0">
           <p className="truncate font-semibold">{user.name}</p>
@@ -117,7 +118,7 @@ export function UserMenu({ user, links }: { user: HeaderUser; links: HeaderLink[
         className="group flex items-center gap-2.5 rounded-full py-1 ps-1 pe-3 ring-1 ring-transparent transition-colors outline-none hover:bg-white/10 hover:ring-white/15 focus-visible:ring-lime aria-expanded:bg-white/10 aria-expanded:ring-white/15"
       >
         <span className="relative">
-          <Avatar name={user.name} />
+          <Avatar name={user.name} src={user.avatarUrl} />
           <span className="absolute -end-0.5 -bottom-0.5 size-3 rounded-full bg-green-500 ring-2 ring-charcoal" aria-hidden />
         </span>
         <span className="hidden max-w-36 text-start lg:block">
@@ -247,7 +248,7 @@ export function MobileAccountSheet({
         }`}
       >
         <span className={`relative rounded-full ring-2 ${active ? "ring-brand" : "ring-transparent"}`}>
-          <Avatar name={user.name} size="sm" />
+          <Avatar name={user.name} src={user.avatarUrl} size="sm" />
           <span className="absolute -end-0.5 -bottom-0.5 size-2 rounded-full bg-green-500 ring-2 ring-white" aria-hidden />
         </span>
         <span className="max-w-16 truncate">{firstName}</span>

@@ -23,7 +23,7 @@ export const viewport: Viewport = {
 export default function AdminRootLayout({ children }: LayoutProps<"/admin">) {
   return (
     <html lang="en" dir="ltr" className={cn("h-full font-sans antialiased", figtree.variable, poppins.variable)}>
-      <body className="min-h-full flex flex-col">
+      <body className="min-h-full flex flex-col" suppressHydrationWarning>
         <div className="flex flex-1 flex-col">{children}</div>
         <Toaster theme="light" mobileOffset={{ bottom: "calc(5rem + env(safe-area-inset-bottom))" }} />
       </body>

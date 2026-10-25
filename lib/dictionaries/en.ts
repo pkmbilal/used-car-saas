@@ -772,6 +772,14 @@ export const en = {
     backToAccount: "← Your account",
     optional: "(optional)",
     saved: "Saved.",
+    avatar: {
+      label: "Profile photo",
+      upload: "Upload photo",
+      replace: "Replace",
+      remove: "Remove",
+      uploading: "Uploading…",
+      hint: "Square image, JPEG, PNG or WebP, under 2 MB.",
+    },
     form: {
       fullName: "Full name",
       mobile: "Mobile number",

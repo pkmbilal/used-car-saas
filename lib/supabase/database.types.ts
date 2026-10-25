@@ -31,6 +31,7 @@ export type Database = {
           business_name: string | null;
           about: string | null;
           logo_key: string | null;
+          avatar_key: string | null;
           showroom_address: string | null;
           has_phone: boolean | null;
           created_at: string;
@@ -50,6 +51,7 @@ export type Database = {
           business_name?: string | null;
           about?: string | null;
           logo_key?: string | null;
+          avatar_key?: string | null;
           showroom_address?: string | null;
           has_phone?: never;
           created_at?: string;
@@ -69,6 +71,7 @@ export type Database = {
           business_name?: string | null;
           about?: string | null;
           logo_key?: string | null;
+          avatar_key?: string | null;
           showroom_address?: string | null;
           has_phone?: never;
           created_at?: string;

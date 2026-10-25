@@ -732,6 +732,8 @@ export const ar: DictionaryShape<typeof en> = {
     "Logos must be under 2 MB.": "يجب أن يكون حجم الشعار أقل من 2 ميجابايت.",
     "Could not save the logo. Try again.": "تعذّر حفظ الشعار. حاول مرة أخرى.",
     "Could not remove the logo. Try again.": "تعذّرت إزالة الشعار. حاول مرة أخرى.",
+    "Profile photos must be under 2 MB.": "يجب أن يكون حجم الصورة الشخصية أقل من 2 ميجابايت.",
+    "Could not remove the photo. Try again.": "تعذّرت إزالة الصورة. حاول مرة أخرى.",
     "Your ID is already verified.": "هويتك موثقة بالفعل.",
     "Your ID is already under review.": "هويتك قيد المراجعة بالفعل.",
     "Upload 1 or {n} files.": "ارفع ملفًا واحدًا أو {n} ملفات.",
@@ -953,6 +955,14 @@ export const ar: DictionaryShape<typeof en> = {
     backToAccount: "→ حسابك",
     optional: "(اختياري)",
     saved: "تم الحفظ.",
+    avatar: {
+      label: "الصورة الشخصية",
+      upload: "رفع صورة",
+      replace: "استبدال",
+      remove: "إزالة",
+      uploading: "جارٍ الرفع…",
+      hint: "صورة مربعة بصيغة JPEG أو PNG أو WebP، أقل من 2 ميجابايت.",
+    },
     form: {
       fullName: "الاسم الكامل",
       mobile: "رقم الجوال",
