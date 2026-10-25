@@ -1,34 +1,27 @@
-import Image from "next/image";
-import { RiyalPrice } from "@/components/riyal-price";
 import Link from "@/components/locale-link";
 import type { Metadata } from "next";
 import { rich } from "@/components/rich-text";
 import { requireSeller } from "@/lib/auth";
-import { carName } from "@/lib/car-names";
-import { cityName, fmt, translateMessage } from "@/lib/dictionary";
+import { fmt } from "@/lib/dictionary";
 import { getDictionary } from "@/lib/i18n-server";
-import { formatDay, formatKm, formatListingStats } from "@/lib/format";
+import { formatDay } from "@/lib/format";
 import { getSellerListings, isFeatured } from "@/lib/listings";
-import {
-  DRAFT_LIMIT,
-  getListingQuota,
-  isDealerPlan,
-  isPlanExpiringSoon,
-  quotaSummary,
-  SELF_FEATURE_DAYS,
-} from "@/lib/plans";
-import { ListingActions } from "./listings/listing-actions";
-import { StatusBadge } from "./listings/status-badge";
+import { getListingQuota, isDealerPlan, isPlanExpiringSoon } from "@/lib/plans";
+import { ListingCardItem, ListingListItem } from "./listing-items";
+import { PlanCard } from "./plan-card";
+import { ViewToggle } from "./view-toggle";
 
 export async function generateMetadata(): Promise<Metadata> {
   const { t } = await getDictionary();
   return { title: t.dashboard.metaTitle };
 }
 
-export default async function DashboardPage() {
+export default async function DashboardPage({ searchParams }: PageProps<"/[lang]/dashboard">) {
   const { user, profile } = await requireSeller();
   const { t, locale } = await getDictionary();
   const d = t.dashboard;
+  const view = (await searchParams).view === "list" ? "list" : "grid";
+  const Item = view === "list" ? ListingListItem : ListingCardItem;
   const [listings, quota] = await Promise.all([getSellerListings(user.id), getListingQuota()]);
   const openDrafts = listings.filter(
     (listing) => listing.status === "draft" && listing.first_published_at === null,
@@ -41,29 +34,6 @@ export default async function DashboardPage() {
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight">{d.title}</h1>
-          {quota && (
-            <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-              {quotaSummary(t, locale, quota)}
-              {" · "}
-              {fmt(t.plans.draftsUsedOf, { used: openDrafts, limit: DRAFT_LIMIT[quota.plan] })}
-              {quota.plan !== "showroom" && (
-                <>
-                  {" · "}
-                  <Link href="/pricing" className="underline">
-                    {d.upgrade}
-                  </Link>
-                </>
-              )}
-              {isDealerPlan(quota.plan) && (
-                <>
-                  {" · "}
-                  <Link href="/account/storefront" className="underline">
-                    {d.editStorefront}
-                  </Link>
-                </>
-              )}
-            </p>
-          )}
         </div>
         {/* Drafts are free, so new listings stay open at the limit; publishing is what's capped. */}
         <div className="flex shrink-0 items-center gap-2 max-sm:w-full">
@@ -80,6 +50,8 @@ export default async function DashboardPage() {
           </Link>
         </div>
       </div>
+
+      {quota && <PlanCard quota={quota} openDrafts={openDrafts} t={t} locale={locale} />}
 
       {quota?.planExpiresAt && isPlanExpiringSoon(quota) && (
         <p className="mt-6 rounded-md bg-amber-50 px-4 py-3 text-sm text-amber-900 dark:bg-amber-950 dark:text-amber-200">
@@ -110,53 +82,28 @@ export default async function DashboardPage() {
           })}
         </p>
       ) : (
-        <ul className="mt-8 divide-y divide-zinc-200 dark:divide-zinc-800">
-          {listings.map((listing) => {
-            const cover = listing.images[0];
-            const editHref = `/dashboard/listings/${listing.id}/edit`;
-            return (
-              <li key={listing.id} className="flex flex-wrap items-center gap-4 py-4">
-                <Link
-                  href={editHref}
-                  className="relative aspect-[4/3] w-28 shrink-0 overflow-hidden rounded-md bg-zinc-100 dark:bg-zinc-800"
-                >
-                  {cover && (
-                    <Image src={cover.url} alt="" fill sizes="112px" className="object-cover" />
-                  )}
-                </Link>
-                <div className="min-w-0 flex-1 max-sm:basis-[calc(100%-8rem)]">
-                  <div className="flex items-center gap-2">
-                    <Link href={editHref} className="truncate font-medium">
-                      {carName(locale, listing.make, listing.model, listing.year)}
-                    </Link>
-                    <StatusBadge status={listing.status} />
-                  </div>
-                  <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-                    <RiyalPrice amount={listing.price} /> · {formatKm(listing.mileage, locale)} ·{" "}
-                    {cityName(t, listing.city)} · {formatListingStats(locale, listing.stats, t.common.stats)}
-                  </p>
-                  {listing.status === "active" && listing.featured_until && isFeatured(listing) && (
-                    <p className="mt-1 text-sm text-amber-700 dark:text-amber-400">
-                      {fmt(d.featuredUntil, { date: formatDay(listing.featured_until, locale) })}
-                    </p>
-                  )}
-                  {listing.status === "removed" && listing.removed_reason && (
-                    <p className="mt-1 text-sm text-red-700 dark:text-red-400">
-                      {fmt(d.removedReason, { reason: translateMessage(t, listing.removed_reason) })}
-                    </p>
-                  )}
-                </div>
-                <ListingActions
-                  listingId={listing.id}
-                  status={listing.status}
-                  showEdit
-                  featureSlots={isFeatured(listing) ? 0 : (quota?.featuredRemaining ?? 0)}
-                  featureDays={SELF_FEATURE_DAYS}
-                />
-              </li>
-            );
-          })}
-        </ul>
+        <>
+          <div className="mt-8 flex justify-end">
+            <ViewToggle view={view} t={t} />
+          </div>
+          <ul
+            className={
+              view === "list"
+                ? "mt-2 divide-y divide-zinc-200 dark:divide-zinc-800"
+                : "mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
+            }
+          >
+            {listings.map((listing) => (
+              <Item
+                key={listing.id}
+                listing={listing}
+                featureSlots={isFeatured(listing) ? 0 : (quota?.featuredRemaining ?? 0)}
+                t={t}
+                locale={locale}
+              />
+            ))}
+          </ul>
+        </>
       )}
     </main>
   );

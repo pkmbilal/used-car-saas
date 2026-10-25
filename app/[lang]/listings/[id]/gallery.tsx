@@ -18,7 +18,10 @@ type Props = {
 const arrowClass =
   "absolute top-[calc(50%-18px)] size-9 rounded-full bg-white text-brand shadow-[0_2px_8px_rgba(0,0,0,.2)] hover:bg-mint";
 
-const aspectClass = "aspect-[4/3] sm:aspect-[16/10]";
+// Lighter on phones so the controls don't cover the photo.
+const mobileFadeClass = "opacity-60 hover:opacity-100 focus-visible:opacity-100 sm:opacity-100";
+
+const aspectClass ="aspect-[4/3] sm:aspect-[16/10]";
 
 // On RTL pages the next photo is to the left.
 function forward(): number {
@@ -94,16 +97,16 @@ export function Gallery({ title, photos, featured = false }: Props) {
           variant="secondary"
           aria-label={g.fullscreen}
           onClick={() => setFullscreen(true)}
-          className="absolute top-3.5 end-3.5 size-9 rounded-full bg-white text-brand shadow-[0_2px_8px_rgba(0,0,0,.2)] hover:bg-mint"
+          className={`absolute top-3.5 end-3.5 size-9 rounded-full bg-white text-brand shadow-[0_2px_8px_rgba(0,0,0,.2)] hover:bg-mint ${mobileFadeClass}`}
         >
           <Maximize2 strokeWidth={2.2} />
         </Button>
         {count > 1 && (
           <>
-            <Button size="icon" variant="secondary" aria-label={g.previous} onClick={() => go(-1)} className={`${arrowClass} start-3.5`}>
+            <Button size="icon" variant="secondary" aria-label={g.previous} onClick={() => go(-1)} className={`${arrowClass} ${mobileFadeClass} start-3.5`}>
               <ChevronLeft strokeWidth={2.6} />
             </Button>
-            <Button size="icon" variant="secondary" aria-label={g.next} onClick={() => go(1)} className={`${arrowClass} end-3.5`}>
+            <Button size="icon" variant="secondary" aria-label={g.next} onClick={() => go(1)} className={`${arrowClass} ${mobileFadeClass} end-3.5`}>
               <ChevronRight strokeWidth={2.6} />
             </Button>
           </>
