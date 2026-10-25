@@ -18,6 +18,7 @@ import {
   Palette,
   ShieldCheck,
   Sparkles,
+  TrendingUp,
 } from "lucide-react";
 import { ListingGrid } from "@/components/listing-card";
 import { ReportListingButton } from "@/components/report-listing-button";
@@ -34,16 +35,26 @@ import { cityName, fmt, optionLabel, translateMessage } from "@/lib/dictionary";
 import { getFavoriteIds } from "@/lib/favorites";
 import { localizePath } from "@/lib/i18n";
 import { getDictionary, localeAlternates } from "@/lib/i18n-server";
-import { formatDay, formatKm, formatMonthYear, formatListingStats, formatSAR } from "@/lib/format";
+import {
+  formatDay,
+  formatKm,
+  formatMonthYear,
+  formatListingStats,
+  formatRelativeDays,
+  formatSAR,
+} from "@/lib/format";
 import { capitalize } from "@/lib/listing-options";
-import { jsonLdScript, listingDescription, listingJsonLd } from "@/lib/listing-seo";
+import { breadcrumbJsonLd, jsonLdScript, listingDescription, listingJsonLd } from "@/lib/listing-seo";
 import { getListingStats, getPublicListing, getSimilarListings, isFeatured } from "@/lib/listings";
+import { getListingQuota, SELF_FEATURE_DAYS } from "@/lib/plans";
+import { publicUrl } from "@/lib/r2";
 import { siteUrl } from "@/lib/site";
 import { getStorefront } from "@/lib/storefront";
-import { BackLink } from "./back-link";
+import { Breadcrumbs, type Crumb } from "./breadcrumbs";
 import { ContactButtons } from "./contact-buttons";
 import { Gallery } from "./gallery";
 import { ListingDescription, ListingFeatures, SpecGrid } from "./listing-details";
+import { OwnerActions } from "./owner-actions";
 import { ShareButton } from "./share-button";
 import { ViewTracker } from "./view-tracker";
 
@@ -91,8 +102,9 @@ export default async function ListingPage({ params }: PageProps<"/[lang]/listing
   const seller = listing.seller;
   const storefront = seller ? getStorefront(seller) : null;
   const featured = isFeatured(listing);
-  const [stats, favoriteIds, similar] = await Promise.all([
+  const [stats, quota, favoriteIds, similar] = await Promise.all([
     isOwner ? getListingStats(listing.id) : null,
+    isOwner ? getListingQuota() : null,
     favoritesPromise,
     similarPromise,
   ]);
@@ -106,6 +118,19 @@ export default async function ListingPage({ params }: PageProps<"/[lang]/listing
   const fuel = optionLabel(t.options.fuel, listing.fuel_type);
   const city = cityName(t, listing.city);
   const showContact = !isOwner && !!seller?.has_phone;
+  const listedAgo = formatRelativeDays(listing.first_published_at ?? listing.created_at, locale);
+  // Counting the model year itself, so a this-year car isn't divided by zero.
+  const ageYears = Math.max(1, new Date().getFullYear() - listing.year + 1);
+  const perYear = listing.mileage > 0 ? Math.round(listing.mileage / ageYears) : 0;
+  const crumbs: Crumb[] = [
+    { name: p.breadcrumbListings, href: "/listings" },
+    { name: makeName(locale, listing.make), href: `/listings?${new URLSearchParams({ make: listing.make })}` },
+    {
+      name: modelName(locale, listing.make, listing.model),
+      href: `/listings?${new URLSearchParams({ make: listing.make, model: listing.model })}`,
+    },
+  ];
+  const absoluteUrl = (path: string) => new URL(localizePath(locale, path), siteUrl()).toString();
 
   const specIcon = { className: "size-4", strokeWidth: 1.8 };
   const specs = [
@@ -113,6 +138,11 @@ export default async function ListingPage({ params }: PageProps<"/[lang]/listing
     { label: p.specs.model, value: modelName(locale, listing.make, listing.model), icon: <Car {...specIcon} /> },
     { label: p.specs.year, value: String(listing.year), icon: <CalendarDays {...specIcon} /> },
     { label: p.specs.mileage, value: formatKm(listing.mileage, locale), icon: <Gauge {...specIcon} /> },
+    {
+      label: p.specs.perYear,
+      value: perYear > 0 ? fmt(p.perYearValue, { km: formatKm(perYear, locale) }) : null,
+      icon: <TrendingUp {...specIcon} />,
+    },
     { label: p.specs.fuelType, value: fuel, icon: <Fuel {...specIcon} /> },
     { label: p.specs.condition, value: optionLabel(t.options.condition, listing.condition), icon: <Sparkles {...specIcon} /> },
     { label: p.specs.transmission, value: transmission, icon: <Cog {...specIcon} /> },
@@ -134,13 +164,14 @@ export default async function ListingPage({ params }: PageProps<"/[lang]/listing
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: jsonLdScript(
+            __html: jsonLdScript([
               listingJsonLd(
                 listing,
-                new URL(localizePath(locale, `/listings/${listing.id}`), siteUrl()).toString(),
+                absoluteUrl(`/listings/${listing.id}`),
                 listingDescription(listing, t, locale),
               ),
-            ),
+              breadcrumbJsonLd(crumbs.map((crumb) => ({ name: crumb.name, url: absoluteUrl(crumb.href) }))),
+            ]),
           }}
         />
       )}
@@ -180,8 +211,8 @@ export default async function ListingPage({ params }: PageProps<"/[lang]/listing
         )}
         <div className="absolute inset-0 bg-[linear-gradient(90deg,#1b2125_0%,#1b2125_36%,rgba(27,33,37,.55)_48%,rgba(27,33,37,0)_62%)] rtl:bg-[linear-gradient(270deg,#1b2125_0%,#1b2125_36%,rgba(27,33,37,.55)_48%,rgba(27,33,37,0)_62%)]" />
         <div className="relative mx-auto w-full max-w-6xl px-4 pt-7 pb-9 sm:px-6">
-          <BackLink />
-          <div className="mt-4 flex flex-wrap items-center gap-3.5">
+          <Breadcrumbs crumbs={crumbs} label={p.breadcrumbLabel} />
+          <div className="mt-3 flex flex-wrap items-center gap-3.5">
             <h1 className="text-3xl font-semibold tracking-tight">{name}</h1>
             {featured && (
               <Badge className="h-6 bg-[#4fc35f] px-3 text-caption font-semibold">{t.common.featured}</Badge>
@@ -218,6 +249,10 @@ export default async function ListingPage({ params }: PageProps<"/[lang]/listing
         <aside className="flex flex-col gap-5">
           <Card className="gap-0 rounded-lg px-5 pt-4 pb-5 shadow-[0_2px_12px_rgba(20,30,25,.06)] ring-0">
             <p className="text-[1.6875rem] font-bold text-brand"><RiyalPrice amount={listing.price} /></p>
+            <p className="mt-1 flex items-center gap-1.5 text-xs text-muted-foreground">
+              <Clock className="size-3.5" />
+              {fmt(p.listedAgo, { when: listedAgo })}
+            </p>
             {stats && (
               <p className="mt-1 text-xs text-muted-foreground">
                 {formatListingStats(locale, stats, t.common.stats)}
@@ -233,6 +268,15 @@ export default async function ListingPage({ params }: PageProps<"/[lang]/listing
             {showContact && seller && (
               <ContactButtons sellerId={seller.id} listingId={listing.id} whatsappText={whatsappText} variant="sidebar" />
             )}
+            {isOwner && (
+              <OwnerActions
+                listingId={listing.id}
+                status={listing.status}
+                featureSlots={featured ? 0 : (quota?.featuredRemaining ?? 0)}
+                featureDays={SELF_FEATURE_DAYS}
+                canUpgrade={!featured && !!quota && quota.plan !== "showroom"}
+              />
+            )}
             <div className={`grid gap-2.5 ${isOwner ? "mt-4 grid-cols-1" : "mt-3 grid-cols-2"}`}>
               {!isOwner && <FavoriteButton listingId={listing.id} favorited={favoriteIds.has(listing.id)} variant="label" />}
               <ShareButton title={title} />
@@ -244,6 +288,10 @@ export default async function ListingPage({ params }: PageProps<"/[lang]/listing
                 <div className="flex items-center gap-3 pt-5">
                   {storefront ? (
                     <DealerLogo name={storefront.name} logoUrl={storefront.logoUrl} size="sm" />
+                  ) : seller.avatar_key ? (
+                    <span className="relative size-11 shrink-0 overflow-hidden rounded-full bg-canvas">
+                      <Image src={publicUrl(seller.avatar_key)} alt="" fill sizes="44px" className="object-cover" />
+                    </span>
                   ) : (
                     <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-charcoal text-lime">
                       <ShieldCheck className="size-5" strokeWidth={1.8} />

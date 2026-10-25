@@ -42,7 +42,7 @@ export default async function RootLayout({ children, params }: LayoutProps<"/[la
 
   return (
     <html lang={lang} dir={dir(lang)} className={cn("h-full font-sans antialiased", ...fonts)}>
-      <body className="min-h-full flex flex-col">
+      <body className="min-h-full flex flex-col" suppressHydrationWarning>
         <DirectionProvider dir={dir(lang)}>
           <I18nProvider t={dictionaries[lang]} locale={lang}>
             <SiteHeader />

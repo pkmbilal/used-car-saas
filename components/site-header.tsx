@@ -1,7 +1,7 @@
 import Link from "@/components/locale-link";
 import { Car } from "lucide-react";
 import { BrandLink } from "@/components/brand";
-import { MobileNav, UserMenu, type HeaderLink } from "@/components/header-menus";
+import { MobileNav, UserMenu, type HeaderLink, type HeaderUser } from "@/components/header-menus";
 import { HeaderShell } from "@/components/header-shell";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { outlineButton, sellButton } from "@/components/header-styles";
@@ -10,6 +10,7 @@ import { NavLink } from "@/components/nav-link";
 import { Button } from "@/components/ui/button";
 import { getCurrentUser } from "@/lib/auth";
 import { getDictionary } from "@/lib/i18n-server";
+import { publicUrl } from "@/lib/r2";
 
 export async function SiteHeader() {
   const current = await getCurrentUser();
@@ -38,12 +39,22 @@ export async function SiteHeader() {
         { href: "/account", label: t.nav.account, hint: t.nav.hints.account, icon: "account" },
       ]
     : [];
-  // On phones the bottom tab bar covers Home, Buy, Sell, Saved and Account;
-  // the menu keeps the rest.
-  const tabHrefs = ["/", "/listings", "/dashboard", "/account/become-seller", "/favorites", "/account"];
+  const user: HeaderUser | null = current
+    ? {
+        name: current.profile.full_name || current.user.email || t.nav.account,
+        avatarUrl: current.profile.avatar_key ? publicUrl(current.profile.avatar_key) : null,
+        email: current.user.email ?? null,
+        role: current.profile.role,
+        plan: current.profile.plan,
+        isAdmin: current.profile.is_admin,
+      }
+    : null;
+  // On phones the bottom tab bar covers Home, Buy, Sell and Saved, and its
+  // account tab opens the account links; the menu keeps the rest.
+  const tabHrefs = ["/", "/listings", "/dashboard", "/account/become-seller", "/favorites"];
   // The footer (with Contact) is hidden on phones, so the menu links it instead.
   const menuLinks = [
-    ...[...mainLinks, ...accountLinks].filter((link) => !tabHrefs.includes(link.href)),
+    ...mainLinks.filter((link) => !tabHrefs.includes(link.href)),
     { href: "/contact", label: t.nav.contact },
   ];
 
@@ -61,17 +72,8 @@ export async function SiteHeader() {
           </div>
           <div className="ms-auto hidden items-center gap-3 md:flex">
             <LanguageSwitcher className="rounded-full px-2 text-label font-medium text-white/70 transition-colors hover:text-white" />
-            {current ? (
-              <UserMenu
-                user={{
-                  name: current.profile.full_name || current.user.email || t.nav.account,
-                  email: current.user.email ?? null,
-                  role: current.profile.role,
-                  plan: current.profile.plan,
-                  isAdmin: current.profile.is_admin,
-                }}
-                links={accountLinks}
-              />
+            {user ? (
+              <UserMenu user={user} links={accountLinks} />
             ) : (
               <Button asChild variant="outline" className={outlineButton}>
                 <Link href="/login">{t.nav.signIn}</Link>
@@ -89,7 +91,7 @@ export async function SiteHeader() {
           </div>
         </nav>
       </HeaderShell>
-      <MobileTabBar signedIn={!!current} isSeller={isSeller} />
+      <MobileTabBar user={user} isSeller={isSeller} accountLinks={accountLinks} />
     </>
   );
 }

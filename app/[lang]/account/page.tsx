@@ -6,7 +6,9 @@ import { fmt } from "@/lib/dictionary";
 import { formatMonthYear } from "@/lib/format";
 import { getDictionary } from "@/lib/i18n-server";
 import { isDealerPlan } from "@/lib/plans";
+import { publicUrl } from "@/lib/r2";
 import { updateProfile } from "./actions";
+import { AvatarUploader } from "./avatar-uploader";
 import { ProfileForm } from "./profile-form";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -35,6 +37,13 @@ export default async function AccountPage({ searchParams }: PageProps<"/[lang]/a
           {a.welcome}
         </p>
       )}
+
+      <div className="mt-8">
+        <AvatarUploader
+          name={profile.full_name}
+          avatarUrl={profile.avatar_key ? publicUrl(profile.avatar_key) : null}
+        />
+      </div>
 
       <div className="mt-8">
         <ProfileForm profile={profile} action={updateProfile} submitLabel={a.save} />

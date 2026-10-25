@@ -1,0 +1,378 @@
+- generic:
+  - banner [aria-hidden]:
+    - navigation:
+      - link:
+        - /url: /ar
+      - generic:
+        - link:
+          - /url: /ar
+          - text: الرئيسية
+        - link:
+          - /url: /ar/listings
+          - text: شراء سيارة
+        - link:
+          - /url: /ar/dealers
+          - text: المعارض
+        - link:
+          - /url: /ar/locations
+          - text: المدن
+        - link:
+          - /url: /ar/pricing
+          - text: الباقات
+      - generic:
+        - link:
+          - /url: /en/listings/49b92fab-c94a-4de1-947f-308845acd0c8
+          - text: English
+        - link:
+          - /url: /ar/login
+          - text: تسجيل الدخول
+        - link:
+          - /url: /ar/account/become-seller
+          - text: بِع سيارتك
+  - generic:
+    - main:
+      - generic [aria-hidden]:
+        - generic:
+          - navigation:
+            - list:
+              - listitem:
+                - link:
+                  - /url: /ar/listings
+                  - text: سيارات للبيع
+              - listitem [aria-hidden]
+              - listitem:
+                - link:
+                  - /url: /ar/listings?make=Toyota
+                  - text: تويوتا
+              - listitem [aria-hidden]
+              - listitem:
+                - link:
+                  - /url: /ar/listings?make=Toyota&model=Camry
+                  - text: كامري
+          - generic:
+            - heading [level=1]: تويوتا كامري
+            - generic: مميز
+          - paragraph:
+            - generic: "2019"
+            - generic: ·
+            - generic: 142,000 كم
+            - generic: ·
+            - generic: أوتوماتيك
+            - generic: ·
+            - generic: الدمام
+          - paragraph:
+            - generic:
+              - generic: ريال سعودي
+              - text: 58,000
+      - generic [aria-hidden]:
+        - generic:
+          - generic:
+            - generic:
+              - button
+              - generic: مميز
+              - button
+              - button
+              - button
+              - generic: 3 / 4
+            - list:
+              - listitem:
+                - button
+              - listitem:
+                - button
+              - listitem:
+                - button
+              - listitem:
+                - button
+          - generic:
+            - heading [level=2]: نظرة عامة
+            - generic:
+              - generic:
+                - generic:
+                  - term: الماركة
+                  - definition: تويوتا
+              - generic:
+                - generic:
+                  - term: الموديل
+                  - definition: كامري
+              - generic:
+                - generic:
+                  - term: سنة الصنع
+                  - definition: "2019"
+              - generic:
+                - generic:
+                  - term: الممشى
+                  - definition: 142,000 كم
+              - generic:
+                - generic:
+                  - term: المعدل السنوي
+                  - definition: 17,750 كم / سنة
+              - generic:
+                - generic:
+                  - term: نوع الوقود
+                  - definition: بنزين
+              - generic:
+                - generic:
+                  - term: الحالة
+                  - definition: جيدة
+              - generic:
+                - generic:
+                  - term: ناقل الحركة
+                  - definition: أوتوماتيك
+              - generic:
+                - generic:
+                  - term: نوع الهيكل
+                  - definition: سيدان
+              - generic:
+                - generic:
+                  - term: المدينة
+                  - definition: الدمام
+              - generic:
+                - generic:
+                  - term: تاريخ الإعلان
+                  - definition: أكتوبر 2026
+          - generic:
+            - heading [level=2]: المزايا
+            - list:
+              - listitem: بلوتوث
+              - listitem: كاميرا خلفية
+              - listitem: مثبت سرعة
+        - complementary:
+          - generic:
+            - paragraph:
+              - generic:
+                - generic: ريال سعودي
+                - text: 58,000
+            - paragraph: نُشر قبل 3 أسابيع
+            - generic:
+              - button: إظهار رقم الجوال
+            - generic:
+              - generic:
+                - button: حفظ
+              - button: مشاركة
+            - generic:
+              - generic:
+                - paragraph: Mohammed Bilal
+                - generic:
+                  - generic: بائع فرد
+                  - generic:
+                    - generic: هوية موثقة
+                    - generic: بريد موثق
+            - generic:
+              - paragraph:
+                - generic: الموقع الدمام، المملكة العربية السعودية
+              - paragraph:
+                - generic: عضو منذ سبتمبر 2026
+            - link:
+              - /url: /ar/sellers/b6996089-e12d-4f4b-97e6-2486908e6a3d
+              - text: عرض إعلانات البائع ←
+          - generic:
+            - heading [level=2]: نصائح للشراء بأمان
+            - list:
+              - listitem: قابل البائع في مكان عام مزدحم وفي وضح النهار.
+              - listitem: لا تدفع عربونًا ولا تحوّل أي مبلغ قبل أن ترى السيارة بنفسك.
+              - listitem: تأكد من تطابق الاستمارة مع هوية البائع ورقم هيكل السيارة.
+              - listitem: افحص السيارة لدى ميكانيكي تثق به.
+          - generic:
+            - button: الإبلاغ عن هذا الإعلان
+      - generic [aria-hidden]:
+        - generic:
+          - heading [level=2]: سيارات مشابهة قد تعجبك
+          - link:
+            - /url: /ar/listings?make=Toyota&model=Camry
+            - text: عرض الكل ←
+        - generic:
+          - list:
+            - listitem:
+              - generic:
+                - generic:
+                  - link:
+                    - /url: /ar/listings/98bdba56-f372-4f09-ae90-12e0ca26e51a
+                    - generic: معرض
+                    - generic:
+                      - paragraph: تويوتا يارس
+                      - paragraph:
+                        - generic: "2023"
+                        - generic [aria-hidden]: ·
+                        - generic: 110,000 كم
+                        - generic [aria-hidden]: ·
+                        - generic: أوتوماتيك
+                      - paragraph:
+                        - generic:
+                          - generic: ريال سعودي
+                          - text: 47,000
+                      - generic:
+                        - generic: سيدان
+                        - generic: بنزين
+                        - generic: الجبيل
+                - button
+            - listitem:
+              - generic:
+                - generic:
+                  - link:
+                    - /url: /ar/listings/f0c27368-5897-4515-9df3-cc3f23e23ff7
+                    - generic:
+                      - generic:
+                        - generic: بائع فرد
+                        - generic: هوية موثقة
+                    - generic:
+                      - paragraph: تويوتا هايلكس
+                      - paragraph:
+                        - generic: "2018"
+                        - generic [aria-hidden]: ·
+                        - generic: 210,000 كم
+                        - generic [aria-hidden]: ·
+                        - generic: عادي
+                      - paragraph:
+                        - generic:
+                          - generic: ريال سعودي
+                          - text: 62,000
+                      - generic:
+                        - generic: بيك أب
+                        - generic: ديزل
+                        - generic: الأحساء
+                - button
+            - listitem:
+              - generic:
+                - generic:
+                  - link:
+                    - /url: /ar/listings/ea953000-8b7b-45d1-b13e-31ea447dca45
+                    - generic: معرض
+                    - generic:
+                      - paragraph: تويوتا لاندكروزر
+                      - paragraph:
+                        - generic: "2022"
+                        - generic [aria-hidden]: ·
+                        - generic: 45,000 كم
+                        - generic [aria-hidden]: ·
+                        - generic: أوتوماتيك
+                      - paragraph:
+                        - generic:
+                          - generic: ريال سعودي
+                          - text: 335,000
+                      - generic:
+                        - generic: SUV
+                        - generic: بنزين
+                        - generic: الجبيل
+                - button
+            - listitem:
+              - generic:
+                - generic:
+                  - link:
+                    - /url: /ar/listings/be70b3c4-6ccd-4829-9e28-63e26407420d
+                    - generic:
+                      - generic:
+                        - generic: بائع فرد
+                        - generic: هوية موثقة
+                    - generic:
+                      - paragraph: هيونداي إلنترا
+                      - paragraph:
+                        - generic: "2020"
+                        - generic [aria-hidden]: ·
+                        - generic: 98,000 كم
+                        - generic [aria-hidden]: ·
+                        - generic: أوتوماتيك
+                      - paragraph:
+                        - generic:
+                          - generic: ريال سعودي
+                          - text: 46,500
+                      - generic:
+                        - generic: سيدان
+                        - generic: بنزين
+                        - generic: الخبر
+                - button
+  - contentinfo [aria-hidden]:
+    - generic:
+      - generic:
+        - link:
+          - /url: /ar
+        - paragraph: سوق السيارات المستعملة في المملكة العربية السعودية. اشترِ وبِع مباشرة مع البائعين.
+      - generic:
+        - paragraph: شراء
+        - link:
+          - /url: /ar/listings
+          - text: تصفح السيارات
+        - link:
+          - /url: /ar/favorites
+          - text: السيارات المحفوظة
+        - link:
+          - /url: /ar/saved-searches
+          - text: عمليات البحث المحفوظة
+      - generic:
+        - paragraph: الماركات الأكثر طلبًا
+        - link:
+          - /url: /ar/brands/toyota
+          - text: تويوتا
+        - link:
+          - /url: /ar/brands/hyundai
+          - text: هيونداي
+        - link:
+          - /url: /ar/brands/nissan
+          - text: نيسان
+        - link:
+          - /url: /ar/brands/lexus
+          - text: لكزس
+      - generic:
+        - paragraph: المدن
+        - link:
+          - /url: /ar/locations/dammam
+          - text: الدمام
+        - link:
+          - /url: /ar/locations/jubail
+          - text: الجبيل
+        - link:
+          - /url: /ar/locations/khobar
+          - text: الخبر
+        - link:
+          - /url: /ar/locations/dhahran
+          - text: الظهران
+        - link:
+          - /url: /ar/locations
+          - text: جميع المدن
+      - generic:
+        - paragraph: بيع
+        - link:
+          - /url: /ar/account/become-seller
+          - text: بِع سيارتك
+        - link:
+          - /url: /ar/pricing
+          - text: الباقات
+        - link:
+          - /url: /ar/dashboard
+          - text: لوحة البائع
+        - link:
+          - /url: /ar/account
+          - text: حسابي
+    - generic:
+      - generic:
+        - paragraph: © 2026 كارسوق، أحد منتجات CodeSudio. جميع الحقوق محفوظة.
+        - navigation:
+          - link:
+            - /url: /ar/contact
+            - text: تواصل معنا
+          - link:
+            - /url: /ar/privacy
+            - text: سياسة الخصوصية
+          - link:
+            - /url: /ar/terms
+            - text: شروط الاستخدام
+  - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=f1e87] [cursor=pointer]
+  - alert
+  - dialog [ref=f1e113]:
+    - heading "2019 تويوتا كامري" [level=2] [ref=f1e114]
+    - generic [ref=f1e115]:
+      - generic [ref=f1e116]: 3 / 4
+      - button "إغلاق" [active] [ref=f1e118] [cursor=pointer]
+    - generic [ref=f1e119]:
+      - img "2019 تويوتا كامري، الصورة 3 من 4" [ref=f1e120]
+      - button "الصورة السابقة" [ref=f1e121] [cursor=pointer]
+      - button "الصورة التالية" [ref=f1e122] [cursor=pointer]
+    - list [ref=f1e123]:
+      - listitem [ref=f1e124]:
+        - button "عرض الصورة 1" [ref=f1e125] [cursor=pointer]
+      - listitem [ref=f1e126]:
+        - button "عرض الصورة 2" [ref=f1e127] [cursor=pointer]
+      - listitem [ref=f1e128]:
+        - button "عرض الصورة 3" [ref=f1e129] [cursor=pointer]
+      - listitem [ref=f1e130]:
+        - button "عرض الصورة 4" [ref=f1e131] [cursor=pointer]

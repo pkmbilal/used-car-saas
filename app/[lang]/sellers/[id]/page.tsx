@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { cache } from "react";
 import { ContactButtons } from "@/app/[lang]/listings/[id]/contact-buttons";
+import { Avatar } from "@/components/avatar";
 import { DealerBadge, DealerLogo } from "@/components/dealer-logo";
 import { ListingGrid } from "@/components/listing-card";
 import { VerificationBadges } from "@/components/verification-badges";
@@ -11,6 +12,7 @@ import { cityName, count, fmt } from "@/lib/dictionary";
 import { formatMonthYear } from "@/lib/format";
 import { getDictionary, localeAlternates } from "@/lib/i18n-server";
 import { getSellerProfile, isFeatured } from "@/lib/listings";
+import { publicUrl } from "@/lib/r2";
 import { getStorefront } from "@/lib/storefront";
 
 const getSeller = cache(getSellerProfile);
@@ -79,13 +81,20 @@ export default async function SellerPage({ params }: PageProps<"/[lang]/sellers/
             </div>
           </Card>
         ) : (
-          <>
-            <div className="flex flex-wrap items-center gap-3">
-              <h1 className="text-2xl font-semibold tracking-tight">{profile.full_name ?? s.seller}</h1>
-              <VerificationBadges profile={profile} />
+          <div className="flex items-center gap-4">
+            <Avatar
+              name={profile.full_name}
+              src={profile.avatar_key ? publicUrl(profile.avatar_key) : null}
+              size="lg"
+            />
+            <div className="min-w-0">
+              <div className="flex flex-wrap items-center gap-3">
+                <h1 className="text-2xl font-semibold tracking-tight">{profile.full_name ?? s.seller}</h1>
+                <VerificationBadges profile={profile} />
+              </div>
+              <p className="mt-1 text-sm text-muted-foreground">{memberSince}</p>
             </div>
-            <p className="mt-1 text-sm text-muted-foreground">{memberSince}</p>
-          </>
+          </div>
         )}
 
         {featured.length > 0 && (

@@ -53,6 +53,24 @@ export function formatDay(date: string, locale: Locale): string {
   return dateFormatter(locale, "day").format(new Date(date));
 }
 
+const relativeFormatters = new Map<Locale, Intl.RelativeTimeFormat>();
+
+const DAY_MS = 24 * 60 * 60 * 1000;
+
+// "today", "3 days ago", "2 weeks ago", "5 months ago".
+export function formatRelativeDays(date: string, locale: Locale): string {
+  let formatter = relativeFormatters.get(locale);
+  if (!formatter) {
+    formatter = new Intl.RelativeTimeFormat(INTL_LOCALE[locale], { numeric: "auto" });
+    relativeFormatters.set(locale, formatter);
+  }
+  const days = Math.max(0, Math.floor((Date.now() - new Date(date).getTime()) / DAY_MS));
+  if (days < 7) return formatter.format(-days, "day");
+  if (days < 30) return formatter.format(-Math.floor(days / 7), "week");
+  if (days < 365) return formatter.format(-Math.floor(days / 30), "month");
+  return formatter.format(-Math.floor(days / 365), "year");
+}
+
 // "120 views · 4 calls · 9 WhatsApps", for the seller's own listings.
 export function formatListingStats(
   locale: Locale,

@@ -1,8 +1,12 @@
 "use server";
 
+import { randomUUID } from "node:crypto";
 import { revalidatePath } from "next/cache";
 import { getCurrentUser } from "@/lib/auth";
+import { avatarKeyPattern, MAX_AVATAR_BYTES } from "@/lib/avatar";
 import { isCity } from "@/lib/cities";
+import { IMAGE_TYPES } from "@/lib/listing-options";
+import { deleteObjects, presignPut } from "@/lib/r2";
 import {
   parseDealerApplication,
   requestDealerDocUpload,
@@ -125,4 +129,71 @@ export async function submitDealerApplicationAction(
   if (submitError) return { error: submitError };
 
   return localeRedirect("/account/dealer-application");
+}
+
+// ---------------------------------------------------------------------------
+// Profile photo: browser asks for a presigned URL, PUTs straight to R2, then
+// confirms.
+// ---------------------------------------------------------------------------
+
+export type AvatarActionResult = { error?: string };
+
+export async function requestAvatarUpload(
+  contentType: string,
+  size: number,
+): Promise<{ url: string; key: string } | { error: string }> {
+  const current = await getCurrentUser();
+  if (!current) return { error: "Upload failed." };
+
+  if (!(contentType in IMAGE_TYPES)) return { error: "Use a JPEG, PNG or WebP image." };
+  if (!Number.isInteger(size) || size <= 0 || size > MAX_AVATAR_BYTES) {
+    return { error: "Profile photos must be under 2 MB." };
+  }
+
+  const ext = IMAGE_TYPES[contentType as keyof typeof IMAGE_TYPES];
+  const key = `avatars/${current.user.id}/${randomUUID()}.${ext}`;
+  const url = await presignPut(key, contentType, size);
+  return { url, key };
+}
+
+export async function confirmAvatarUpload(key: string): Promise<AvatarActionResult> {
+  const current = await getCurrentUser();
+  if (!current) return { error: "Upload failed." };
+
+  // Only accept keys the presign step could have issued for this user.
+  if (!avatarKeyPattern(current.user.id).test(key)) return { error: "Invalid upload." };
+
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from("profiles")
+    .update({ avatar_key: key })
+    .eq("id", current.user.id);
+  if (error) return { error: "Could not save the photo. Try again." };
+
+  await removeOldAvatar(current.profile.avatar_key);
+  revalidatePath("/", "layout");
+  return {};
+}
+
+export async function removeAvatar(): Promise<AvatarActionResult> {
+  const current = await getCurrentUser();
+  if (!current) return { error: "Could not remove the photo. Try again." };
+
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from("profiles")
+    .update({ avatar_key: null })
+    .eq("id", current.user.id);
+  if (error) return { error: "Could not remove the photo. Try again." };
+
+  await removeOldAvatar(current.profile.avatar_key);
+  revalidatePath("/", "layout");
+  return {};
+}
+
+// Best effort: the profile no longer points at it, so a failed delete only
+// leaves an orphaned object behind.
+async function removeOldAvatar(key: string | null) {
+  if (!key) return;
+  await deleteObjects([key]).catch(() => {});
 }

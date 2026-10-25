@@ -52,6 +52,7 @@ function SignOutForm({ children }: { children: React.ReactNode }) {
 
 export type HeaderUser = {
   name: string;
+  avatarUrl: string | null;
   email: string | null;
   role: Profile["role"];
   plan: Profile["plan"];
@@ -67,12 +68,48 @@ const LINK_ICONS: Record<NonNullable<HeaderLink["icon"]>, LucideIcon> = {
   account: Settings,
 };
 
+function useRoleLabel(user: HeaderUser) {
+  const { t } = useDictionary();
+  return user.role === "seller" ? `${t.nav.roles.seller} · ${t.plans.labels[user.plan]}` : t.nav.roles.buyer;
+}
+
+// Name, email and role badges on the brand gradient, atop both account menus.
+function UserCard({ user }: { user: HeaderUser }) {
+  const { t } = useDictionary();
+  const roleLabel = useRoleLabel(user);
+  const badgeClass = "inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium ring-1";
+
+  return (
+    <div className="bg-gradient-to-br from-forest via-forest to-brand px-4 pt-4 pb-5 text-white">
+      <div className="flex items-center gap-3">
+        <span className="rounded-full ring-2 ring-white/30">
+          <Avatar name={user.name} src={user.avatarUrl} size="lg" />
+        </span>
+        <div className="min-w-0">
+          <p className="truncate font-semibold">{user.name}</p>
+          {user.email && <p className="truncate text-sm text-white/70">{user.email}</p>}
+          <div className="mt-1.5 flex flex-wrap gap-1.5">
+            <span className={`${badgeClass} bg-white/10 text-white ring-white/20`}>
+              <UserRound className="size-3" aria-hidden />
+              {roleLabel}
+            </span>
+            {user.isAdmin && (
+              <span className={`${badgeClass} bg-lime/15 text-lime ring-lime/30`}>
+                <ShieldCheck className="size-3" aria-hidden />
+                {t.nav.administrator}
+              </span>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // The signed-in user, with their account links and sign out.
 export function UserMenu({ user, links }: { user: HeaderUser; links: HeaderLink[] }) {
   const { t } = useDictionary();
-  const roleLabel =
-    user.role === "seller" ? `${t.nav.roles.seller} · ${t.plans.labels[user.plan]}` : t.nav.roles.buyer;
-  const badgeClass = "inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium ring-1";
+  const roleLabel = useRoleLabel(user);
 
   return (
     <DropdownMenu>
@@ -81,7 +118,7 @@ export function UserMenu({ user, links }: { user: HeaderUser; links: HeaderLink[
         className="group flex items-center gap-2.5 rounded-full py-1 ps-1 pe-3 ring-1 ring-transparent transition-colors outline-none hover:bg-white/10 hover:ring-white/15 focus-visible:ring-lime aria-expanded:bg-white/10 aria-expanded:ring-white/15"
       >
         <span className="relative">
-          <Avatar name={user.name} />
+          <Avatar name={user.name} src={user.avatarUrl} />
           <span className="absolute -end-0.5 -bottom-0.5 size-3 rounded-full bg-green-500 ring-2 ring-charcoal" aria-hidden />
         </span>
         <span className="hidden max-w-36 text-start lg:block">
@@ -101,29 +138,7 @@ export function UserMenu({ user, links }: { user: HeaderUser; links: HeaderLink[
         sideOffset={8}
         className="light w-80 overflow-hidden rounded-xl p-0 shadow-xl ring-1 ring-black/5"
       >
-        <div className="bg-gradient-to-br from-forest via-forest to-brand px-4 pt-4 pb-5 text-white">
-          <div className="flex items-center gap-3">
-            <span className="rounded-full ring-2 ring-white/30">
-              <Avatar name={user.name} size="lg" />
-            </span>
-            <div className="min-w-0">
-              <p className="truncate font-semibold">{user.name}</p>
-              {user.email && <p className="truncate text-sm text-white/70">{user.email}</p>}
-              <div className="mt-1.5 flex flex-wrap gap-1.5">
-                <span className={`${badgeClass} bg-white/10 text-white ring-white/20`}>
-                  <UserRound className="size-3" aria-hidden />
-                  {roleLabel}
-                </span>
-                {user.isAdmin && (
-                  <span className={`${badgeClass} bg-lime/15 text-lime ring-lime/30`}>
-                    <ShieldCheck className="size-3" aria-hidden />
-                    {t.nav.administrator}
-                  </span>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
+        <UserCard user={user} />
 
         <div className="p-1.5">
           {links.map(({ href, label, hint, icon }) => {
@@ -204,6 +219,76 @@ export function MobileNav({ links, signedIn }: { links: HeaderLink[]; signedIn: 
               <Link href="/login">{t.nav.signIn}</Link>
             </Button>
           )}
+        </div>
+      </SheetContent>
+    </Sheet>
+  );
+}
+
+// The bottom tab bar's account tab: the user's avatar, opening their menu as a bottom sheet.
+export function MobileAccountSheet({
+  user,
+  links,
+  active,
+}: {
+  user: HeaderUser;
+  links: HeaderLink[];
+  active: boolean;
+}) {
+  const { t } = useDictionary();
+  const firstName = user.name.split(/\s+/)[0] || t.nav.tabs.account;
+  const rowClass = "flex items-center gap-3 rounded-lg px-2 py-2 text-start active:bg-canvas";
+
+  return (
+    <Sheet>
+      <SheetTrigger
+        aria-label={t.nav.accountMenu}
+        className={`flex h-full w-full flex-col items-center justify-center gap-1 text-[0.6875rem] font-medium transition-colors ${
+          active ? "text-brand" : "text-zinc-500 active:text-ink"
+        }`}
+      >
+        <span className={`relative rounded-full ring-2 ${active ? "ring-brand" : "ring-transparent"}`}>
+          <Avatar name={user.name} src={user.avatarUrl} size="sm" />
+          <span className="absolute -end-0.5 -bottom-0.5 size-2 rounded-full bg-green-500 ring-2 ring-white" aria-hidden />
+        </span>
+        <span className="max-w-16 truncate">{firstName}</span>
+      </SheetTrigger>
+      <SheetContent
+        side="bottom"
+        className="light pb-safe max-h-[85vh] gap-0 overflow-y-auto rounded-t-2xl border-0 p-0 [&>[data-slot=sheet-close]]:text-white"
+      >
+        <SheetTitle className="sr-only">{t.nav.accountMenu}</SheetTitle>
+        <UserCard user={user} />
+
+        <nav className="p-1.5">
+          {links.map(({ href, label, hint, icon }) => {
+            const Icon = icon ? LINK_ICONS[icon] : UserRound;
+            return (
+              <SheetClose key={href} asChild>
+                <Link href={href} className={rowClass}>
+                  <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-canvas text-forest ring-1 ring-line">
+                    <Icon className="size-4" aria-hidden />
+                  </span>
+                  <span className="min-w-0">
+                    <span className="block text-sm font-medium">{label}</span>
+                    {hint && <span className="block truncate text-xs text-muted-foreground">{hint}</span>}
+                  </span>
+                </Link>
+              </SheetClose>
+            );
+          })}
+        </nav>
+
+        <Separator />
+        <div className="bg-canvas/70 p-1.5">
+          <SignOutForm>
+            <button type="submit" className={`${rowClass} w-full text-red-600`}>
+              <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-white ring-1 ring-red-100">
+                <LogOut className="size-4" aria-hidden />
+              </span>
+              <span className="text-sm font-medium">{t.nav.signOut}</span>
+            </button>
+          </SignOutForm>
         </div>
       </SheetContent>
     </Sheet>

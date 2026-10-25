@@ -1,0 +1,38 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - navigation [ref=e3]:
+      - link [ref=e4] [cursor=pointer]:
+        - /url: /en
+        - img "KarSouq" [ref=e5]
+      - button "Menu" [ref=e7] [cursor=pointer]
+  - navigation "Main" [ref=e8]:
+    - list [ref=e9]:
+      - listitem [ref=e10]:
+        - link "Home" [ref=e11] [cursor=pointer]:
+          - /url: /en
+      - listitem [ref=e15]:
+        - link "Buy" [ref=e16] [cursor=pointer]:
+          - /url: /en/listings
+      - listitem [ref=e20]:
+        - link [ref=e21] [cursor=pointer]:
+          - /url: /en/account/become-seller
+      - listitem [ref=e24]:
+        - link "Saved" [ref=e25] [cursor=pointer]:
+          - /url: /en/favorites
+      - listitem [ref=e28]:
+        - link "Sign in" [ref=e29] [cursor=pointer]:
+          - /url: /en/login
+  - status [ref=e34]:
+    - paragraph [aria-hidden] [ref=e47]:
+      - generic [ref=e48]: Buy
+      - generic [ref=e50]: Sell
+      - generic [ref=e53]: Drive
+    - generic [ref=e56]: Loading…
+  - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=e62] [cursor=pointer]:
+    - generic [ref=e65]:
+      - text: Compiling
+      - generic [ref=e66]:
+        - generic [ref=e67]: .
+        - generic [ref=e68]: .
+        - generic [ref=e69]: .
