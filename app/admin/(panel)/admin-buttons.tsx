@@ -206,12 +206,17 @@ export function ReasonActionButton({
   );
 }
 
-export function RemoveListingButton({ listingId }: { listingId: string }) {
+// `autoHidden`: the listing is already hidden by reports; this confirms it.
+export function RemoveListingButton({ listingId, autoHidden = false }: { listingId: string; autoHidden?: boolean }) {
   return (
     <ReasonActionButton
-      label="Remove listing"
-      title="Remove this listing?"
-      description="It disappears from search and its open reports are closed. The seller sees your reason."
+      label={autoHidden ? "Keep removed" : "Remove listing"}
+      title={autoHidden ? "Keep this listing removed?" : "Remove this listing?"}
+      description={
+        autoHidden
+          ? "It stays hidden and its open reports are closed. The seller sees your reason instead of the automatic one."
+          : "It disappears from search and its open reports are closed. The seller sees your reason."
+      }
       success="Listing removed"
       action={removeListingAction.bind(null, listingId)}
     />

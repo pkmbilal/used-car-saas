@@ -4,6 +4,7 @@ import {
   BadgeX,
   Ban,
   CircleCheck,
+  EyeOff,
   Flag,
   RotateCcw,
   Star,
@@ -13,6 +14,7 @@ import {
 } from "lucide-react";
 import type { AdminActionRow, AdminActionType } from "@/lib/admin";
 import { formatDay } from "@/lib/format";
+import { AUTO_HIDE_REPORT_THRESHOLD } from "@/lib/moderation";
 import { ADMIN_ACTION_LABELS } from "./labels";
 import { EmptyState, linkClass } from "./ui";
 
@@ -29,6 +31,7 @@ const ACTION_STYLE: Record<AdminActionType, { icon: LucideIcon; tone: string }> 
   id_revoked: { icon: BadgeX, tone: "bg-red-50 text-red-700 dark:bg-red-950 dark:text-red-300" },
   dealer_approved: { icon: Store, tone: "bg-green-50 text-green-700 dark:bg-green-950 dark:text-green-300" },
   dealer_rejected: { icon: Store, tone: "bg-red-50 text-red-700 dark:bg-red-950 dark:text-red-300" },
+  listing_auto_hidden: { icon: EyeOff, tone: "bg-red-50 text-red-700 dark:bg-red-950 dark:text-red-300" },
 };
 
 // Moderation log as a timeline, shared by the Activity page and the user
@@ -79,7 +82,11 @@ export function ActionList({ actions, empty }: { actions: AdminActionRow[]; empt
                   {action.reason}
                 </p>
               )}
-              <p className="mt-1 text-xs text-zinc-500">By {action.admin?.full_name ?? "a former admin"}</p>
+              <p className="mt-1 text-xs text-zinc-500">
+                {action.action === "listing_auto_hidden"
+                  ? `Automatic, after ${AUTO_HIDE_REPORT_THRESHOLD} reports`
+                  : `By ${action.admin?.full_name ?? "a former admin"}`}
+              </p>
             </div>
           </li>
         );

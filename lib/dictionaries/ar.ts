@@ -693,6 +693,9 @@ export const ar: DictionaryShape<typeof en> = {
     "Keep details under {n} characters.": "يجب ألا تتجاوز التفاصيل {n} حرف.",
     "You've already reported this listing.": "لقد أبلغت عن هذا الإعلان من قبل.",
     "Could not send the report. Try again.": "تعذّر إرسال البلاغ. حاول مرة أخرى.",
+    // Fixed removal reasons (AUTO_HIDE_REASON, SUSPENSION_REMOVAL_REASON)
+    "Hidden for review after multiple reports": "أُخفي للمراجعة بعد تلقّي عدة بلاغات",
+    "Seller account suspended": "حساب البائع موقوف",
     "Pick at least one filter to save.": "اختر فلترًا واحدًا على الأقل لحفظ البحث.",
     "Give the search a name (up to {n} characters).": "أدخل اسمًا للبحث (حتى {n} حرفًا).",
     "You can save up to {n} searches. Delete one first.": "يمكنك حفظ {n} عملية بحث كحد أقصى. احذف واحدة أولًا.",

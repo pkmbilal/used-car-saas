@@ -415,7 +415,7 @@ export type Database = {
         Row: {
           id: string;
           admin_id: string | null;
-          action: "listing_removed" | "listing_restored" | "reports_dismissed" | "listing_unfeatured" | "user_suspended" | "user_unsuspended" | "id_approved" | "id_rejected" | "id_revoked" | "dealer_approved" | "dealer_rejected";
+          action: "listing_removed" | "listing_restored" | "reports_dismissed" | "listing_unfeatured" | "user_suspended" | "user_unsuspended" | "id_approved" | "id_rejected" | "id_revoked" | "dealer_approved" | "dealer_rejected" | "listing_auto_hidden";
           user_id: string | null;
           listing_id: string | null;
           reason: string | null;
@@ -424,7 +424,7 @@ export type Database = {
         Insert: {
           id?: string;
           admin_id?: string | null;
-          action: "listing_removed" | "listing_restored" | "reports_dismissed" | "listing_unfeatured" | "user_suspended" | "user_unsuspended" | "id_approved" | "id_rejected" | "id_revoked" | "dealer_approved" | "dealer_rejected";
+          action: "listing_removed" | "listing_restored" | "reports_dismissed" | "listing_unfeatured" | "user_suspended" | "user_unsuspended" | "id_approved" | "id_rejected" | "id_revoked" | "dealer_approved" | "dealer_rejected" | "listing_auto_hidden";
           user_id?: string | null;
           listing_id?: string | null;
           reason?: string | null;
@@ -433,7 +433,7 @@ export type Database = {
         Update: {
           id?: string;
           admin_id?: string | null;
-          action?: "listing_removed" | "listing_restored" | "reports_dismissed" | "listing_unfeatured" | "user_suspended" | "user_unsuspended" | "id_approved" | "id_rejected" | "id_revoked" | "dealer_approved" | "dealer_rejected";
+          action?: "listing_removed" | "listing_restored" | "reports_dismissed" | "listing_unfeatured" | "user_suspended" | "user_unsuspended" | "id_approved" | "id_rejected" | "id_revoked" | "dealer_approved" | "dealer_rejected" | "listing_auto_hidden";
           user_id?: string | null;
           listing_id?: string | null;
           reason?: string | null;

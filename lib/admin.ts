@@ -2,7 +2,7 @@ import "server-only";
 import { requireAdmin } from "@/lib/auth";
 import { isDealerPlanChoice } from "@/lib/dealer-application-options";
 import { withImageUrls, type ListingStatus } from "@/lib/listings";
-import { SUSPENSION_REMOVAL_REASON } from "@/lib/moderation";
+import { AUTO_HIDE_REASON, SUSPENSION_REMOVAL_REASON } from "@/lib/moderation";
 import {
   FEATURED_ALLOWANCE,
   isPlan,
@@ -539,7 +539,8 @@ async function logAdminAction(
 // Listing moderation
 // ---------------------------------------------------------------------------
 
-// Only live listings can be taken down; resolves any open reports on it.
+// Only live or auto-hidden listings can be taken down; resolves any open
+// reports on it.
 export async function removeListing(listingId: string, reason: string): Promise<AdminResult> {
   const { user } = await requireAdmin();
   const removedReason = reason.trim();
@@ -547,13 +548,19 @@ export async function removeListing(listingId: string, reason: string): Promise<
   if (removedReason.length > 300) return { error: "Keep the reason under 300 characters." };
 
   const supabase = createAdminClient();
-  const { data, error } = await supabase
-    .from("listings")
-    .update({ status: "removed", removed_reason: removedReason })
-    .eq("id", listingId)
-    .eq("status", "active")
-    .select("seller_id");
-  if (error) return { error: "Could not remove the listing. Try again." };
+  const takeDown = () =>
+    supabase
+      .from("listings")
+      .update({ status: "removed", removed_reason: removedReason })
+      .eq("id", listingId);
+  let { data, error } = await takeDown().eq("status", "active").select("seller_id");
+  if (!error && data?.length === 0) {
+    ({ data, error } = await takeDown()
+      .eq("status", "removed")
+      .eq("removed_reason", AUTO_HIDE_REASON)
+      .select("seller_id"));
+  }
+  if (error || !data) return { error: "Could not remove the listing. Try again." };
   if (data.length === 0) return { error: "Only live listings can be removed." };
   await logAdminAction(user.id, "listing_removed", {
     userId: data[0].seller_id,
@@ -603,10 +610,28 @@ export async function dismissReports(listingId: string): Promise<AdminResult> {
 
   const { data: listing } = await supabase
     .from("listings")
-    .select("seller_id")
+    .select("status, removed_reason, seller_id, seller:profiles!listings_seller_id_fkey(suspended_at)")
     .eq("id", listingId)
     .maybeSingle();
   await logAdminAction(user.id, "reports_dismissed", { userId: listing?.seller_id ?? null, listingId });
+
+  // Dismissing clears an auto-hide. A suspended seller's listing stays hidden
+  // under the suspension reason so unsuspending brings it back.
+  if (listing?.status === "removed" && listing.removed_reason === AUTO_HIDE_REASON) {
+    const suspended = !!listing.seller?.suspended_at;
+    const { error: restoreError } = await supabase
+      .from("listings")
+      .update(
+        suspended
+          ? { removed_reason: SUSPENSION_REMOVAL_REASON }
+          : { status: "active", removed_reason: null },
+      )
+      .eq("id", listingId)
+      .eq("status", "removed")
+      .eq("removed_reason", AUTO_HIDE_REASON);
+    if (restoreError) return { error: "Reports dismissed, but the listing could not be restored." };
+    if (!suspended) await logAdminAction(user.id, "listing_restored", { userId: listing.seller_id, listingId });
+  }
   return {};
 }
 
