@@ -8,7 +8,13 @@ const AVATAR_TONES = [
 ];
 
 // Initials on a colour picked from the name, so a person keeps theirs.
-export function Avatar({ name, size = "md" }: { name: string | null; size?: "md" | "lg" }) {
+const AVATAR_SIZES = {
+  sm: "size-6 text-[0.625rem]",
+  md: "size-9 text-sm",
+  lg: "size-16 text-xl",
+};
+
+export function Avatar({ name, size = "md" }: { name: string | null; size?: keyof typeof AVATAR_SIZES }) {
   const label = (name ?? "?").trim() || "?";
   const initials = label
     .split(/\s+/)
@@ -21,9 +27,7 @@ export function Avatar({ name, size = "md" }: { name: string | null; size?: "md"
   return (
     <span
       aria-hidden
-      className={`grid shrink-0 place-items-center rounded-full font-semibold ${AVATAR_TONES[hash % AVATAR_TONES.length]} ${
-        size === "lg" ? "size-16 text-xl" : "size-9 text-sm"
-      }`}
+      className={`grid shrink-0 place-items-center rounded-full font-semibold ${AVATAR_TONES[hash % AVATAR_TONES.length]} ${AVATAR_SIZES[size]}`}
     >
       {initials}
     </span>
