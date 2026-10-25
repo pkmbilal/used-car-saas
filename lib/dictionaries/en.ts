@@ -322,6 +322,11 @@ export const en = {
       "You've published all {limit} listings for this month on {plan}. Your draft is saved: publish it next month, or see the Pricing page to upgrade.",
     quotaReached:
       "You've published all {limit} listings for this month on {plan}. You can still save drafts and publish them next month, or upgrade for more.",
+    draftLimitReached:
+      "You have {limit} unpublished drafts, the most allowed on {plan}. Publish or delete a draft to add another.",
+    draftImportTooMany:
+      "You can add {remaining} more drafts (up to {limit} unpublished at a time). Publish or delete some drafts, or import fewer rows.",
+    draftsUsedOf: "{used} of {limit} drafts",
     summaryPlan: "{plan} plan",
     summaryPlanUntil: "{plan} plan until {date}",
     unlimited: "Unlimited listings",

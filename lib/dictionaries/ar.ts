@@ -348,6 +348,11 @@ export const ar: DictionaryShape<typeof en> = {
       "لقد نشرت جميع إعلاناتك المتاحة لهذا الشهر ({limit}) ضمن {plan}. تم حفظ المسودة: انشرها الشهر القادم، أو اطّلع على صفحة الباقات للترقية.",
     quotaReached:
       "لقد نشرت جميع إعلاناتك المتاحة لهذا الشهر ({limit}) ضمن {plan}. يمكنك حفظ المسودات ونشرها الشهر القادم، أو الترقية للحصول على المزيد.",
+    draftLimitReached:
+      "لديك {limit} مسودات غير منشورة، وهو الحد الأقصى ضمن {plan}. انشر مسودة أو احذفها لإضافة أخرى.",
+    draftImportTooMany:
+      "يمكنك إضافة {remaining} مسودات أخرى فقط (حتى {limit} مسودة غير منشورة في الوقت نفسه). انشر بعض المسودات أو احذفها، أو استورد صفوفًا أقل.",
+    draftsUsedOf: "المسودات: {used} من {limit}",
     summaryPlan: "{plan}",
     summaryPlanUntil: "{plan} حتى {date}",
     unlimited: "إعلانات غير محدودة",
@@ -643,6 +648,7 @@ export const ar: DictionaryShape<typeof en> = {
     "Listing not found.": "الإعلان غير موجود.",
     "This listing was removed by moderators.": "أزال فريق الإشراف هذا الإعلان.",
     "Add at least one photo before publishing.": "أضف صورة واحدة على الأقل قبل النشر.",
+    "Publish this listing before marking it sold.": "انشر هذا الإعلان قبل تحديده كمباع.",
     "Could not update the listing. Try again.": "تعذّر تحديث الإعلان. حاول مرة أخرى.",
     "Could not delete the listing. Try again.": "تعذّر حذف الإعلان. حاول مرة أخرى.",
     "Use a JPEG, PNG or WebP photo.": "استخدم صورة بصيغة JPEG أو PNG أو WebP.",

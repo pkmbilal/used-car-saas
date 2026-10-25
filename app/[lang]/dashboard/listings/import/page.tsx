@@ -9,7 +9,14 @@ import { getDictionary } from "@/lib/i18n-server";
 import { BODY_TYPES, CONDITIONS, FEATURE_VALUES, FUEL_TYPES, TRANSMISSIONS } from "@/lib/listing-options";
 import { IMPORT_COLUMNS, MAX_IMPORT_ROWS } from "@/lib/listing-import";
 import { MAKES } from "@/lib/makes";
-import { getListingQuota, isDealerPlan, quotaReachedNote, quotaSummary } from "@/lib/plans";
+import {
+  draftImportTooManyMessage,
+  getDraftUsage,
+  getListingQuota,
+  isDealerPlan,
+  quotaReachedNote,
+  quotaSummary,
+} from "@/lib/plans";
 import { ImportForm } from "./import-form";
 
 // CSV values stay in English (they're the stored values), so the hints list
@@ -39,8 +46,11 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function ImportListingsPage() {
-  const { profile } = await requireSeller("/dashboard/listings/import");
-  const quota = await getListingQuota();
+  const { user, profile } = await requireSeller("/dashboard/listings/import");
+  const [quota, drafts] = await Promise.all([
+    getListingQuota(),
+    getDraftUsage(user.id, profile.plan),
+  ]);
   const { t, locale } = await getDictionary();
   const p = t.dashboard.import;
   const hints = columnHints(t);
@@ -66,6 +76,11 @@ export default async function ImportListingsPage() {
           </p>
           {quota && (
             <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">{quotaSummary(t, locale, quota)}</p>
+          )}
+          {drafts.remaining < MAX_IMPORT_ROWS && (
+            <p className="mt-6 rounded-md bg-amber-50 px-4 py-3 text-sm text-amber-900 dark:bg-amber-950 dark:text-amber-200">
+              {draftImportTooManyMessage(t, drafts)}
+            </p>
           )}
           {quota?.remaining === 0 && (
             <p className="mt-6 rounded-md bg-amber-50 px-4 py-3 text-sm text-amber-900 dark:bg-amber-950 dark:text-amber-200">

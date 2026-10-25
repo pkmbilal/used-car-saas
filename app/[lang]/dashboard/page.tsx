@@ -10,6 +10,7 @@ import { getDictionary } from "@/lib/i18n-server";
 import { formatDay, formatKm, formatListingStats } from "@/lib/format";
 import { getSellerListings, isFeatured } from "@/lib/listings";
 import {
+  DRAFT_LIMIT,
   getListingQuota,
   isDealerPlan,
   isPlanExpiringSoon,
@@ -29,6 +30,9 @@ export default async function DashboardPage() {
   const { t, locale } = await getDictionary();
   const d = t.dashboard;
   const [listings, quota] = await Promise.all([getSellerListings(user.id), getListingQuota()]);
+  const openDrafts = listings.filter(
+    (listing) => listing.status === "draft" && listing.first_published_at === null,
+  ).length;
   const newListingClass =
     "rounded-md bg-zinc-900 px-4 py-2.5 text-center text-sm text-white max-sm:flex-1 sm:py-2 dark:bg-zinc-100 dark:text-zinc-900";
 
@@ -40,6 +44,8 @@ export default async function DashboardPage() {
           {quota && (
             <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
               {quotaSummary(t, locale, quota)}
+              {" · "}
+              {fmt(t.plans.draftsUsedOf, { used: openDrafts, limit: DRAFT_LIMIT[quota.plan] })}
               {quota.plan !== "showroom" && (
                 <>
                   {" · "}

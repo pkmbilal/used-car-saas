@@ -152,6 +152,33 @@ export async function featureOwnListing(listingId: string): Promise<{ error?: Fe
 // Raised by the enforce_listing_quota trigger.
 export const QUOTA_EXCEEDED_DB_MESSAGE = "listing_quota_exceeded";
 
+// Never-published drafts a seller can hold at once, so drafts can't fill R2
+// with photos. Must match plan_draft_limit in the draft_limit migration, which
+// enforces it (and raises these messages).
+export const DRAFT_LIMIT: Record<Plan, number> = {
+  free: 5,
+  dealer: 50,
+  dealer_pro: 200,
+  showroom: 500,
+};
+export const DRAFT_LIMIT_DB_MESSAGE = "draft_limit_exceeded";
+export const NOT_PUBLISHED_DB_MESSAGE = "listing_not_published";
+
+export type DraftUsage = { plan: Plan; used: number; limit: number; remaining: number };
+
+export async function getDraftUsage(sellerId: string, plan: Plan): Promise<DraftUsage> {
+  const supabase = await createClient();
+  const { count } = await supabase
+    .from("listings")
+    .select("id", { count: "exact", head: true })
+    .eq("seller_id", sellerId)
+    .eq("status", "draft")
+    .is("first_published_at", null);
+  const used = count ?? 0;
+  const limit = DRAFT_LIMIT[plan];
+  return { plan, used, limit, remaining: Math.max(0, limit - used) };
+}
+
 function namedPlan(t: Dictionary, plan: Plan): string {
   return fmt(t.plans.named, { plan: t.plans.labels[plan] });
 }
@@ -163,6 +190,14 @@ export function quotaExceededMessage(t: Dictionary, quota: Pick<ListingQuota, "p
 // Shown on the new-listing and import pages: drafts can still be saved.
 export function quotaReachedNote(t: Dictionary, quota: Pick<ListingQuota, "plan" | "limit">): string {
   return fmt(t.plans.quotaReached, { limit: quota.limit ?? "", plan: namedPlan(t, quota.plan) });
+}
+
+export function draftLimitMessage(t: Dictionary, usage: Pick<DraftUsage, "plan" | "limit">): string {
+  return fmt(t.plans.draftLimitReached, { limit: usage.limit, plan: namedPlan(t, usage.plan) });
+}
+
+export function draftImportTooManyMessage(t: Dictionary, usage: Pick<DraftUsage, "remaining" | "limit">): string {
+  return fmt(t.plans.draftImportTooMany, { remaining: usage.remaining, limit: usage.limit });
 }
 
 export function quotaSummary(t: Dictionary, locale: Locale, quota: ListingQuota): string {
