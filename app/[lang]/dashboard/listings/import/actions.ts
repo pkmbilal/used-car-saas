@@ -2,9 +2,14 @@
 
 import { requireSeller } from "@/lib/auth";
 import { MAX_IMPORT_BYTES, parseListingCsv, type ImportRowError } from "@/lib/listing-import";
-import { isDealerPlan } from "@/lib/plans";
+import {
+  DRAFT_LIMIT_DB_MESSAGE,
+  draftImportTooManyMessage,
+  getDraftUsage,
+  isDealerPlan,
+} from "@/lib/plans";
 import { createClient } from "@/lib/supabase/server";
-import { revalidateLocalized } from "@/lib/i18n-server";
+import { getDictionary, revalidateLocalized } from "@/lib/i18n-server";
 
 export type ImportFormState = {
   error?: string;
@@ -39,12 +44,23 @@ export async function importListings(
     };
   }
 
+  // Friendly early check; the database trigger is what actually enforces it.
+  const drafts = await getDraftUsage(user.id, profile.plan);
+  if (parsed.rows.length > drafts.remaining) {
+    const { t } = await getDictionary();
+    return { error: draftImportTooManyMessage(t, drafts) };
+  }
+
   // Drafts, because a listing needs photos before it can go live. Drafts don't
   // use the monthly quota; each listing is charged when first published.
   const supabase = await createClient();
   const { error } = await supabase
     .from("listings")
     .insert(parsed.rows.map((row) => ({ ...row, seller_id: user.id, status: "draft" as const })));
+  if (error?.message === DRAFT_LIMIT_DB_MESSAGE) {
+    const { t } = await getDictionary();
+    return { error: draftImportTooManyMessage(t, await getDraftUsage(user.id, profile.plan)) };
+  }
   if (error) return { error: "Could not import the listings. Nothing was imported. Try again." };
 
   revalidateLocalized("/dashboard", "layout");

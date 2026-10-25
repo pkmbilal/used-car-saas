@@ -152,6 +152,33 @@ export async function featureOwnListing(listingId: string): Promise<{ error?: Fe
 // Raised by the enforce_listing_quota trigger.
 export const QUOTA_EXCEEDED_DB_MESSAGE = "listing_quota_exceeded";
 
+// Never-published drafts a seller can hold at once, so drafts can't fill R2
+// with photos. Must match plan_draft_limit in the draft_limit migration, which
+// enforces it (and raises these messages).
+export const DRAFT_LIMIT: Record<Plan, number> = {
+  free: 5,
+  dealer: 50,
+  dealer_pro: 200,
+  showroom: 500,
+};
+export const DRAFT_LIMIT_DB_MESSAGE = "draft_limit_exceeded";
+export const NOT_PUBLISHED_DB_MESSAGE = "listing_not_published";
+
+export type DraftUsage = { plan: Plan; used: number; limit: number; remaining: number };
+
+export async function getDraftUsage(sellerId: string, plan: Plan): Promise<DraftUsage> {
+  const supabase = await createClient();
+  const { count } = await supabase
+    .from("listings")
+    .select("id", { count: "exact", head: true })
+    .eq("seller_id", sellerId)
+    .eq("status", "draft")
+    .is("first_published_at", null);
+  const used = count ?? 0;
+  const limit = DRAFT_LIMIT[plan];
+  return { plan, used, limit, remaining: Math.max(0, limit - used) };
+}
+
 function namedPlan(t: Dictionary, plan: Plan): string {
   return fmt(t.plans.named, { plan: t.plans.labels[plan] });
 }
@@ -165,6 +192,14 @@ export function quotaReachedNote(t: Dictionary, quota: Pick<ListingQuota, "plan"
   return fmt(t.plans.quotaReached, { limit: quota.limit ?? "", plan: namedPlan(t, quota.plan) });
 }
 
+export function draftLimitMessage(t: Dictionary, usage: Pick<DraftUsage, "plan" | "limit">): string {
+  return fmt(t.plans.draftLimitReached, { limit: usage.limit, plan: namedPlan(t, usage.plan) });
+}
+
+export function draftImportTooManyMessage(t: Dictionary, usage: Pick<DraftUsage, "remaining" | "limit">): string {
+  return fmt(t.plans.draftImportTooMany, { remaining: usage.remaining, limit: usage.limit });
+}
+
 export function quotaSummary(t: Dictionary, locale: Locale, quota: ListingQuota): string {
   const name = t.plans.labels[quota.plan];
   const plan = quota.planExpiresAt
@@ -175,10 +210,17 @@ export function quotaSummary(t: Dictionary, locale: Locale, quota: ListingQuota)
     : `${plan} · ${fmt(t.plans.usedOf, { used: quota.used, limit: quota.limit })}`;
 }
 
-// Monthly SAR price per plan, for prefilling recorded payments.
+// /pricing shows prices excluding VAT; dealers pay price + VAT.
+export const VAT_RATE = 0.15;
+
+function withVat(price: number): number {
+  return Math.round(price * (1 + VAT_RATE) * 100) / 100;
+}
+
+// Monthly SAR price per plan including VAT, for prefilling recorded payments.
 export const PLAN_PRICES: Record<Plan, number> = {
-  free: PLAN_DETAILS.free.price,
-  dealer: PLAN_DETAILS.dealer.price,
-  dealer_pro: PLAN_DETAILS.dealer_pro.price,
-  showroom: PLAN_DETAILS.showroom.price,
+  free: withVat(PLAN_DETAILS.free.price),
+  dealer: withVat(PLAN_DETAILS.dealer.price),
+  dealer_pro: withVat(PLAN_DETAILS.dealer_pro.price),
+  showroom: withVat(PLAN_DETAILS.showroom.price),
 };

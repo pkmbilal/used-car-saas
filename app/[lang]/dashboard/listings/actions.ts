@@ -10,8 +10,12 @@ import {
 } from "@/lib/listing-options";
 import { getSellerListing, parseListing, type ListingStatus } from "@/lib/listings";
 import {
+  DRAFT_LIMIT_DB_MESSAGE,
+  draftLimitMessage,
   featureOwnListing,
+  getDraftUsage,
   getListingQuota,
+  NOT_PUBLISHED_DB_MESSAGE,
   QUOTA_EXCEEDED_DB_MESSAGE,
   quotaExceededMessage,
 } from "@/lib/plans";
@@ -27,6 +31,7 @@ export type ListingFormState = {
 export type ActionResult = { error?: string };
 
 const SUSPENDED_ERROR = "Your account is suspended, so you can't publish listings.";
+const NOT_PUBLISHED_ERROR = "Publish this listing before marking it sold.";
 
 function revalidateDashboard() {
   revalidateLocalized("/dashboard", "layout");
@@ -55,14 +60,26 @@ export async function createListing(
   const parsed = parseListing(formData);
   if ("error" in parsed) return { error: parsed.error };
 
+  // Friendly early check; the database trigger is what actually enforces it.
+  const drafts = await getDraftUsage(user.id, profile.plan);
+  if (drafts.remaining === 0) {
+    const { t } = await getDictionary();
+    return { error: draftLimitMessage(t, drafts) };
+  }
+
   // Starts as a draft: photos need the listing id before it can go live.
-  // Drafts are free; the quota is charged on first publish.
+  // Drafts don't use the monthly quota (it's charged on first publish), but
+  // how many a seller can hold at once is capped.
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("listings")
     .insert({ ...parsed.data, seller_id: user.id, status: "draft" })
     .select("id")
     .single();
+  if (error?.message === DRAFT_LIMIT_DB_MESSAGE) {
+    const { t } = await getDictionary();
+    return { error: draftLimitMessage(t, drafts) };
+  }
   if (error) return { error: "Could not create the listing. Try again." };
 
   revalidateDashboard();
@@ -106,6 +123,9 @@ export async function setListingStatus(
   if (status === "active" && listing.images.length === 0) {
     return { error: "Add at least one photo before publishing." };
   }
+  if (status === "sold" && listing.first_published_at === null) {
+    return { error: NOT_PUBLISHED_ERROR };
+  }
 
   // A listing's first publish uses a monthly listing; relisting doesn't.
   // Friendly early check; the database trigger is what actually enforces it.
@@ -123,6 +143,7 @@ export async function setListingStatus(
   if (error?.message === QUOTA_EXCEEDED_DB_MESSAGE && quota) {
     return { error: quotaExceededMessage(t, quota) };
   }
+  if (error?.message === NOT_PUBLISHED_DB_MESSAGE) return { error: NOT_PUBLISHED_ERROR };
   if (error) return { error: "Could not update the listing. Try again." };
 
   revalidateDashboard();

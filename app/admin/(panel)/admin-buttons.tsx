@@ -329,7 +329,7 @@ function PaymentFields({
 
 // Monthly price × months; "no expiry" suggests one month.
 function suggestedPrice(prices: Record<string, number>, plan: string, duration: string): number {
-  return (prices[plan] ?? 0) * (durationMonths(duration) ?? 1);
+  return Math.round((prices[plan] ?? 0) * (durationMonths(duration) ?? 1) * 100) / 100;
 }
 
 // Grants a plan for a duration, with an optional note for the plan history

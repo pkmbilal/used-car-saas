@@ -47,6 +47,16 @@ export const en = {
     sellYourCar: "Sell your car",
     menu: "Menu",
     main: "Main",
+    accountMenu: "Account menu",
+    administrator: "Administrator",
+    roles: { buyer: "Buyer", seller: "Seller" },
+    hints: {
+      savedCars: "Cars you've saved",
+      savedSearches: "Get alerts for new matches",
+      myListings: "Cars you're selling",
+      admin: "Moderation and reports",
+      account: "Name, phone and city",
+    },
     tabs: {
       home: "Home",
       buy: "Buy",
@@ -322,6 +332,11 @@ export const en = {
       "You've published all {limit} listings for this month on {plan}. Your draft is saved: publish it next month, or see the Pricing page to upgrade.",
     quotaReached:
       "You've published all {limit} listings for this month on {plan}. You can still save drafts and publish them next month, or upgrade for more.",
+    draftLimitReached:
+      "You have {limit} unpublished drafts, the most allowed on {plan}. Publish or delete a draft to add another.",
+    draftImportTooMany:
+      "You can add {remaining} more drafts (up to {limit} unpublished at a time). Publish or delete some drafts, or import fewer rows.",
+    draftsUsedOf: "{used} of {limit} drafts",
     summaryPlan: "{plan} plan",
     summaryPlanUntil: "{plan} plan until {date}",
     unlimited: "Unlimited listings",
@@ -527,13 +542,13 @@ export const en = {
     currentPlan: "Current plan",
     underReview: "Application under review",
     upgrade: "Upgrade",
-    vatNote: "Prices are in Saudi Riyals and include 15% VAT.",
+    vatNote: "Prices are in Saudi Riyals and exclude 15% VAT, which is added at payment.",
     questions: "Questions?",
     talkToSales: "Talk to sales on WhatsApp",
     salesMessage: "Hi, I have a question about KarSouq plans.",
     mostPopular: "Most popular",
     free: "Free",
-    perMonth: "/ month incl. VAT",
+    perMonth: "/ month + VAT",
     usage: {
       onPlan: "You're on {plan}",
       unlimited: "Unlimited listings · {used} published this month",
