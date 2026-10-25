@@ -877,6 +877,7 @@ export const en = {
   dashboard: {
     metaTitle: "Your listings | KarSouq",
     title: "Your listings",
+    listingCount: plural({ one: "{count} listing", other: "{count} listings" }),
     upgrade: "Upgrade",
     editStorefront: "Edit storefront",
     importCsv: "Import CSV",

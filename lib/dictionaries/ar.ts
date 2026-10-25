@@ -1058,6 +1058,14 @@ export const ar: DictionaryShape<typeof en> = {
   dashboard: {
     metaTitle: "إعلاناتي | كارسوق",
     title: "إعلاناتي",
+    listingCount: plural({
+      zero: "لا توجد إعلانات",
+      one: "إعلان واحد",
+      two: "إعلانان",
+      few: "{count} إعلانات",
+      many: "{count} إعلانًا",
+      other: "{count} إعلان",
+    }),
     upgrade: "ترقية",
     editStorefront: "تعديل صفحة المعرض",
     importCsv: "استيراد CSV",

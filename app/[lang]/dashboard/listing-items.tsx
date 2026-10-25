@@ -6,7 +6,7 @@ import Link from "@/components/locale-link";
 import { carName } from "@/lib/car-names";
 import { cityName, count, fmt, translateMessage } from "@/lib/dictionary";
 import type { Dictionary } from "@/lib/dictionaries";
-import { formatDay, formatKm, formatListingStats } from "@/lib/format";
+import { formatDay, formatKm } from "@/lib/format";
 import type { Locale } from "@/lib/i18n";
 import { isFeatured, type ListingStats, type ListingWithImages } from "@/lib/listings";
 import { SELF_FEATURE_DAYS } from "@/lib/plans";
@@ -22,14 +22,18 @@ type Props = {
 
 const editHref = (id: string) => `/dashboard/listings/${id}/edit`;
 
-export function ListingCardItem({ listing, featureSlots, t, locale }: Props) {
-  const cover = listing.images[0];
-  const featured = listing.status === "active" && isFeatured(listing);
-  const stats: [LucideIcon, string][] = [
+function listingStats({ listing, t, locale }: Omit<Props, "featureSlots">): [LucideIcon, string][] {
+  return [
     [Eye, count(locale, listing.stats.views, t.common.stats.views)],
     [Phone, count(locale, listing.stats.calls, t.common.stats.calls)],
     [MessageCircle, count(locale, listing.stats.whatsapps, t.common.stats.whatsapps)],
   ];
+}
+
+export function ListingCardItem({ listing, featureSlots, t, locale }: Props) {
+  const cover = listing.images[0];
+  const featured = listing.status === "active" && isFeatured(listing);
+  const stats = listingStats({ listing, t, locale });
 
   return (
     <li className="flex h-full flex-col overflow-hidden rounded-2xl bg-card shadow-[0_2px_10px_rgba(20,30,25,.06)] ring-1 ring-black/5 transition hover:shadow-[0_10px_24px_rgba(20,30,25,.1)] dark:ring-white/10">
@@ -109,33 +113,78 @@ export function ListingCardItem({ listing, featureSlots, t, locale }: Props) {
 
 export function ListingListItem({ listing, featureSlots, t, locale }: Props) {
   const cover = listing.images[0];
+  const featured = listing.status === "active" && isFeatured(listing);
+  const stats = listingStats({ listing, t, locale });
 
   return (
-    <li className="flex flex-wrap items-center gap-x-4 gap-y-3 py-4">
-      <Link
-        href={editHref(listing.id)}
-        className="relative aspect-[4/3] w-24 shrink-0 overflow-hidden rounded-md bg-mint sm:w-28 dark:bg-zinc-800"
-      >
-        {cover && <Image src={cover.url} alt="" fill sizes="112px" className="object-cover" />}
-      </Link>
-      <div className="min-w-0 flex-1">
-        <div className="flex items-center gap-2">
-          <Link href={editHref(listing.id)} className="truncate font-medium">
-            {carName(locale, listing.make, listing.model, listing.year)}
-          </Link>
-          <StatusBadge status={listing.status} />
+    <li className="overflow-hidden rounded-2xl bg-card shadow-[0_2px_10px_rgba(20,30,25,.06)] ring-1 ring-black/5 transition hover:shadow-[0_10px_24px_rgba(20,30,25,.1)] dark:ring-white/10">
+      <div className="flex gap-3 p-3 sm:gap-5 sm:p-4">
+        <Link
+          href={editHref(listing.id)}
+          className="relative aspect-[4/3] w-28 shrink-0 self-start overflow-hidden rounded-xl bg-mint sm:w-44 dark:bg-zinc-800"
+        >
+          {cover && (
+            <Image
+              src={cover.url}
+              alt=""
+              fill
+              sizes="(min-width: 640px) 176px, 112px"
+              className="object-cover"
+            />
+          )}
+          {featured && (
+            <span className="absolute top-2 start-2 rounded-full bg-lime px-2 py-0.5 text-[11px] font-semibold text-on-lime shadow-sm">
+              {t.common.featured}
+            </span>
+          )}
+        </Link>
+
+        <div className="min-w-0 flex-1">
+          <div className="flex flex-col gap-1 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
+            <div className="min-w-0">
+              <StatusBadge status={listing.status} />
+              <Link
+                href={editHref(listing.id)}
+                className="mt-1.5 block truncate font-semibold sm:text-lg"
+              >
+                {carName(locale, listing.make, listing.model, listing.year)}
+              </Link>
+            </div>
+            <p className="shrink-0 text-lg font-bold text-brand sm:text-xl">
+              <RiyalPrice amount={listing.price} />
+            </p>
+          </div>
+          <p className="mt-1.5 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-zinc-600 sm:text-sm dark:text-zinc-400">
+            <span className="flex items-center gap-1.5">
+              <Gauge className="size-3.5 sm:size-4" aria-hidden />
+              {formatKm(listing.mileage, locale)}
+            </span>
+            <span className="flex items-center gap-1.5">
+              <MapPin className="size-3.5 sm:size-4" aria-hidden />
+              {cityName(t, listing.city)}
+            </span>
+          </p>
+          <ListingNotes listing={listing} t={t} locale={locale} card />
         </div>
-        <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-          <RiyalPrice amount={listing.price} /> · {formatKm(listing.mileage, locale)} ·{" "}
-          {cityName(t, listing.city)} · {formatListingStats(locale, listing.stats, t.common.stats)}
-        </p>
-        <ListingNotes listing={listing} t={t} locale={locale} />
       </div>
-      <div className="max-sm:basis-full">
+
+      <div className="flex flex-col gap-3 border-t border-zinc-100 bg-zinc-50/60 px-3 py-3 sm:flex-row sm:items-center sm:justify-between sm:px-4 dark:border-zinc-800 dark:bg-zinc-900/40">
+        <ul className="flex flex-wrap gap-2">
+          {stats.map(([Icon, label]) => (
+            <li
+              key={label}
+              className="inline-flex items-center gap-1.5 rounded-full bg-mint/70 px-2.5 py-1 text-xs text-ink tabular-nums dark:bg-zinc-800 dark:text-zinc-200"
+            >
+              <Icon className="size-3.5 text-brand" aria-hidden />
+              {label}
+            </li>
+          ))}
+        </ul>
         <ListingActions
           listingId={listing.id}
           status={listing.status}
           showEdit
+          variant="row"
           featureSlots={featureSlots}
           featureDays={SELF_FEATURE_DAYS}
         />

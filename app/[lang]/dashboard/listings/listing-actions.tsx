@@ -18,22 +18,35 @@ type Props = {
   // Featured slots left this month; the button shows when this is above 0.
   featureSlots?: number;
   featureDays?: number;
-  // "card" shows full buttons (dashboard card view) instead of text links.
-  variant?: "inline" | "card";
+  // "card" shows full buttons (dashboard card view), "row" compact buttons
+  // (dashboard list view), "inline" text links.
+  variant?: "inline" | "card" | "row";
 };
 
 const buttonClass = "text-sm font-medium underline-offset-4 hover:underline disabled:opacity-50";
 const pillClass =
   "inline-flex min-h-11 items-center justify-center gap-2 rounded-xl px-4 py-2 text-center text-sm font-medium transition active:scale-[.97] disabled:opacity-50";
 
-// Row 1: edit, view, delete; row 2: the status actions.
-const pills = {
-  edit: "order-1 flex-1 bg-gradient-to-b from-brand to-forest text-white shadow-md shadow-forest/25 hover:text-white hover:brightness-110",
-  view: "order-2 flex-1 bg-white text-ink shadow-sm ring-1 ring-zinc-200 hover:bg-zinc-50 dark:bg-zinc-900 dark:text-zinc-100 dark:ring-zinc-700 dark:hover:bg-zinc-800",
-  delete: "order-3 size-11 shrink-0 bg-red-50 px-0 text-red-600 ring-1 ring-red-200 hover:bg-red-100 dark:bg-red-950 dark:ring-red-900",
-  publish: "flex-1 bg-green-50 text-green-700 ring-1 ring-green-200 hover:bg-green-100 dark:bg-green-950 dark:text-green-400 dark:ring-green-900",
-  markSold: "flex-1 bg-zinc-100 text-zinc-800 ring-1 ring-zinc-200 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-100 dark:ring-zinc-700",
-  feature: "flex-1 bg-gradient-to-b from-lime-light to-lime text-on-lime shadow-[inset_0_1px_0_rgba(255,255,255,.45)] hover:brightness-105",
+const rowPillClass =
+  "inline-flex h-9 items-center justify-center gap-1.5 rounded-lg px-3 text-sm font-medium transition active:scale-[.97] disabled:opacity-50";
+
+const tones = {
+  edit: "bg-gradient-to-b from-brand to-forest text-white shadow-md shadow-forest/25 hover:text-white hover:brightness-110",
+  view: "bg-white text-ink shadow-sm ring-1 ring-zinc-200 hover:bg-zinc-50 dark:bg-zinc-900 dark:text-zinc-100 dark:ring-zinc-700 dark:hover:bg-zinc-800",
+  delete: "bg-red-50 text-red-600 ring-1 ring-red-200 hover:bg-red-100 dark:bg-red-950 dark:ring-red-900",
+  publish: "bg-green-50 text-green-700 ring-1 ring-green-200 hover:bg-green-100 dark:bg-green-950 dark:text-green-400 dark:ring-green-900",
+  markSold: "bg-zinc-100 text-zinc-800 ring-1 ring-zinc-200 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-100 dark:ring-zinc-700",
+  feature: "bg-gradient-to-b from-lime-light to-lime text-on-lime shadow-[inset_0_1px_0_rgba(255,255,255,.45)] hover:brightness-105",
+};
+
+// Card: row 1 is edit, view, delete; row 2 the status actions.
+const cardLayout: Record<keyof typeof tones, string> = {
+  edit: "order-1 flex-1",
+  view: "order-2 flex-1",
+  delete: "order-3 size-11 shrink-0 px-0",
+  publish: "flex-1",
+  markSold: "flex-1",
+  feature: "flex-1",
 };
 
 export function ListingActions({
@@ -51,9 +64,21 @@ export function ListingActions({
   const [error, setError] = useState<string>();
 
   const card = variant === "card";
-  const cls = (extra: string, pill: keyof typeof pills) =>
-    card ? `${pillClass} ${pills[pill]}` : `${buttonClass} ${extra}`;
-  const icon = (Icon: LucideIcon) => card && <Icon className="size-4 shrink-0" aria-hidden />;
+  const row = variant === "row";
+  const cls = (extra: string, pill: keyof typeof tones) => {
+    if (card) return `${pillClass} ${cardLayout[pill]} ${tones[pill]}`;
+    // Mobile: one row of equal-width icon buttons; labels come back at sm.
+    if (row)
+      return `${rowPillClass} ${pill === "delete" ? "w-9 shrink-0 px-0" : "min-w-0 flex-1 sm:flex-none"} ${tones[pill]}`;
+    return `${buttonClass} ${extra}`;
+  };
+  const icon = (Icon: LucideIcon) =>
+    (card || row) && <Icon className="size-4 shrink-0" aria-hidden />;
+  const label = (text: string) =>
+    row ? <span className="truncate max-sm:sr-only">{text}</span> : text;
+  const tip = (text: string) => (row ? text : undefined);
+  const featureLabel = fmt(a.feature, { days: featureDays ?? "", slots: featureSlots });
+  const publishLabel = status === "sold" ? a.relist : a.publish;
 
   function run(action: () => Promise<ActionResult>, after?: () => void) {
     setError(undefined);
@@ -70,33 +95,36 @@ export function ListingActions({
         <button
           type="button"
           disabled={pending}
+          title={tip(publishLabel)}
           className={cls("text-green-700 dark:text-green-400", "publish")}
           onClick={() => run(() => setListingStatus(listingId, "active"))}
         >
           {icon(status === "sold" ? RotateCcw : Send)}
-          {status === "sold" ? a.relist : a.publish}
+          {label(publishLabel)}
         </button>
       )}
       {status === "active" && (
         <button
           type="button"
           disabled={pending}
+          title={tip(a.markSold)}
           className={cls("", "markSold")}
           onClick={() => run(() => setListingStatus(listingId, "sold"))}
         >
           {icon(CircleCheck)}
-          {a.markSold}
+          {label(a.markSold)}
         </button>
       )}
       {status === "active" && featureSlots > 0 && (
         <button
           type="button"
           disabled={pending}
+          title={tip(featureLabel)}
           className={cls("text-amber-700 dark:text-amber-400", "feature")}
           onClick={() => run(() => featureListing(listingId))}
         >
           {icon(Star)}
-          {fmt(a.feature, { days: featureDays ?? "", slots: featureSlots })}
+          {label(featureLabel)}
         </button>
       )}
     </>
@@ -104,18 +132,22 @@ export function ListingActions({
   const hasStatusActions = status !== "removed";
 
   return (
-    <div className={`flex flex-col gap-1 ${card ? "" : "items-end"}`}>
+    <div className={`flex flex-col gap-1 ${card ? "" : row ? "sm:items-end" : "items-end"}`}>
       <div
-        className={`flex flex-wrap items-center ${card ? "gap-2" : "justify-end gap-3"}`}
+        className={`flex items-center ${card ? "flex-wrap gap-2" : row ? "gap-1.5 sm:flex-wrap sm:justify-end sm:gap-2" : "flex-wrap justify-end gap-3"}`}
       >
-        <Link href={`/listings/${listingId}`} className={cls("", "view")}>
+        <Link href={`/listings/${listingId}`} title={tip(a.view)} className={cls("", "view")}>
           {icon(Eye)}
-          {a.view}
+          {label(a.view)}
         </Link>
         {showEdit && (
-          <Link href={`/dashboard/listings/${listingId}/edit`} className={cls("", "edit")}>
+          <Link
+            href={`/dashboard/listings/${listingId}/edit`}
+            title={tip(a.edit)}
+            className={cls("", "edit")}
+          >
             {icon(Pencil)}
-            {a.edit}
+            {label(a.edit)}
           </Link>
         )}
         {card
@@ -126,6 +158,7 @@ export function ListingActions({
         <button
           type="button"
           disabled={pending}
+          title={tip(a.delete)}
           className={cls("text-red-600", "delete")}
           onClick={() => {
             if (!window.confirm(a.confirmDelete)) return;
@@ -136,7 +169,7 @@ export function ListingActions({
           }}
         >
           {icon(Trash2)}
-          {card ? <span className="sr-only">{a.delete}</span> : a.delete}
+          {card || row ? <span className="sr-only">{a.delete}</span> : a.delete}
         </button>
       </div>
       {error && <p className="text-sm text-red-600">{error}</p>}
