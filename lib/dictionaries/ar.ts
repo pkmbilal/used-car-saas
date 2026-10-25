@@ -545,6 +545,8 @@ export const ar: DictionaryShape<typeof en> = {
       previous: "الصورة السابقة",
       next: "الصورة التالية",
       show: "عرض الصورة {index}",
+      fullscreen: "عرض بملء الشاشة",
+      close: "إغلاق",
     },
     share: "مشاركة",
     linkCopied: "تم نسخ الرابط",

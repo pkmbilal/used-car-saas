@@ -512,6 +512,8 @@ export const en = {
       previous: "Previous photo",
       next: "Next photo",
       show: "Show photo {index}",
+      fullscreen: "View fullscreen",
+      close: "Close",
     },
     share: "Share",
     linkCopied: "Link copied",
