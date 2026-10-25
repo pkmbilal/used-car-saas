@@ -72,6 +72,20 @@ export function listingJsonLd(listing: SeoListing, url: string, description: str
   };
 }
 
+// schema.org BreadcrumbList for the listing page's trail; urls are absolute.
+export function breadcrumbJsonLd(items: { name: string; url: string }[]) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: items.map((item, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      name: item.name,
+      item: item.url,
+    })),
+  };
+}
+
 // JSON for an inline <script type="application/ld+json">; escapes "<" so
 // listing text can't close the script tag.
 export function jsonLdScript(data: object): string {

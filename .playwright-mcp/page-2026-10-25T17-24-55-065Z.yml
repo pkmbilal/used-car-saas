@@ -1,0 +1,548 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - navigation [ref=e3]:
+      - link [ref=e4] [cursor=pointer]:
+        - /url: /ar
+        - img "KarSouq" [ref=e5]
+      - generic [ref=e6]:
+        - link "الرئيسية" [ref=e7] [cursor=pointer]:
+          - /url: /ar
+        - link "شراء سيارة" [ref=e8] [cursor=pointer]:
+          - /url: /ar/listings
+        - link "المعارض" [ref=e10] [cursor=pointer]:
+          - /url: /ar/dealers
+        - link "المدن" [ref=e11] [cursor=pointer]:
+          - /url: /ar/locations
+        - link "الباقات" [ref=e12] [cursor=pointer]:
+          - /url: /ar/pricing
+      - generic [ref=e13]:
+        - link "English" [ref=e14] [cursor=pointer]:
+          - /url: /en/listings
+        - link "تسجيل الدخول" [ref=e19] [cursor=pointer]:
+          - /url: /ar/login
+        - link "بِع سيارتك" [ref=e20] [cursor=pointer]:
+          - /url: /ar/account/become-seller
+  - main [ref=e22]:
+    - generic [ref=e25]:
+      - paragraph [ref=e26]: سيارات مستعملة للبيع
+      - heading "ابحث عن سيارتك المثالية بفلاتر سهلة" [level=1] [ref=e27]
+      - paragraph [ref=e28]: حدّد تفضيلاتك، واعثر على السيارة المناسبة، وتواصل مع البائع مباشرة.
+    - generic [ref=e31]:
+      - generic [ref=e32]:
+        - generic [ref=e33]: الماركة
+        - combobox "الماركة" [ref=e34] [cursor=pointer]
+        - combobox [aria-hidden] [ref=e35]
+      - generic [ref=e36]:
+        - generic [ref=e37]: الموديل
+        - combobox "الموديل" [disabled] [ref=e38]:
+          - generic: اختر الماركة أولًا
+        - combobox [disabled] [aria-hidden] [ref=e39]
+      - generic [ref=e40]:
+        - generic [ref=e41]: أعلى سعر
+        - combobox "أعلى سعر" [ref=e42] [cursor=pointer]
+        - combobox [aria-hidden] [ref=e43]
+      - generic [ref=e44]:
+        - generic [ref=e45]: سنة الصنع
+        - combobox "سنة الصنع" [ref=e46] [cursor=pointer]
+        - combobox [aria-hidden] [ref=e47]
+      - generic [ref=e48]:
+        - generic [ref=e49]: المدينة
+        - combobox "المدينة" [ref=e50] [cursor=pointer]
+        - combobox [aria-hidden] [ref=e52]
+      - button "ابحث عن سيارة" [ref=e53] [cursor=pointer]
+    - generic [ref=e54]:
+      - button "الفلاتر" [ref=e55] [cursor=pointer]
+      - generic [ref=e56]:
+        - generic [ref=e57]:
+          - paragraph [ref=e58]: تم العثور على 17 سيارة
+          - generic [ref=e60]:
+            - generic [ref=e61]: ترتيب حسب
+            - combobox "ترتيب حسب" [ref=e62] [cursor=pointer]
+            - combobox [aria-hidden] [ref=e63]
+        - generic [ref=e64]:
+          - paragraph [ref=e65]: مميزة
+          - list [ref=e66]:
+            - listitem [ref=e67]:
+              - generic [ref=e68]:
+                - link "تويوتا كامري 2019 بائع فرد هوية موثقة مميز تويوتا كامري 2019 142,000 كم أوتوماتيك ريال سعودي 58,000 سيدان بنزين الدمام" [ref=e70] [cursor=pointer]:
+                  - /url: /ar/listings/49b92fab-c94a-4de1-947f-308845acd0c8
+                  - generic [ref=e71]:
+                    - img "تويوتا كامري 2019" [ref=e72]
+                    - generic [ref=e73]:
+                      - generic [ref=e74]: بائع فرد
+                      - generic "تحقق فريقنا من الهوية" [ref=e75]: هوية موثقة
+                    - generic [ref=e76]: مميز
+                  - generic [ref=e77]:
+                    - paragraph [ref=e78]: تويوتا كامري
+                    - paragraph [ref=e79]:
+                      - generic [ref=e80]: "2019"
+                      - generic [aria-hidden] [ref=e81]: ·
+                      - generic [ref=e82]: 142,000 كم
+                      - generic [aria-hidden] [ref=e83]: ·
+                      - generic [ref=e84]: أوتوماتيك
+                    - paragraph [ref=e85]:
+                      - generic [ref=e86]:
+                        - generic [ref=e88]: ريال سعودي
+                        - text: 58,000
+                    - generic [ref=e89]:
+                      - generic [ref=e90]: سيدان
+                      - generic [ref=e95]: بنزين
+                      - generic [ref=e99]: الدمام
+                - button "احفظ هذه السيارة" [ref=e106] [cursor=pointer]
+        - list [ref=e108]:
+          - listitem [ref=e109]:
+            - generic [ref=e110]:
+              - link "تويوتا يارس 2023 معرض تويوتا يارس 2023 110,000 كم أوتوماتيك ريال سعودي 47,000 سيدان بنزين الجبيل" [ref=e112] [cursor=pointer]:
+                - /url: /ar/listings/98bdba56-f372-4f09-ae90-12e0ca26e51a
+                - generic [ref=e113]:
+                  - img "تويوتا يارس 2023" [ref=e114]
+                  - generic [ref=e115]: معرض
+                - generic [ref=e117]:
+                  - paragraph [ref=e118]: تويوتا يارس
+                  - paragraph [ref=e119]:
+                    - generic [ref=e120]: "2023"
+                    - generic [aria-hidden] [ref=e121]: ·
+                    - generic [ref=e122]: 110,000 كم
+                    - generic [aria-hidden] [ref=e123]: ·
+                    - generic [ref=e124]: أوتوماتيك
+                  - paragraph [ref=e125]:
+                    - generic [ref=e126]:
+                      - generic [ref=e128]: ريال سعودي
+                      - text: 47,000
+                  - generic [ref=e129]:
+                    - generic [ref=e130]: سيدان
+                    - generic [ref=e135]: بنزين
+                    - generic [ref=e139]: الجبيل
+              - button "احفظ هذه السيارة" [ref=e146] [cursor=pointer]
+          - listitem [ref=e147]:
+            - generic [ref=e148]:
+              - link "هيونداي إلنترا 2020 بائع فرد هوية موثقة هيونداي إلنترا 2020 98,000 كم أوتوماتيك ريال سعودي 46,500 سيدان بنزين الخبر" [ref=e150] [cursor=pointer]:
+                - /url: /ar/listings/be70b3c4-6ccd-4829-9e28-63e26407420d
+                - generic [ref=e151]:
+                  - img "هيونداي إلنترا 2020" [ref=e152]
+                  - generic [ref=e153]:
+                    - generic [ref=e154]: بائع فرد
+                    - generic "تحقق فريقنا من الهوية" [ref=e155]: هوية موثقة
+                - generic [ref=e156]:
+                  - paragraph [ref=e157]: هيونداي إلنترا
+                  - paragraph [ref=e158]:
+                    - generic [ref=e159]: "2020"
+                    - generic [aria-hidden] [ref=e160]: ·
+                    - generic [ref=e161]: 98,000 كم
+                    - generic [aria-hidden] [ref=e162]: ·
+                    - generic [ref=e163]: أوتوماتيك
+                  - paragraph [ref=e164]:
+                    - generic [ref=e165]:
+                      - generic [ref=e167]: ريال سعودي
+                      - text: 46,500
+                  - generic [ref=e168]:
+                    - generic [ref=e169]: سيدان
+                    - generic [ref=e174]: بنزين
+                    - generic [ref=e178]: الخبر
+              - button "احفظ هذه السيارة" [ref=e185] [cursor=pointer]
+          - listitem [ref=e186]:
+            - generic [ref=e187]:
+              - link "نيسان صني 2017 بائع فرد هوية موثقة نيسان صني 2017 186,000 كم أوتوماتيك ريال سعودي 24,000 سيدان بنزين الدمام" [ref=e189] [cursor=pointer]:
+                - /url: /ar/listings/f1fcc5b2-ce56-4df7-a699-410c2d3c07ed
+                - generic [ref=e190]:
+                  - img "نيسان صني 2017" [ref=e191]
+                  - generic [ref=e192]:
+                    - generic [ref=e193]: بائع فرد
+                    - generic "تحقق فريقنا من الهوية" [ref=e194]: هوية موثقة
+                - generic [ref=e195]:
+                  - paragraph [ref=e196]: نيسان صني
+                  - paragraph [ref=e197]:
+                    - generic [ref=e198]: "2017"
+                    - generic [aria-hidden] [ref=e199]: ·
+                    - generic [ref=e200]: 186,000 كم
+                    - generic [aria-hidden] [ref=e201]: ·
+                    - generic [ref=e202]: أوتوماتيك
+                  - paragraph [ref=e203]:
+                    - generic [ref=e204]:
+                      - generic [ref=e206]: ريال سعودي
+                      - text: 24,000
+                  - generic [ref=e207]:
+                    - generic [ref=e208]: سيدان
+                    - generic [ref=e213]: بنزين
+                    - generic [ref=e217]: الدمام
+              - button "احفظ هذه السيارة" [ref=e224] [cursor=pointer]
+          - listitem [ref=e225]:
+            - generic [ref=e226]:
+              - link "تويوتا هايلكس 2018 بائع فرد هوية موثقة تويوتا هايلكس 2018 210,000 كم عادي ريال سعودي 62,000 بيك أب ديزل الأحساء" [ref=e228] [cursor=pointer]:
+                - /url: /ar/listings/f0c27368-5897-4515-9df3-cc3f23e23ff7
+                - generic [ref=e229]:
+                  - img "تويوتا هايلكس 2018" [ref=e230]
+                  - generic [ref=e231]:
+                    - generic [ref=e232]: بائع فرد
+                    - generic "تحقق فريقنا من الهوية" [ref=e233]: هوية موثقة
+                - generic [ref=e234]:
+                  - paragraph [ref=e235]: تويوتا هايلكس
+                  - paragraph [ref=e236]:
+                    - generic [ref=e237]: "2018"
+                    - generic [aria-hidden] [ref=e238]: ·
+                    - generic [ref=e239]: 210,000 كم
+                    - generic [aria-hidden] [ref=e240]: ·
+                    - generic [ref=e241]: عادي
+                  - paragraph [ref=e242]:
+                    - generic [ref=e243]:
+                      - generic [ref=e245]: ريال سعودي
+                      - text: 62,000
+                  - generic [ref=e246]:
+                    - generic [ref=e247]: بيك أب
+                    - generic [ref=e252]: ديزل
+                    - generic [ref=e256]: الأحساء
+              - button "احفظ هذه السيارة" [ref=e263] [cursor=pointer]
+          - listitem [ref=e264]:
+            - generic [ref=e265]:
+              - link "كيا سبورتاج 2021 بائع فرد هوية موثقة كيا سبورتاج 2021 64,000 كم أوتوماتيك ريال سعودي 79,000 SUV بنزين الظهران" [ref=e267] [cursor=pointer]:
+                - /url: /ar/listings/6bd17bdc-2ec7-4331-933b-2cd5143511b2
+                - generic [ref=e268]:
+                  - img "كيا سبورتاج 2021" [ref=e269]
+                  - generic [ref=e270]:
+                    - generic [ref=e271]: بائع فرد
+                    - generic "تحقق فريقنا من الهوية" [ref=e272]: هوية موثقة
+                - generic [ref=e273]:
+                  - paragraph [ref=e274]: كيا سبورتاج
+                  - paragraph [ref=e275]:
+                    - generic [ref=e276]: "2021"
+                    - generic [aria-hidden] [ref=e277]: ·
+                    - generic [ref=e278]: 64,000 كم
+                    - generic [aria-hidden] [ref=e279]: ·
+                    - generic [ref=e280]: أوتوماتيك
+                  - paragraph [ref=e281]:
+                    - generic [ref=e282]:
+                      - generic [ref=e284]: ريال سعودي
+                      - text: 79,000
+                  - generic [ref=e285]:
+                    - generic [ref=e286]: SUV
+                    - generic [ref=e291]: بنزين
+                    - generic [ref=e295]: الظهران
+              - button "احفظ هذه السيارة" [ref=e302] [cursor=pointer]
+          - listitem [ref=e303]:
+            - generic [ref=e304]:
+              - link "تويوتا لاندكروزر 2022 معرض تويوتا لاندكروزر 2022 45,000 كم أوتوماتيك ريال سعودي 335,000 SUV بنزين الجبيل" [ref=e306] [cursor=pointer]:
+                - /url: /ar/listings/ea953000-8b7b-45d1-b13e-31ea447dca45
+                - generic [ref=e307]:
+                  - img "تويوتا لاندكروزر 2022" [ref=e308]
+                  - generic [ref=e309]: معرض
+                - generic [ref=e311]:
+                  - paragraph [ref=e312]: تويوتا لاندكروزر
+                  - paragraph [ref=e313]:
+                    - generic [ref=e314]: "2022"
+                    - generic [aria-hidden] [ref=e315]: ·
+                    - generic [ref=e316]: 45,000 كم
+                    - generic [aria-hidden] [ref=e317]: ·
+                    - generic [ref=e318]: أوتوماتيك
+                  - paragraph [ref=e319]:
+                    - generic [ref=e320]:
+                      - generic [ref=e322]: ريال سعودي
+                      - text: 335,000
+                  - generic [ref=e323]:
+                    - generic [ref=e324]: SUV
+                    - generic [ref=e329]: بنزين
+                    - generic [ref=e333]: الجبيل
+              - button "احفظ هذه السيارة" [ref=e340] [cursor=pointer]
+          - listitem [ref=e341]:
+            - generic [ref=e342]:
+              - link "نيسان باترول 2021 معرض نيسان باترول 2021 72,000 كم أوتوماتيك ريال سعودي 245,000 SUV بنزين الجبيل" [ref=e344] [cursor=pointer]:
+                - /url: /ar/listings/ba568aa6-22e0-41ea-b176-6942edf9d7a1
+                - generic [ref=e345]:
+                  - img "نيسان باترول 2021" [ref=e346]
+                  - generic [ref=e347]: معرض
+                - generic [ref=e349]:
+                  - paragraph [ref=e350]: نيسان باترول
+                  - paragraph [ref=e351]:
+                    - generic [ref=e352]: "2021"
+                    - generic [aria-hidden] [ref=e353]: ·
+                    - generic [ref=e354]: 72,000 كم
+                    - generic [aria-hidden] [ref=e355]: ·
+                    - generic [ref=e356]: أوتوماتيك
+                  - paragraph [ref=e357]:
+                    - generic [ref=e358]:
+                      - generic [ref=e360]: ريال سعودي
+                      - text: 245,000
+                  - generic [ref=e361]:
+                    - generic [ref=e362]: SUV
+                    - generic [ref=e367]: بنزين
+                    - generic [ref=e371]: الجبيل
+              - button "احفظ هذه السيارة" [ref=e378] [cursor=pointer]
+          - listitem [ref=e379]:
+            - generic [ref=e380]:
+              - link "جي إم سي يوكن 2020 معرض جي إم سي يوكن 2020 98,000 كم أوتوماتيك ريال سعودي 189,000 SUV بنزين الدمام" [ref=e382] [cursor=pointer]:
+                - /url: /ar/listings/0c502bfb-2b07-4884-9a3d-d72b599bc586
+                - generic [ref=e383]:
+                  - img "جي إم سي يوكن 2020" [ref=e384]
+                  - generic [ref=e385]: معرض
+                - generic [ref=e387]:
+                  - paragraph [ref=e388]: جي إم سي يوكن
+                  - paragraph [ref=e389]:
+                    - generic [ref=e390]: "2020"
+                    - generic [aria-hidden] [ref=e391]: ·
+                    - generic [ref=e392]: 98,000 كم
+                    - generic [aria-hidden] [ref=e393]: ·
+                    - generic [ref=e394]: أوتوماتيك
+                  - paragraph [ref=e395]:
+                    - generic [ref=e396]:
+                      - generic [ref=e398]: ريال سعودي
+                      - text: 189,000
+                  - generic [ref=e399]:
+                    - generic [ref=e400]: SUV
+                    - generic [ref=e405]: بنزين
+                    - generic [ref=e409]: الدمام
+              - button "احفظ هذه السيارة" [ref=e416] [cursor=pointer]
+          - listitem [ref=e417]:
+            - generic [ref=e418]:
+              - link "شيفروليه تاهو 2019 معرض شيفروليه تاهو 2019 121,000 كم أوتوماتيك ريال سعودي 139,000 SUV بنزين الجبيل" [ref=e420] [cursor=pointer]:
+                - /url: /ar/listings/41274159-5362-426e-9339-322bc9a5211c
+                - generic [ref=e421]:
+                  - img "شيفروليه تاهو 2019" [ref=e422]
+                  - generic [ref=e423]: معرض
+                - generic [ref=e425]:
+                  - paragraph [ref=e426]: شيفروليه تاهو
+                  - paragraph [ref=e427]:
+                    - generic [ref=e428]: "2019"
+                    - generic [aria-hidden] [ref=e429]: ·
+                    - generic [ref=e430]: 121,000 كم
+                    - generic [aria-hidden] [ref=e431]: ·
+                    - generic [ref=e432]: أوتوماتيك
+                  - paragraph [ref=e433]:
+                    - generic [ref=e434]:
+                      - generic [ref=e436]: ريال سعودي
+                      - text: 139,000
+                  - generic [ref=e437]:
+                    - generic [ref=e438]: SUV
+                    - generic [ref=e443]: بنزين
+                    - generic [ref=e447]: الجبيل
+              - button "احفظ هذه السيارة" [ref=e454] [cursor=pointer]
+          - listitem [ref=e455]:
+            - generic [ref=e456]:
+              - link "فورد F-150 2021 معرض فورد F-150 2021 66,000 كم أوتوماتيك ريال سعودي 175,000 بيك أب بنزين الخبر" [ref=e458] [cursor=pointer]:
+                - /url: /ar/listings/eabe247d-563a-4d88-ab2c-e6292b6770d5
+                - generic [ref=e459]:
+                  - img "فورد F-150 2021" [ref=e460]
+                  - generic [ref=e461]: معرض
+                - generic [ref=e463]:
+                  - paragraph [ref=e464]: فورد F-150
+                  - paragraph [ref=e465]:
+                    - generic [ref=e466]: "2021"
+                    - generic [aria-hidden] [ref=e467]: ·
+                    - generic [ref=e468]: 66,000 كم
+                    - generic [aria-hidden] [ref=e469]: ·
+                    - generic [ref=e470]: أوتوماتيك
+                  - paragraph [ref=e471]:
+                    - generic [ref=e472]:
+                      - generic [ref=e474]: ريال سعودي
+                      - text: 175,000
+                  - generic [ref=e475]:
+                    - generic [ref=e476]: بيك أب
+                    - generic [ref=e481]: بنزين
+                    - generic [ref=e485]: الخبر
+              - button "احفظ هذه السيارة" [ref=e492] [cursor=pointer]
+          - listitem [ref=e493]:
+            - generic [ref=e494]:
+              - link "هيونداي توسان 2023 معرض هيونداي توسان 2023 21,000 كم أوتوماتيك ريال سعودي 104,000 SUV هجين الجبيل" [ref=e496] [cursor=pointer]:
+                - /url: /ar/listings/8c955fec-d51b-43d7-99c8-6fc0b63ed052
+                - generic [ref=e497]:
+                  - img "هيونداي توسان 2023" [ref=e498]
+                  - generic [ref=e499]: معرض
+                - generic [ref=e501]:
+                  - paragraph [ref=e502]: هيونداي توسان
+                  - paragraph [ref=e503]:
+                    - generic [ref=e504]: "2023"
+                    - generic [aria-hidden] [ref=e505]: ·
+                    - generic [ref=e506]: 21,000 كم
+                    - generic [aria-hidden] [ref=e507]: ·
+                    - generic [ref=e508]: أوتوماتيك
+                  - paragraph [ref=e509]:
+                    - generic [ref=e510]:
+                      - generic [ref=e512]: ريال سعودي
+                      - text: 104,000
+                  - generic [ref=e513]:
+                    - generic [ref=e514]: SUV
+                    - generic [ref=e519]: هجين
+                    - generic [ref=e523]: الجبيل
+              - button "احفظ هذه السيارة" [ref=e530] [cursor=pointer]
+          - listitem [ref=e531]:
+            - generic [ref=e532]:
+              - link "لكزس LX 600 2023 معرض لكزس LX 600 2023 18,000 كم أوتوماتيك ريال سعودي 520,000 SUV بنزين الدمام" [ref=e534] [cursor=pointer]:
+                - /url: /ar/listings/73ca6cd7-a3e7-44a7-b8a2-0a826b26da4d
+                - generic [ref=e535]:
+                  - img "لكزس LX 600 2023" [ref=e536]
+                  - generic [ref=e537]: معرض
+                - generic [ref=e539]:
+                  - paragraph [ref=e540]: لكزس LX 600
+                  - paragraph [ref=e541]:
+                    - generic [ref=e542]: "2023"
+                    - generic [aria-hidden] [ref=e543]: ·
+                    - generic [ref=e544]: 18,000 كم
+                    - generic [aria-hidden] [ref=e545]: ·
+                    - generic [ref=e546]: أوتوماتيك
+                  - paragraph [ref=e547]:
+                    - generic [ref=e548]:
+                      - generic [ref=e550]: ريال سعودي
+                      - text: 520,000
+                  - generic [ref=e551]:
+                    - generic [ref=e552]: SUV
+                    - generic [ref=e557]: بنزين
+                    - generic [ref=e561]: الدمام
+              - button "احفظ هذه السيارة" [ref=e568] [cursor=pointer]
+          - listitem [ref=e569]:
+            - generic [ref=e570]:
+              - link "مرسيدس-بنز E-Class 2021 معرض مرسيدس-بنز E-Class 2021 52,000 كم أوتوماتيك ريال سعودي 215,000 سيدان بنزين الخبر" [ref=e572] [cursor=pointer]:
+                - /url: /ar/listings/c78218e3-fc57-472b-82c0-a741681481f3
+                - generic [ref=e573]:
+                  - img "مرسيدس-بنز E-Class 2021" [ref=e574]
+                  - generic [ref=e575]: معرض
+                - generic [ref=e577]:
+                  - paragraph [ref=e578]: مرسيدس-بنز E-Class
+                  - paragraph [ref=e579]:
+                    - generic [ref=e580]: "2021"
+                    - generic [aria-hidden] [ref=e581]: ·
+                    - generic [ref=e582]: 52,000 كم
+                    - generic [aria-hidden] [ref=e583]: ·
+                    - generic [ref=e584]: أوتوماتيك
+                  - paragraph [ref=e585]:
+                    - generic [ref=e586]:
+                      - generic [ref=e588]: ريال سعودي
+                      - text: 215,000
+                  - generic [ref=e589]:
+                    - generic [ref=e590]: سيدان
+                    - generic [ref=e595]: بنزين
+                    - generic [ref=e599]: الخبر
+              - button "احفظ هذه السيارة" [ref=e606] [cursor=pointer]
+          - listitem [ref=e607]:
+            - generic [ref=e608]:
+              - link "بي إم دبليو X5 2020 معرض بي إم دبليو X5 2020 79,000 كم أوتوماتيك ريال سعودي 229,000 SUV بنزين الدمام" [ref=e610] [cursor=pointer]:
+                - /url: /ar/listings/b1254979-2128-4fec-a739-d221ff20235b
+                - generic [ref=e611]:
+                  - img "بي إم دبليو X5 2020" [ref=e612]
+                  - generic [ref=e613]: معرض
+                - generic [ref=e615]:
+                  - paragraph [ref=e616]: بي إم دبليو X5
+                  - paragraph [ref=e617]:
+                    - generic [ref=e618]: "2020"
+                    - generic [aria-hidden] [ref=e619]: ·
+                    - generic [ref=e620]: 79,000 كم
+                    - generic [aria-hidden] [ref=e621]: ·
+                    - generic [ref=e622]: أوتوماتيك
+                  - paragraph [ref=e623]:
+                    - generic [ref=e624]:
+                      - generic [ref=e626]: ريال سعودي
+                      - text: 229,000
+                  - generic [ref=e627]:
+                    - generic [ref=e628]: SUV
+                    - generic [ref=e633]: بنزين
+                    - generic [ref=e637]: الدمام
+              - button "احفظ هذه السيارة" [ref=e644] [cursor=pointer]
+          - listitem [ref=e645]:
+            - generic [ref=e646]:
+              - link "تسلا Model 3 2022 معرض تسلا Model 3 2022 34,000 كم أوتوماتيك ريال سعودي 149,000 سيدان كهربائي الدمام" [ref=e648] [cursor=pointer]:
+                - /url: /ar/listings/8c40bc0f-2fbb-4d88-b6bc-d7385feaf06b
+                - generic [ref=e649]:
+                  - img "تسلا Model 3 2022" [ref=e650]
+                  - generic [ref=e651]: معرض
+                - generic [ref=e653]:
+                  - paragraph [ref=e654]: تسلا Model 3
+                  - paragraph [ref=e655]:
+                    - generic [ref=e656]: "2022"
+                    - generic [aria-hidden] [ref=e657]: ·
+                    - generic [ref=e658]: 34,000 كم
+                    - generic [aria-hidden] [ref=e659]: ·
+                    - generic [ref=e660]: أوتوماتيك
+                  - paragraph [ref=e661]:
+                    - generic [ref=e662]:
+                      - generic [ref=e664]: ريال سعودي
+                      - text: 149,000
+                  - generic [ref=e665]:
+                    - generic [ref=e666]: سيدان
+                    - generic [ref=e671]: كهربائي
+                    - generic [ref=e675]: الدمام
+              - button "احفظ هذه السيارة" [ref=e682] [cursor=pointer]
+          - listitem [ref=e683]:
+            - generic [ref=e684]:
+              - link "لاند روفر رنج روفر سبورت 2019 معرض لاند روفر رنج روفر سبورت 2019 88,000 كم أوتوماتيك ريال سعودي 198,000 SUV بنزين الخبر" [ref=e686] [cursor=pointer]:
+                - /url: /ar/listings/5e787c83-552d-4d05-91d8-2c5c2694ca32
+                - generic [ref=e687]:
+                  - img "لاند روفر رنج روفر سبورت 2019" [ref=e688]
+                  - generic [ref=e689]: معرض
+                - generic [ref=e691]:
+                  - paragraph [ref=e692]: لاند روفر رنج روفر سبورت
+                  - paragraph [ref=e693]:
+                    - generic [ref=e694]: "2019"
+                    - generic [aria-hidden] [ref=e695]: ·
+                    - generic [ref=e696]: 88,000 كم
+                    - generic [aria-hidden] [ref=e697]: ·
+                    - generic [ref=e698]: أوتوماتيك
+                  - paragraph [ref=e699]:
+                    - generic [ref=e700]:
+                      - generic [ref=e702]: ريال سعودي
+                      - text: 198,000
+                  - generic [ref=e703]:
+                    - generic [ref=e704]: SUV
+                    - generic [ref=e709]: بنزين
+                    - generic [ref=e713]: الخبر
+              - button "احفظ هذه السيارة" [ref=e720] [cursor=pointer]
+  - contentinfo [ref=e721]:
+    - generic [ref=e722]:
+      - generic [ref=e723]:
+        - link [ref=e724] [cursor=pointer]:
+          - /url: /ar
+          - img "KarSouq" [ref=e725]
+        - paragraph [ref=e726]: سوق السيارات المستعملة في المملكة العربية السعودية. اشترِ وبِع مباشرة مع البائعين.
+      - generic [ref=e727]:
+        - paragraph [ref=e728]: شراء
+        - link "تصفح السيارات" [ref=e729] [cursor=pointer]:
+          - /url: /ar/listings
+        - link "السيارات المحفوظة" [ref=e730] [cursor=pointer]:
+          - /url: /ar/favorites
+        - link "عمليات البحث المحفوظة" [ref=e731] [cursor=pointer]:
+          - /url: /ar/saved-searches
+      - generic [ref=e732]:
+        - paragraph [ref=e733]: الماركات الأكثر طلبًا
+        - link "تويوتا" [ref=e734] [cursor=pointer]:
+          - /url: /ar/brands/toyota
+        - link "هيونداي" [ref=e735] [cursor=pointer]:
+          - /url: /ar/brands/hyundai
+        - link "نيسان" [ref=e736] [cursor=pointer]:
+          - /url: /ar/brands/nissan
+        - link "لكزس" [ref=e737] [cursor=pointer]:
+          - /url: /ar/brands/lexus
+      - generic [ref=e738]:
+        - paragraph [ref=e739]: المدن
+        - link "الدمام" [ref=e740] [cursor=pointer]:
+          - /url: /ar/locations/dammam
+        - link "الجبيل" [ref=e741] [cursor=pointer]:
+          - /url: /ar/locations/jubail
+        - link "الخبر" [ref=e742] [cursor=pointer]:
+          - /url: /ar/locations/khobar
+        - link "الظهران" [ref=e743] [cursor=pointer]:
+          - /url: /ar/locations/dhahran
+        - link "جميع المدن" [ref=e744] [cursor=pointer]:
+          - /url: /ar/locations
+      - generic [ref=e745]:
+        - paragraph [ref=e746]: بيع
+        - link "بِع سيارتك" [ref=e747] [cursor=pointer]:
+          - /url: /ar/account/become-seller
+        - link "الباقات" [ref=e748] [cursor=pointer]:
+          - /url: /ar/pricing
+        - link "لوحة البائع" [ref=e749] [cursor=pointer]:
+          - /url: /ar/dashboard
+        - link "حسابي" [ref=e750] [cursor=pointer]:
+          - /url: /ar/account
+    - generic [ref=e752]:
+      - paragraph [ref=e753]: © 2026 كارسوق، أحد منتجات CodeSudio. جميع الحقوق محفوظة.
+      - navigation [ref=e754]:
+        - link "تواصل معنا" [ref=e755] [cursor=pointer]:
+          - /url: /ar/contact
+        - link "سياسة الخصوصية" [ref=e756] [cursor=pointer]:
+          - /url: /ar/privacy
+        - link "شروط الاستخدام" [ref=e757] [cursor=pointer]:
+          - /url: /ar/terms
+  - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=e763] [cursor=pointer]:
+    - generic [ref=e766]:
+      - text: Compiling
+      - generic [ref=e767]:
+        - generic [ref=e768]: .
+        - generic [ref=e769]: .
+        - generic [ref=e770]: .
