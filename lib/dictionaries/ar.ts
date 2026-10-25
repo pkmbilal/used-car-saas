@@ -74,6 +74,16 @@ export const ar: DictionaryShape<typeof en> = {
     sellYourCar: "بِع سيارتك",
     menu: "القائمة",
     main: "التنقل الرئيسي",
+    accountMenu: "قائمة الحساب",
+    administrator: "مشرف",
+    roles: { buyer: "مشترٍ", seller: "بائع" },
+    hints: {
+      savedCars: "السيارات التي حفظتها",
+      savedSearches: "تنبيهات بالإعلانات الجديدة المطابقة",
+      myListings: "السيارات التي تبيعها",
+      admin: "الإشراف والبلاغات",
+      account: "الاسم والجوال والمدينة",
+    },
     tabs: {
       home: "الرئيسية",
       buy: "شراء",

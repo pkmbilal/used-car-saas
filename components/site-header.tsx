@@ -27,10 +27,15 @@ export async function SiteHeader() {
   const sellHref = isSeller ? "/dashboard/listings/new" : "/account/become-seller";
   const accountLinks: HeaderLink[] = current
     ? [
-        { href: "/favorites", label: t.nav.savedCars },
-        { href: "/saved-searches", label: t.nav.savedSearches },
-        ...(current.profile.is_admin ? [{ href: "/admin", label: t.nav.admin }] : []),
-        { href: "/account", label: t.nav.account },
+        ...(isSeller
+          ? [{ href: "/dashboard", label: t.nav.myListings, hint: t.nav.hints.myListings, icon: "listings" as const }]
+          : []),
+        { href: "/favorites", label: t.nav.savedCars, hint: t.nav.hints.savedCars, icon: "saved" },
+        { href: "/saved-searches", label: t.nav.savedSearches, hint: t.nav.hints.savedSearches, icon: "searches" },
+        ...(current.profile.is_admin
+          ? [{ href: "/admin", label: t.nav.admin, hint: t.nav.hints.admin, icon: "admin" as const }]
+          : []),
+        { href: "/account", label: t.nav.account, hint: t.nav.hints.account, icon: "account" },
       ]
     : [];
   // On phones the bottom tab bar covers Home, Buy, Sell, Saved and Account;
@@ -57,7 +62,16 @@ export async function SiteHeader() {
           <div className="ms-auto hidden items-center gap-3 md:flex">
             <LanguageSwitcher className="rounded-full px-2 text-label font-medium text-white/70 transition-colors hover:text-white" />
             {current ? (
-              <UserMenu name={current.profile.full_name || current.user.email || t.nav.account} links={accountLinks} />
+              <UserMenu
+                user={{
+                  name: current.profile.full_name || current.user.email || t.nav.account,
+                  email: current.user.email ?? null,
+                  role: current.profile.role,
+                  plan: current.profile.plan,
+                  isAdmin: current.profile.is_admin,
+                }}
+                links={accountLinks}
+              />
             ) : (
               <Button asChild variant="outline" className={outlineButton}>
                 <Link href="/login">{t.nav.signIn}</Link>

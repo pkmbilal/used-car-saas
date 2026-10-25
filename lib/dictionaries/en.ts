@@ -47,6 +47,16 @@ export const en = {
     sellYourCar: "Sell your car",
     menu: "Menu",
     main: "Main",
+    accountMenu: "Account menu",
+    administrator: "Administrator",
+    roles: { buyer: "Buyer", seller: "Seller" },
+    hints: {
+      savedCars: "Cars you've saved",
+      savedSearches: "Get alerts for new matches",
+      myListings: "Cars you're selling",
+      admin: "Moderation and reports",
+      account: "Name, phone and city",
+    },
     tabs: {
       home: "Home",
       buy: "Buy",
