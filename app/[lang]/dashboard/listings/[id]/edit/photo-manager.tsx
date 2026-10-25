@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useRef, useState, useTransition } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useDictionary } from "@/components/i18n-provider";
+import { compressImage } from "@/lib/compress-image";
 import { fmt, translateMessage } from "@/lib/dictionary";
 import {
   IMAGE_TYPES,
@@ -37,10 +38,11 @@ export function PhotoManager({ listingId, photos }: Props) {
   const [error, setError] = useState<string>();
   const remaining = MAX_IMAGES_PER_LISTING - photos.length;
 
-  // Uploads one file: presign → PUT straight to R2 → confirm.
-  async function uploadFile(file: File): Promise<string | undefined> {
-    if (!(file.type in IMAGE_TYPES)) return fmt(p.fileType, { name: file.name });
-    if (file.size > MAX_IMAGE_BYTES) return fmt(p.fileSize, { name: file.name });
+  // Uploads one file: compress → presign → PUT straight to R2 → confirm.
+  async function uploadFile(original: File): Promise<string | undefined> {
+    if (!(original.type in IMAGE_TYPES)) return fmt(p.fileType, { name: original.name });
+    const file = await compressImage(original, { maxEdge: 1920, quality: 0.8 });
+    if (file.size > MAX_IMAGE_BYTES) return fmt(p.fileSize, { name: original.name });
 
     const presigned = await requestImageUpload(listingId, file.type, file.size);
     if ("error" in presigned) return translateMessage(t, presigned.error);
@@ -50,7 +52,7 @@ export function PhotoManager({ listingId, photos }: Props) {
       headers: { "Content-Type": file.type },
       body: file,
     });
-    if (!response.ok) return fmt(p.uploadFailed, { name: file.name });
+    if (!response.ok) return fmt(p.uploadFailed, { name: original.name });
 
     const confirmed = await confirmImageUpload(listingId, presigned.key);
     return confirmed.error && translateMessage(t, confirmed.error);
