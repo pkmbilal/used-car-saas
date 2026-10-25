@@ -24,7 +24,7 @@ export async function getFavoriteListings(userId: string): Promise<ListingWithIm
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("favorites")
-    .select("listing:listings(*, listing_images(*), seller:profiles!listings_seller_id_fkey(plan))")
+    .select("listing:listings(*, listing_images(*), seller:profiles!listings_seller_id_fkey(plan, id_verified_at))")
     .eq("user_id", userId)
     .order("created_at", { ascending: false });
   if (error) throw error;

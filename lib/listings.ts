@@ -179,17 +179,24 @@ export type ListingWithImages = Listing & {
   images: (ListingImage & { url: string })[];
   // Set by public card queries (LISTING_CARD_SELECT); shown as a badge.
   sellerType?: SellerType;
+  // Set by public card queries; shown as an "ID verified" badge.
+  sellerIdVerified?: boolean;
 };
 
-// Public listing cards: photos plus the seller's plan, for the dealer/private badge.
-export const LISTING_CARD_SELECT = "*, listing_images(*), seller:profiles!listings_seller_id_fkey(plan)";
+// Public listing cards: photos plus the seller's plan and ID status, for the card badges.
+export const LISTING_CARD_SELECT =
+  "*, listing_images(*), seller:profiles!listings_seller_id_fkey(plan, id_verified_at)";
 
 export function toListingCard<
-  T extends Listing & { listing_images: ListingImage[]; seller: { plan: Plan } | null },
+  T extends Listing & {
+    listing_images: ListingImage[];
+    seller: { plan: Plan; id_verified_at: string | null } | null;
+  },
 >({ seller, ...listing }: T): ListingWithImages {
   return {
     ...withImageUrls(listing),
     sellerType: seller ? (isDealerPlan(seller.plan) ? "dealer" : "private") : undefined,
+    sellerIdVerified: !!seller?.id_verified_at,
   };
 }
 

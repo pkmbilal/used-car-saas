@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "@/components/locale-link";
 import { FavoriteButton } from "@/components/favorite-button";
-import { ArrowRight, Car, Fuel, MapPin } from "lucide-react";
+import { ArrowRight, BadgeCheck, Car, Fuel, MapPin } from "lucide-react";
 import { RiyalPrice } from "@/components/riyal-price";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
@@ -42,14 +42,24 @@ export async function ListingCard({ listing, favorited, sizes }: CardProps) {
                 className="object-cover"
               />
             )}
-            {listing.sellerType && (
-              <Badge
-                className={`absolute bottom-3 start-3 text-caption font-semibold ${
-                  listing.sellerType === "dealer" ? "bg-charcoal text-lime" : "bg-white/90 text-ink"
-                }`}
-              >
-                {listing.sellerType === "dealer" ? t.common.dealer : t.common.privateSeller}
-              </Badge>
+            {(listing.sellerType || listing.sellerIdVerified) && (
+              <div className="absolute bottom-3 start-3 flex flex-wrap gap-1.5">
+                {listing.sellerType && (
+                  <Badge
+                    className={`text-caption font-semibold ${
+                      listing.sellerType === "dealer" ? "bg-charcoal text-lime" : "bg-white/90 text-ink"
+                    }`}
+                  >
+                    {listing.sellerType === "dealer" ? t.common.dealer : t.common.privateSeller}
+                  </Badge>
+                )}
+                {listing.sellerIdVerified && (
+                  <Badge title={t.verification.idVerifiedTitle} className="bg-mint text-caption font-semibold text-brand">
+                    <BadgeCheck />
+                    {t.verification.idVerified}
+                  </Badge>
+                )}
+              </div>
             )}
             {isFeatured(listing) && (
               <Badge className="absolute top-3 start-3 bg-lime text-caption font-semibold text-on-lime">
