@@ -210,10 +210,17 @@ export function quotaSummary(t: Dictionary, locale: Locale, quota: ListingQuota)
     : `${plan} · ${fmt(t.plans.usedOf, { used: quota.used, limit: quota.limit })}`;
 }
 
-// Monthly SAR price per plan, for prefilling recorded payments.
+// /pricing shows prices excluding VAT; dealers pay price + VAT.
+export const VAT_RATE = 0.15;
+
+function withVat(price: number): number {
+  return Math.round(price * (1 + VAT_RATE) * 100) / 100;
+}
+
+// Monthly SAR price per plan including VAT, for prefilling recorded payments.
 export const PLAN_PRICES: Record<Plan, number> = {
-  free: PLAN_DETAILS.free.price,
-  dealer: PLAN_DETAILS.dealer.price,
-  dealer_pro: PLAN_DETAILS.dealer_pro.price,
-  showroom: PLAN_DETAILS.showroom.price,
+  free: withVat(PLAN_DETAILS.free.price),
+  dealer: withVat(PLAN_DETAILS.dealer.price),
+  dealer_pro: withVat(PLAN_DETAILS.dealer_pro.price),
+  showroom: withVat(PLAN_DETAILS.showroom.price),
 };
