@@ -1,6 +1,7 @@
 "use server";
 
-import { safeNext } from "@/lib/auth";
+import { redirect } from "next/navigation";
+import { isAdminAccount, safeNext } from "@/lib/auth";
 import { describeAuthError, type AuthFlowState } from "@/lib/auth-flows";
 import {
   isValidEmail,
@@ -62,13 +63,18 @@ export async function resetAction(_prev: ResetState, formData: FormData): Promis
       }
 
       const supabase = await createClient();
-      const { error } = await supabase.auth.updateUser({ password });
+      const { data, error } = await supabase.auth.updateUser({ password });
       if (error) {
         return {
           step: "password",
           email,
           error: describeAuthError(error, "Could not update your password. Start again."),
         };
+      }
+      // Admins can reset here but must sign in through the admin panel.
+      if (await isAdminAccount(data.user.id)) {
+        await supabase.auth.signOut();
+        redirect("/admin/login");
       }
       return localeRedirect(safeNext(formData.get("next")));
     }
