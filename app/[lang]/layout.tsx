@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { GoogleAnalytics } from "@next/third-parties/google";
 import { Analytics } from "@vercel/analytics/next";
 import { notFound } from "next/navigation";
 import { DirectionProvider } from "@/components/direction-provider";
@@ -57,6 +58,8 @@ export default async function RootLayout({ children, params }: LayoutProps<"/[la
         </DirectionProvider>
         <Analytics />
       </body>
+      {/* Only set in production, so dev/preview traffic stays out of GA. */}
+      {process.env.NEXT_PUBLIC_GA_ID && <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID} />}
     </html>
   );
 }
