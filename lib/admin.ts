@@ -97,7 +97,7 @@ export async function getAllListings(filters: {
   const supabase = createAdminClient();
   let query = supabase
     .from("listings")
-    .select("*, listing_images(*), seller:profiles!listings_seller_id_fkey(id, full_name, plan)", {
+    .select("*, listing_images(*), seller:profiles!listings_seller_id_fkey(id, full_name, plan, is_demo)", {
       count: "exact",
     });
 
@@ -749,6 +749,18 @@ export async function unsuspendUser(userId: string): Promise<AdminResult> {
     .eq("status", "removed")
     .eq("removed_reason", SUSPENSION_REMOVAL_REASON);
   if (listingError) return { error: "User unsuspended, but their listings could not be restored." };
+  return {};
+}
+
+// Demo accounts stay usable on production but RLS hides their profile and
+// listings from everyone except other demo accounts.
+export async function setDemoAccount(userId: string, isDemo: boolean): Promise<AdminResult> {
+  const { user } = await requireAdmin();
+  if (userId === user.id) return { error: "You can't change demo mode on your own account." };
+
+  const supabase = createAdminClient();
+  const { error } = await supabase.from("profiles").update({ is_demo: isDemo }).eq("id", userId);
+  if (error) return { error: "Could not update demo mode. Try again." };
   return {};
 }
 

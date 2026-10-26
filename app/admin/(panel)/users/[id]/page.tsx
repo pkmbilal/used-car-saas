@@ -11,6 +11,7 @@ import {
   ExternalLink,
   FileCheck,
   Flag,
+  FlaskConical,
   History,
   MapPin,
   Phone,
@@ -35,6 +36,7 @@ import { publicUrl } from "@/lib/r2";
 import { ActionList } from "../../action-list";
 import {
   revokeIdVerificationAction,
+  setDemoAccountAction,
   setUserPlanAction,
   suspendUserAction,
   unsuspendUserAction,
@@ -624,6 +626,41 @@ export default async function AdminUserPage({ params }: PageProps<"/admin/users/
                           "Their live listings are hidden and they can't publish new ones until you unsuspend them.",
                       }}
                       action={suspendUserAction.bind(null, profile.id)}
+                    />
+                  )}
+                </div>
+              )}
+              {!isSelf && <hr className="border-line dark:border-zinc-800" />}
+              {!isSelf && (
+                <div className="flex flex-wrap items-center gap-3">
+                  <IconTile icon={FlaskConical} tone={profile.is_demo ? "amber" : "neutral"} />
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm font-medium">{profile.is_demo ? "Demo account" : "Real account"}</p>
+                    <p className="text-xs text-zinc-500">
+                      {profile.is_demo
+                        ? "Profile and listings are hidden from the public."
+                        : "Visible to everyone."}
+                    </p>
+                  </div>
+                  {profile.is_demo ? (
+                    <AdminActionButton
+                      label="Make public"
+                      success="Account is now public"
+                      confirm={{
+                        title: "Make this account public?",
+                        description: "Its profile and active listings become visible to all buyers.",
+                      }}
+                      action={setDemoAccountAction.bind(null, profile.id, false)}
+                    />
+                  ) : (
+                    <AdminActionButton
+                      label="Mark as demo"
+                      success="Marked as demo"
+                      confirm={{
+                        title: "Mark as a demo account?",
+                        description: "Its profile and listings are hidden from everyone except demo accounts.",
+                      }}
+                      action={setDemoAccountAction.bind(null, profile.id, true)}
                     />
                   )}
                 </div>

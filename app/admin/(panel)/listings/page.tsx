@@ -155,7 +155,10 @@ export default async function AdminListingsPage({ searchParams }: PageProps<"/ad
                             <Link href={`/admin/users/${listing.seller.id}`} className={linkClass}>
                               {listing.seller.full_name ?? "Unnamed"}
                             </Link>
-                            <Pill>{PLAN_LABELS[listing.seller.plan]}</Pill>
+                            <div className="flex flex-wrap gap-1">
+                              <Pill>{PLAN_LABELS[listing.seller.plan]}</Pill>
+                              {listing.seller.is_demo && <Pill tone="amber">Demo</Pill>}
+                            </div>
                           </div>
                         ) : (
                           <span className="text-zinc-500">Unknown</span>
