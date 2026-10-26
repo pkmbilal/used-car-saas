@@ -1,10 +1,10 @@
 import Link from "@/components/locale-link";
-import { Car } from "lucide-react";
+import { Plus } from "lucide-react";
 import { BrandLink } from "@/components/brand";
 import { MobileNav, UserMenu, type HeaderLink, type HeaderUser } from "@/components/header-menus";
 import { HeaderShell } from "@/components/header-shell";
 import { LanguageSwitcher } from "@/components/language-switcher";
-import { outlineButton, sellButton } from "@/components/header-styles";
+import { navSellButton, outlineButton } from "@/components/header-styles";
 import { MobileTabBar } from "@/components/mobile-tab-bar";
 import { NavLink } from "@/components/nav-link";
 import { Button } from "@/components/ui/button";
@@ -69,6 +69,12 @@ export async function SiteHeader() {
                 {link.label}
               </NavLink>
             ))}
+            <Button asChild className={navSellButton}>
+              <Link href={sellHref}>
+                <Plus className="size-3.5" strokeWidth={2.75} />
+                {t.nav.tabs.sell}
+              </Link>
+            </Button>
           </div>
           <div className="ms-auto hidden items-center gap-3 md:flex">
             <LanguageSwitcher />
@@ -79,12 +85,6 @@ export async function SiteHeader() {
                 <Link href="/login">{t.nav.signIn}</Link>
               </Button>
             )}
-            <Button asChild className={sellButton}>
-              <Link href={sellHref}>
-                <Car className="size-4" />
-                {t.nav.sellYourCar}
-              </Link>
-            </Button>
           </div>
           <div className="ms-auto md:hidden">
             <MobileNav links={menuLinks} signedIn={!!current} />

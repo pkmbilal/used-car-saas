@@ -44,7 +44,6 @@ export const en = {
     contact: "Contact",
     signIn: "Sign in",
     signOut: "Sign out",
-    sellYourCar: "Sell your car",
     menu: "Menu",
     language: "Language",
     main: "Main",

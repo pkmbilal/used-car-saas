@@ -71,7 +71,6 @@ export const ar: DictionaryShape<typeof en> = {
     contact: "تواصل معنا",
     signIn: "تسجيل الدخول",
     signOut: "تسجيل الخروج",
-    sellYourCar: "بِع سيارتك",
     menu: "القائمة",
     language: "اللغة",
     main: "التنقل الرئيسي",
