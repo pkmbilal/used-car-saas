@@ -204,7 +204,7 @@ export function MobileNav({ links, signedIn }: { links: HeaderLink[]; signedIn: 
               </Link>
             </SheetClose>
           ))}
-          <LanguageSwitcher className={linkClass} />
+          <LanguageSwitcher variant="row" />
         </nav>
         <Separator className="bg-white/10" />
         <div className="flex gap-3 px-4">
