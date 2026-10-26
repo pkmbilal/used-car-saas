@@ -295,6 +295,12 @@ async function Payments({ params, page }: ListProps) {
                             </span>
                           )}
                         </>
+                      ) : payment.addon_request ? (
+                        <Pill>
+                          {payment.addon_request.kind === "featured_boost"
+                            ? "Featured boost"
+                            : `${payment.addon_request.quantity} extra listing${payment.addon_request.quantity === 1 ? "" : "s"}`}
+                        </Pill>
                       ) : (
                         <span className="text-zinc-400">—</span>
                       )}

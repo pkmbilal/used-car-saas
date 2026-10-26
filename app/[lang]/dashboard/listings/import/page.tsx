@@ -85,6 +85,10 @@ export default async function ImportListingsPage() {
           {quota?.remaining === 0 && (
             <p className="mt-6 rounded-md bg-amber-50 px-4 py-3 text-sm text-amber-900 dark:bg-amber-950 dark:text-amber-200">
               {quotaReachedNote(t, quota)}{" "}
+              <Link href="/dashboard#extra-listings" className="font-medium underline">
+                {t.addons.buyExtra}
+              </Link>
+              {" · "}
               <Link href="/pricing" className="font-medium underline">
                 {p.seePlans}
               </Link>

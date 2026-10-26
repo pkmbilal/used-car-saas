@@ -2,12 +2,20 @@ import { Plus, Upload } from "lucide-react";
 import Link from "@/components/locale-link";
 import type { Metadata } from "next";
 import { rich } from "@/components/rich-text";
+import { addonReference, getMyPendingAddons } from "@/lib/addons";
 import { requireSeller } from "@/lib/auth";
+import { salesWhatsappUrl } from "@/lib/contact";
 import { count, fmt } from "@/lib/dictionary";
 import { getDictionary } from "@/lib/i18n-server";
-import { formatDay } from "@/lib/format";
+import { formatDay, formatSAR } from "@/lib/format";
 import { getSellerListings, isFeatured } from "@/lib/listings";
-import { getListingQuota, isDealerPlan, isPlanExpiringSoon } from "@/lib/plans";
+import {
+  addonPrice,
+  EXTRA_LISTING_PACKS,
+  getListingQuota,
+  isDealerPlan,
+  isPlanExpiringSoon,
+} from "@/lib/plans";
 import { ListingCardItem, ListingListItem } from "./listing-items";
 import { PlanCard } from "./plan-card";
 import { ViewToggle } from "./view-toggle";
@@ -23,7 +31,34 @@ export default async function DashboardPage({ searchParams }: PageProps<"/[lang]
   const d = t.dashboard;
   const view = (await searchParams).view === "list" ? "list" : "grid";
   const Item = view === "list" ? ListingListItem : ListingCardItem;
-  const [listings, quota] = await Promise.all([getSellerListings(user.id), getListingQuota()]);
+  const [listings, quota, pendingAddons] = await Promise.all([
+    getSellerListings(user.id),
+    getListingQuota(),
+    getMyPendingAddons(),
+  ]);
+  const pendingBoosts = new Set(
+    pendingAddons.flatMap((addon) => (addon.kind === "featured_boost" && addon.listingId ? [addon.listingId] : [])),
+  );
+  const boostLabel = fmt(t.addons.boostShort, { price: formatSAR(addonPrice("featured_boost"), locale) });
+  const pendingExtra = pendingAddons.find((addon) => addon.kind === "extra_listings");
+  const pendingRef = pendingExtra ? addonReference(pendingExtra.id) : null;
+  const extraListings =
+    quota && quota.limit !== null
+      ? {
+          packs: EXTRA_LISTING_PACKS.map((quantity) => ({
+            quantity,
+            label: count(locale, quantity, t.addons.pack),
+            price: formatSAR(addonPrice("extra_listings", quantity), locale),
+          })),
+          pending:
+            pendingExtra && pendingRef
+              ? {
+                  note: count(locale, pendingExtra.quantity, t.addons.extraPending, { ref: pendingRef }),
+                  whatsappUrl: salesWhatsappUrl(fmt(t.addons.whatsappExtra, { ref: pendingRef })),
+                }
+              : null,
+        }
+      : null;
   const openDrafts = listings.filter(
     (listing) => listing.status === "draft" && listing.first_published_at === null,
   ).length;
@@ -67,7 +102,9 @@ export default async function DashboardPage({ searchParams }: PageProps<"/[lang]
         </div>
       </div>
 
-      {quota && <PlanCard quota={quota} openDrafts={openDrafts} t={t} locale={locale} />}
+      {quota && (
+        <PlanCard quota={quota} openDrafts={openDrafts} t={t} locale={locale} extraListings={extraListings} />
+      )}
 
       {quota?.planExpiresAt && isPlanExpiringSoon(quota) && (
         <p className="mt-6 rounded-md bg-amber-50 px-4 py-3 text-sm text-amber-900 dark:bg-amber-950 dark:text-amber-200">
@@ -114,6 +151,8 @@ export default async function DashboardPage({ searchParams }: PageProps<"/[lang]
                 key={listing.id}
                 listing={listing}
                 featureSlots={isFeatured(listing) ? 0 : (quota?.featuredRemaining ?? 0)}
+                boostLabel={isFeatured(listing) ? null : boostLabel}
+                boostPending={pendingBoosts.has(listing.id)}
                 t={t}
                 locale={locale}
               />

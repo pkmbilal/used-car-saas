@@ -2,6 +2,7 @@
 
 import { randomUUID } from "node:crypto";
 import { revalidatePath } from "next/cache";
+import { requestAddon } from "@/lib/addons";
 import { requireSeller } from "@/lib/auth";
 import {
   IMAGE_TYPES,
@@ -48,6 +49,27 @@ export async function featureListing(listingId: string): Promise<ActionResult> {
   }
   const { t } = await getDictionary();
   return { error: t.plans.featureErrors[result.error] };
+}
+
+// One-off add-ons: these only file a request; an admin applies it once paid.
+export async function requestFeaturedBoost(listingId: string): Promise<ActionResult> {
+  await requireSeller();
+  return addonResult(await requestAddon("featured_boost", listingId, 1));
+}
+
+export async function requestExtraListings(quantity: number): Promise<ActionResult> {
+  await requireSeller();
+  return addonResult(await requestAddon("extra_listings", null, quantity));
+}
+
+async function addonResult(result: Awaited<ReturnType<typeof requestAddon>>): Promise<ActionResult> {
+  if (!result.error) {
+    revalidateDashboard();
+    revalidateLocalized("/listings", "layout");
+    return {};
+  }
+  const { t } = await getDictionary();
+  return { error: t.addons.errors[result.error] };
 }
 
 export async function createListing(

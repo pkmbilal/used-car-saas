@@ -1,4 +1,4 @@
-import { ArrowUpRight, Crown, FileText, Send, Star, Store } from "lucide-react";
+import { ArrowUpRight, Crown, FileText, PlusCircle, Send, Star, Store } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import Link from "@/components/locale-link";
 import { fmt } from "@/lib/dictionary";
@@ -6,15 +6,18 @@ import type { Dictionary } from "@/lib/dictionaries";
 import { formatDay } from "@/lib/format";
 import type { Locale } from "@/lib/i18n";
 import { DRAFT_LIMIT, isDealerPlan, type ListingQuota } from "@/lib/plans";
+import { BuyExtraListings, type ExtraListingsOffer } from "./buy-extra-listings";
 
 type Props = {
   quota: ListingQuota;
   openDrafts: number;
   t: Dictionary;
   locale: Locale;
+  // null on plans without a listing limit.
+  extraListings: ExtraListingsOffer | null;
 };
 
-export function PlanCard({ quota, openDrafts, t, locale }: Props) {
+export function PlanCard({ quota, openDrafts, t, locale, extraListings }: Props) {
   const c = t.dashboard.planCard;
   const linkClass =
     "inline-flex min-h-10 items-center gap-1.5 rounded-full px-3.5 text-sm font-medium transition-colors";
@@ -73,7 +76,22 @@ export function PlanCard({ quota, openDrafts, t, locale }: Props) {
             className="max-sm:col-span-2"
           />
         )}
+        {quota.listingCredits > 0 && (
+          <div className="rounded-xl bg-white/[0.07] p-3 ring-1 ring-white/15 backdrop-blur-sm">
+            <p className="flex items-center gap-1.5 text-xs text-white/70">
+              <PlusCircle className="size-3.5 shrink-0" aria-hidden />
+              <span className="truncate">{t.addons.credits}</span>
+            </p>
+            <p className="mt-1.5 text-2xl font-semibold tracking-tight tabular-nums">{quota.listingCredits}</p>
+          </div>
+        )}
       </div>
+
+      {extraListings && (
+        <div id="extra-listings" className="mt-3 scroll-mt-24 border-t border-white/10 pt-3">
+          <BuyExtraListings offer={extraListings} />
+        </div>
+      )}
 
       {isDealerPlan(quota.plan) && (
         <div className="mt-3 border-t border-white/10 pt-3">

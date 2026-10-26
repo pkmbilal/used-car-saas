@@ -39,6 +39,12 @@ export default async function AdminLayout({ children }: LayoutProps<"/admin">) {
       count: pending.dealers,
       description: "Businesses applying for a dealer plan.",
     },
+    {
+      href: "/admin/requests",
+      label: "Add-ons",
+      count: pending.addons,
+      description: "Featured boosts and extra listings sellers have asked to buy.",
+    },
     { href: "/admin/plans", label: "Plans", description: "Plan changes, renewals, payments and featured placements." },
     { href: "/admin/activity", label: "Activity", description: "Every moderation decision, newest first." },
   ];
@@ -46,6 +52,7 @@ export default async function AdminLayout({ children }: LayoutProps<"/admin">) {
     { href: "/admin/reports", label: "Open reports", count: pending.reports },
     { href: "/admin/verifications", label: "ID verifications", count: pending.verifications },
     { href: "/admin/dealers", label: "Dealer applications", count: pending.dealers },
+    { href: "/admin/requests", label: "Add-on requests", count: pending.addons },
   ];
 
   return (

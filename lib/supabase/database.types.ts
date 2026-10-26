@@ -34,6 +34,7 @@ export type Database = {
           avatar_key: string | null;
           showroom_address: string | null;
           has_phone: boolean | null;
+          listing_credits: number;
           created_at: string;
         };
         Insert: {
@@ -54,6 +55,7 @@ export type Database = {
           avatar_key?: string | null;
           showroom_address?: string | null;
           has_phone?: never;
+          listing_credits?: number;
           created_at?: string;
         };
         Update: {
@@ -74,6 +76,7 @@ export type Database = {
           avatar_key?: string | null;
           showroom_address?: string | null;
           has_phone?: never;
+          listing_credits?: number;
           created_at?: string;
         };
         Relationships: [];
@@ -364,6 +367,7 @@ export type Database = {
           id: string;
           user_id: string;
           plan_change_id: string | null;
+          addon_request_id: string | null;
           amount: number;
           method: "bank_transfer" | "cash" | "other";
           reference: string | null;
@@ -374,6 +378,7 @@ export type Database = {
           id?: string;
           user_id: string;
           plan_change_id?: string | null;
+          addon_request_id?: string | null;
           amount: number;
           method: "bank_transfer" | "cash" | "other";
           reference?: string | null;
@@ -384,6 +389,7 @@ export type Database = {
           id?: string;
           user_id?: string;
           plan_change_id?: string | null;
+          addon_request_id?: string | null;
           amount?: number;
           method?: "bank_transfer" | "cash" | "other";
           reference?: string | null;
@@ -406,8 +412,76 @@ export type Database = {
             referencedColumns: ["id"];
           },
           {
+            foreignKeyName: "plan_payments_addon_request_id_fkey";
+            columns: ["addon_request_id"];
+            isOneToOne: false;
+            referencedRelation: "addon_requests";
+            referencedColumns: ["id"];
+          },
+          {
             foreignKeyName: "plan_payments_recorded_by_fkey";
             columns: ["recorded_by"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      addon_requests: {
+        Row: {
+          id: string;
+          user_id: string;
+          kind: "featured_boost" | "extra_listings";
+          listing_id: string | null;
+          quantity: number;
+          status: "pending" | "approved" | "rejected";
+          reject_reason: string | null;
+          decided_by: string | null;
+          decided_at: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          kind: "featured_boost" | "extra_listings";
+          listing_id?: string | null;
+          quantity: number;
+          status?: "pending" | "approved" | "rejected";
+          reject_reason?: string | null;
+          decided_by?: string | null;
+          decided_at?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          user_id?: string;
+          kind?: "featured_boost" | "extra_listings";
+          listing_id?: string | null;
+          quantity?: number;
+          status?: "pending" | "approved" | "rejected";
+          reject_reason?: string | null;
+          decided_by?: string | null;
+          decided_at?: string | null;
+          created_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "addon_requests_user_id_fkey";
+            columns: ["user_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "addon_requests_listing_id_fkey";
+            columns: ["listing_id"];
+            isOneToOne: false;
+            referencedRelation: "listings";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "addon_requests_decided_by_fkey";
+            columns: ["decided_by"];
             isOneToOne: false;
             referencedRelation: "profiles";
             referencedColumns: ["id"];
@@ -418,7 +492,7 @@ export type Database = {
         Row: {
           id: string;
           admin_id: string | null;
-          action: "listing_removed" | "listing_restored" | "reports_dismissed" | "listing_unfeatured" | "user_suspended" | "user_unsuspended" | "id_approved" | "id_rejected" | "id_revoked" | "dealer_approved" | "dealer_rejected" | "listing_auto_hidden";
+          action: "listing_removed" | "listing_restored" | "reports_dismissed" | "listing_unfeatured" | "user_suspended" | "user_unsuspended" | "id_approved" | "id_rejected" | "id_revoked" | "dealer_approved" | "dealer_rejected" | "listing_auto_hidden" | "addon_rejected";
           user_id: string | null;
           listing_id: string | null;
           reason: string | null;
@@ -427,7 +501,7 @@ export type Database = {
         Insert: {
           id?: string;
           admin_id?: string | null;
-          action: "listing_removed" | "listing_restored" | "reports_dismissed" | "listing_unfeatured" | "user_suspended" | "user_unsuspended" | "id_approved" | "id_rejected" | "id_revoked" | "dealer_approved" | "dealer_rejected" | "listing_auto_hidden";
+          action: "listing_removed" | "listing_restored" | "reports_dismissed" | "listing_unfeatured" | "user_suspended" | "user_unsuspended" | "id_approved" | "id_rejected" | "id_revoked" | "dealer_approved" | "dealer_rejected" | "listing_auto_hidden" | "addon_rejected";
           user_id?: string | null;
           listing_id?: string | null;
           reason?: string | null;
@@ -436,7 +510,7 @@ export type Database = {
         Update: {
           id?: string;
           admin_id?: string | null;
-          action?: "listing_removed" | "listing_restored" | "reports_dismissed" | "listing_unfeatured" | "user_suspended" | "user_unsuspended" | "id_approved" | "id_rejected" | "id_revoked" | "dealer_approved" | "dealer_rejected" | "listing_auto_hidden";
+          action?: "listing_removed" | "listing_restored" | "reports_dismissed" | "listing_unfeatured" | "user_suspended" | "user_unsuspended" | "id_approved" | "id_rejected" | "id_revoked" | "dealer_approved" | "dealer_rejected" | "listing_auto_hidden" | "addon_rejected";
           user_id?: string | null;
           listing_id?: string | null;
           reason?: string | null;
@@ -768,6 +842,10 @@ export type Database = {
         Args: Record<PropertyKey, never>;
         Returns: { views: number; calls: number; whatsapps: number }[];
       };
+      approve_addon_request: {
+        Args: { p_request: string; p_admin: string };
+        Returns: undefined;
+      };
       expire_plans: {
         Args: Record<PropertyKey, never>;
         Returns: number;
@@ -791,6 +869,14 @@ export type Database = {
       increment_listing_view: {
         Args: { p_listing_id: string };
         Returns: undefined;
+      };
+      reject_addon_request: {
+        Args: { p_request: string; p_admin: string; p_reason: string };
+        Returns: undefined;
+      };
+      request_addon: {
+        Args: { p_kind: "featured_boost" | "extra_listings"; p_listing_id: string | null; p_quantity: number };
+        Returns: string;
       };
       reveal_seller_phone: {
         Args: { p_seller_id: string; p_ip_hash: string };
@@ -816,6 +902,7 @@ export type Database = {
           monthly_limit: number | null;
           featured_used: number;
           featured_allowance: number | null;
+          listing_credits: number;
         }[];
       };
     };

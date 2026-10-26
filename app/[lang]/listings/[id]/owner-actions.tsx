@@ -2,13 +2,18 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { CheckCircle2, Pencil, RotateCcw, Sparkles } from "lucide-react";
+import { CheckCircle2, Clock, Pencil, RotateCcw, Sparkles } from "lucide-react";
 import { useDictionary } from "@/components/i18n-provider";
 import Link from "@/components/locale-link";
 import { Button } from "@/components/ui/button";
 import { fmt, translateMessage } from "@/lib/dictionary";
 import type { ListingStatus } from "@/lib/listings";
-import { featureListing, setListingStatus, type ActionResult } from "../../dashboard/listings/actions";
+import {
+  featureListing,
+  requestFeaturedBoost,
+  setListingStatus,
+  type ActionResult,
+} from "../../dashboard/listings/actions";
 
 type Props = {
   listingId: string;
@@ -18,12 +23,18 @@ type Props = {
   featureDays: number;
   // Whether a higher plan exists, for the "get featured slots" link.
   canUpgrade: boolean;
+  // A paid boost, offered when there are no featured slots left; null when
+  // the listing is already featured.
+  boost: {
+    label: string;
+    pending: { note: string; whatsappUrl: string | null } | null;
+  } | null;
 };
 
 const buttonClass = "h-10 w-full text-xs max-sm:text-sm font-medium";
 
 // The seller's controls on their own listing page.
-export function OwnerActions({ listingId, status, featureSlots, featureDays, canUpgrade }: Props) {
+export function OwnerActions({ listingId, status, featureSlots, featureDays, canUpgrade, boost }: Props) {
   const router = useRouter();
   const { t } = useDictionary();
   const a = t.dashboard.actions;
@@ -81,6 +92,35 @@ export function OwnerActions({ listingId, status, featureSlots, featureDays, can
           </Button>
         )}
       </div>
+      {status === "active" && featureSlots === 0 && boost && !boost.pending && (
+        <Button
+          type="button"
+          disabled={pending}
+          className={buttonClass}
+          onClick={() => run(() => requestFeaturedBoost(listingId))}
+        >
+          <Sparkles className="size-3.5" />
+          {boost.label}
+        </Button>
+      )}
+      {status === "active" && boost?.pending && (
+        <div className="rounded-md bg-mint px-3 py-2 text-xs text-brand-600">
+          <p className="flex items-start gap-1.5 font-medium">
+            <Clock className="mt-px size-3.5 shrink-0" />
+            {boost.pending.note}
+          </p>
+          {boost.pending.whatsappUrl && (
+            <a
+              href={boost.pending.whatsappUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-1.5 inline-block font-semibold underline"
+            >
+              {t.addons.payOnWhatsapp}
+            </a>
+          )}
+        </div>
+      )}
       {status === "active" && featureSlots === 0 && canUpgrade && (
         <Link href="/pricing" className="text-xs font-semibold text-brand hover:underline">
           {t.listingPage.boostUpsell}

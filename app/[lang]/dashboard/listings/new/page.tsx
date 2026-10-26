@@ -71,6 +71,10 @@ export default async function NewListingPage() {
           <AlertTriangle className="mt-0.5 size-4 shrink-0" aria-hidden />
           <span>
             {quotaReachedNote(t, quota)}{" "}
+            <Link href="/dashboard#extra-listings" className="font-medium underline">
+              {t.addons.buyExtra}
+            </Link>
+            {" · "}
             <Link href="/pricing" className="font-medium underline">
               {p.seePlans}
             </Link>

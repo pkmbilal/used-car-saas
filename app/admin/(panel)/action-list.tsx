@@ -6,6 +6,7 @@ import {
   CircleCheck,
   EyeOff,
   Flag,
+  PackagePlus,
   RotateCcw,
   Star,
   Store,
@@ -32,6 +33,7 @@ const ACTION_STYLE: Record<AdminActionType, { icon: LucideIcon; tone: string }> 
   dealer_approved: { icon: Store, tone: "bg-green-50 text-green-700 dark:bg-green-950 dark:text-green-300" },
   dealer_rejected: { icon: Store, tone: "bg-red-50 text-red-700 dark:bg-red-950 dark:text-red-300" },
   listing_auto_hidden: { icon: EyeOff, tone: "bg-red-50 text-red-700 dark:bg-red-950 dark:text-red-300" },
+  addon_rejected: { icon: PackagePlus, tone: "bg-red-50 text-red-700 dark:bg-red-950 dark:text-red-300" },
 };
 
 // Moderation log as a timeline, shared by the Activity page and the user

@@ -29,7 +29,9 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { addonReference, getMyPendingAddons } from "@/lib/addons";
 import { getCurrentUser } from "@/lib/auth";
+import { salesWhatsappUrl } from "@/lib/contact";
 import { carName, makeName, modelName } from "@/lib/car-names";
 import { cityName, fmt, optionLabel, translateMessage } from "@/lib/dictionary";
 import { getFavoriteIds } from "@/lib/favorites";
@@ -46,7 +48,7 @@ import {
 import { capitalize } from "@/lib/listing-options";
 import { breadcrumbJsonLd, jsonLdScript, listingDescription, listingJsonLd } from "@/lib/listing-seo";
 import { getListingStats, getPublicListing, getSimilarListings, isFeatured } from "@/lib/listings";
-import { getListingQuota, SELF_FEATURE_DAYS } from "@/lib/plans";
+import { addonPrice, BOOST_DAYS, getListingQuota, SELF_FEATURE_DAYS } from "@/lib/plans";
 import { publicUrl } from "@/lib/r2";
 import { siteUrl } from "@/lib/site";
 import { getStorefront } from "@/lib/storefront";
@@ -102,9 +104,10 @@ export default async function ListingPage({ params }: PageProps<"/[lang]/listing
   const seller = listing.seller;
   const storefront = seller ? getStorefront(seller) : null;
   const featured = isFeatured(listing);
-  const [stats, quota, favoriteIds, similar] = await Promise.all([
+  const [stats, quota, pendingAddons, favoriteIds, similar] = await Promise.all([
     isOwner ? getListingStats(listing.id) : null,
     isOwner ? getListingQuota() : null,
+    isOwner ? getMyPendingAddons(listing.id) : [],
     favoritesPromise,
     similarPromise,
   ]);
@@ -113,6 +116,19 @@ export default async function ListingPage({ params }: PageProps<"/[lang]/listing
     price: formatSAR(listing.price, locale),
     url: await listingUrl(localizePath(locale, `/listings/${listing.id}`)),
   });
+  // A paid 7-day boost, for sellers without featured slots left.
+  const boostOffer = (pendingId: string | undefined) => {
+    const ref = pendingId ? addonReference(pendingId) : null;
+    return {
+      label: fmt(t.addons.boost, { days: BOOST_DAYS, price: formatSAR(addonPrice("featured_boost"), locale) }),
+      pending: ref
+        ? {
+            note: fmt(t.addons.boostPending, { ref }),
+            whatsappUrl: salesWhatsappUrl(fmt(t.addons.whatsappBoost, { ref })),
+          }
+        : null,
+    };
+  };
   const cover = listing.images[0];
   const transmission = listing.transmission ? optionLabel(t.options.transmission, listing.transmission) : null;
   const fuel = optionLabel(t.options.fuel, listing.fuel_type);
@@ -275,6 +291,7 @@ export default async function ListingPage({ params }: PageProps<"/[lang]/listing
                 featureSlots={featured ? 0 : (quota?.featuredRemaining ?? 0)}
                 featureDays={SELF_FEATURE_DAYS}
                 canUpgrade={!featured && !!quota && quota.plan !== "showroom"}
+                boost={featured ? null : boostOffer(pendingAddons[0]?.id)}
               />
             )}
             <div className={`grid gap-2.5 ${isOwner ? "mt-4 grid-cols-1" : "mt-3 grid-cols-2"}`}>

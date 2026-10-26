@@ -215,7 +215,7 @@ function daysFromNow(days: number): string {
 export async function getPendingCounts() {
   await requireAdmin();
   const supabase = createAdminClient();
-  const [reports, ids, dealers] = await Promise.all([
+  const [reports, ids, dealers, addons] = await Promise.all([
     supabase.from("listing_reports").select("id", { count: "exact", head: true }).eq("status", "open"),
     supabase
       .from("id_verification_requests")
@@ -225,11 +225,13 @@ export async function getPendingCounts() {
       .from("dealer_applications")
       .select("id", { count: "exact", head: true })
       .eq("status", "pending"),
+    supabase.from("addon_requests").select("id", { count: "exact", head: true }).eq("status", "pending"),
   ]);
   return {
     reports: reports.count ?? 0,
     verifications: ids.count ?? 0,
     dealers: dealers.count ?? 0,
+    addons: addons.count ?? 0,
   };
 }
 
@@ -407,7 +409,7 @@ export async function getPayments(page: number) {
   const { data, count, error } = await supabase
     .from("plan_payments")
     .select(
-      "*, user:profiles!plan_payments_user_id_fkey(id, full_name), recorded_by_profile:profiles!plan_payments_recorded_by_fkey(full_name), plan_change:plan_changes(to_plan, expires_at)",
+      "*, user:profiles!plan_payments_user_id_fkey(id, full_name), recorded_by_profile:profiles!plan_payments_recorded_by_fkey(full_name), plan_change:plan_changes(to_plan, expires_at), addon_request:addon_requests(kind, quantity)",
       { count: "exact" },
     )
     .order("created_at", { ascending: false })
@@ -1082,4 +1084,80 @@ export async function rejectDealerApplication(
     reject_reason: rejectReason,
   });
   return "error" in reviewed ? reviewed : {};
+}
+
+// ---------------------------------------------------------------------------
+// Add-on requests
+// ---------------------------------------------------------------------------
+
+export type PendingAddonRequest = Awaited<ReturnType<typeof getPendingAddonRequests>>[number];
+
+// Oldest first, with the seller and the listing to boost.
+export async function getPendingAddonRequests() {
+  await requireAdmin();
+  const supabase = createAdminClient();
+  const { data, error } = await supabase
+    .from("addon_requests")
+    .select(
+      "id, kind, quantity, created_at, user:profiles!addon_requests_user_id_fkey(id, full_name, phone, city, plan, suspended_at), listing:listings(id, year, make, model, status, featured_until)",
+    )
+    .eq("status", "pending")
+    .order("created_at", { ascending: true });
+  if (error) throw error;
+  return data;
+}
+
+// approve_addon_request applies the boost or credits; the payment, if any,
+// points at the request.
+export async function approveAddonRequest(requestId: string, payment: PaymentInput | null): Promise<AdminResult> {
+  const { user } = await requireAdmin();
+  const invalidPayment = validatePayment(payment);
+  if (invalidPayment) return { error: invalidPayment };
+
+  const supabase = createAdminClient();
+  const { data: request } = await supabase
+    .from("addon_requests")
+    .select("user_id")
+    .eq("id", requestId)
+    .maybeSingle();
+  if (!request) return { error: "Request not found." };
+
+  const { error } = await supabase.rpc("approve_addon_request", { p_request: requestId, p_admin: user.id });
+  if (error?.message === "request_not_pending") return { error: "Request is no longer pending." };
+  if (error?.message === "listing_not_active") {
+    return { error: "The listing isn't live any more. Reject the request instead." };
+  }
+  if (error) return { error: "Could not approve the request. Try again." };
+  if (!payment || !isPaymentMethod(payment.method)) return {};
+
+  const { error: paymentError } = await supabase.from("plan_payments").insert({
+    user_id: request.user_id,
+    addon_request_id: requestId,
+    amount: payment.amount,
+    method: payment.method,
+    reference: payment.reference.trim() || null,
+    recorded_by: user.id,
+  });
+  if (paymentError) return { error: "Request approved, but the payment could not be recorded." };
+  return {};
+}
+
+export async function rejectAddonRequest(requestId: string, reason: string): Promise<AdminResult> {
+  const { user } = await requireAdmin();
+  // Sellers don't see this one; it's kept in the activity log.
+  const rejectReason = reason.trim();
+  if (!rejectReason) return { error: "Give a reason for the activity log." };
+  if (rejectReason.length > MAX_REJECT_REASON) {
+    return { error: `Keep the reason under ${MAX_REJECT_REASON} characters.` };
+  }
+
+  const supabase = createAdminClient();
+  const { error } = await supabase.rpc("reject_addon_request", {
+    p_request: requestId,
+    p_admin: user.id,
+    p_reason: rejectReason,
+  });
+  if (error?.message === "request_not_pending") return { error: "Request is no longer pending." };
+  if (error) return { error: "Could not reject the request. Try again." };
+  return {};
 }

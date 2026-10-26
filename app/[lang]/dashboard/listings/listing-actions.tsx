@@ -12,6 +12,7 @@ import {
   Pencil,
   RotateCcw,
   Send,
+  Sparkles,
   Star,
   Trash2,
 } from "lucide-react";
@@ -28,7 +29,13 @@ import {
 import { fmt, translateMessage } from "@/lib/dictionary";
 import { localizePath } from "@/lib/i18n";
 import type { ListingStatus } from "@/lib/listings";
-import { deleteListing, featureListing, setListingStatus, type ActionResult } from "./actions";
+import {
+  deleteListing,
+  featureListing,
+  requestFeaturedBoost,
+  setListingStatus,
+  type ActionResult,
+} from "./actions";
 
 type Props = {
   listingId: string;
@@ -37,6 +44,10 @@ type Props = {
   // Featured slots left this month; the button shows when this is above 0.
   featureSlots?: number;
   featureDays?: number;
+  // Label of the paid boost request, offered once featured slots run out;
+  // hidden while a request waits for payment.
+  boostLabel?: string;
+  boostPending?: boolean;
   // "card" shows full buttons (dashboard card view), "row" compact buttons
   // (dashboard list view), "inline" a pill toolbar (edit page header).
   variant?: "inline" | "card" | "row";
@@ -83,6 +94,8 @@ export function ListingActions({
   showEdit = false,
   featureSlots = 0,
   featureDays,
+  boostLabel,
+  boostPending = false,
   variant = "inline",
 }: Props) {
   const router = useRouter();
@@ -108,11 +121,12 @@ export function ListingActions({
   const featureLabel = fmt(a.feature, { days: featureDays ?? "", slots: featureSlots });
   const publishLabel = status === "sold" ? a.relist : a.publish;
 
-  function run(action: () => Promise<ActionResult>) {
+  function run(action: () => Promise<ActionResult>, refresh = false) {
     setError(undefined);
     startTransition(async () => {
       const result = await action();
       if (result.error) setError(translateMessage(t, result.error));
+      else if (refresh) router.refresh();
     });
   }
 
@@ -165,6 +179,18 @@ export function ListingActions({
         >
           {icon(Star)}
           {label(featureLabel)}
+        </button>
+      )}
+      {status === "active" && featureSlots === 0 && boostLabel && !boostPending && (
+        <button
+          type="button"
+          disabled={pending}
+          title={row ? boostLabel : undefined}
+          className={cls("feature")}
+          onClick={() => run(() => requestFeaturedBoost(listingId), true)}
+        >
+          {icon(Sparkles)}
+          {label(boostLabel)}
         </button>
       )}
     </>

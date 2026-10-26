@@ -17,6 +17,7 @@ import {
   LayoutDashboard,
   LogOut,
   Menu,
+  PackagePlus,
   Search,
   Settings,
   ShieldCheck,
@@ -47,6 +48,7 @@ const ICONS: Record<string, LucideIcon> = {
   "/admin/users": Users,
   "/admin/verifications": BadgeCheck,
   "/admin/dealers": Store,
+  "/admin/requests": PackagePlus,
   "/admin/plans": CreditCard,
   "/admin/activity": History,
 };

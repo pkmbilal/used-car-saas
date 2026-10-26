@@ -108,6 +108,7 @@ export type ListingQuota = {
   featuredUsed: number;
   featuredAllowance: number | null; // null = none included, admins feature as paid extras
   featuredRemaining: number; // self-serve slots left this month
+  listingCredits: number; // bought extra listings, spent once the monthly limit is used up
 };
 
 export async function getListingQuota(): Promise<ListingQuota | null> {
@@ -121,11 +122,13 @@ export async function getListingQuota(): Promise<ListingQuota | null> {
     planExpiresAt: row.plan_expires_at,
     used: row.used,
     limit: row.monthly_limit,
-    remaining: row.monthly_limit === null ? null : Math.max(0, row.monthly_limit - row.used),
+    remaining:
+      row.monthly_limit === null ? null : Math.max(0, row.monthly_limit - row.used) + row.listing_credits,
     featuredUsed: row.featured_used,
     featuredAllowance: row.featured_allowance,
     featuredRemaining:
       row.featured_allowance === null ? 0 : Math.max(0, row.featured_allowance - row.featured_used),
+    listingCredits: row.listing_credits,
   };
 }
 
@@ -215,6 +218,27 @@ export const VAT_RATE = 0.15;
 
 function withVat(price: number): number {
   return Math.round(price * (1 + VAT_RATE) * 100) / 100;
+}
+
+// One-off add-ons any seller can request (addon_requests migration), in SAR
+// excluding VAT: a 7-day boost per listing, and a price per extra listing.
+export const ADDON_PRICES = { featured_boost: 49, extra_listing: 19 } as const;
+
+export const BOOST_DAYS = 7;
+
+// Must match the pack sizes request_addon accepts.
+export const EXTRA_LISTING_PACKS = [1, 3, 5] as const;
+
+export type AddonKind = "featured_boost" | "extra_listings";
+
+// Price excluding VAT, for the site.
+export function addonPrice(kind: AddonKind, quantity = 1): number {
+  return kind === "featured_boost" ? ADDON_PRICES.featured_boost : ADDON_PRICES.extra_listing * quantity;
+}
+
+// Price including VAT, for prefilling recorded payments.
+export function addonPriceWithVat(kind: AddonKind, quantity = 1): number {
+  return withVat(addonPrice(kind, quantity));
 }
 
 // Monthly SAR price per plan including VAT, for prefilling recorded payments.

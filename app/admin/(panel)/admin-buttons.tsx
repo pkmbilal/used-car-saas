@@ -241,8 +241,8 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 
 // Optional payment recorded with a plan change. The amount follows the plan
 // price × months until the admin types their own.
-function usePayment(suggestedAmount: number) {
-  const [record, setRecord] = useState(false);
+function usePayment(suggestedAmount: number, recordByDefault = false) {
+  const [record, setRecord] = useState(recordByDefault);
   const [amount, setAmount] = useState<string>();
   const [method, setMethod] = useState<PaymentMethod>("bank_transfer");
   const [reference, setReference] = useState("");
@@ -261,7 +261,7 @@ function usePayment(suggestedAmount: number) {
     // Call when the plan or duration changes so the suggestion applies again.
     resetAmount: () => setAmount(undefined),
     reset: () => {
-      setRecord(false);
+      setRecord(recordByDefault);
       setAmount(undefined);
       setReference("");
     },
@@ -578,5 +578,59 @@ export function ApproveDealerButton({
       </div>
       <ErrorText error={error} />
     </div>
+  );
+}
+
+// Approves a paid add-on, recording the payment by default.
+export function ApproveAddonButton({
+  price,
+  action,
+}: {
+  price: number;
+  action: (payment: PaymentInput | null) => Promise<AdminResult>;
+}) {
+  const { pending, error, run } = useAdminAction();
+  const [open, setOpen] = useState(false);
+  const payment = usePayment(price, true);
+
+  return (
+    <>
+      <button type="button" onClick={() => setOpen(true)} className={primaryButtonClass}>
+        Approve
+      </button>
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent className="sm:max-w-lg">
+          <form
+            className="grid gap-4"
+            onSubmit={(event) => {
+              event.preventDefault();
+              run(
+                () => action(payment.value()),
+                () => {
+                  payment.reset();
+                  setOpen(false);
+                },
+                "Add-on approved",
+              );
+            }}
+          >
+            <DialogHeader>
+              <DialogTitle>Approve this add-on?</DialogTitle>
+              <DialogDescription>Confirm you&apos;ve received payment. The boost or listings apply right away.</DialogDescription>
+            </DialogHeader>
+            <PaymentFields fields={payment.fields} pending={pending} />
+            <ErrorText error={error} />
+            <DialogFooter>
+              <button type="button" onClick={() => setOpen(false)} className={secondaryButtonClass}>
+                Cancel
+              </button>
+              <button type="submit" disabled={pending} className={primaryButtonClass}>
+                {pending ? "Approving…" : "Approve"}
+              </button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }

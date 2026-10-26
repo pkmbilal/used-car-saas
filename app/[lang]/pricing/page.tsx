@@ -1,10 +1,14 @@
 import type { Metadata } from "next";
+import { PlusCircle, Sparkles, type LucideIcon } from "lucide-react";
 import { getCurrentUser, type Profile } from "@/lib/auth";
 import { getLatestDealerApplication } from "@/lib/dealer-application";
 import { salesWhatsappUrl } from "@/lib/contact";
 import type { Dictionary } from "@/lib/dictionaries";
 import { getDictionary, localeAlternates } from "@/lib/i18n-server";
-import { getListingQuota, PLAN_DETAILS, PLANS, type Plan } from "@/lib/plans";
+import { fmt } from "@/lib/dictionary";
+import { formatSAR } from "@/lib/format";
+import type { Locale } from "@/lib/i18n";
+import { addonPrice, getListingQuota, PLAN_DETAILS, PLANS, type Plan } from "@/lib/plans";
 import { PricingFaq } from "./faq";
 import { PlanCard, type PlanCta } from "./plan-card";
 import { UsageBanner } from "./usage-banner";
@@ -56,7 +60,7 @@ function planCta(
 }
 
 export default async function PricingPage() {
-  const { t } = await getDictionary();
+  const { t, locale } = await getDictionary();
   const current = await getCurrentUser();
   const [latest, quota] = current
     ? await Promise.all([
@@ -99,6 +103,7 @@ export default async function PricingPage() {
             </li>
           ))}
         </ul>
+        <Addons t={t} locale={locale} />
         <p className="mt-6 text-center text-xs text-muted-foreground">
           {t.pricing.vatNote}
           {salesUrl && (
@@ -114,5 +119,41 @@ export default async function PricingPage() {
         <PricingFaq salesUrl={salesUrl} />
       </div>
     </main>
+  );
+}
+
+// One-off purchases for sellers who don't need a whole plan.
+function Addons({ t, locale }: { t: Dictionary; locale: Locale }) {
+  const a = t.addons;
+  const items: { icon: LucideIcon; title: string; text: string; price: number }[] = [
+    { icon: Sparkles, title: a.boostTitle, text: a.boostText, price: addonPrice("featured_boost") },
+    { icon: PlusCircle, title: a.extraTitle, text: a.extraText, price: addonPrice("extra_listings") },
+  ];
+
+  return (
+    <section className="mt-10">
+      <h2 className="text-xl font-semibold tracking-tight">{a.pricingTitle}</h2>
+      <p className="mt-1 max-w-2xl text-label text-muted-foreground">{a.pricingIntro}</p>
+      <ul className="mt-4 grid gap-4 sm:grid-cols-2">
+        {items.map(({ icon: Icon, title, text, price }) => (
+          <li
+            key={title}
+            className="flex gap-4 rounded-lg bg-white p-5 shadow-[0_2px_10px_rgba(20,30,25,.05)]"
+          >
+            <span className="grid size-10 shrink-0 place-items-center rounded-lg bg-mint text-brand">
+              <Icon className="size-5" aria-hidden />
+            </span>
+            <div className="min-w-0">
+              <p className="font-semibold">{title}</p>
+              <p className="mt-1 text-label text-muted-foreground">{text}</p>
+              <p className="mt-2 text-sm font-semibold text-brand">
+                {fmt(a.perListing, { price: formatSAR(price, locale) })}{" "}
+                <span className="font-normal text-muted-foreground">{a.plusVat}</span>
+              </p>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </section>
   );
 }

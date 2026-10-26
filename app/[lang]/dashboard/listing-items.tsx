@@ -16,13 +16,19 @@ import { StatusBadge } from "./listings/status-badge";
 type Props = {
   listing: ListingWithImages & { stats: ListingStats };
   featureSlots: number;
+  // A paid boost on offer (null when already featured), and whether one is
+  // waiting for payment.
+  boostLabel: string | null;
+  boostPending: boolean;
   t: Dictionary;
   locale: Locale;
 };
 
+type NotesProps = Omit<Props, "featureSlots" | "boostLabel">;
+
 const editHref = (id: string) => `/dashboard/listings/${id}/edit`;
 
-function listingStats({ listing, t, locale }: Omit<Props, "featureSlots">): [LucideIcon, string][] {
+function listingStats({ listing, t, locale }: Pick<Props, "listing" | "t" | "locale">): [LucideIcon, string][] {
   return [
     [Eye, count(locale, listing.stats.views, t.common.stats.views)],
     [Phone, count(locale, listing.stats.calls, t.common.stats.calls)],
@@ -30,7 +36,7 @@ function listingStats({ listing, t, locale }: Omit<Props, "featureSlots">): [Luc
   ];
 }
 
-export function ListingCardItem({ listing, featureSlots, t, locale }: Props) {
+export function ListingCardItem({ listing, featureSlots, boostLabel, boostPending, t, locale }: Props) {
   const cover = listing.images[0];
   const featured = listing.status === "active" && isFeatured(listing);
   const stats = listingStats({ listing, t, locale });
@@ -92,7 +98,7 @@ export function ListingCardItem({ listing, featureSlots, t, locale }: Props) {
             </li>
           ))}
         </ul>
-        <ListingNotes listing={listing} t={t} locale={locale} card />
+        <ListingNotes listing={listing} boostPending={boostPending} t={t} locale={locale} card />
       </div>
 
       <div className="mt-auto px-4 pt-3.5 pb-3">
@@ -104,6 +110,8 @@ export function ListingCardItem({ listing, featureSlots, t, locale }: Props) {
             variant="card"
             featureSlots={featureSlots}
             featureDays={SELF_FEATURE_DAYS}
+            boostLabel={boostLabel ?? undefined}
+            boostPending={boostPending}
           />
         </div>
       </div>
@@ -111,7 +119,7 @@ export function ListingCardItem({ listing, featureSlots, t, locale }: Props) {
   );
 }
 
-export function ListingListItem({ listing, featureSlots, t, locale }: Props) {
+export function ListingListItem({ listing, featureSlots, boostLabel, boostPending, t, locale }: Props) {
   const cover = listing.images[0];
   const featured = listing.status === "active" && isFeatured(listing);
   const stats = listingStats({ listing, t, locale });
@@ -164,7 +172,7 @@ export function ListingListItem({ listing, featureSlots, t, locale }: Props) {
               {cityName(t, listing.city)}
             </span>
           </p>
-          <ListingNotes listing={listing} t={t} locale={locale} card />
+          <ListingNotes listing={listing} boostPending={boostPending} t={t} locale={locale} card />
         </div>
       </div>
 
@@ -187,6 +195,8 @@ export function ListingListItem({ listing, featureSlots, t, locale }: Props) {
           variant="row"
           featureSlots={featureSlots}
           featureDays={SELF_FEATURE_DAYS}
+          boostLabel={boostLabel ?? undefined}
+          boostPending={boostPending}
         />
       </div>
     </li>
@@ -195,10 +205,11 @@ export function ListingListItem({ listing, featureSlots, t, locale }: Props) {
 
 function ListingNotes({
   listing,
+  boostPending,
   t,
   locale,
   card = false,
-}: Omit<Props, "featureSlots"> & { card?: boolean }) {
+}: NotesProps & { card?: boolean }) {
   const d = t.dashboard;
   return (
     <>
@@ -207,6 +218,13 @@ function ListingNotes({
           className={`text-amber-700 dark:text-amber-400 ${card ? "mt-3 inline-block rounded-full bg-amber-50 px-2.5 py-1 text-xs font-medium dark:bg-amber-950" : "mt-1 text-sm"}`}
         >
           {fmt(d.featuredUntil, { date: formatDay(listing.featured_until, locale) })}
+        </p>
+      )}
+      {listing.status === "active" && boostPending && (
+        <p
+          className={`text-amber-700 dark:text-amber-400 ${card ? "mt-3 inline-block rounded-full bg-amber-50 px-2.5 py-1 text-xs font-medium dark:bg-amber-950" : "mt-1 text-sm"}`}
+        >
+          {t.addons.boostPendingShort}
         </p>
       )}
       {listing.status === "removed" && listing.removed_reason && (
