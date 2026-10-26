@@ -31,7 +31,6 @@ export const en = {
     tagline: ["Buy", "Sell", "Drive"],
   },
   nav: {
-    home: "Home",
     buyCars: "Buy Cars",
     dealers: "Dealers",
     locations: "Locations",

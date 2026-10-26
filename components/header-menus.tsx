@@ -115,13 +115,13 @@ export function UserMenu({ user, links }: { user: HeaderUser; links: HeaderLink[
     <DropdownMenu>
       <DropdownMenuTrigger
         aria-label={t.nav.accountMenu}
-        className="group flex items-center gap-2.5 rounded-full py-1 ps-1 pe-3 ring-1 ring-transparent transition-colors outline-none hover:bg-white/10 hover:ring-white/15 focus-visible:ring-lime aria-expanded:bg-white/10 aria-expanded:ring-white/15"
+        className="group flex items-center gap-2.5 rounded-full py-1 ps-1 pe-2 ring-1 xl:pe-3 ring-transparent transition-colors outline-none hover:bg-white/10 hover:ring-white/15 focus-visible:ring-lime aria-expanded:bg-white/10 aria-expanded:ring-white/15"
       >
         <span className="relative">
           <Avatar name={user.name} src={user.avatarUrl} />
           <span className="absolute -end-0.5 -bottom-0.5 size-3 rounded-full bg-green-500 ring-2 ring-charcoal" aria-hidden />
         </span>
-        <span className="hidden max-w-36 text-start lg:block">
+        <span className="hidden max-w-36 text-start xl:block">
           <span className="block truncate text-sm font-semibold leading-tight text-white">{user.name}</span>
           <span className="block truncate text-xs text-white/60">
             {user.isAdmin ? t.nav.administrator : roleLabel}

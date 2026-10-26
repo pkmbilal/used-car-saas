@@ -58,7 +58,6 @@ export const ar: DictionaryShape<typeof en> = {
     tagline: ["اشترِ", "بِع", "انطلق"],
   },
   nav: {
-    home: "الرئيسية",
     buyCars: "شراء سيارة",
     dealers: "المعارض",
     locations: "المدن",
