@@ -27,7 +27,7 @@ export default async function EditListingPage({
   const p = t.dashboard.editPage;
 
   return (
-    <main className="mx-auto w-full max-w-3xl px-4 py-12">
+    <main className="mx-auto w-full max-w-6xl px-4 py-12">
       <Link href="/dashboard" className="text-sm text-zinc-600 dark:text-zinc-400">
         {t.dashboard.backToListings}
       </Link>
