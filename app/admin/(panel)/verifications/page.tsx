@@ -23,7 +23,7 @@ export default async function AdminVerificationsPage() {
     <div className="flex flex-col gap-4">
       <Hint icon={Clock}>
         Check that the name on the ID matches the profile. Document links expire after 5 minutes, so reload for fresh
-        ones. Files are deleted once you approve or reject.
+        ones. Files stay on the user&apos;s page after you decide.
       </Hint>
 
       <div className="grid gap-4 xl:grid-cols-2">

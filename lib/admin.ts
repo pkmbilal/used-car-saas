@@ -12,7 +12,7 @@ import {
   type Plan,
 } from "@/lib/plans";
 import { isPaymentMethod, type PaymentInput } from "@/lib/payment-options";
-import { deleteObjects, presignGet, PRIVATE_BUCKET } from "@/lib/r2";
+import { presignGet } from "@/lib/r2";
 import { createAdminClient } from "@/lib/supabase/admin";
 import type { Database } from "@/lib/supabase/database.types";
 import { MAX_REJECT_REASON } from "@/lib/verification-options";
@@ -83,6 +83,10 @@ export type FeaturedStatus = {
   allowance: number | null; // null = no allowance, featured as paid extras
   countedThisMonth: boolean; // re-featuring this listing won't use another slot
 };
+
+export function atFeaturedLimit({ used, allowance, countedThisMonth }: FeaturedStatus): boolean {
+  return allowance !== null && used >= allowance && !countedThisMonth;
+}
 
 export async function getAllListings(filters: {
   status?: ListingStatus;
@@ -445,7 +449,7 @@ export async function getUserDetail(userId: string) {
     .maybeSingle();
   if (!profile) return null;
 
-  const [listings, planChanges, payments, featuredGrants, reports, idRequests, dealerApplications, actions] =
+  const [listings, planChanges, payments, featuredGrants, reports, idRequests, dealerApplications, actions, usage] =
     await Promise.all([
       supabase
         .from("listings")
@@ -479,12 +483,14 @@ export async function getUserDetail(userId: string) {
         .limit(USER_HISTORY_LIMIT),
       supabase
         .from("id_verification_requests")
-        .select("id, status, reject_reason, created_at, reviewed_at")
+        .select("id, status, reject_reason, doc_keys, created_at, reviewed_at")
         .eq("user_id", userId)
         .order("created_at", { ascending: false }),
       supabase
         .from("dealer_applications")
-        .select("id, business_name, requested_plan, status, reject_reason, created_at, reviewed_at")
+        .select(
+          "id, business_name, requested_plan, status, reject_reason, cr_doc_key, vat_doc_key, muroor_doc_key, created_at, reviewed_at",
+        )
         .eq("user_id", userId)
         .order("created_at", { ascending: false }),
       supabase
@@ -493,20 +499,41 @@ export async function getUserDetail(userId: string) {
         .eq("user_id", userId)
         .order("created_at", { ascending: false })
         .limit(USER_HISTORY_LIMIT),
+      // This month's featured usage, for the per-listing feature options.
+      supabase.from("featured_usage").select("listing_id").eq("seller_id", userId).eq("month", quotaMonth()),
     ]);
+
+  const usedThisMonth = usage.data?.length ?? 0;
+  const countedListings = new Set((usage.data ?? []).map((row) => row.listing_id));
 
   return {
     profile,
     listings: (listings.data ?? []).map((listing) => ({
       ...listing,
       featuredNow: listing.featured_until !== null && new Date(listing.featured_until).getTime() > Date.now(),
+      featured: {
+        used: usedThisMonth,
+        allowance: FEATURED_ALLOWANCE[profile.plan],
+        countedThisMonth: countedListings.has(listing.id),
+      } satisfies FeaturedStatus,
     })),
     planChanges: planChanges.data ?? [],
     payments: payments.data ?? [],
     featuredGrants: featuredGrants.data ?? [],
     reports: reports.data ?? [],
-    idRequests: idRequests.data ?? [],
-    dealerApplications: dealerApplications.data ?? [],
+    // Requests reviewed before documents were kept have none left.
+    idRequests: await Promise.all(
+      (idRequests.data ?? []).map(async ({ doc_keys, ...request }) => ({
+        ...request,
+        docs: await idDocLinks(doc_keys),
+      })),
+    ),
+    dealerApplications: await Promise.all(
+      (dealerApplications.data ?? []).map(async ({ cr_doc_key, vat_doc_key, muroor_doc_key, ...application }) => ({
+        ...application,
+        docs: await dealerDocLinks({ cr_doc_key, vat_doc_key, muroor_doc_key }),
+      })),
+    ),
     actions: actions.data ?? [],
   };
 }
@@ -827,6 +854,35 @@ export async function extendUserPlan(
 }
 
 // ---------------------------------------------------------------------------
+// Private documents
+// ---------------------------------------------------------------------------
+
+// Short-lived links to ID documents in the private bucket.
+function idDocLinks(keys: string[]) {
+  return Promise.all(keys.map(async (key) => ({ url: await presignGet(key), isPdf: key.endsWith(".pdf") })));
+}
+
+// Short-lived links to whichever dealer documents were uploaded.
+async function dealerDocLinks(keys: {
+  cr_doc_key: string | null;
+  vat_doc_key: string | null;
+  muroor_doc_key: string | null;
+}) {
+  const docs = await Promise.all(
+    (
+      [
+        ["cr", keys.cr_doc_key],
+        ["vat", keys.vat_doc_key],
+        ["muroor", keys.muroor_doc_key],
+      ] as const
+    ).map(async ([doc, key]) =>
+      key ? { doc, url: await presignGet(key), isPdf: key.endsWith(".pdf") } : null,
+    ),
+  );
+  return docs.filter((doc) => doc !== null);
+}
+
+// ---------------------------------------------------------------------------
 // ID verification
 // ---------------------------------------------------------------------------
 
@@ -846,20 +902,12 @@ export async function getPendingIdVerifications() {
   if (error) throw error;
 
   return Promise.all(
-    data.map(async ({ doc_keys, ...request }) => ({
-      ...request,
-      docs: await Promise.all(
-        doc_keys.map(async (key) => ({
-          url: await presignGet(key),
-          isPdf: key.endsWith(".pdf"),
-        })),
-      ),
-    })),
+    data.map(async ({ doc_keys, ...request }) => ({ ...request, docs: await idDocLinks(doc_keys) })),
   );
 }
 
-// Closes a pending request and deletes its documents: we don't keep ID copies
-// once a decision is made.
+// Closes a pending request. Its documents are kept so admins can check them
+// again later from the user's page.
 async function reviewIdVerification(
   requestId: string,
   decision: { status: "approved" } | { status: "rejected"; reject_reason: string },
@@ -869,7 +917,7 @@ async function reviewIdVerification(
 
   const { data: request } = await supabase
     .from("id_verification_requests")
-    .select("user_id, doc_keys")
+    .select("user_id")
     .eq("id", requestId)
     .eq("status", "pending")
     .maybeSingle();
@@ -879,7 +927,6 @@ async function reviewIdVerification(
     .from("id_verification_requests")
     .update({
       ...decision,
-      doc_keys: [],
       reviewed_at: new Date().toISOString(),
       reviewed_by: user.id,
     })
@@ -889,9 +936,6 @@ async function reviewIdVerification(
   if (error) return { error: "Could not update the request. Try again." };
   if (data.length === 0) return { error: "Request is no longer pending." };
 
-  await deleteObjects(request.doc_keys, PRIVATE_BUCKET).catch((err) =>
-    console.error("Failed to delete ID documents", request.doc_keys, err),
-  );
   await logAdminAction(user.id, decision.status === "approved" ? "id_approved" : "id_rejected", {
     userId: request.user_id,
     reason: decision.status === "rejected" ? decision.reject_reason : undefined,
@@ -963,20 +1007,10 @@ export async function getPendingDealerApplications() {
   if (error) throw error;
 
   return Promise.all(
-    data.map(async ({ cr_doc_key, vat_doc_key, muroor_doc_key, ...application }) => {
-      const docs = await Promise.all(
-        (
-          [
-            ["cr", cr_doc_key],
-            ["vat", vat_doc_key],
-            ["muroor", muroor_doc_key],
-          ] as const
-        ).map(async ([doc, key]) =>
-          key ? { doc, url: await presignGet(key), isPdf: key.endsWith(".pdf") } : null,
-        ),
-      );
-      return { ...application, docs: docs.filter((doc) => doc !== null) };
-    }),
+    data.map(async ({ cr_doc_key, vat_doc_key, muroor_doc_key, ...application }) => ({
+      ...application,
+      docs: await dealerDocLinks({ cr_doc_key, vat_doc_key, muroor_doc_key }),
+    })),
   );
 }
 
@@ -992,7 +1026,7 @@ async function reviewDealerApplication(
     .update({ ...decision, reviewed_at: new Date().toISOString(), reviewed_by: user.id })
     .eq("id", applicationId)
     .eq("status", "pending")
-    .select("user_id, business_name, showroom_address, cr_doc_key, vat_doc_key, muroor_doc_key");
+    .select("user_id, business_name, showroom_address");
   if (error) return { error: "Could not update the application. Try again." };
   if (data.length === 0) return { error: "Application is no longer pending." };
   await logAdminAction(user.id, decision.status === "approved" ? "dealer_approved" : "dealer_rejected", {
@@ -1002,8 +1036,7 @@ async function reviewDealerApplication(
   return { application: data[0], reviewerId: user.id };
 }
 
-// Grants the plan and prefills the storefront from the application. Documents
-// are kept as the dealer's business records.
+// Grants the plan and prefills the storefront from the application.
 export async function approveDealerApplication(
   applicationId: string,
   plan: string,
@@ -1048,14 +1081,5 @@ export async function rejectDealerApplication(
     status: "rejected",
     reject_reason: rejectReason,
   });
-  if ("error" in reviewed) return reviewed;
-
-  // Rejected applications don't need their documents; the seller re-uploads
-  // if they apply again.
-  const { cr_doc_key, vat_doc_key, muroor_doc_key } = reviewed.application;
-  const keys = [cr_doc_key, vat_doc_key, muroor_doc_key].filter((key) => key !== null);
-  await deleteObjects(keys, PRIVATE_BUCKET).catch((err) =>
-    console.error("Failed to delete dealer documents", keys, err),
-  );
-  return {};
+  return "error" in reviewed ? reviewed : {};
 }

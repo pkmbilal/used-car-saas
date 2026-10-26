@@ -112,7 +112,7 @@ export default async function AdminDealersPage() {
             <ReasonActionButton
               label="Reject"
               title="Reject this application?"
-              description="The applicant sees your reason. Their documents are deleted and they can apply again."
+              description="The applicant sees your reason and can apply again."
               success="Application rejected"
               action={rejectDealerApplicationAction.bind(null, application.id)}
             />
