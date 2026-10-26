@@ -75,6 +75,7 @@ export default async function AdminUsersPage({ searchParams }: PageProps<"/admin
                               <Pill tone={isSeller ? "brand" : "neutral"}>{isSeller ? "Seller" : "Buyer"}</Pill>
                               {user.is_admin && <Pill tone="blue">Admin</Pill>}
                               {user.suspended_at && <Pill tone="red">Suspended</Pill>}
+                              {user.is_demo && <Pill tone="amber">Demo</Pill>}
                               <VerificationBadges profile={user} />
                             </div>
                           </div>

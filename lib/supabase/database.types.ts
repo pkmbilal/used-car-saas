@@ -35,6 +35,7 @@ export type Database = {
           showroom_address: string | null;
           has_phone: boolean | null;
           listing_credits: number;
+          is_demo: boolean;
           created_at: string;
         };
         Insert: {
@@ -56,6 +57,7 @@ export type Database = {
           showroom_address?: string | null;
           has_phone?: never;
           listing_credits?: number;
+          is_demo?: boolean;
           created_at?: string;
         };
         Update: {
@@ -77,6 +79,7 @@ export type Database = {
           showroom_address?: string | null;
           has_phone?: never;
           listing_credits?: number;
+          is_demo?: boolean;
           created_at?: string;
         };
         Relationships: [];
@@ -869,6 +872,10 @@ export type Database = {
       increment_listing_view: {
         Args: { p_listing_id: string };
         Returns: undefined;
+      };
+      is_demo_user: {
+        Args: { p_user: string };
+        Returns: boolean;
       };
       reject_addon_request: {
         Args: { p_request: string; p_admin: string; p_reason: string };

@@ -14,6 +14,7 @@ import {
   removeListing,
   restoreListing,
   revokeIdVerification,
+  setDemoAccount,
   setUserPlan,
   suspendUser,
   unfeatureListing,
@@ -74,6 +75,10 @@ export async function extendUserPlanAction(
 
 export async function unsuspendUserAction(userId: string) {
   return revalidating(unsuspendUser(userId));
+}
+
+export async function setDemoAccountAction(userId: string, isDemo: boolean) {
+  return revalidating(setDemoAccount(userId, isDemo));
 }
 
 export async function approveIdVerificationAction(requestId: string) {
