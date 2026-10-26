@@ -71,7 +71,7 @@ export async function SiteHeader() {
             ))}
           </div>
           <div className="ms-auto hidden items-center gap-3 md:flex">
-            <LanguageSwitcher className="rounded-full px-2 text-label font-medium text-white/70 transition-colors hover:text-white" />
+            <LanguageSwitcher />
             {user ? (
               <UserMenu user={user} links={accountLinks} />
             ) : (

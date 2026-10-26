@@ -73,6 +73,7 @@ export const ar: DictionaryShape<typeof en> = {
     signOut: "تسجيل الخروج",
     sellYourCar: "بِع سيارتك",
     menu: "القائمة",
+    language: "اللغة",
     main: "التنقل الرئيسي",
     accountMenu: "قائمة الحساب",
     administrator: "مشرف",

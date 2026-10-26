@@ -46,6 +46,7 @@ export const en = {
     signOut: "Sign out",
     sellYourCar: "Sell your car",
     menu: "Menu",
+    language: "Language",
     main: "Main",
     accountMenu: "Account menu",
     administrator: "Administrator",
