@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Car, Search } from "lucide-react";
 import { RiyalPrice } from "@/components/riyal-price";
 import { StatusBadge } from "@/app/[lang]/dashboard/listings/status-badge";
-import { getAllListings, type FeaturedStatus } from "@/lib/admin";
+import { ADMIN_PAGE_SIZE, atFeaturedLimit, getAllListings, type FeaturedStatus } from "@/lib/admin";
 import { formatDay, formatKm } from "@/lib/format";
 import { isFeatured, type ListingStatus } from "@/lib/listings";
 import { PLAN_LABELS } from "@/lib/plans";
@@ -23,10 +23,6 @@ const STATUS_LABELS: Record<ListingStatus, string> = {
 
 function isStatus(value: string | undefined): value is ListingStatus {
   return STATUSES.includes(value as ListingStatus);
-}
-
-function atFeaturedLimit({ used, allowance, countedThisMonth }: FeaturedStatus): boolean {
-  return allowance !== null && used >= allowance && !countedThisMonth;
 }
 
 function FeaturedCell({ listing }: { listing: { status: ListingStatus; featured_until: string | null; featured: FeaturedStatus } }) {
@@ -104,6 +100,7 @@ export default async function AdminListingsPage({ searchParams }: PageProps<"/ad
             <table className={`${table.table} md:min-w-[60rem]`}>
               <thead>
                 <tr className={table.headRow}>
+                  <th className={`${table.th} w-12`}>No.</th>
                   <th className={table.th}>Vehicle</th>
                   <th className={table.th}>Seller</th>
                   <th className={table.th}>Price</th>
@@ -116,11 +113,14 @@ export default async function AdminListingsPage({ searchParams }: PageProps<"/ad
                 </tr>
               </thead>
               <tbody className={table.body}>
-                {listings.map((listing) => {
+                {listings.map((listing, index) => {
                   const photo = listing.images[0];
                   const title = `${listing.year} ${listing.make} ${listing.model}`;
                   return (
                     <ExpandableRow key={listing.id}>
+                      <td className={`${table.td} tabular-nums text-zinc-500 max-md:hidden`}>
+                        {(page - 1) * ADMIN_PAGE_SIZE + index + 1}
+                      </td>
                       <td className={cn(table.td, table.tdPrimary, "max-md:pr-20")}>
                         <div className="flex items-center gap-3">
                           <div className="relative h-12 w-18 shrink-0 overflow-hidden rounded-md bg-zinc-100 dark:bg-zinc-800">

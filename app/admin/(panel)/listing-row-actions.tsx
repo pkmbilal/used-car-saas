@@ -41,6 +41,7 @@ export function ListingRowActions({
   status,
   featured,
   canFeature = true,
+  showSeller = true,
 }: {
   listingId: string;
   sellerId: string;
@@ -48,6 +49,8 @@ export function ListingRowActions({
   featured: boolean;
   // False once the seller has used their plan's featured allowance this month.
   canFeature?: boolean;
+  // False on the seller's own admin page, where the link would go nowhere new.
+  showSeller?: boolean;
 }) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
@@ -83,12 +86,14 @@ export function ListingRowActions({
               onSelect={() => router.push(`/listings/${listingId}`)}
             />
           )}
-          <MenuRow
-            icon={UserRound}
-            title="Seller details"
-            hint="Profile, plan and activity"
-            onSelect={() => router.push(`/admin/users/${sellerId}`)}
-          />
+          {showSeller && (
+            <MenuRow
+              icon={UserRound}
+              title="Seller details"
+              hint="Profile, plan and activity"
+              onSelect={() => router.push(`/admin/users/${sellerId}`)}
+            />
+          )}
           {status === "active" &&
             canFeature &&
             FEATURE_OPTIONS.map((days) => (

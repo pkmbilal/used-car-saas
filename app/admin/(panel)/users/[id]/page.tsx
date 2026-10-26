@@ -24,7 +24,7 @@ import {
 import { StatusBadge } from "@/app/[lang]/dashboard/listings/status-badge";
 import { RiyalPrice } from "@/components/riyal-price";
 import { VerificationBadges } from "@/components/verification-badges";
-import { getUserDetail } from "@/lib/admin";
+import { atFeaturedLimit, getUserDetail } from "@/lib/admin";
 import { getCurrentUser } from "@/lib/auth";
 import { DEALER_DOCS } from "@/lib/dealer-application-options";
 import { formatDay, formatMonthYear } from "@/lib/format";
@@ -41,6 +41,7 @@ import {
 } from "../../actions";
 import { AdminActionButton, PlanSelect } from "../../admin-buttons";
 import { PLAN_CHANGE_SOURCES } from "../../labels";
+import { ListingRowActions } from "../../listing-row-actions";
 import {
   Avatar,
   DocumentTile,
@@ -307,15 +308,20 @@ export default async function AdminUserPage({ params }: PageProps<"/admin/users/
                 <table className={`${table.table} md:min-w-[40rem]`}>
                   <thead>
                     <tr className={table.headRow}>
+                      <th className={`${table.th} w-12`}>No.</th>
                       <th className={table.th}>Vehicle</th>
                       <th className={table.th}>Price</th>
                       <th className={table.th}>Status</th>
                       <th className={table.th}>Listed</th>
+                      <th className={`${table.th} w-12`}>
+                        <span className="sr-only">Actions</span>
+                      </th>
                     </tr>
                   </thead>
                   <tbody className={table.body}>
-                    {detail.listings.map((listing) => (
+                    {detail.listings.map((listing, index) => (
                       <tr key={listing.id} className={table.row}>
+                        <td className={`${table.td} tabular-nums text-zinc-500 max-md:hidden`}>{index + 1}</td>
                         <td className={`${table.td} ${table.tdPrimary}`}>
                           <Link href={`/listings/${listing.id}`} className={linkClass}>
                             {listing.year} {listing.make} {listing.model}
@@ -338,6 +344,16 @@ export default async function AdminUserPage({ params }: PageProps<"/admin/users/
                         </td>
                         <td data-label="Listed" className={`${table.td} whitespace-nowrap text-zinc-600 dark:text-zinc-400`}>
                           {formatDay(listing.created_at, "en")}
+                        </td>
+                        <td className={`${table.td} text-right ${table.tdActions}`}>
+                          <ListingRowActions
+                            listingId={listing.id}
+                            sellerId={profile.id}
+                            status={listing.status}
+                            featured={listing.featuredNow}
+                            canFeature={!atFeaturedLimit(listing.featured)}
+                            showSeller={false}
+                          />
                         </td>
                       </tr>
                     ))}

@@ -84,6 +84,10 @@ export type FeaturedStatus = {
   countedThisMonth: boolean; // re-featuring this listing won't use another slot
 };
 
+export function atFeaturedLimit({ used, allowance, countedThisMonth }: FeaturedStatus): boolean {
+  return allowance !== null && used >= allowance && !countedThisMonth;
+}
+
 export async function getAllListings(filters: {
   status?: ListingStatus;
   q?: string;
@@ -445,7 +449,7 @@ export async function getUserDetail(userId: string) {
     .maybeSingle();
   if (!profile) return null;
 
-  const [listings, planChanges, payments, featuredGrants, reports, idRequests, dealerApplications, actions] =
+  const [listings, planChanges, payments, featuredGrants, reports, idRequests, dealerApplications, actions, usage] =
     await Promise.all([
       supabase
         .from("listings")
@@ -495,13 +499,23 @@ export async function getUserDetail(userId: string) {
         .eq("user_id", userId)
         .order("created_at", { ascending: false })
         .limit(USER_HISTORY_LIMIT),
+      // This month's featured usage, for the per-listing feature options.
+      supabase.from("featured_usage").select("listing_id").eq("seller_id", userId).eq("month", quotaMonth()),
     ]);
+
+  const usedThisMonth = usage.data?.length ?? 0;
+  const countedListings = new Set((usage.data ?? []).map((row) => row.listing_id));
 
   return {
     profile,
     listings: (listings.data ?? []).map((listing) => ({
       ...listing,
       featuredNow: listing.featured_until !== null && new Date(listing.featured_until).getTime() > Date.now(),
+      featured: {
+        used: usedThisMonth,
+        allowance: FEATURED_ALLOWANCE[profile.plan],
+        countedThisMonth: countedListings.has(listing.id),
+      } satisfies FeaturedStatus,
     })),
     planChanges: planChanges.data ?? [],
     payments: payments.data ?? [],
