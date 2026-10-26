@@ -8,6 +8,8 @@ export function Panel({
   title,
   description,
   actions,
+  icon: Icon,
+  count,
   children,
   flush = false,
   className = "",
@@ -15,6 +17,9 @@ export function Panel({
   title?: React.ReactNode;
   description?: React.ReactNode;
   actions?: React.ReactNode;
+  // Optional tile before the title and a count pill after it.
+  icon?: LucideIcon;
+  count?: number;
   children: React.ReactNode;
   // Flush panels let a table run edge to edge.
   flush?: boolean;
@@ -26,9 +31,21 @@ export function Panel({
     >
       {(title || actions) && (
         <div className="flex flex-wrap items-start justify-between gap-3 border-b border-line px-5 py-4 dark:border-zinc-800">
-          <div className="min-w-0">
-            {title && <h2 className="font-semibold">{title}</h2>}
-            {description && <p className="mt-0.5 text-sm text-zinc-600 dark:text-zinc-400">{description}</p>}
+          <div className="flex min-w-0 items-start gap-3">
+            {Icon && <IconTile icon={Icon} tone="brand" size="sm" />}
+            <div className="min-w-0">
+              {title && (
+                <h2 className="flex items-center gap-2 font-semibold">
+                  {title}
+                  {count !== undefined && (
+                    <span className="rounded-full bg-zinc-100 px-1.5 text-xs font-medium text-zinc-600 tabular-nums dark:bg-zinc-800 dark:text-zinc-400">
+                      {count}
+                    </span>
+                  )}
+                </h2>
+              )}
+              {description && <p className="mt-0.5 text-sm text-zinc-600 dark:text-zinc-400">{description}</p>}
+            </div>
           </div>
           {actions && <div className="flex flex-wrap items-center gap-2">{actions}</div>}
         </div>
@@ -78,6 +95,34 @@ const PILL_TONES = {
 } as const;
 
 export type PillTone = keyof typeof PILL_TONES;
+
+const TILE_TONES: Record<PillTone, string> = {
+  neutral: "bg-canvas text-zinc-600 ring-line dark:bg-zinc-800 dark:text-zinc-300 dark:ring-zinc-700",
+  green: "bg-green-50 text-green-700 ring-green-100 dark:bg-green-950/60 dark:text-green-400 dark:ring-green-900/60",
+  red: "bg-red-50 text-red-600 ring-red-100 dark:bg-red-950/60 dark:text-red-400 dark:ring-red-900/60",
+  amber: "bg-amber-50 text-amber-700 ring-amber-100 dark:bg-amber-950/60 dark:text-amber-400 dark:ring-amber-900/60",
+  blue: "bg-blue-50 text-blue-700 ring-blue-100 dark:bg-blue-950/60 dark:text-blue-400 dark:ring-blue-900/60",
+  brand: "bg-mint text-forest ring-brand/15 dark:bg-zinc-800 dark:text-lime dark:ring-zinc-700",
+};
+
+// A rounded icon square, as in the row menus. `sm` sits beside panel titles.
+export function IconTile({
+  icon: Icon,
+  tone = "neutral",
+  size = "md",
+}: {
+  icon: LucideIcon;
+  tone?: PillTone;
+  size?: "sm" | "md";
+}) {
+  return (
+    <span
+      className={`grid shrink-0 place-items-center rounded-lg ring-1 ${size === "sm" ? "size-7" : "size-9"} ${TILE_TONES[tone]}`}
+    >
+      <Icon className="size-4" aria-hidden />
+    </span>
+  );
+}
 
 export function Pill({ tone = "neutral", children }: { tone?: PillTone; children: React.ReactNode }) {
   return (
