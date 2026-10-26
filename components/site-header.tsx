@@ -17,13 +17,12 @@ export async function SiteHeader() {
   const { t } = await getDictionary();
   const isSeller = current?.profile.role === "seller";
 
+  // Kept short: the logo links home, My listings sits in the user menu and
+  // Locations in the footer.
   const mainLinks: HeaderLink[] = [
-    { href: "/", label: t.nav.home },
     { href: "/listings", label: t.nav.buyCars },
     { href: "/dealers", label: t.nav.dealers },
-    { href: "/locations", label: t.nav.locations },
     { href: "/pricing", label: t.nav.pricing },
-    ...(isSeller ? [{ href: "/dashboard", label: t.nav.myListings }] : []),
   ];
   const sellHref = isSeller ? "/dashboard/listings/new" : "/account/become-seller";
   const accountLinks: HeaderLink[] = current
@@ -50,18 +49,18 @@ export async function SiteHeader() {
       }
     : null;
   // On phones the bottom tab bar covers Home, Buy, Sell and Saved, and its
-  // account tab opens the account links; the menu keeps the rest.
-  const tabHrefs = ["/", "/listings", "/dashboard", "/account/become-seller", "/favorites"];
-  // The footer (with Contact) is hidden on phones, so the menu links it instead.
+  // account tab opens the account links; the menu keeps the rest. The footer
+  // (with Locations and Contact) is hidden on phones, so the menu links them instead.
   const menuLinks = [
-    ...mainLinks.filter((link) => !tabHrefs.includes(link.href)),
+    ...mainLinks.filter((link) => link.href !== "/listings"),
+    { href: "/locations", label: t.nav.locations },
     { href: "/contact", label: t.nav.contact },
   ];
 
   return (
     <>
       <HeaderShell>
-        <nav className="mx-auto flex h-14 w-full max-w-6xl items-center gap-6 px-4 transition-[height] duration-300 sm:px-6 md:h-[4.5rem] md:group-data-scrolled:h-16 lg:gap-8">
+        <nav className="mx-auto flex h-14 w-full max-w-6xl items-center gap-4 px-4 transition-[height] duration-300 sm:px-6 md:h-[4.5rem] md:group-data-scrolled:h-16 lg:gap-6">
           <BrandLink />
           <div className="hidden items-center gap-0.5 rounded-full bg-white/[0.04] p-1 text-label font-medium ring-1 ring-white/10 md:flex">
             {mainLinks.map((link) => (
@@ -76,7 +75,7 @@ export async function SiteHeader() {
               </Link>
             </Button>
           </div>
-          <div className="ms-auto hidden items-center gap-3 md:flex">
+          <div className="ms-auto hidden items-center gap-2 md:flex">
             <LanguageSwitcher />
             {user ? (
               <UserMenu user={user} links={accountLinks} />
