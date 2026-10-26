@@ -22,6 +22,8 @@ import { MakeModelFields } from "./make-model-fields";
 
 type Props = {
   listing?: ListingInput;
+  // The first photo, for the preview. New listings have none yet.
+  cover?: string;
   action: (prev: ListingFormState, formData: FormData) => Promise<ListingFormState>;
   submitLabel: string;
 };
@@ -62,7 +64,7 @@ function RiyalSymbol() {
   );
 }
 
-export function ListingForm({ listing, action, submitLabel }: Props) {
+export function ListingForm({ listing, cover, action, submitLabel }: Props) {
   const [state, formAction, pending] = useActionState(action, {});
   const [preview, setPreview] = useState(() => previewFromListing(listing));
   const { t } = useDictionary();
@@ -259,7 +261,7 @@ export function ListingForm({ listing, action, submitLabel }: Props) {
       </form>
 
       <aside className="hidden lg:sticky lg:top-24 lg:block">
-        <ListingPreview data={preview} />
+        <ListingPreview data={preview} cover={cover} />
       </aside>
     </div>
   );

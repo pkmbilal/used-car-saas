@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { Camera, Car, Check, Fuel, MapPin } from "lucide-react";
 import { useDictionary } from "@/components/i18n-provider";
 import { carName } from "@/lib/car-names";
@@ -75,7 +76,7 @@ function Skeleton({ className }: { className: string }) {
 
 // A client-side copy of components/listing-card.tsx (a server component), fed
 // from the form as the seller types.
-export function ListingPreview({ data }: { data: PreviewData }) {
+export function ListingPreview({ data, cover }: { data: PreviewData; cover?: string }) {
   const { t, locale } = useDictionary();
   const f = t.dashboard.form;
   const year = positive(data.year);
@@ -98,9 +99,15 @@ export function ListingPreview({ data }: { data: PreviewData }) {
       </div>
 
       <div className="overflow-hidden rounded-lg bg-white text-ink shadow-[0_10px_24px_rgba(20,30,25,.1)] dark:bg-zinc-900 dark:text-zinc-100">
-        <div className="flex aspect-[3/2] flex-col items-center justify-center gap-2 bg-mint text-forest/60 dark:bg-zinc-800 dark:text-zinc-400">
-          <Camera className="size-7" aria-hidden />
-          <span className="text-xs font-medium">{f.photosAfterSave}</span>
+        <div className="relative flex aspect-[3/2] flex-col items-center justify-center gap-2 bg-mint text-forest/60 dark:bg-zinc-800 dark:text-zinc-400">
+          {cover ? (
+            <Image src={cover} alt={name} fill sizes="340px" className="object-cover" />
+          ) : (
+            <>
+              <Camera className="size-7" aria-hidden />
+              <span className="text-xs font-medium">{f.photosAfterSave}</span>
+            </>
+          )}
         </div>
         <div className="flex flex-col px-4 pt-3.5 pb-4">
           <p className="truncate text-sm font-semibold">{name || <Skeleton className="h-3.5 w-36" />}</p>

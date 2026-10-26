@@ -1108,6 +1108,7 @@ export const ar: DictionaryShape<typeof en> = {
       feature: "تمييز لمدة {days} أيام (متبقٍ {slots})",
       delete: "حذف",
       confirmDelete: "هل تريد حذف هذا الإعلان وصوره؟ لا يمكن التراجع عن ذلك.",
+      deleteTitle: "حذف هذا الإعلان؟",
     },
     newPage: {
       metaTitle: "إعلان جديد | كارسوق",

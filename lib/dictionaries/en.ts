@@ -918,6 +918,7 @@ export const en = {
       feature: "Feature for {days} days ({slots} left)",
       delete: "Delete",
       confirmDelete: "Delete this listing and its photos? This can't be undone.",
+      deleteTitle: "Delete this listing?",
     },
     newPage: {
       metaTitle: "New listing | KarSouq",

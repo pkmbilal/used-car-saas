@@ -53,6 +53,7 @@ export default async function EditListingPage({
         <h2 className="mb-3 text-lg font-medium">{p.details}</h2>
         <ListingForm
           listing={listing}
+          cover={listing.images[0]?.url}
           action={updateListing.bind(null, listing.id)}
           submitLabel={p.submit}
         />
