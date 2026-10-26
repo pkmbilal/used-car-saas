@@ -70,13 +70,14 @@ const tones = {
   feature: "bg-gradient-to-b from-lime-light to-lime text-on-lime shadow-[inset_0_1px_0_rgba(255,255,255,.45)] hover:brightness-105",
 };
 
-// Card: row 1 is edit, view, delete; row 2 the status actions.
+// Card: row 1 is edit, view and the compact mark-sold and delete icons;
+// row 2 the full-width publish or feature/boost action.
 const cardLayout: Record<keyof typeof tones, string> = {
   edit: "order-1 flex-1",
   view: "order-2 flex-1",
-  delete: "order-3 size-11 shrink-0 px-0",
+  markSold: "order-3 size-11 shrink-0 px-0",
+  delete: "order-4 size-11 shrink-0 px-0",
   publish: "flex-1",
-  markSold: "flex-1",
   feature: "flex-1",
 };
 
@@ -143,6 +144,23 @@ export function ListingActions({
     });
   }
 
+  const canFeature = status === "active" && featureSlots > 0;
+  const canBoost = status === "active" && featureSlots === 0 && !!boostLabel && !boostPending;
+  const hasStatusActions = status === "draft" || status === "sold" || canFeature || canBoost;
+
+  const markSoldButton = (
+    <button
+      type="button"
+      disabled={pending}
+      title={card || row ? a.markSold : undefined}
+      className={cls("markSold")}
+      onClick={() => run(() => setListingStatus(listingId, "sold"))}
+    >
+      {icon(CircleCheck)}
+      {card ? <span className="sr-only">{a.markSold}</span> : label(a.markSold)}
+    </button>
+  );
+
   const statusActions = (
     <>
       {(status === "draft" || status === "sold") && (
@@ -157,19 +175,8 @@ export function ListingActions({
           {label(publishLabel)}
         </button>
       )}
-      {status === "active" && (
-        <button
-          type="button"
-          disabled={pending}
-          title={row ? a.markSold : undefined}
-          className={cls("markSold")}
-          onClick={() => run(() => setListingStatus(listingId, "sold"))}
-        >
-          {icon(CircleCheck)}
-          {label(a.markSold)}
-        </button>
-      )}
-      {status === "active" && featureSlots > 0 && (
+      {status === "active" && !card && markSoldButton}
+      {canFeature && (
         <button
           type="button"
           disabled={pending}
@@ -181,7 +188,7 @@ export function ListingActions({
           {label(featureLabel)}
         </button>
       )}
-      {status === "active" && featureSlots === 0 && boostLabel && !boostPending && (
+      {canBoost && (
         <button
           type="button"
           disabled={pending}
@@ -195,7 +202,6 @@ export function ListingActions({
       )}
     </>
   );
-  const hasStatusActions = status !== "removed";
 
   return (
     <div className={`flex flex-col gap-2 ${card ? "" : "sm:items-end"}`}>
@@ -216,9 +222,10 @@ export function ListingActions({
             {label(a.edit)}
           </Link>
         )}
+        {card && status === "active" && markSoldButton}
         {card
           ? hasStatusActions && (
-              <div className="order-4 flex w-full gap-2">{statusActions}</div>
+              <div className="order-5 flex w-full gap-2">{statusActions}</div>
             )
           : statusActions}
         <button
