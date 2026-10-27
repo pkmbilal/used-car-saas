@@ -89,5 +89,5 @@ export function breadcrumbJsonLd(items: { name: string; url: string }[]) {
 // JSON for an inline <script type="application/ld+json">; escapes "<" so
 // listing text can't close the script tag.
 export function jsonLdScript(data: object): string {
-  return JSON.stringify(data).replace(/</g, "\u003c");
+  return JSON.stringify(data).replace(/</g, "\\u003c");
 }

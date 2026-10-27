@@ -77,12 +77,21 @@ export async function generateMetadata({
     price: formatSAR(listing.price, locale),
   });
   const description = listingDescription(listing, t, locale);
-  const cover = listing.images[0];
+  const images = listing.images[0] ? [listing.images[0].url] : undefined;
   return {
     title,
     description,
     alternates: await localeAlternates(`/listings/${listing.id}`),
-    openGraph: { title, description, url: localizePath(locale, `/listings/${listing.id}`), ...(cover && { images: [cover.url] }) },
+    openGraph: {
+      type: "website",
+      siteName: t.common.siteName,
+      locale: locale === "ar" ? "ar_SA" : "en_US",
+      title,
+      description,
+      url: localizePath(locale, `/listings/${listing.id}`),
+      images,
+    },
+    twitter: { card: images ? "summary_large_image" : "summary", title, description, images },
   };
 }
 
@@ -229,7 +238,7 @@ export default async function ListingPage({ params }: PageProps<"/[lang]/listing
         <div className="relative mx-auto w-full max-w-6xl px-4 pt-7 pb-9 sm:px-6">
           <Breadcrumbs crumbs={crumbs} label={p.breadcrumbLabel} />
           <div className="mt-3 flex flex-wrap items-center gap-3.5">
-            <h1 className="text-3xl font-semibold tracking-tight">{name}</h1>
+            <h1 className="text-3xl font-semibold tracking-tight">{title}</h1>
             {featured && (
               <Badge className="h-6 bg-[#4fc35f] px-3 text-caption font-semibold">{t.common.featured}</Badge>
             )}
