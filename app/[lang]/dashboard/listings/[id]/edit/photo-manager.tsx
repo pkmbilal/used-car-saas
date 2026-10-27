@@ -3,14 +3,12 @@
 import Image from "next/image";
 import { useRef, useState, useTransition } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import Link from "@/components/locale-link";
 import { useDictionary } from "@/components/i18n-provider";
+import { rich } from "@/components/rich-text";
 import { compressImage } from "@/lib/compress-image";
 import { fmt, translateMessage } from "@/lib/dictionary";
-import {
-  IMAGE_TYPES,
-  MAX_IMAGE_BYTES,
-  MAX_IMAGES_PER_LISTING,
-} from "@/lib/listing-options";
+import { IMAGE_TYPES, MAX_IMAGE_BYTES } from "@/lib/listing-options";
 import {
   confirmImageUpload,
   deleteImage,
@@ -24,19 +22,22 @@ type Photo = { id: string; url: string };
 type Props = {
   listingId: string;
   photos: Photo[];
+  maxPhotos: number; // set by the seller's plan
+  canUpgrade: boolean; // a higher plan allows more photos
 };
 
 const buttonClass =
   "rounded bg-white/90 px-2 py-0.5 text-xs font-medium text-zinc-900 disabled:opacity-40";
 
-export function PhotoManager({ listingId, photos }: Props) {
+export function PhotoManager({ listingId, photos, maxPhotos, canUpgrade }: Props) {
   const { t } = useDictionary();
   const p = t.dashboard.photos;
   const inputRef = useRef<HTMLInputElement>(null);
   const [pending, startTransition] = useTransition();
   const [progress, setProgress] = useState<string>();
   const [error, setError] = useState<string>();
-  const remaining = MAX_IMAGES_PER_LISTING - photos.length;
+  // Can go negative after a downgrade; such listings keep their photos.
+  const remaining = maxPhotos - photos.length;
 
   // Uploads one file: compress → presign → PUT straight to R2 → confirm.
   async function uploadFile(original: File): Promise<string | undefined> {
@@ -163,9 +164,20 @@ export function PhotoManager({ listingId, photos }: Props) {
           />
         </label>
         <span className="text-sm text-zinc-600 dark:text-zinc-400">
-          {progress ?? fmt(p.count, { count: photos.length, max: MAX_IMAGES_PER_LISTING })}
+          {progress ?? fmt(p.count, { count: photos.length, max: maxPhotos })}
         </span>
       </div>
+      {remaining <= 0 && canUpgrade && (
+        <p className="text-sm text-zinc-600 dark:text-zinc-400">
+          {rich(p.limitReached, {
+            pricing: (
+              <Link href="/pricing" className="font-medium underline underline-offset-2">
+                {p.pricing}
+              </Link>
+            ),
+          })}
+        </p>
+      )}
       {error && <p className="text-sm text-red-600">{error}</p>}
     </div>
   );
