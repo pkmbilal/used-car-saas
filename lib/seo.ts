@@ -9,6 +9,9 @@ import { siteUrl } from "@/lib/site";
 // their links still count.
 export const noIndex: Metadata["robots"] = { index: false, follow: true };
 
+// A share image: a bare URL, or one with its size and type.
+type ShareImage = string | { url: string; width?: number; height?: number; type?: string; alt?: string };
+
 // Title, description, canonical + hreflang and share tags for a public page.
 // Without images, the share card is app/[lang]/opengraph-image. Past page 1
 // of a list, the page number goes in the title and canonical URL, so each
@@ -24,7 +27,7 @@ export async function pageMetadata({
   description?: string;
   path: string;
   page?: unknown;
-  images?: string[];
+  images?: ShareImage[];
 }): Promise<Metadata> {
   const { t, locale } = await getDictionary();
   const n = Number(page);
@@ -34,8 +37,18 @@ export async function pageMetadata({
     path = `${path}?page=${n}`;
   }
   // A page's own openGraph replaces the layout's, file-based image included,
-  // so the default card has to be named here.
-  images ??= [localizePath(locale, "/opengraph-image")];
+  // so the default card has to be named here. Its size and type go with it:
+  // WhatsApp's scraper often drops an image it hasn't measured on first fetch,
+  // then caches that imageless preview.
+  images ??= [
+    {
+      url: localizePath(locale, "/opengraph-image"),
+      width: 1200,
+      height: 630,
+      type: "image/png",
+      alt: t.common.siteName,
+    },
+  ];
   return {
     title,
     description,
