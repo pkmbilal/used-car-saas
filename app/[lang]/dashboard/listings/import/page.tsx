@@ -18,6 +18,7 @@ import {
   quotaSummary,
 } from "@/lib/plans";
 import { ImportForm } from "./import-form";
+import { noIndex } from "@/lib/seo";
 
 // CSV values stay in English (they're the stored values), so the hints list
 // them as is.
@@ -42,7 +43,7 @@ function columnHints(t: Dictionary): Record<(typeof IMPORT_COLUMNS)[number], str
 
 export async function generateMetadata(): Promise<Metadata> {
   const { t } = await getDictionary();
-  return { title: t.dashboard.import.metaTitle };
+  return { title: t.dashboard.import.metaTitle, robots: noIndex };
 }
 
 export default async function ImportListingsPage() {

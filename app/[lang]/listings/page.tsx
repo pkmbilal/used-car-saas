@@ -10,7 +10,7 @@ import { Card } from "@/components/ui/card";
 import { getCurrentUser } from "@/lib/auth";
 import { count, fmt } from "@/lib/dictionary";
 import { getViewerFavoriteIds } from "@/lib/favorites";
-import { getDictionary, localeAlternates } from "@/lib/i18n-server";
+import { getDictionary } from "@/lib/i18n-server";
 import {
   getActiveFacetCounts,
   getFeaturedListings,
@@ -25,14 +25,22 @@ import {
   listingsHref,
   MAX_SAVED_SEARCH_NAME,
 } from "@/lib/saved-searches";
+import { pageMetadata } from "@/lib/seo";
 import { ActiveFilters } from "./active-filters";
 import { Filters } from "./filters";
 import { MobileFilters } from "./mobile-filters";
 import { SortSelect } from "./sort-select";
 
-export async function generateMetadata(): Promise<Metadata> {
+export async function generateMetadata({ searchParams }: PageProps<"/[lang]/listings">): Promise<Metadata> {
   const { t } = await getDictionary();
-  return { title: t.listings.metaTitle, alternates: await localeAlternates("/listings") };
+  const filters = parseListingFilters(await searchParams);
+  return pageMetadata({
+    title: t.listings.metaTitle,
+    description: t.listings.metaDescription,
+    path: "/listings",
+    // Filtered results all canonicalize to the plain list; only its pages stand alone.
+    page: hasActiveFilters(filters) ? 1 : filters.page,
+  });
 }
 
 export default async function ListingsPage({ searchParams }: PageProps<"/[lang]/listings">) {

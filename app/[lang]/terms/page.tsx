@@ -1,16 +1,17 @@
 import type { Metadata } from "next";
 import { LEGAL_CONTACT_EMAIL, LegalPage } from "@/components/legal-page";
 import { COMPANY_NAME } from "@/lib/contact";
-import { getDictionary, localeAlternates } from "@/lib/i18n-server";
+import { getDictionary } from "@/lib/i18n-server";
+import { pageMetadata } from "@/lib/seo";
 
 export async function generateMetadata(): Promise<Metadata> {
   const { locale } = await getDictionary();
-  return {
+  return pageMetadata({
     ...(locale === "ar"
       ? { title: "شروط الاستخدام | كارسوق", description: "قواعد بيع السيارات وشرائها على كارسوق." }
       : { title: "Terms of Use | KarSouq", description: "The rules for buying and selling cars on KarSouq." }),
-    alternates: await localeAlternates("/terms"),
-  };
+    path: "/terms",
+  });
 }
 
 const email = (

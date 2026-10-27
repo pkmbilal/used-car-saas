@@ -3,17 +3,14 @@ import { CityCard } from "@/components/city-card";
 import { Pagination } from "@/components/pagination";
 import { CITIES, isCitySort, sortCities, type CitySort } from "@/lib/cities";
 import { cityName, count } from "@/lib/dictionary";
-import { getDictionary, localeAlternates } from "@/lib/i18n-server";
+import { getDictionary } from "@/lib/i18n-server";
 import { getActiveFacetCounts } from "@/lib/listings";
 import { SortSelect } from "../listings/sort-select";
+import { pageMetadata } from "@/lib/seo";
 
 export async function generateMetadata(): Promise<Metadata> {
   const { t } = await getDictionary();
-  return {
-    title: t.locations.metaTitle,
-    description: t.locations.metaDescription,
-    alternates: await localeAlternates("/locations"),
-  };
+  return pageMetadata({ title: t.locations.metaTitle, description: t.locations.metaDescription, path: "/locations" });
 }
 
 // Six rows of the three-column desktop grid.

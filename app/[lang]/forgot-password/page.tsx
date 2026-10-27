@@ -3,10 +3,11 @@ import { AuthShell } from "@/components/auth-shell";
 import { getDictionary } from "@/lib/i18n-server";
 import { safeNext } from "@/lib/auth";
 import { ResetForm } from "./reset-form";
+import { noIndex } from "@/lib/seo";
 
 export async function generateMetadata(): Promise<Metadata> {
   const { t } = await getDictionary();
-  return { title: t.authPages.reset.metaTitle };
+  return { title: t.authPages.reset.metaTitle, robots: noIndex };
 }
 
 // No signed-in redirect: after the code step the user is signed in but still

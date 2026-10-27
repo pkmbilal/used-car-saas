@@ -12,10 +12,11 @@ import {
 } from "@/lib/plans";
 import { createListing } from "../actions";
 import { ListingForm } from "../listing-form";
+import { noIndex } from "@/lib/seo";
 
 export async function generateMetadata(): Promise<Metadata> {
   const { t } = await getDictionary();
-  return { title: t.dashboard.newPage.metaTitle };
+  return { title: t.dashboard.newPage.metaTitle, robots: noIndex };
 }
 
 const noticeClass =

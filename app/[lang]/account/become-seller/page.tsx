@@ -6,10 +6,11 @@ import { becomeSeller } from "../actions";
 import { DealerApplicationForm } from "../dealer-application/dealer-application-form";
 import { ProfileForm } from "../profile-form";
 import { getDictionary, localeRedirect } from "@/lib/i18n-server";
+import { noIndex } from "@/lib/seo";
 
 export async function generateMetadata(): Promise<Metadata> {
   const { t } = await getDictionary();
-  return { title: t.account.becomeSellerPage.metaTitle };
+  return { title: t.account.becomeSellerPage.metaTitle, robots: noIndex };
 }
 
 export default async function BecomeSellerPage({

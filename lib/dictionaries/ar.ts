@@ -5,6 +5,8 @@ import type { en } from "./en";
 export const ar: DictionaryShape<typeof en> = {
   common: {
     siteName: "كارسوق",
+    home: "الرئيسية",
+    page: "صفحة {page}",
     cancel: "إلغاء",
     save: "حفظ",
     saving: "جارٍ الحفظ…",
@@ -284,8 +286,9 @@ export const ar: DictionaryShape<typeof en> = {
     car: "جارٍ تحميل السيارة",
   },
   meta: {
-    siteTitle: "كارسوق | سيارات مستعملة في السعودية",
-    siteDescription: "اشترِ وبِع سيارات مستعملة موثوقة في المملكة العربية السعودية",
+    siteTitle: "سيارات مستعملة للبيع في السعودية | كارسوق",
+    siteDescription:
+      "اشترِ وبِع سيارات مستعملة في السعودية. تصفّح عروض بائعين أفراد ومعارض موثّقين في الرياض وجدة والدمام وغيرها، وتواصل معهم مباشرة عبر واتساب.",
     titleSuffix: "{title} | كارسوق",
   },
   search: {
@@ -387,6 +390,8 @@ export const ar: DictionaryShape<typeof en> = {
   seo: {
     listingDescription:
       "{make} {model} {year} مستعملة للبيع في {city}: {specs}، {price}. تواصل مع البائع مباشرة عبر كارسوق.",
+    sellerTitle: "{name} – سيارات مستعملة في {city} | كارسوق",
+    sellerDescription: "سيارات مستعملة للبيع من {name} على كارسوق. تصفّح السيارات وتواصل مباشرة مع البائع.",
   },
   home: {
     eyebrow: "سيارات مستعملة في السعودية",
@@ -442,6 +447,8 @@ export const ar: DictionaryShape<typeof en> = {
   },
   listings: {
     metaTitle: "تصفّح السيارات المستعملة | كارسوق",
+    metaDescription:
+      "تصفّح السيارات المستعملة المعروضة للبيع في جميع أنحاء السعودية. صفِّ النتائج حسب الماركة والسعر والسنة والمدينة، وتواصل مع البائعين والمعارض مباشرة.",
     eyebrow: "سيارات مستعملة للبيع",
     titleStart: "ابحث عن",
     titleHighlight: "سيارتك المثالية",

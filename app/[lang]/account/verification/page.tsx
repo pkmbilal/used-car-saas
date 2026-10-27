@@ -7,10 +7,11 @@ import { formatMonthYear } from "@/lib/format";
 import { getDictionary } from "@/lib/i18n-server";
 import { getLatestIdVerificationRequest } from "@/lib/verification";
 import { IdUploadForm } from "./id-upload-form";
+import { noIndex } from "@/lib/seo";
 
 export async function generateMetadata(): Promise<Metadata> {
   const { t } = await getDictionary();
-  return { title: t.account.verification.metaTitle };
+  return { title: t.account.verification.metaTitle, robots: noIndex };
 }
 
 const noticeClass = "rounded-md px-4 py-3 text-sm";

@@ -4,15 +4,17 @@ import { cache } from "react";
 import { ContactButtons } from "@/app/[lang]/listings/[id]/contact-buttons";
 import { Avatar } from "@/components/avatar";
 import { DealerBadge, DealerLogo } from "@/components/dealer-logo";
+import { JsonLd } from "@/components/json-ld";
 import { ListingGrid } from "@/components/listing-card";
 import { VerificationBadges } from "@/components/verification-badges";
 import { Card } from "@/components/ui/card";
 import { getViewerFavoriteIds } from "@/lib/favorites";
 import { cityName, count, fmt } from "@/lib/dictionary";
 import { formatMonthYear } from "@/lib/format";
-import { getDictionary, localeAlternates } from "@/lib/i18n-server";
+import { getDictionary } from "@/lib/i18n-server";
 import { getSellerProfile, isFeatured } from "@/lib/listings";
 import { publicUrl } from "@/lib/r2";
+import { absoluteUrl, pageMetadata } from "@/lib/seo";
 import { getStorefront } from "@/lib/storefront";
 
 const getSeller = cache(getSellerProfile);
@@ -25,13 +27,17 @@ export async function generateMetadata({
   const seller = await getSeller(id);
   if (!seller) return { title: t.seller.notFound };
 
-  const storefront = getStorefront(seller.profile);
-  const name = storefront?.name ?? seller.profile.full_name ?? t.seller.seller;
-  return {
-    title: fmt(t.meta.titleSuffix, { title: name }),
-    description: storefront?.about?.slice(0, 160),
-    alternates: await localeAlternates(`/sellers/${id}`),
-  };
+  const { profile } = seller;
+  const storefront = getStorefront(profile);
+  const name = storefront?.name ?? profile.full_name ?? t.seller.seller;
+  return pageMetadata({
+    title: profile.city
+      ? fmt(t.seo.sellerTitle, { name, city: cityName(t, profile.city) })
+      : fmt(t.meta.titleSuffix, { title: name }),
+    description: storefront?.about?.slice(0, 160) || fmt(t.seo.sellerDescription, { name }),
+    path: `/sellers/${id}`,
+    images: storefront?.logoUrl ? [storefront.logoUrl] : undefined,
+  });
 }
 
 export default async function SellerPage({ params }: PageProps<"/[lang]/sellers/[id]">) {
@@ -52,6 +58,24 @@ export default async function SellerPage({ params }: PageProps<"/[lang]/sellers/
 
   return (
     <main className="light bg-canvas text-ink">
+      {storefront && (
+        <JsonLd
+          data={{
+            "@context": "https://schema.org",
+            "@type": "AutoDealer",
+            name: storefront.name,
+            url: absoluteUrl(locale, `/sellers/${profile.id}`),
+            ...(storefront.logoUrl && { logo: storefront.logoUrl, image: storefront.logoUrl }),
+            ...(storefront.about && { description: storefront.about }),
+            address: {
+              "@type": "PostalAddress",
+              ...(storefront.showroomAddress && { streetAddress: storefront.showroomAddress }),
+              ...(profile.city && { addressLocality: profile.city }),
+              addressCountry: "SA",
+            },
+          }}
+        />
+      )}
       <div className="mx-auto w-full max-w-6xl px-4 py-12 sm:px-6">
         {storefront ? (
           <Card className="flex-col gap-6 rounded-xl p-6 shadow-[0_2px_12px_rgba(20,30,25,.06)] ring-0 sm:flex-row">

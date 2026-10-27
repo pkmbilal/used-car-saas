@@ -2,15 +2,12 @@ import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { Mail, MessageCircle } from "lucide-react";
 import { salesWhatsappUrl, SUPPORT_EMAIL } from "@/lib/contact";
-import { getDictionary, localeAlternates } from "@/lib/i18n-server";
+import { getDictionary } from "@/lib/i18n-server";
+import { pageMetadata } from "@/lib/seo";
 
 export async function generateMetadata(): Promise<Metadata> {
   const { t } = await getDictionary();
-  return {
-    title: t.contact.metaTitle,
-    description: t.contact.metaDescription,
-    alternates: await localeAlternates("/contact"),
-  };
+  return pageMetadata({ title: t.contact.metaTitle, description: t.contact.metaDescription, path: "/contact" });
 }
 
 export default async function ContactPage() {

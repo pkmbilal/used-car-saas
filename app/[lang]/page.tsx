@@ -1,6 +1,8 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "@/components/locale-link";
 import { ArrowRight, MessageCircle, Plus, ShieldCheck, type LucideIcon } from "lucide-react";
+import { JsonLd } from "@/components/json-ld";
 import { ListingGrid } from "@/components/listing-card";
 import { SearchBar } from "@/components/search-bar";
 import { Badge } from "@/components/ui/badge";
@@ -18,6 +20,7 @@ import {
   parseListingFilters,
 } from "@/lib/listings";
 import { isMake } from "@/lib/makes";
+import { pageMetadata, siteJsonLd } from "@/lib/seo";
 import { BrandCard } from "./brand-card";
 import { CityBrowser } from "./city-browser";
 import { Eyebrow, SectionHeading } from "./section-heading";
@@ -36,8 +39,13 @@ const sectionClass = "mx-auto mt-14 w-full max-w-6xl px-4 sm:px-6 md:mt-20";
 const limeCtaClass =
   "group h-12 gap-3 rounded-full bg-gradient-to-b from-lime-light to-lime pe-2.5 ps-6 text-sm font-semibold text-on-lime shadow-[inset_0_1px_0_rgba(255,255,255,.45),0_10px_30px_-8px_rgba(111,224,124,.55)] transition-all hover:text-on-lime hover:shadow-[inset_0_1px_0_rgba(255,255,255,.45),0_14px_36px_-6px_rgba(111,224,124,.7)] focus-visible:ring-2 focus-visible:ring-lime/60 focus-visible:ring-offset-2 focus-visible:ring-offset-forest-dark motion-safe:hover:-translate-y-px";
 
-export default async function Home() {
+export async function generateMetadata(): Promise<Metadata> {
   const { t } = await getDictionary();
+  return pageMetadata({ title: t.meta.siteTitle, description: t.meta.siteDescription, path: "/" });
+}
+
+export default async function Home() {
+  const { t, locale } = await getDictionary();
   const [featured, latest, facets, favoriteIds, byCity] = await Promise.all([
     getFeaturedListings(parseListingFilters({}), 4),
     getLatestListings(4),
@@ -56,6 +64,7 @@ export default async function Home() {
 
   return (
     <main className="light bg-canvas text-ink">
+      <JsonLd data={siteJsonLd(t.common.siteName, locale)} />
       {/* Hero */}
       <section className="relative isolate overflow-hidden bg-forest-dark">
         <div className="absolute inset-0 -z-20 bg-[radial-gradient(ellipse_at_top_right,rgba(31,125,60,.28),transparent_60%)] rtl:bg-[radial-gradient(ellipse_at_top_left,rgba(31,125,60,.28),transparent_60%)]" />

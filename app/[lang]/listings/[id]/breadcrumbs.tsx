@@ -4,7 +4,7 @@ import Link from "@/components/locale-link";
 
 export type Crumb = { name: string; href: string };
 
-// Listings › Make › Model trail in the hero, each step a filtered search.
+// Listings › Make › Model trail in the hero.
 export function Breadcrumbs({ crumbs, label }: { crumbs: Crumb[]; label: string }) {
   return (
     <nav aria-label={label}>
