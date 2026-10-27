@@ -6,6 +6,7 @@ import { notFound } from "next/navigation";
 import { cache } from "react";
 import { DealerBadge, DealerLogo } from "@/components/dealer-logo";
 import { FavoriteButton } from "@/components/favorite-button";
+import { JsonLd } from "@/components/json-ld";
 import {
   BadgeCheck,
   CalendarDays,
@@ -33,10 +34,11 @@ import { addonReference, getMyPendingAddons } from "@/lib/addons";
 import { getCurrentUser } from "@/lib/auth";
 import { salesWhatsappUrl } from "@/lib/contact";
 import { carName, makeName, modelName } from "@/lib/car-names";
+import { cityHref, isCity } from "@/lib/cities";
 import { cityName, fmt, optionLabel, translateMessage } from "@/lib/dictionary";
 import { getFavoriteIds } from "@/lib/favorites";
 import { localizePath } from "@/lib/i18n";
-import { getDictionary, localeAlternates } from "@/lib/i18n-server";
+import { getDictionary } from "@/lib/i18n-server";
 import {
   formatDay,
   formatKm,
@@ -46,11 +48,12 @@ import {
   formatSAR,
 } from "@/lib/format";
 import { capitalize } from "@/lib/listing-options";
-import { breadcrumbJsonLd, jsonLdScript, listingDescription, listingJsonLd } from "@/lib/listing-seo";
+import { listingDescription, listingJsonLd } from "@/lib/listing-seo";
 import { getListingStats, getPublicListing, getSimilarListings, isFeatured } from "@/lib/listings";
+import { isMake, makeHref } from "@/lib/makes";
 import { addonPrice, BOOST_DAYS, getListingQuota, SELF_FEATURE_DAYS } from "@/lib/plans";
 import { publicUrl } from "@/lib/r2";
-import { siteUrl } from "@/lib/site";
+import { absoluteUrl, breadcrumbJsonLd, pageMetadata } from "@/lib/seo";
 import { getStorefront } from "@/lib/storefront";
 import { Breadcrumbs, type Crumb } from "./breadcrumbs";
 import { ContactButtons } from "./contact-buttons";
@@ -76,14 +79,12 @@ export async function generateMetadata({
     model: modelName(locale, listing.make, listing.model),
     price: formatSAR(listing.price, locale),
   });
-  const description = listingDescription(listing, t, locale);
-  const cover = listing.images[0];
-  return {
+  return pageMetadata({
     title,
-    description,
-    alternates: await localeAlternates(`/listings/${listing.id}`),
-    openGraph: { title, description, url: localizePath(locale, `/listings/${listing.id}`), ...(cover && { images: [cover.url] }) },
-  };
+    description: listingDescription(listing, t, locale),
+    path: `/listings/${listing.id}`,
+    images: listing.images[0] ? [listing.images[0].url] : undefined,
+  });
 }
 
 export default async function ListingPage({ params }: PageProps<"/[lang]/listings/[id]">) {
@@ -140,13 +141,21 @@ export default async function ListingPage({ params }: PageProps<"/[lang]/listing
   const perYear = listing.mileage > 0 ? Math.round(listing.mileage / ageYears) : 0;
   const crumbs: Crumb[] = [
     { name: p.breadcrumbListings, href: "/listings" },
-    { name: makeName(locale, listing.make), href: `/listings?${new URLSearchParams({ make: listing.make })}` },
+    {
+      name: makeName(locale, listing.make),
+      // The brand page where there is one, so listings link to it rather than a filtered search.
+      href:
+        isMake(listing.make) && listing.make !== "Other"
+          ? makeHref(listing.make)
+          : `/listings?${new URLSearchParams({ make: listing.make })}`,
+    },
     {
       name: modelName(locale, listing.make, listing.model),
       href: `/listings?${new URLSearchParams({ make: listing.make, model: listing.model })}`,
     },
   ];
-  const absoluteUrl = (path: string) => new URL(localizePath(locale, path), siteUrl()).toString();
+  const listingPath = `/listings/${listing.id}`;
+  const sellerName = storefront?.name ?? seller?.full_name;
 
   const specIcon = { className: "size-4", strokeWidth: 1.8 };
   const specs = [
@@ -177,18 +186,20 @@ export default async function ListingPage({ params }: PageProps<"/[lang]/listing
     <main className={`light bg-canvas text-ink ${showContact ? "max-lg:pb-[calc(5rem+env(safe-area-inset-bottom))]" : ""}`}>
       {!isOwner && listing.status === "active" && <ViewTracker listingId={listing.id} />}
       {listing.status === "active" && (
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: jsonLdScript([
-              listingJsonLd(
-                listing,
-                absoluteUrl(`/listings/${listing.id}`),
-                listingDescription(listing, t, locale),
-              ),
-              breadcrumbJsonLd(crumbs.map((crumb) => ({ name: crumb.name, url: absoluteUrl(crumb.href) }))),
+        <JsonLd
+          data={[
+            listingJsonLd(
+              listing,
+              absoluteUrl(locale, listingPath),
+              listingDescription(listing, t, locale),
+              sellerName ? { name: sellerName, dealer: !!storefront } : null,
+            ),
+            breadcrumbJsonLd([
+              { name: t.common.home, url: absoluteUrl(locale, "/") },
+              ...crumbs.map((crumb) => ({ name: crumb.name, url: absoluteUrl(locale, crumb.href) })),
+              { name: title, url: absoluteUrl(locale, listingPath) },
             ]),
-          }}
+          ]}
         />
       )}
       {isOwner && listing.status !== "active" && (
@@ -229,7 +240,7 @@ export default async function ListingPage({ params }: PageProps<"/[lang]/listing
         <div className="relative mx-auto w-full max-w-6xl px-4 pt-7 pb-9 sm:px-6">
           <Breadcrumbs crumbs={crumbs} label={p.breadcrumbLabel} />
           <div className="mt-3 flex flex-wrap items-center gap-3.5">
-            <h1 className="text-3xl font-semibold tracking-tight">{name}</h1>
+            <h1 className="text-3xl font-semibold tracking-tight">{title}</h1>
             {featured && (
               <Badge className="h-6 bg-[#4fc35f] px-3 text-caption font-semibold">{t.common.featured}</Badge>
             )}
@@ -331,7 +342,13 @@ export default async function ListingPage({ params }: PageProps<"/[lang]/listing
                     <span>
                       {p.location}
                       <br />
-                      {fmt(p.locationValue, { city })}
+                      {isCity(listing.city) ? (
+                        <Link href={cityHref(listing.city)} className="hover:text-brand hover:underline">
+                          {fmt(p.locationValue, { city })}
+                        </Link>
+                      ) : (
+                        fmt(p.locationValue, { city })
+                      )}
                     </span>
                   </p>
                   <p className="flex items-start gap-3.5">

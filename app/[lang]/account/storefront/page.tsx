@@ -7,10 +7,11 @@ import { isDealerPlan } from "@/lib/plans";
 import { publicUrl } from "@/lib/r2";
 import { LogoUploader } from "./logo-uploader";
 import { StorefrontForm } from "./storefront-form";
+import { noIndex } from "@/lib/seo";
 
 export async function generateMetadata(): Promise<Metadata> {
   const { t } = await getDictionary();
-  return { title: t.account.storefront.metaTitle };
+  return { title: t.account.storefront.metaTitle, robots: noIndex };
 }
 
 export default async function StorefrontPage() {

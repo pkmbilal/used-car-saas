@@ -6,10 +6,11 @@ import { fmt } from "@/lib/dictionary";
 import { getDictionary } from "@/lib/i18n-server";
 import { describeFilters, getSavedSearches, MAX_SAVED_SEARCHES } from "@/lib/saved-searches";
 import { deleteSavedSearchAction, openSavedSearchAction } from "./actions";
+import { noIndex } from "@/lib/seo";
 
 export async function generateMetadata(): Promise<Metadata> {
   const { t } = await getDictionary();
-  return { title: t.savedSearches.metaTitle };
+  return { title: t.savedSearches.metaTitle, robots: noIndex };
 }
 
 export default async function SavedSearchesPage() {

@@ -6,6 +6,8 @@ import { plural } from "@/lib/dictionary";
 export const en = {
   common: {
     siteName: "KarSouq",
+    home: "Home",
+    page: "Page {page}",
     cancel: "Cancel",
     save: "Save",
     saving: "Saving…",
@@ -258,8 +260,9 @@ export const en = {
     car: "Loading car",
   },
   meta: {
-    siteTitle: "KarSouq | Used Cars in Saudi Arabia",
-    siteDescription: "Buy and sell verified used cars in Saudi Arabia",
+    siteTitle: "Used Cars for Sale in Saudi Arabia | KarSouq",
+    siteDescription:
+      "Buy and sell used cars in Saudi Arabia. Browse verified private sellers and dealers in Riyadh, Jeddah, Dammam and more, and contact them directly on WhatsApp.",
     titleSuffix: "{title} | KarSouq",
   },
   search: {
@@ -361,6 +364,8 @@ export const en = {
   seo: {
     listingDescription:
       "Used {year} {make} {model} for sale in {city}: {specs}, {price}. Contact the seller directly on KarSouq.",
+    sellerTitle: "{name} – used cars in {city} | KarSouq",
+    sellerDescription: "Used cars for sale by {name} on KarSouq. Browse their cars and contact them directly.",
   },
   home: {
     eyebrow: "USED CARS IN SAUDI ARABIA",
@@ -416,6 +421,8 @@ export const en = {
   },
   listings: {
     metaTitle: "Browse used cars | KarSouq",
+    metaDescription:
+      "Browse used cars for sale across Saudi Arabia. Filter by make, price, year and city, and contact private sellers and dealers directly.",
     eyebrow: "USED CARS FOR SALE",
     titleStart: "Find Your",
     titleHighlight: "Perfect Car",

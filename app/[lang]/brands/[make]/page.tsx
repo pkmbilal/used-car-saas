@@ -2,27 +2,30 @@ import type { Metadata } from "next";
 import Link from "@/components/locale-link";
 import { notFound } from "next/navigation";
 import { ArrowRight, ChevronRight } from "lucide-react";
+import { JsonLd } from "@/components/json-ld";
 import { ListingGrid } from "@/components/listing-card";
 import { Pagination } from "@/components/pagination";
 import { makeName } from "@/lib/car-names";
 import { count, fmt } from "@/lib/dictionary";
 import { getViewerFavoriteIds } from "@/lib/favorites";
-import { getDictionary, localeAlternates } from "@/lib/i18n-server";
+import { getDictionary } from "@/lib/i18n-server";
 import { getActiveFacetCounts, PAGE_SIZE, parseListingFilters, searchListings } from "@/lib/listings";
 import { makeFromSlug, makeHref, MAKES } from "@/lib/makes";
+import { absoluteUrl, breadcrumbJsonLd, pageMetadata } from "@/lib/seo";
 import { SortSelect } from "../../listings/sort-select";
 import { BrandCard } from "../../brand-card";
 
-export async function generateMetadata({ params }: PageProps<"/[lang]/brands/[make]">): Promise<Metadata> {
+export async function generateMetadata({ params, searchParams }: PageProps<"/[lang]/brands/[make]">): Promise<Metadata> {
   const make = makeFromSlug((await params).make);
   const { t, locale } = await getDictionary();
   if (!make) return { title: t.brands.makeNotFound };
   const name = makeName(locale, make);
-  return {
+  return pageMetadata({
     title: fmt(t.brands.makeMetaTitle, { make: name }),
     description: fmt(t.brands.makeMetaDescription, { make: name }),
-    alternates: await localeAlternates(makeHref(make)),
-  };
+    path: makeHref(make),
+    page: (await searchParams).page,
+  });
 }
 
 export default async function BrandPage({ params, searchParams }: PageProps<"/[lang]/brands/[make]">) {
@@ -57,6 +60,13 @@ export default async function BrandPage({ params, searchParams }: PageProps<"/[l
 
   return (
     <main className="light bg-canvas text-ink">
+      <JsonLd
+        data={breadcrumbJsonLd([
+          { name: t.common.home, url: absoluteUrl(locale, "/") },
+          { name: b.brands, url: absoluteUrl(locale, "/brands") },
+          { name, url: absoluteUrl(locale, basePath) },
+        ])}
+      />
       <section className="relative overflow-hidden bg-charcoal">
         <div className="absolute inset-y-0 end-0 w-2/3 bg-[radial-gradient(ellipse_at_70%_60%,rgba(111,224,124,.16),transparent_60%)] rtl:bg-[radial-gradient(ellipse_at_30%_60%,rgba(111,224,124,.16),transparent_60%)]" />
         <div className="relative mx-auto w-full max-w-6xl px-4 pt-10 pb-14 sm:px-6">

@@ -10,10 +10,11 @@ import { ListingActions } from "../../listing-actions";
 import { ListingForm } from "../../listing-form";
 import { StatusBadge } from "../../status-badge";
 import { PhotoManager } from "./photo-manager";
+import { noIndex } from "@/lib/seo";
 
 export async function generateMetadata(): Promise<Metadata> {
   const { t } = await getDictionary();
-  return { title: t.dashboard.editPage.metaTitle };
+  return { title: t.dashboard.editPage.metaTitle, robots: noIndex };
 }
 
 export default async function EditListingPage({

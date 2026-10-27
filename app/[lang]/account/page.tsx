@@ -10,10 +10,11 @@ import { publicUrl } from "@/lib/r2";
 import { updateProfile } from "./actions";
 import { AvatarUploader } from "./avatar-uploader";
 import { ProfileForm } from "./profile-form";
+import { noIndex } from "@/lib/seo";
 
 export async function generateMetadata(): Promise<Metadata> {
   const { t } = await getDictionary();
-  return { title: t.account.metaTitle };
+  return { title: t.account.metaTitle, robots: noIndex };
 }
 
 export default async function AccountPage({ searchParams }: PageProps<"/[lang]/account">) {

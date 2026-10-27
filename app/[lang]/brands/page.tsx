@@ -1,18 +1,15 @@
 import type { Metadata } from "next";
 import { makeName } from "@/lib/car-names";
 import { count } from "@/lib/dictionary";
-import { getDictionary, localeAlternates } from "@/lib/i18n-server";
+import { getDictionary } from "@/lib/i18n-server";
 import { getActiveFacetCounts } from "@/lib/listings";
 import { MAKES } from "@/lib/makes";
 import { BrandCard } from "../brand-card";
+import { pageMetadata } from "@/lib/seo";
 
 export async function generateMetadata(): Promise<Metadata> {
   const { t } = await getDictionary();
-  return {
-    title: t.brands.metaTitle,
-    description: t.brands.metaDescription,
-    alternates: await localeAlternates("/brands"),
-  };
+  return pageMetadata({ title: t.brands.metaTitle, description: t.brands.metaDescription, path: "/brands" });
 }
 
 export default async function BrandsPage() {

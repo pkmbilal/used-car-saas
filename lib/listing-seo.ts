@@ -44,7 +44,12 @@ export function listingDescription(listing: SeoListing, t: Dictionary, locale: L
 
 // schema.org Car + Offer structured data for search results. Spec values stay
 // in English; the description is in the page's language.
-export function listingJsonLd(listing: SeoListing, url: string, description: string) {
+export function listingJsonLd(
+  listing: SeoListing,
+  url: string,
+  description: string,
+  seller: { name: string; dealer: boolean } | null,
+) {
   return {
     "@context": "https://schema.org",
     "@type": "Car",
@@ -68,26 +73,7 @@ export function listingJsonLd(listing: SeoListing, url: string, description: str
       priceCurrency: "SAR",
       availability: listing.status === "active" ? "https://schema.org/InStock" : "https://schema.org/SoldOut",
       areaServed: { "@type": "City", name: listing.city },
+      ...(seller && { seller: { "@type": seller.dealer ? "AutoDealer" : "Person", name: seller.name } }),
     },
   };
-}
-
-// schema.org BreadcrumbList for the listing page's trail; urls are absolute.
-export function breadcrumbJsonLd(items: { name: string; url: string }[]) {
-  return {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: items.map((item, i) => ({
-      "@type": "ListItem",
-      position: i + 1,
-      name: item.name,
-      item: item.url,
-    })),
-  };
-}
-
-// JSON for an inline <script type="application/ld+json">; escapes "<" so
-// listing text can't close the script tag.
-export function jsonLdScript(data: object): string {
-  return JSON.stringify(data).replace(/</g, "\u003c");
 }

@@ -4,7 +4,7 @@ import { getCurrentUser, type Profile } from "@/lib/auth";
 import { getLatestDealerApplication } from "@/lib/dealer-application";
 import { salesWhatsappUrl } from "@/lib/contact";
 import type { Dictionary } from "@/lib/dictionaries";
-import { getDictionary, localeAlternates } from "@/lib/i18n-server";
+import { getDictionary } from "@/lib/i18n-server";
 import { fmt } from "@/lib/dictionary";
 import { formatSAR } from "@/lib/format";
 import type { Locale } from "@/lib/i18n";
@@ -12,14 +12,11 @@ import { addonPrice, getListingQuota, PLAN_DETAILS, PLANS, type Plan } from "@/l
 import { PricingFaq } from "./faq";
 import { PlanCard, type PlanCta } from "./plan-card";
 import { UsageBanner } from "./usage-banner";
+import { pageMetadata } from "@/lib/seo";
 
 export async function generateMetadata(): Promise<Metadata> {
   const { t } = await getDictionary();
-  return {
-    title: t.pricing.metaTitle,
-    description: t.pricing.metaDescription,
-    alternates: await localeAlternates("/pricing"),
-  };
+  return pageMetadata({ title: t.pricing.metaTitle, description: t.pricing.metaDescription, path: "/pricing" });
 }
 
 function signupHref(next: string): string {

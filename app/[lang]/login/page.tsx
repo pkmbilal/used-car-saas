@@ -3,10 +3,11 @@ import { AuthShell } from "@/components/auth-shell";
 import { getCurrentUser, safeNext } from "@/lib/auth";
 import { LoginForm } from "./login-form";
 import { getDictionary, localeRedirect } from "@/lib/i18n-server";
+import { noIndex } from "@/lib/seo";
 
 export async function generateMetadata(): Promise<Metadata> {
   const { t } = await getDictionary();
-  return { title: t.authPages.login.metaTitle };
+  return { title: t.authPages.login.metaTitle, robots: noIndex };
 }
 
 export default async function LoginPage({ searchParams }: PageProps<"/[lang]/login">) {

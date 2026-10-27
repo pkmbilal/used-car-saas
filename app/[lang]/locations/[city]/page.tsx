@@ -4,26 +4,29 @@ import { notFound } from "next/navigation";
 import { ArrowRight, ChevronRight } from "lucide-react";
 import { CityCard } from "@/components/city-card";
 import { DealerCard } from "@/components/dealer-card";
+import { JsonLd } from "@/components/json-ld";
 import { ListingGrid } from "@/components/listing-card";
 import { Pagination } from "@/components/pagination";
 import { citiesByCount, cityFromSlug, cityHref } from "@/lib/cities";
 import { cityName, count, fmt } from "@/lib/dictionary";
 import { getViewerFavoriteIds } from "@/lib/favorites";
-import { getDictionary, localeAlternates } from "@/lib/i18n-server";
+import { getDictionary } from "@/lib/i18n-server";
 import { getActiveFacetCounts, PAGE_SIZE, parseListingFilters, searchListings } from "@/lib/listings";
+import { absoluteUrl, breadcrumbJsonLd, pageMetadata } from "@/lib/seo";
 import { getDealerStorefronts } from "@/lib/storefront";
 import { SortSelect } from "../../listings/sort-select";
 
-export async function generateMetadata({ params }: PageProps<"/[lang]/locations/[city]">): Promise<Metadata> {
+export async function generateMetadata({ params, searchParams }: PageProps<"/[lang]/locations/[city]">): Promise<Metadata> {
   const city = cityFromSlug((await params).city);
   const { t } = await getDictionary();
   if (!city) return { title: t.locations.cityNotFound };
   const name = cityName(t, city);
-  return {
+  return pageMetadata({
     title: fmt(t.locations.cityMetaTitle, { city: name }),
     description: fmt(t.locations.cityMetaDescription, { city: name }),
-    alternates: await localeAlternates(cityHref(city)),
-  };
+    path: cityHref(city),
+    page: (await searchParams).page,
+  });
 }
 
 export default async function CityPage({ params, searchParams }: PageProps<"/[lang]/locations/[city]">) {
@@ -60,6 +63,13 @@ export default async function CityPage({ params, searchParams }: PageProps<"/[la
 
   return (
     <main className="light bg-canvas text-ink">
+      <JsonLd
+        data={breadcrumbJsonLd([
+          { name: t.common.home, url: absoluteUrl(locale, "/") },
+          { name: l.locations, url: absoluteUrl(locale, "/locations") },
+          { name, url: absoluteUrl(locale, basePath) },
+        ])}
+      />
       <section className="relative overflow-hidden bg-charcoal">
         <div className="absolute inset-y-0 end-0 w-2/3 bg-[radial-gradient(ellipse_at_70%_60%,rgba(111,224,124,.16),transparent_60%)] rtl:bg-[radial-gradient(ellipse_at_30%_60%,rgba(111,224,124,.16),transparent_60%)]" />
         <div className="relative mx-auto w-full max-w-6xl px-4 pt-10 pb-14 sm:px-6">

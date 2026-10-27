@@ -1,16 +1,13 @@
 import type { Metadata } from "next";
 import { DealerCard } from "@/components/dealer-card";
 import { count } from "@/lib/dictionary";
-import { getDictionary, localeAlternates } from "@/lib/i18n-server";
+import { getDictionary } from "@/lib/i18n-server";
 import { getDealerStorefronts } from "@/lib/storefront";
+import { pageMetadata } from "@/lib/seo";
 
 export async function generateMetadata(): Promise<Metadata> {
   const { t } = await getDictionary();
-  return {
-    title: t.dealers.metaTitle,
-    description: t.dealers.metaDescription,
-    alternates: await localeAlternates("/dealers"),
-  };
+  return pageMetadata({ title: t.dealers.metaTitle, description: t.dealers.metaDescription, path: "/dealers" });
 }
 
 export default async function DealersPage() {

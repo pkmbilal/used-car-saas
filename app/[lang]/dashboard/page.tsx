@@ -19,10 +19,11 @@ import {
 import { ListingCardItem, ListingListItem } from "./listing-items";
 import { PlanCard } from "./plan-card";
 import { ViewToggle } from "./view-toggle";
+import { noIndex } from "@/lib/seo";
 
 export async function generateMetadata(): Promise<Metadata> {
   const { t } = await getDictionary();
-  return { title: t.dashboard.metaTitle };
+  return { title: t.dashboard.metaTitle, robots: noIndex };
 }
 
 export default async function DashboardPage({ searchParams }: PageProps<"/[lang]/dashboard">) {

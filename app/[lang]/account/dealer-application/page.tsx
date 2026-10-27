@@ -8,10 +8,11 @@ import { fmt } from "@/lib/dictionary";
 import { getDictionary } from "@/lib/i18n-server";
 import { isDealerPlan } from "@/lib/plans";
 import { DealerApplicationForm } from "./dealer-application-form";
+import { noIndex } from "@/lib/seo";
 
 export async function generateMetadata(): Promise<Metadata> {
   const { t } = await getDictionary();
-  return { title: t.account.dealer.metaTitle };
+  return { title: t.account.dealer.metaTitle, robots: noIndex };
 }
 
 const noticeClass = "rounded-md px-4 py-3 text-sm";
