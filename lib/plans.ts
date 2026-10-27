@@ -165,6 +165,17 @@ export const DRAFT_LIMIT: Record<Plan, number> = {
   showroom: 500,
 };
 export const DRAFT_LIMIT_DB_MESSAGE = "draft_limit_exceeded";
+
+// Photos per listing. Must match plan_photo_limit in the photo_limit
+// migration, which enforces it. Listings over the limit after a downgrade keep
+// their photos but can't add more.
+export const PHOTO_LIMIT: Record<Plan, number> = {
+  free: 5,
+  dealer: 10,
+  dealer_pro: 15,
+  showroom: 20,
+};
+export const PHOTO_LIMIT_DB_MESSAGE = "photo_limit_exceeded";
 export const NOT_PUBLISHED_DB_MESSAGE = "listing_not_published";
 
 export type DraftUsage = { plan: Plan; used: number; limit: number; remaining: number };

@@ -4,11 +4,7 @@ import { randomUUID } from "node:crypto";
 import { revalidatePath } from "next/cache";
 import { requestAddon } from "@/lib/addons";
 import { requireSeller } from "@/lib/auth";
-import {
-  IMAGE_TYPES,
-  MAX_IMAGE_BYTES,
-  MAX_IMAGES_PER_LISTING,
-} from "@/lib/listing-options";
+import { IMAGE_TYPES, MAX_IMAGE_BYTES } from "@/lib/listing-options";
 import { getSellerListing, parseListing, type ListingStatus } from "@/lib/listings";
 import {
   DRAFT_LIMIT_DB_MESSAGE,
@@ -17,6 +13,8 @@ import {
   getDraftUsage,
   getListingQuota,
   NOT_PUBLISHED_DB_MESSAGE,
+  PHOTO_LIMIT,
+  PHOTO_LIMIT_DB_MESSAGE,
   QUOTA_EXCEEDED_DB_MESSAGE,
   quotaExceededMessage,
 } from "@/lib/plans";
@@ -33,6 +31,10 @@ export type ActionResult = { error?: string };
 
 const SUSPENDED_ERROR = "Your account is suspended, so you can't publish listings.";
 const NOT_PUBLISHED_ERROR = "Publish this listing before marking it sold.";
+
+function photoLimitError(max: number): string {
+  return `A listing can have up to ${max} photos.`;
+}
 
 function revalidateDashboard() {
   revalidateLocalized("/dashboard", "layout");
@@ -204,7 +206,7 @@ export async function requestImageUpload(
   contentType: string,
   size: number,
 ): Promise<{ url: string; key: string } | { error: string }> {
-  const { user } = await requireSeller();
+  const { user, profile } = await requireSeller();
 
   if (!(contentType in IMAGE_TYPES)) return { error: "Use a JPEG, PNG or WebP photo." };
   if (!Number.isInteger(size) || size <= 0 || size > MAX_IMAGE_BYTES) {
@@ -213,9 +215,8 @@ export async function requestImageUpload(
 
   const listing = await getSellerListing(user.id, listingId);
   if (!listing) return { error: "Listing not found." };
-  if (listing.images.length >= MAX_IMAGES_PER_LISTING) {
-    return { error: `A listing can have up to ${MAX_IMAGES_PER_LISTING} photos.` };
-  }
+  const maxPhotos = PHOTO_LIMIT[profile.plan];
+  if (listing.images.length >= maxPhotos) return { error: photoLimitError(maxPhotos) };
 
   const ext = IMAGE_TYPES[contentType as keyof typeof IMAGE_TYPES];
   const key = `listings/${listingId}/${randomUUID()}.${ext}`;
@@ -227,7 +228,7 @@ export async function confirmImageUpload(
   listingId: string,
   key: string,
 ): Promise<ActionResult> {
-  const { user } = await requireSeller();
+  const { user, profile } = await requireSeller();
 
   const listing = await getSellerListing(user.id, listingId);
   if (!listing) return { error: "Listing not found." };
@@ -235,15 +236,15 @@ export async function confirmImageUpload(
   // Only accept keys this listing's presign step could have issued.
   const keyPattern = new RegExp(`^listings/${listing.id}/[0-9a-f-]{36}\\.(jpg|png|webp)$`);
   if (!keyPattern.test(key)) return { error: "Invalid upload." };
-  if (listing.images.length >= MAX_IMAGES_PER_LISTING) {
-    return { error: `A listing can have up to ${MAX_IMAGES_PER_LISTING} photos.` };
-  }
+  const maxPhotos = PHOTO_LIMIT[profile.plan];
+  if (listing.images.length >= maxPhotos) return { error: photoLimitError(maxPhotos) };
 
   const nextPosition = Math.max(-1, ...listing.images.map((image) => image.position)) + 1;
   const supabase = await createClient();
   const { error } = await supabase
     .from("listing_images")
     .insert({ listing_id: listingId, r2_key: key, position: nextPosition });
+  if (error?.message === PHOTO_LIMIT_DB_MESSAGE) return { error: photoLimitError(maxPhotos) };
   if (error) return { error: "Could not save the photo. Try again." };
 
   revalidateDashboard();

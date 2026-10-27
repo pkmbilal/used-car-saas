@@ -5,6 +5,7 @@ import { requireSeller } from "@/lib/auth";
 import { carName } from "@/lib/car-names";
 import { getDictionary } from "@/lib/i18n-server";
 import { getSellerListing } from "@/lib/listings";
+import { PHOTO_LIMIT } from "@/lib/plans";
 import { updateListing } from "../../actions";
 import { ListingActions } from "../../listing-actions";
 import { ListingForm } from "../../listing-form";
@@ -21,7 +22,7 @@ export default async function EditListingPage({
   params,
 }: PageProps<"/[lang]/dashboard/listings/[id]/edit">) {
   const { id } = await params;
-  const { user } = await requireSeller(`/dashboard/listings/${id}/edit`);
+  const { user, profile } = await requireSeller(`/dashboard/listings/${id}/edit`);
   const listing = await getSellerListing(user.id, id);
   if (!listing) notFound();
   const { t, locale } = await getDictionary();
@@ -47,6 +48,8 @@ export default async function EditListingPage({
         <PhotoManager
           listingId={listing.id}
           photos={listing.images.map(({ id, url }) => ({ id, url }))}
+          maxPhotos={PHOTO_LIMIT[profile.plan]}
+          canUpgrade={profile.plan !== "showroom"}
         />
       </section>
 

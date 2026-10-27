@@ -45,7 +45,6 @@ export function bodyTypeLabel(value: string): string {
   return value === "suv" ? "SUV" : capitalize(value);
 }
 
-export const MAX_IMAGES_PER_LISTING = 15;
 export const MAX_IMAGE_BYTES = 10 * 1024 * 1024;
 export const IMAGE_TYPES = {
   "image/jpeg": "jpg",

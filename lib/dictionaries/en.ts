@@ -292,6 +292,7 @@ export const en = {
         tagline: "For individuals selling their own car.",
         features: [
           "3 listings a month",
+          "Up to 5 photos per listing",
           "Seller profile page",
           "Buyers contact you by phone or WhatsApp",
           "Views and contact stats on your dashboard",
@@ -301,6 +302,7 @@ export const en = {
         tagline: "For showrooms getting started online.",
         features: [
           "30 listings a month",
+          "Up to 10 photos per listing",
           "Branded dealer storefront",
           "Listed in the dealers directory",
           "Bulk upload from CSV",
@@ -311,6 +313,7 @@ export const en = {
         tagline: "For established dealers growing their sales.",
         features: [
           "100 listings a month",
+          "Up to 15 photos per listing",
           "Dealer mini-site with its own link, in Arabic and English",
           "WhatsApp lead routing to the right salesperson",
           "3 featured listings a month",
@@ -322,6 +325,7 @@ export const en = {
         tagline: "For showrooms with multiple branches and teams.",
         features: [
           "Unlimited listings",
+          "Up to 20 photos per listing",
           "Multiple branches and staff accounts",
           "Custom domain for your mini-site",
           "10 featured listings a month",
@@ -1031,6 +1035,8 @@ export const en = {
       empty: "No photos yet. Add at least one to publish. The first photo is the cover.",
       add: "Add photos",
       count: "{count} / {max} photos",
+      limitReached: "You've reached your plan's photo limit. See {pricing} for plans with more photos.",
+      pricing: "Pricing",
     },
     import: {
       metaTitle: "Import listings | KarSouq",
