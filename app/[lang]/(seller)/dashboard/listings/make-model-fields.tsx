@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useDictionary } from "@/components/i18n-provider";
 import { makeName, modelName } from "@/lib/car-names";
 import { MAKES, modelsFor } from "@/lib/makes";
-import { Field, inputClass } from "./form-fields";
+import { Field, inputClass, selectClass } from "./form-fields";
 
 const TYPE_MODEL = "__other__";
 
@@ -45,7 +45,7 @@ export function MakeModelFields({
             setSelected("");
             setTyped("");
           }}
-          className={inputClass}
+          className={selectClass}
         >
           <option value="" disabled>
             {f.chooseMake}
@@ -65,7 +65,7 @@ export function MakeModelFields({
             required
             value={selected}
             onChange={(event) => setSelected(event.target.value)}
-            className={inputClass}
+            className={selectClass}
           >
             <option value="" disabled>
               {f.chooseModel}
@@ -79,7 +79,7 @@ export function MakeModelFields({
           </select>
         )}
         {make === "" && (
-          <select id="model" disabled value="" className={inputClass}>
+          <select id="model" disabled value="" className={selectClass}>
             <option value="">{f.chooseMakeFirst}</option>
           </select>
         )}

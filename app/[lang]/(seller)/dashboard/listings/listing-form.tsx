@@ -16,7 +16,7 @@ import {
 } from "@/lib/listing-options";
 import type { ListingInput } from "@/lib/listings";
 import type { ListingFormState } from "./actions";
-import { Field, inputClass, Section } from "./form-fields";
+import { Field, inputClass, Section, selectClass } from "./form-fields";
 import { ListingPreview, previewFromForm, previewFromListing } from "./listing-preview";
 import { MakeModelFields } from "./make-model-fields";
 
@@ -42,7 +42,7 @@ function Select({
   format?: (value: string) => string;
 }) {
   return (
-    <select id={id} name={id} required defaultValue={defaultValue ?? ""} className={inputClass}>
+    <select id={id} name={id} required defaultValue={defaultValue ?? ""} className={selectClass}>
       <option value="" disabled>
         {placeholder}
       </option>
