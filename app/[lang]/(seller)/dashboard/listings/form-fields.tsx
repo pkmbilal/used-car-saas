@@ -1,6 +1,8 @@
 export const inputClass =
   "min-h-11 w-full rounded-xl border border-line bg-white px-3.5 py-2.5 text-sm shadow-sm transition placeholder:text-zinc-400 hover:border-zinc-300 focus:border-brand focus:ring-4 focus:ring-brand/15 focus:outline-none disabled:cursor-not-allowed disabled:bg-zinc-50 disabled:text-zinc-400 dark:border-zinc-700 dark:bg-zinc-900 dark:hover:border-zinc-600 dark:focus:border-lime dark:focus:ring-lime/15 dark:disabled:bg-zinc-900/60";
 
+export const selectClass = `${inputClass} select-chevron pe-10`;
+
 export function Field({
   id,
   label,

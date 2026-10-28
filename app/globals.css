@@ -165,6 +165,19 @@
   padding-bottom: env(safe-area-inset-bottom);
 }
 
+/* Native <select> with our own chevron, inset like the text. Pair with pe-10
+   so the selected value doesn't run under it. */
+@utility select-chevron {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2371717a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-size: 1rem;
+  background-position: right 0.875rem center;
+  &:where([dir="rtl"], [dir="rtl"] *) {
+    background-position: left 0.875rem center;
+  }
+}
+
 /* Admin dashboard charts. Categorical slots validated for CVD separation in
    both modes (dataviz palette, slots 1-4); dark steps are their own values. */
 .admin-viz {
