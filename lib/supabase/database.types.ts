@@ -561,6 +561,70 @@ export type Database = {
         };
         Relationships: [];
       };
+      listing_offers: {
+        Row: {
+          id: string;
+          listing_id: string;
+          buyer_id: string;
+          seller_id: string;
+          amount: number;
+          note: string | null;
+          counter_amount: number | null;
+          status: "pending" | "countered" | "accepted" | "declined" | "withdrawn" | "expired";
+          responded_at: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          listing_id: string;
+          buyer_id: string;
+          seller_id: string;
+          amount: number;
+          note?: string | null;
+          counter_amount?: number | null;
+          status?: "pending" | "countered" | "accepted" | "declined" | "withdrawn" | "expired";
+          responded_at?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          listing_id?: string;
+          buyer_id?: string;
+          seller_id?: string;
+          amount?: number;
+          note?: string | null;
+          counter_amount?: number | null;
+          status?: "pending" | "countered" | "accepted" | "declined" | "withdrawn" | "expired";
+          responded_at?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "listing_offers_listing_id_fkey";
+            columns: ["listing_id"];
+            isOneToOne: false;
+            referencedRelation: "listings";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "listing_offers_buyer_id_fkey";
+            columns: ["buyer_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "listing_offers_seller_id_fkey";
+            columns: ["seller_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       listing_reports: {
         Row: {
           id: string;
@@ -672,6 +736,38 @@ export type Database = {
             foreignKeyName: "listing_view_counts_listing_id_fkey";
             columns: ["listing_id"];
             isOneToOne: true;
+            referencedRelation: "listings";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      listing_daily_stats: {
+        Row: {
+          listing_id: string;
+          day: string;
+          views: number;
+          calls: number;
+          whatsapps: number;
+        };
+        Insert: {
+          listing_id: string;
+          day: string;
+          views?: number;
+          calls?: number;
+          whatsapps?: number;
+        };
+        Update: {
+          listing_id?: string;
+          day?: string;
+          views?: number;
+          calls?: number;
+          whatsapps?: number;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "listing_daily_stats_listing_id_fkey";
+            columns: ["listing_id"];
+            isOneToOne: false;
             referencedRelation: "listings";
             referencedColumns: ["id"];
           },
@@ -885,6 +981,22 @@ export type Database = {
         Args: { p_kind: "featured_boost" | "extra_listings"; p_listing_id: string | null; p_quantity: number };
         Returns: string;
       };
+      make_offer: {
+        Args: { p_listing_id: string; p_amount: number; p_note: string | null };
+        Returns: string;
+      };
+      seller_respond_offer: {
+        Args: { p_offer_id: string; p_action: "accept" | "decline" | "counter"; p_counter: number | null };
+        Returns: undefined;
+      };
+      buyer_respond_offer: {
+        Args: { p_offer_id: string; p_action: "accept" | "decline" | "withdraw" };
+        Returns: undefined;
+      };
+      offer_contact: {
+        Args: { p_offer_id: string };
+        Returns: { full_name: string | null; phone: string | null }[];
+      };
       reveal_seller_phone: {
         Args: { p_seller_id: string; p_ip_hash: string };
         Returns: string;
@@ -899,6 +1011,25 @@ export type Database = {
           p_note?: string | null;
         };
         Returns: string;
+      };
+      my_insights_days: {
+        Args: { p_days: number };
+        Returns: number;
+      };
+      seller_insights: {
+        Args: { p_days: number };
+        Returns: {
+          day: string;
+          views: number;
+          calls: number;
+          whatsapps: number;
+          saves: number;
+          offers: number;
+        }[];
+      };
+      seller_listing_insights: {
+        Args: { p_days: number };
+        Returns: { listing_id: string; views: number; calls: number; whatsapps: number; saves: number }[];
       };
       listing_quota_status: {
         Args: Record<PropertyKey, never>;

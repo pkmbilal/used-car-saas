@@ -10,12 +10,14 @@ import { NavLink } from "@/components/nav-link";
 import { Button } from "@/components/ui/button";
 import { getCurrentUser } from "@/lib/auth";
 import { getDictionary } from "@/lib/i18n-server";
+import { countOffersAwaitingMe } from "@/lib/offers";
 import { publicUrl } from "@/lib/r2";
 
 export async function SiteHeader() {
   const current = await getCurrentUser();
   const { t } = await getDictionary();
   const isSeller = current?.profile.role === "seller";
+  const offersWaiting = current ? await countOffersAwaitingMe(current.user.id) : 0;
 
   // Kept short: the logo links home, My listings sits in the user menu and
   // Locations in the footer.
@@ -30,6 +32,7 @@ export async function SiteHeader() {
         ...(isSeller
           ? [{ href: "/dashboard", label: t.nav.myListings, hint: t.nav.hints.myListings, icon: "listings" as const }]
           : []),
+        { href: "/offers", label: t.nav.offers, hint: t.nav.hints.offers, icon: "offers", badge: offersWaiting },
         { href: "/favorites", label: t.nav.savedCars, hint: t.nav.hints.savedCars, icon: "saved" },
         { href: "/saved-searches", label: t.nav.savedSearches, hint: t.nav.hints.savedSearches, icon: "searches" },
         ...(current.profile.is_admin

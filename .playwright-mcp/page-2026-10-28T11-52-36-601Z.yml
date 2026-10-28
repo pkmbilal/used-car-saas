@@ -1,0 +1,77 @@
+- generic [active] [ref=f3e1]:
+  - banner [ref=f3e2]:
+    - navigation [ref=f3e3]:
+      - link [ref=f3e4] [cursor=pointer]:
+        - /url: /en
+        - img "KarSouq" [ref=f3e5]
+      - generic [ref=f3e6]:
+        - link "Buy Cars" [ref=f3e7] [cursor=pointer]:
+          - /url: /en/listings
+        - link "Dealers" [ref=f3e8] [cursor=pointer]:
+          - /url: /en/dealers
+        - link "Pricing" [ref=f3e9] [cursor=pointer]:
+          - /url: /en/pricing
+        - link "Sell" [ref=f3e10] [cursor=pointer]:
+          - /url: /en/account/become-seller
+      - generic [ref=f3e11]:
+        - link "العربية" [ref=f3e12] [cursor=pointer]:
+          - /url: /ar/account/storefront
+          - text: ع
+        - link "Sign in" [ref=f3e16] [cursor=pointer]:
+          - /url: /en/login
+  - status [ref=f3e18]:
+    - paragraph [aria-hidden] [ref=f3e31]:
+      - generic [ref=f3e32]: Buy
+      - generic [ref=f3e34]: Sell
+      - generic [ref=f3e37]: Drive
+    - generic [ref=f3e40]: Loading…
+  - contentinfo [ref=f3e41]:
+    - generic [ref=f3e42]:
+      - generic [ref=f3e43]:
+        - link [ref=f3e44] [cursor=pointer]:
+          - /url: /en
+          - img "KarSouq" [ref=f3e45]
+        - paragraph [ref=f3e46]: Saudi Arabia's marketplace for used cars. Buy and sell directly with sellers.
+      - generic [ref=f3e47]:
+        - paragraph [ref=f3e48]: BUY
+        - link "Browse Cars" [ref=f3e49] [cursor=pointer]:
+          - /url: /en/listings
+        - link "Saved Cars" [ref=f3e50] [cursor=pointer]:
+          - /url: /en/favorites
+        - link "Saved Searches" [ref=f3e51] [cursor=pointer]:
+          - /url: /en/saved-searches
+      - generic [ref=f3e52]:
+        - paragraph [ref=f3e53]: POPULAR MAKES
+        - link "Toyota" [ref=f3e54] [cursor=pointer]:
+          - /url: /en/brands/toyota
+        - link "Hyundai" [ref=f3e55] [cursor=pointer]:
+          - /url: /en/brands/hyundai
+        - link "Nissan" [ref=f3e56] [cursor=pointer]:
+          - /url: /en/brands/nissan
+        - link "Lexus" [ref=f3e57] [cursor=pointer]:
+          - /url: /en/brands/lexus
+      - generic [ref=f3e58]:
+        - paragraph [ref=f3e59]: CITIES
+        - link "All Cities" [ref=f3e60] [cursor=pointer]:
+          - /url: /en/locations
+      - generic [ref=f3e61]:
+        - paragraph [ref=f3e62]: SELL
+        - link "Sell Your Car" [ref=f3e63] [cursor=pointer]:
+          - /url: /en/account/become-seller
+        - link "Pricing" [ref=f3e64] [cursor=pointer]:
+          - /url: /en/pricing
+        - link "Seller Dashboard" [ref=f3e65] [cursor=pointer]:
+          - /url: /en/dashboard
+        - link "My Account" [ref=f3e66] [cursor=pointer]:
+          - /url: /en/account
+    - generic [ref=f3e68]:
+      - paragraph [ref=f3e69]: © 2026 KarSouq, a CodeSudio product. All rights reserved.
+      - navigation [ref=f3e70]:
+        - link "Contact" [ref=f3e71] [cursor=pointer]:
+          - /url: /en/contact
+        - link "Privacy Policy" [ref=f3e72] [cursor=pointer]:
+          - /url: /en/privacy
+        - link "Terms of Use" [ref=f3e73] [cursor=pointer]:
+          - /url: /en/terms
+  - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=f3e79] [cursor=pointer]

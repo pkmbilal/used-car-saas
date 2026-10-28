@@ -5,7 +5,7 @@ import { useDictionary } from "@/components/i18n-provider";
 import Link from "@/components/locale-link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { saveSearchAction, type SaveSearchState } from "@/app/[lang]/saved-searches/actions";
+import { saveSearchAction, type SaveSearchState } from "@/app/[lang]/(site)/saved-searches/actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { translateMessage } from "@/lib/dictionary";

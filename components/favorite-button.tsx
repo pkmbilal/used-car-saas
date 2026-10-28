@@ -3,7 +3,7 @@
 import { useOptimistic, useState, useTransition } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { Heart } from "lucide-react";
-import { toggleFavorite } from "@/app/[lang]/favorites/actions";
+import { toggleFavorite } from "@/app/[lang]/(site)/favorites/actions";
 import { useDictionary } from "@/components/i18n-provider";
 import { Button } from "@/components/ui/button";
 import { translateMessage } from "@/lib/dictionary";

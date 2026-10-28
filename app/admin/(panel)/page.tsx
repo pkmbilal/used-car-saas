@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Car, CircleCheck, Download, MapPin, MessageCircle, Users } from "lucide-react";
 import { RiyalPrice } from "@/components/riyal-price";
-import { StatusBadge } from "@/app/[lang]/dashboard/listings/status-badge";
+import { StatusBadge } from "@/app/[lang]/(seller)/dashboard/listings/status-badge";
 import { DASHBOARD_RANGES, EXPIRING_WINDOW_DAYS, getDashboard, isDashboardRange } from "@/lib/admin";
 import { formatCount, formatDay, formatKm } from "@/lib/format";
 import { isFeatured } from "@/lib/listings";
