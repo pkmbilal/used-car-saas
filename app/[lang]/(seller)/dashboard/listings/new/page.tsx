@@ -32,9 +32,9 @@ export default async function NewListingPage() {
   const p = t.dashboard.newPage;
 
   return (
-    <main className="mx-auto w-full max-w-6xl px-4 py-6 sm:py-12">
+    <div className="mx-auto w-full max-w-6xl">
       <Link
-        href="/dashboard"
+        href="/dashboard/listings"
         className="inline-flex items-center gap-1 text-sm text-zinc-600 transition-colors hover:text-forest dark:text-zinc-400 dark:hover:text-lime"
       >
         <ChevronLeft className="size-4 rtl:rotate-180" aria-hidden />
@@ -61,7 +61,7 @@ export default async function NewListingPage() {
           <AlertTriangle className="mt-0.5 size-4 shrink-0" aria-hidden />
           <span>
             {draftLimitMessage(t, drafts)}{" "}
-            <Link href="/dashboard" className="font-medium underline">
+            <Link href="/dashboard/listings" className="font-medium underline">
               {t.dashboard.backToListings}
             </Link>
           </span>
@@ -86,6 +86,6 @@ export default async function NewListingPage() {
       <div className="mt-8">
         <ListingForm action={createListing} submitLabel={p.submit} />
       </div>
-    </main>
+    </div>
   );
 }

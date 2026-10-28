@@ -40,7 +40,7 @@ export default async function DealerApplicationPage({
         {isDealerPlan(profile.plan) ? (
           <p className={`${noticeClass} bg-green-50 text-green-900 dark:bg-green-950 dark:text-green-200`}>
             {fmt(d.onPlan, { plan: fmt(t.plans.named, { plan: t.plans.labels[profile.plan] }) })}{" "}
-            <Link href="/account/storefront" className="font-medium underline">
+            <Link href="/dashboard/storefront" className="font-medium underline">
               {d.setUpStorefront}
             </Link>
           </p>

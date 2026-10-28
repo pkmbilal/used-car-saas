@@ -3,7 +3,7 @@
 import { useActionState, useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { Flag } from "lucide-react";
-import { reportListing, type ReportState } from "@/app/[lang]/listings/[id]/actions";
+import { reportListing, type ReportState } from "@/app/[lang]/(site)/listings/[id]/actions";
 import { useDictionary } from "@/components/i18n-provider";
 import { Button } from "@/components/ui/button";
 import {

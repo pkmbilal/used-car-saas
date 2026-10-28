@@ -1,10 +1,8 @@
-import type { Metadata } from "next";
 import Image from "next/image";
 import type { LucideIcon } from "lucide-react";
 import { HandCoins, Handshake, Hourglass, Inbox, MessageCircle, Phone, Search } from "lucide-react";
 import Link from "@/components/locale-link";
 import { RiyalPrice } from "@/components/riyal-price";
-import { requireUser } from "@/lib/auth";
 import { carName } from "@/lib/car-names";
 import { count, fmt } from "@/lib/dictionary";
 import type { Dictionary } from "@/lib/dictionaries";
@@ -13,13 +11,8 @@ import type { Locale } from "@/lib/i18n";
 import { getDictionary } from "@/lib/i18n-server";
 import { getOfferContact, getReceivedOffers, getSentOffers, type Offer, type OfferStatus } from "@/lib/offers";
 import { publicUrl } from "@/lib/r2";
-import { absoluteUrl, noIndex } from "@/lib/seo";
+import { absoluteUrl } from "@/lib/seo";
 import { OfferActions } from "./offer-actions";
-
-export async function generateMetadata(): Promise<Metadata> {
-  const { t } = await getDictionary();
-  return { title: t.offers.metaTitle, robots: noIndex };
-}
 
 type Contact = { name: string | null; phone: string };
 type Tab = "received" | "sent";
@@ -40,14 +33,21 @@ function countLive(offers: Offer[], status: OfferStatus) {
   return offers.filter((offer) => offer.status === status && offer.listing?.status === "active").length;
 }
 
-export default async function OffersPage({ searchParams }: PageProps<"/[lang]/offers">) {
-  const { user } = await requireUser("/offers");
+// Received and sent offers, on /offers and in the Seller Center (basePath).
+export async function OffersView({
+  userId,
+  tabParam,
+  basePath,
+}: {
+  userId: string;
+  tabParam: string | string[] | undefined;
+  basePath: "/offers" | "/dashboard/offers";
+}) {
   const { t, locale } = await getDictionary();
   const o = t.offers;
-  const [received, sent] = await Promise.all([getReceivedOffers(user.id), getSentOffers(user.id)]);
+  const [received, sent] = await Promise.all([getReceivedOffers(userId), getSentOffers(userId)]);
   const contacts = await withContacts([...received, ...sent]);
 
-  const tabParam = (await searchParams).tab;
   // Buyers who have never received an offer land on what they sent.
   const tab: Tab =
     tabParam === "sent" || (tabParam !== "received" && received.length === 0 && sent.length > 0)
@@ -61,7 +61,7 @@ export default async function OffersPage({ searchParams }: PageProps<"/[lang]/of
   const deals = [...received, ...sent].filter((offer) => offer.status === "accepted").length;
 
   return (
-    <main className="mx-auto w-full max-w-4xl px-4 py-6 sm:py-12">
+    <>
       <div>
         <span className="inline-flex items-center gap-1.5 rounded-full bg-forest/5 px-2.5 py-1 text-xs font-semibold tracking-wide text-forest ring-1 ring-forest/15 dark:bg-lime/10 dark:text-lime dark:ring-lime/25">
           <span className="size-1.5 rounded-full bg-brand dark:bg-lime" aria-hidden />
@@ -89,8 +89,8 @@ export default async function OffersPage({ searchParams }: PageProps<"/[lang]/of
 
       <div className="mt-8 flex">
         <div className="inline-flex gap-1 rounded-full bg-white p-1 shadow-sm ring-1 ring-zinc-200 dark:bg-zinc-900 dark:ring-zinc-700">
-          <TabLink href="/offers?tab=received" label={o.received} total={received.length} active={tab === "received"} />
-          <TabLink href="/offers?tab=sent" label={o.sent} total={sent.length} active={tab === "sent"} />
+          <TabLink href={`${basePath}?tab=received`} label={o.received} total={received.length} active={tab === "received"} />
+          <TabLink href={`${basePath}?tab=sent`} label={o.sent} total={sent.length} active={tab === "sent"} />
         </div>
       </div>
 
@@ -103,7 +103,7 @@ export default async function OffersPage({ searchParams }: PageProps<"/[lang]/of
           ))}
         </ul>
       )}
-    </main>
+    </>
   );
 }
 

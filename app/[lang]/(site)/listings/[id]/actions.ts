@@ -76,5 +76,6 @@ export async function sendOffer(
 
   revalidateLocalized(`/listings/${listingId}`);
   revalidateLocalized("/offers");
+  revalidateLocalized("/dashboard", "layout");
   return { sent: true };
 }

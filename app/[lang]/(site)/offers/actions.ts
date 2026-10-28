@@ -46,5 +46,6 @@ export async function respondToOffer(
   if (result.error) return result;
 
   revalidateLocalized("/offers");
+  revalidateLocalized("/dashboard", "layout");
   return {};
 }

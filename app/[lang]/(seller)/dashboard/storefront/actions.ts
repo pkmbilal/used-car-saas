@@ -21,13 +21,13 @@ const NOT_DEALER_ERROR = "Storefronts are part of the Dealer plans.";
 
 async function requireDealer() {
   const current = await getCurrentUser();
-  if (!current) return localeRedirect("/login?next=/account/storefront");
+  if (!current) return localeRedirect("/login?next=/dashboard/storefront");
   if (current.profile.role !== "seller" || !isDealerPlan(current.profile.plan)) return null;
   return current;
 }
 
 function revalidateStorefront(userId: string) {
-  revalidateLocalized("/account/storefront");
+  revalidateLocalized("/dashboard/storefront");
   revalidateLocalized(`/sellers/${userId}`);
 }
 

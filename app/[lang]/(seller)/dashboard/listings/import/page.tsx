@@ -57,8 +57,8 @@ export default async function ImportListingsPage() {
   const hints = columnHints(t);
 
   return (
-    <main className="mx-auto w-full max-w-3xl px-4 py-12">
-      <Link href="/dashboard" className="text-sm text-zinc-600 dark:text-zinc-400">
+    <div className="mx-auto w-full max-w-3xl">
+      <Link href="/dashboard/listings" className="text-sm text-zinc-600 dark:text-zinc-400">
         {t.dashboard.backToListings}
       </Link>
       <h1 className="mt-2 text-2xl font-semibold tracking-tight">{p.title}</h1>
@@ -131,6 +131,6 @@ export default async function ImportListingsPage() {
           </details>
         </>
       )}
-    </main>
+    </div>
   );
 }

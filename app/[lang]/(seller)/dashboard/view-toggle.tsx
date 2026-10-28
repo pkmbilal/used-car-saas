@@ -7,8 +7,8 @@ export type ListingsView = "grid" | "list";
 
 export function ViewToggle({ view, t }: { view: ListingsView; t: Dictionary }) {
   const options: [ListingsView, string, LucideIcon, string][] = [
-    ["grid", "/dashboard", LayoutGrid, t.dashboard.cardView],
-    ["list", "/dashboard?view=list", List, t.dashboard.listView],
+    ["grid", "/dashboard/listings", LayoutGrid, t.dashboard.cardView],
+    ["list", "/dashboard/listings?view=list", List, t.dashboard.listView],
   ];
 
   return (

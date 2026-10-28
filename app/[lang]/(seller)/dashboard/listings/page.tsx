@@ -1,34 +1,26 @@
-import { ChartLine, Plus, Upload } from "lucide-react";
+import { Plus, Upload } from "lucide-react";
 import Link from "@/components/locale-link";
 import type { Metadata } from "next";
 import { rich } from "@/components/rich-text";
-import { addonReference, getMyPendingAddons } from "@/lib/addons";
+import { getMyPendingAddons } from "@/lib/addons";
 import { requireSeller } from "@/lib/auth";
-import { salesWhatsappUrl } from "@/lib/contact";
 import { count, fmt } from "@/lib/dictionary";
 import { getDictionary } from "@/lib/i18n-server";
-import { formatDay, formatSAR } from "@/lib/format";
+import { formatSAR } from "@/lib/format";
 import { getSellerListings, isFeatured } from "@/lib/listings";
 import { getPendingOfferCounts } from "@/lib/offers";
-import {
-  addonPrice,
-  EXTRA_LISTING_PACKS,
-  getListingQuota,
-  isDealerPlan,
-  isPlanExpiringSoon,
-} from "@/lib/plans";
-import { ListingCardItem, ListingListItem } from "./listing-items";
-import { PlanCard } from "./plan-card";
-import { ViewToggle } from "./view-toggle";
+import { addonPrice, getListingQuota, isDealerPlan } from "@/lib/plans";
 import { noIndex } from "@/lib/seo";
+import { ListingCardItem, ListingListItem } from "../listing-items";
+import { ViewToggle } from "../view-toggle";
 
 export async function generateMetadata(): Promise<Metadata> {
   const { t } = await getDictionary();
   return { title: t.dashboard.metaTitle, robots: noIndex };
 }
 
-export default async function DashboardPage({ searchParams }: PageProps<"/[lang]/dashboard">) {
-  const { user, profile } = await requireSeller();
+export default async function ListingsPage({ searchParams }: PageProps<"/[lang]/dashboard/listings">) {
+  const { user, profile } = await requireSeller("/dashboard/listings");
   const { t, locale } = await getDictionary();
   const d = t.dashboard;
   const view = (await searchParams).view === "list" ? "list" : "grid";
@@ -43,33 +35,11 @@ export default async function DashboardPage({ searchParams }: PageProps<"/[lang]
     pendingAddons.flatMap((addon) => (addon.kind === "featured_boost" && addon.listingId ? [addon.listingId] : [])),
   );
   const boostLabel = fmt(t.addons.boostShort, { price: formatSAR(addonPrice("featured_boost"), locale) });
-  const pendingExtra = pendingAddons.find((addon) => addon.kind === "extra_listings");
-  const pendingRef = pendingExtra ? addonReference(pendingExtra.id) : null;
-  const extraListings =
-    quota && quota.limit !== null
-      ? {
-          packs: EXTRA_LISTING_PACKS.map((quantity) => ({
-            quantity,
-            label: count(locale, quantity, t.addons.pack),
-            price: formatSAR(addonPrice("extra_listings", quantity), locale),
-          })),
-          pending:
-            pendingExtra && pendingRef
-              ? {
-                  note: count(locale, pendingExtra.quantity, t.addons.extraPending, { ref: pendingRef }),
-                  whatsappUrl: salesWhatsappUrl(fmt(t.addons.whatsappExtra, { ref: pendingRef })),
-                }
-              : null,
-        }
-      : null;
-  const openDrafts = listings.filter(
-    (listing) => listing.status === "draft" && listing.first_published_at === null,
-  ).length;
   const buttonClass =
     "inline-flex min-h-11 items-center justify-center gap-2 rounded-full text-sm font-semibold transition-all focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none max-sm:flex-1 motion-safe:hover:-translate-y-px dark:focus-visible:ring-offset-zinc-950";
 
   return (
-    <main className="mx-auto w-full max-w-5xl px-4 py-6 sm:py-12">
+    <div className="mx-auto w-full max-w-5xl">
       <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <span className="inline-flex items-center gap-1.5 rounded-full bg-forest/5 px-2.5 py-1 text-xs font-semibold tracking-wide text-forest ring-1 ring-forest/15 dark:bg-lime/10 dark:text-lime dark:ring-lime/25">
@@ -84,13 +54,6 @@ export default async function DashboardPage({ searchParams }: PageProps<"/[lang]
         </div>
         {/* Drafts are free, so new listings stay open at the limit; publishing is what's capped. */}
         <div className="flex shrink-0 items-center gap-2.5 max-sm:w-full">
-          <Link
-            href="/dashboard/insights"
-            className={`${buttonClass} border border-line bg-white px-5 text-zinc-800 shadow-sm hover:border-forest/30 hover:bg-forest/5 focus-visible:ring-forest/30 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100 dark:hover:bg-zinc-800`}
-          >
-            <ChartLine className="size-4" aria-hidden />
-            {t.insights.open}
-          </Link>
           {isDealerPlan(profile.plan) && (
             <Link
               href="/dashboard/listings/import"
@@ -111,28 +74,6 @@ export default async function DashboardPage({ searchParams }: PageProps<"/[lang]
           </Link>
         </div>
       </div>
-
-      {quota && (
-        <PlanCard quota={quota} openDrafts={openDrafts} t={t} locale={locale} extraListings={extraListings} />
-      )}
-
-      {quota?.planExpiresAt && isPlanExpiringSoon(quota) && (
-        <p className="mt-6 rounded-md bg-amber-50 px-4 py-3 text-sm text-amber-900 dark:bg-amber-950 dark:text-amber-200">
-          {fmt(d.planEnding, {
-            plan: fmt(t.plans.named, { plan: t.plans.labels[quota.plan] }),
-            date: formatDay(quota.planExpiresAt, locale),
-          })}{" "}
-          <Link href="/pricing" className="font-medium underline">
-            {d.renew}
-          </Link>
-        </p>
-      )}
-
-      {profile.suspended_at && (
-        <p className="mt-6 rounded-md bg-red-50 px-4 py-3 text-sm text-red-900 dark:bg-red-950 dark:text-red-200">
-          {d.suspended}
-        </p>
-      )}
 
       {listings.length === 0 ? (
         <p className="mt-8 text-zinc-600 dark:text-zinc-400">
@@ -171,6 +112,6 @@ export default async function DashboardPage({ searchParams }: PageProps<"/[lang]
           </ul>
         </>
       )}
-    </main>
+    </div>
   );
 }

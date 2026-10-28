@@ -232,7 +232,7 @@ function ListingNotes({
       )}
       {listing.status === "active" && pendingOffers > 0 && (
         <Link
-          href="/offers"
+          href="/dashboard/offers"
           className={`text-brand ${card ? "mt-3 me-2 inline-block rounded-full bg-mint px-2.5 py-1 text-xs font-semibold" : "mt-1 block text-sm font-medium"} hover:underline`}
         >
           {count(locale, pendingOffers, t.offers.pendingOnListing)}

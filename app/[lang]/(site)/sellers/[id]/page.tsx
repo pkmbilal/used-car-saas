@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { cache } from "react";
-import { ContactButtons } from "@/app/[lang]/listings/[id]/contact-buttons";
+import { ContactButtons } from "@/app/[lang]/(site)/listings/[id]/contact-buttons";
 import { Avatar } from "@/components/avatar";
 import { DealerBadge, DealerLogo } from "@/components/dealer-logo";
 import { JsonLd } from "@/components/json-ld";

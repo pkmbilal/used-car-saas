@@ -279,7 +279,7 @@ function AdminUserMenu({ user }: { user: AdminUser }) {
     },
     { href: "/account", label: "Account settings", hint: "Name, phone and city", icon: Settings },
     ...(user.isSeller
-      ? [{ href: "/dashboard", label: "My listings", hint: "Cars you're selling", icon: Car }]
+      ? [{ href: "/dashboard", label: "Seller Center", hint: "Your listings, offers and insights", icon: Car }]
       : []),
     { href: "/", label: "View site", hint: "KarSouq as buyers see it", icon: ExternalLink },
   ];

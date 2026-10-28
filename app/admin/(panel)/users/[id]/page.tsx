@@ -22,7 +22,7 @@ import {
   Wallet,
   type LucideIcon,
 } from "lucide-react";
-import { StatusBadge } from "@/app/[lang]/dashboard/listings/status-badge";
+import { StatusBadge } from "@/app/[lang]/(seller)/dashboard/listings/status-badge";
 import { RiyalPrice } from "@/components/riyal-price";
 import { VerificationBadges } from "@/components/verification-badges";
 import { atFeaturedLimit, getUserDetail } from "@/lib/admin";

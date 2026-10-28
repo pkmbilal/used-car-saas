@@ -38,7 +38,7 @@ export function ImportForm() {
         <p className="mt-4 rounded-md bg-green-50 px-4 py-3 text-sm text-green-900 dark:bg-green-950 dark:text-green-200">
           {rich(count(locale, state.imported, p.imported), {
             link: (
-              <Link href="/dashboard" className="font-medium underline">
+              <Link href="/dashboard/listings" className="font-medium underline">
                 {p.yourListings}
               </Link>
             ),

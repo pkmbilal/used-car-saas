@@ -139,7 +139,7 @@ export function ListingActions({
         setConfirming(false);
         setError(translateMessage(t, result.error));
       } else {
-        router.push(localizePath(locale, "/dashboard"));
+        router.push(localizePath(locale, "/dashboard/listings"));
       }
     });
   }

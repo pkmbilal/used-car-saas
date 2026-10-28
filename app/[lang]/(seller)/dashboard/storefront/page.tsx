@@ -15,12 +15,12 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function StorefrontPage() {
-  const { user, profile } = await requireSeller("/account/storefront");
+  const { user, profile } = await requireSeller("/dashboard/storefront");
   const { t } = await getDictionary();
   const s = t.account.storefront;
 
   return (
-    <main className="mx-auto w-full max-w-md px-4 py-12">
+    <div className="mx-auto w-full max-w-md">
       <h1 className="text-2xl font-semibold tracking-tight">{s.title}</h1>
       <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
         {s.intro}{" "}
@@ -42,6 +42,6 @@ export default async function StorefrontPage() {
           </Link>
         </p>
       )}
-    </main>
+    </div>
   );
 }

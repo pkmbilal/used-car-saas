@@ -96,7 +96,7 @@ export function PlanCard({ quota, openDrafts, t, locale, extraListings }: Props)
       {isDealerPlan(quota.plan) && (
         <div className="mt-3 flex flex-wrap gap-x-1 border-t border-white/10 pt-3">
           <Link
-            href="/account/storefront"
+            href="/dashboard/storefront"
             className={`${linkClass} -ms-3.5 text-white/85 hover:bg-white/10 hover:text-white`}
           >
             <Store className="size-4" aria-hidden />

@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Car, Search } from "lucide-react";
 import { RiyalPrice } from "@/components/riyal-price";
-import { StatusBadge } from "@/app/[lang]/dashboard/listings/status-badge";
+import { StatusBadge } from "@/app/[lang]/(seller)/dashboard/listings/status-badge";
 import { ADMIN_PAGE_SIZE, atFeaturedLimit, getAllListings, type FeaturedStatus } from "@/lib/admin";
 import { formatDay, formatKm } from "@/lib/format";
 import { isFeatured, type ListingStatus } from "@/lib/listings";

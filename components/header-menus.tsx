@@ -131,29 +131,43 @@ function UserCard({ user }: { user: HeaderUser }) {
 }
 
 // The signed-in user, with their account links and sign out.
-export function UserMenu({ user, links }: { user: HeaderUser; links: HeaderLink[] }) {
+// "light" is for white bars (the Seller Center); the site header is dark.
+export function UserMenu({
+  user,
+  links,
+  tone = "dark",
+}: {
+  user: HeaderUser;
+  links: HeaderLink[];
+  tone?: "dark" | "light";
+}) {
   const { t } = useDictionary();
   const roleLabel = useRoleLabel(user);
+  const light = tone === "light";
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
         aria-label={t.nav.accountMenu}
-        className="group flex items-center gap-2.5 rounded-full py-1 ps-1 pe-2 ring-1 xl:pe-3 ring-transparent transition-colors outline-none hover:bg-white/10 hover:ring-white/15 focus-visible:ring-lime aria-expanded:bg-white/10 aria-expanded:ring-white/15"
+        className={`group flex items-center gap-2.5 rounded-full py-1 ps-1 pe-2 ring-1 xl:pe-3 ring-transparent transition-colors outline-none ${
+          light
+            ? "hover:bg-zinc-100 hover:ring-line focus-visible:ring-brand aria-expanded:bg-zinc-100 aria-expanded:ring-line"
+            : "hover:bg-white/10 hover:ring-white/15 focus-visible:ring-lime aria-expanded:bg-white/10 aria-expanded:ring-white/15"
+        }`}
       >
         <span className="relative">
           <Avatar name={user.name} src={user.avatarUrl} />
-          <span className="absolute -end-0.5 -bottom-0.5 size-3 rounded-full bg-green-500 ring-2 ring-charcoal" aria-hidden />
+          <span className={`absolute -end-0.5 -bottom-0.5 size-3 rounded-full bg-green-500 ring-2 ${light ? "ring-white" : "ring-charcoal"}`} aria-hidden />
           <AvatarDot links={links} size="md" />
         </span>
         <span className="hidden max-w-36 text-start xl:block">
-          <span className="block truncate text-sm font-semibold leading-tight text-white">{user.name}</span>
-          <span className="block truncate text-xs text-white/60">
+          <span className={`block truncate text-sm font-semibold leading-tight ${light ? "text-ink" : "text-white"}`}>{user.name}</span>
+          <span className={`block truncate text-xs ${light ? "text-zinc-500" : "text-white/60"}`}>
             {user.isAdmin ? t.nav.administrator : roleLabel}
           </span>
         </span>
         <ChevronDown
-          className="size-4 text-white/60 transition-transform group-aria-expanded:rotate-180"
+          className={`size-4 transition-transform group-aria-expanded:rotate-180 ${light ? "text-zinc-500" : "text-white/60"}`}
           aria-hidden
         />
       </DropdownMenuTrigger>

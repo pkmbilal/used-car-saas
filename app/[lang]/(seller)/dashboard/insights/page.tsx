@@ -68,12 +68,8 @@ export default async function InsightsPage({ searchParams }: PageProps<"/[lang]/
     "inline-flex min-h-10 items-center gap-2 rounded-full border border-line bg-white px-4 text-sm font-semibold text-zinc-800 shadow-sm transition-colors hover:border-forest/30 hover:bg-forest/5 focus-visible:ring-2 focus-visible:ring-forest/30 focus-visible:outline-none dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100 dark:hover:bg-zinc-800";
 
   return (
-    <main data-print-report className="mx-auto w-full max-w-5xl px-4 py-6 sm:py-12 print:max-w-none print:py-0">
-      <Link href="/dashboard" className="text-sm text-zinc-600 hover:underline print:hidden dark:text-zinc-400">
-        {t.dashboard.backToListings}
-      </Link>
-
-      <div className="mt-3 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+    <div data-print-report className="mx-auto w-full max-w-5xl print:max-w-none">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <p className="hidden text-sm text-zinc-500 print:block">
             {[profile.business_name ?? profile.full_name, t.insights.report.title].filter(Boolean).join(" · ")}
@@ -150,7 +146,7 @@ export default async function InsightsPage({ searchParams }: PageProps<"/[lang]/
           />
         </div>
       )}
-    </main>
+    </div>
   );
 }
 
@@ -158,11 +154,8 @@ export default async function InsightsPage({ searchParams }: PageProps<"/[lang]/
 function Teaser({ t }: { t: Dictionary }) {
   const teaser = t.insights.teaser;
   return (
-    <main className="mx-auto w-full max-w-5xl px-4 py-6 sm:py-12">
-      <Link href="/dashboard" className="text-sm text-zinc-600 hover:underline dark:text-zinc-400">
-        {t.dashboard.backToListings}
-      </Link>
-      <h1 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">{t.insights.title}</h1>
+    <div className="mx-auto w-full max-w-5xl">
+      <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">{t.insights.title}</h1>
 
       <div className="relative mt-6 overflow-hidden rounded-2xl ring-1 ring-black/5 dark:ring-white/10">
         <div aria-hidden className="pointer-events-none grid gap-3 p-4 blur-sm select-none sm:p-5">
@@ -195,7 +188,7 @@ function Teaser({ t }: { t: Dictionary }) {
           </div>
         </div>
       </div>
-    </main>
+    </div>
   );
 }
 

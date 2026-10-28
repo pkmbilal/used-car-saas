@@ -53,7 +53,7 @@ export default async function AccountPage({ searchParams }: PageProps<"/[lang]/a
       {profile.role === "seller" && isDealerPlan(profile.plan) && (
         <p className="mt-8 text-sm">
           {a.storefrontPrompt}{" "}
-          <Link href="/account/storefront" className="font-medium underline">
+          <Link href="/dashboard/storefront" className="font-medium underline">
             {a.editStorefront}
           </Link>
         </p>

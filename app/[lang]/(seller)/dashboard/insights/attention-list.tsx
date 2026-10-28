@@ -60,7 +60,7 @@ function describe(
   const a = t.insights.attention;
   switch (item.kind) {
     case "pendingOffers":
-      return { icon: HandCoins, text: count(locale, item.count, a.pendingOffers), href: "/offers", action: a.reviewOffers };
+      return { icon: HandCoins, text: count(locale, item.count, a.pendingOffers), href: "/dashboard/offers", action: a.reviewOffers };
     case "featuredEnding":
       return {
         icon: Clock,
@@ -72,7 +72,7 @@ function describe(
         action: a.editListing,
       };
     case "unusedFeatured":
-      return { icon: Star, text: count(locale, item.count, a.unusedFeatured), href: "/dashboard", action: a.featureListing };
+      return { icon: Star, text: count(locale, item.count, a.unusedFeatured), href: "/dashboard/listings", action: a.featureListing };
     case "noContacts":
       return {
         icon: PhoneOff,

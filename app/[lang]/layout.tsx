@@ -4,8 +4,6 @@ import { Analytics } from "@vercel/analytics/next";
 import { notFound } from "next/navigation";
 import { DirectionProvider } from "@/components/direction-provider";
 import { I18nProvider } from "@/components/i18n-provider";
-import { SiteFooter } from "@/components/site-footer";
-import { SiteHeader } from "@/components/site-header";
 import { Toaster } from "@/components/ui/sonner";
 import { dictionaries } from "@/lib/dictionaries";
 import { figtree, plexArabic, poppins } from "@/lib/fonts";
@@ -45,9 +43,8 @@ export default async function RootLayout({ children, params }: LayoutProps<"/[la
       <body className="min-h-full flex flex-col" suppressHydrationWarning>
         <DirectionProvider dir={dir(lang)}>
           <I18nProvider t={dictionaries[lang]} locale={lang}>
-            <SiteHeader />
-            <div className="flex flex-1 flex-col">{children}</div>
-            <SiteFooter />
+            {/* (site) adds the public header and footer; (seller) has its own shell. */}
+            {children}
             {/* On phones, toasts sit above the bottom tab bar. */}
             <Toaster
               theme="light"

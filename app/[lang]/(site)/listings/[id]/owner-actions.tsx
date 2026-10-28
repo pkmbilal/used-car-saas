@@ -13,7 +13,7 @@ import {
   requestFeaturedBoost,
   setListingStatus,
   type ActionResult,
-} from "../../dashboard/listings/actions";
+} from "@/app/[lang]/(seller)/dashboard/listings/actions";
 
 type Props = {
   listingId: string;
