@@ -5,6 +5,7 @@ import {
   Bell,
   Car,
   ChevronDown,
+  HandCoins,
   Heart,
   LogOut,
   Menu,
@@ -35,7 +36,9 @@ export type HeaderLink = {
   href: string;
   label: string;
   hint?: string;
-  icon?: "listings" | "saved" | "searches" | "admin" | "account";
+  icon?: "listings" | "offers" | "saved" | "searches" | "admin" | "account";
+  // Items waiting on the user, e.g. offers to answer.
+  badge?: number;
 };
 
 
@@ -62,11 +65,32 @@ export type HeaderUser = {
 // Icons are picked here: components can't be passed from the server header.
 const LINK_ICONS: Record<NonNullable<HeaderLink["icon"]>, LucideIcon> = {
   listings: Car,
+  offers: HandCoins,
   saved: Heart,
   searches: Bell,
   admin: ShieldCheck,
   account: Settings,
 };
+
+function LinkBadge({ count }: { count?: number }) {
+  if (!count) return null;
+  return (
+    <span className="ms-auto rounded-full bg-brand px-2 py-0.5 text-xs font-semibold text-white">
+      {count > 99 ? "99+" : count}
+    </span>
+  );
+}
+
+// A dot on the avatar while any account link has a badge.
+function AvatarDot({ links, size }: { links: HeaderLink[]; size: "sm" | "md" }) {
+  if (!links.some((link) => link.badge)) return null;
+  return (
+    <span
+      className={`absolute -end-0.5 -top-0.5 rounded-full bg-red-500 ring-2 ${size === "sm" ? "size-2 ring-white" : "size-3 ring-charcoal"}`}
+      aria-hidden
+    />
+  );
+}
 
 function useRoleLabel(user: HeaderUser) {
   const { t } = useDictionary();
@@ -120,6 +144,7 @@ export function UserMenu({ user, links }: { user: HeaderUser; links: HeaderLink[
         <span className="relative">
           <Avatar name={user.name} src={user.avatarUrl} />
           <span className="absolute -end-0.5 -bottom-0.5 size-3 rounded-full bg-green-500 ring-2 ring-charcoal" aria-hidden />
+          <AvatarDot links={links} size="md" />
         </span>
         <span className="hidden max-w-36 text-start xl:block">
           <span className="block truncate text-sm font-semibold leading-tight text-white">{user.name}</span>
@@ -141,7 +166,7 @@ export function UserMenu({ user, links }: { user: HeaderUser; links: HeaderLink[
         <UserCard user={user} />
 
         <div className="p-1.5">
-          {links.map(({ href, label, hint, icon }) => {
+          {links.map(({ href, label, hint, icon, badge }) => {
             const Icon = icon ? LINK_ICONS[icon] : UserRound;
             return (
               <DropdownMenuItem key={href} asChild className="gap-3 rounded-lg px-2 py-2">
@@ -153,6 +178,7 @@ export function UserMenu({ user, links }: { user: HeaderUser; links: HeaderLink[
                     <span className="block text-sm font-medium">{label}</span>
                     {hint && <span className="block truncate text-xs text-muted-foreground">{hint}</span>}
                   </span>
+                  <LinkBadge count={badge} />
                 </Link>
               </DropdownMenuItem>
             );
@@ -250,6 +276,7 @@ export function MobileAccountSheet({
         <span className={`relative rounded-full ring-2 ${active ? "ring-brand" : "ring-transparent"}`}>
           <Avatar name={user.name} src={user.avatarUrl} size="sm" />
           <span className="absolute -end-0.5 -bottom-0.5 size-2 rounded-full bg-green-500 ring-2 ring-white" aria-hidden />
+          <AvatarDot links={links} size="sm" />
         </span>
         <span className="max-w-16 truncate">{firstName}</span>
       </SheetTrigger>
@@ -261,7 +288,7 @@ export function MobileAccountSheet({
         <UserCard user={user} />
 
         <nav className="p-1.5">
-          {links.map(({ href, label, hint, icon }) => {
+          {links.map(({ href, label, hint, icon, badge }) => {
             const Icon = icon ? LINK_ICONS[icon] : UserRound;
             return (
               <SheetClose key={href} asChild>
@@ -273,6 +300,7 @@ export function MobileAccountSheet({
                     <span className="block text-sm font-medium">{label}</span>
                     {hint && <span className="block truncate text-xs text-muted-foreground">{hint}</span>}
                   </span>
+                  <LinkBadge count={badge} />
                 </Link>
               </SheetClose>
             );

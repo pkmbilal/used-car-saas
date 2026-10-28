@@ -50,6 +50,7 @@ import {
 import { capitalize } from "@/lib/listing-options";
 import { listingDescription, listingJsonLd } from "@/lib/listing-seo";
 import { getListingStats, getPublicListing, getSimilarListings, isFeatured } from "@/lib/listings";
+import { getMyOfferForListing } from "@/lib/offers";
 import { isMake, makeHref } from "@/lib/makes";
 import { addonPrice, BOOST_DAYS, getListingQuota, SELF_FEATURE_DAYS } from "@/lib/plans";
 import { publicUrl } from "@/lib/r2";
@@ -58,6 +59,7 @@ import { getStorefront } from "@/lib/storefront";
 import { Breadcrumbs, type Crumb } from "./breadcrumbs";
 import { ContactButtons } from "./contact-buttons";
 import { Gallery } from "./gallery";
+import { MakeOfferButton } from "./make-offer-button";
 import { ListingDescription, ListingFeatures, SpecGrid } from "./listing-details";
 import { OwnerActions } from "./owner-actions";
 import { ShareButton } from "./share-button";
@@ -105,12 +107,14 @@ export default async function ListingPage({ params }: PageProps<"/[lang]/listing
   const seller = listing.seller;
   const storefront = seller ? getStorefront(seller) : null;
   const featured = isFeatured(listing);
-  const [stats, quota, pendingAddons, favoriteIds, similar] = await Promise.all([
+  const canOffer = !isOwner && listing.status === "active";
+  const [stats, quota, pendingAddons, favoriteIds, similar, myOffer] = await Promise.all([
     isOwner ? getListingStats(listing.id) : null,
     isOwner ? getListingQuota() : null,
     isOwner ? getMyPendingAddons(listing.id) : [],
     favoritesPromise,
     similarPromise,
+    canOffer && current ? getMyOfferForListing(current.user.id, listing.id) : null,
   ]);
   const whatsappText = fmt(p.whatsappText, {
     title,
@@ -294,6 +298,16 @@ export default async function ListingPage({ params }: PageProps<"/[lang]/listing
 
             {showContact && seller && (
               <ContactButtons sellerId={seller.id} listingId={listing.id} whatsappText={whatsappText} variant="sidebar" />
+            )}
+            {canOffer && (
+              <div className={`${showContact ? "mt-2.5" : "mt-4"} flex flex-col`}>
+                <MakeOfferButton
+                  listingId={listing.id}
+                  price={Number(listing.price)}
+                  signedIn={!!current}
+                  myOffer={myOffer}
+                />
+              </div>
             )}
             {isOwner && (
               <OwnerActions

@@ -10,7 +10,7 @@ import { Car, Heart, House, Plus, Search, UserRound, type LucideIcon } from "luc
 type Tab = { href: string; label: string; icon: LucideIcon; exact?: boolean; primary?: boolean; account?: boolean };
 
 // Pages reached from the account sheet, which light up its tab.
-const ACCOUNT_PATHS = ["/account", "/saved-searches", "/admin"];
+const ACCOUNT_PATHS = ["/account", "/offers", "/saved-searches", "/admin"];
 
 // Phone-only app-style navigation, fixed to the bottom of the screen.
 export function MobileTabBar({

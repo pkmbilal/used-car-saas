@@ -2,8 +2,11 @@
 
 import { getCurrentUser } from "@/lib/auth";
 import { revealSellerPhone, type RevealResult } from "@/lib/contact-reveal";
+import { revalidateLocalized } from "@/lib/i18n-server";
 import { isContactKind, recordListingContact, recordListingView } from "@/lib/listings";
 import { parseReport } from "@/lib/moderation";
+import { MAX_OFFER_NOTE, parseAmount } from "@/lib/offer-limits";
+import { makeOffer, type OfferError } from "@/lib/offers";
 import { createClient } from "@/lib/supabase/server";
 
 // "signin" tells the client to send the visitor to the login page.
@@ -49,4 +52,29 @@ export async function recordContact(listingId: string, kind: string): Promise<vo
 export async function revealPhone(sellerId: string): Promise<RevealResult> {
   if (!UUID.test(sellerId)) return { error: "unavailable" };
   return revealSellerPhone(sellerId);
+}
+
+// "signin" tells the client to send the visitor to the login page.
+export type OfferState = { error?: "signin" | OfferError; sent?: boolean };
+
+export async function sendOffer(
+  listingId: string,
+  _prev: OfferState,
+  formData: FormData,
+): Promise<OfferState> {
+  if (!UUID.test(listingId)) return { error: "listing_not_active" };
+  const current = await getCurrentUser();
+  if (!current) return { error: "signin" };
+
+  const amount = parseAmount(formData.get("amount"));
+  if (amount === null) return { error: "invalid_amount" };
+  const note = String(formData.get("note") ?? "").trim();
+  if (note.length > MAX_OFFER_NOTE) return { error: "note_too_long" };
+
+  const result = await makeOffer(listingId, amount, note || null);
+  if (result.error) return { error: result.error };
+
+  revalidateLocalized(`/listings/${listingId}`);
+  revalidateLocalized("/offers");
+  return { sent: true };
 }

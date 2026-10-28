@@ -9,6 +9,7 @@ import { count, fmt } from "@/lib/dictionary";
 import { getDictionary } from "@/lib/i18n-server";
 import { formatDay, formatSAR } from "@/lib/format";
 import { getSellerListings, isFeatured } from "@/lib/listings";
+import { getPendingOfferCounts } from "@/lib/offers";
 import {
   addonPrice,
   EXTRA_LISTING_PACKS,
@@ -32,10 +33,11 @@ export default async function DashboardPage({ searchParams }: PageProps<"/[lang]
   const d = t.dashboard;
   const view = (await searchParams).view === "list" ? "list" : "grid";
   const Item = view === "list" ? ListingListItem : ListingCardItem;
-  const [listings, quota, pendingAddons] = await Promise.all([
+  const [listings, quota, pendingAddons, pendingOffers] = await Promise.all([
     getSellerListings(user.id),
     getListingQuota(),
     getMyPendingAddons(),
+    getPendingOfferCounts(user.id),
   ]);
   const pendingBoosts = new Set(
     pendingAddons.flatMap((addon) => (addon.kind === "featured_boost" && addon.listingId ? [addon.listingId] : [])),
@@ -154,6 +156,7 @@ export default async function DashboardPage({ searchParams }: PageProps<"/[lang]
                 featureSlots={isFeatured(listing) ? 0 : (quota?.featuredRemaining ?? 0)}
                 boostLabel={isFeatured(listing) ? null : boostLabel}
                 boostPending={pendingBoosts.has(listing.id)}
+                pendingOffers={pendingOffers.get(listing.id) ?? 0}
                 t={t}
                 locale={locale}
               />

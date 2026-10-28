@@ -20,6 +20,8 @@ type Props = {
   // waiting for payment.
   boostLabel: string | null;
   boostPending: boolean;
+  // Offers on this listing waiting for the seller's answer.
+  pendingOffers: number;
   t: Dictionary;
   locale: Locale;
 };
@@ -36,7 +38,7 @@ function listingStats({ listing, t, locale }: Pick<Props, "listing" | "t" | "loc
   ];
 }
 
-export function ListingCardItem({ listing, featureSlots, boostLabel, boostPending, t, locale }: Props) {
+export function ListingCardItem({ listing, featureSlots, boostLabel, boostPending, pendingOffers, t, locale }: Props) {
   const cover = listing.images[0];
   const featured = listing.status === "active" && isFeatured(listing);
   const stats = listingStats({ listing, t, locale });
@@ -98,7 +100,7 @@ export function ListingCardItem({ listing, featureSlots, boostLabel, boostPendin
             </li>
           ))}
         </ul>
-        <ListingNotes listing={listing} boostPending={boostPending} t={t} locale={locale} card />
+        <ListingNotes listing={listing} boostPending={boostPending} pendingOffers={pendingOffers} t={t} locale={locale} card />
       </div>
 
       <div className="mt-auto px-4 pt-3.5 pb-3">
@@ -119,7 +121,7 @@ export function ListingCardItem({ listing, featureSlots, boostLabel, boostPendin
   );
 }
 
-export function ListingListItem({ listing, featureSlots, boostLabel, boostPending, t, locale }: Props) {
+export function ListingListItem({ listing, featureSlots, boostLabel, boostPending, pendingOffers, t, locale }: Props) {
   const cover = listing.images[0];
   const featured = listing.status === "active" && isFeatured(listing);
   const stats = listingStats({ listing, t, locale });
@@ -172,7 +174,7 @@ export function ListingListItem({ listing, featureSlots, boostLabel, boostPendin
               {cityName(t, listing.city)}
             </span>
           </p>
-          <ListingNotes listing={listing} boostPending={boostPending} t={t} locale={locale} card />
+          <ListingNotes listing={listing} boostPending={boostPending} pendingOffers={pendingOffers} t={t} locale={locale} card />
         </div>
       </div>
 
@@ -206,6 +208,7 @@ export function ListingListItem({ listing, featureSlots, boostLabel, boostPendin
 function ListingNotes({
   listing,
   boostPending,
+  pendingOffers,
   t,
   locale,
   card = false,
@@ -226,6 +229,14 @@ function ListingNotes({
         >
           {t.addons.boostPendingShort}
         </p>
+      )}
+      {listing.status === "active" && pendingOffers > 0 && (
+        <Link
+          href="/offers"
+          className={`text-brand ${card ? "mt-3 me-2 inline-block rounded-full bg-mint px-2.5 py-1 text-xs font-semibold" : "mt-1 block text-sm font-medium"} hover:underline`}
+        >
+          {count(locale, pendingOffers, t.offers.pendingOnListing)}
+        </Link>
       )}
       {listing.status === "removed" && listing.removed_reason && (
         <p
