@@ -718,6 +718,12 @@ export const en = {
     sellerWhatsappText: "Hi {name}, I've accepted your offer of {amount} for my {title} on KarSouq: {url}",
     buyerWhatsappText: "Hi {name}, our deal of {amount} for your {title} on KarSouq was accepted: {url}",
     pendingOnListing: plural({ one: "{count} offer to answer", other: "{count} offers to answer" }),
+    toAnswerCount: plural({ one: "{count} offer needs your reply", other: "{count} offers need your reply" }),
+    statToAnswer: "To answer",
+    statWaiting: "Waiting",
+    statDeals: "Deals",
+    belowAsking: "{pct}% below asking",
+    dealDone: "Deal agreed. Contact each other to finish up.",
     errors: {
       not_signed_in: "Sign in to make an offer.",
       account_suspended: "Your account is suspended.",

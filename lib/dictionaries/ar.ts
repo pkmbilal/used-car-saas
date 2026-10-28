@@ -868,6 +868,18 @@ export const ar: DictionaryShape<typeof en> = {
       many: "{count} عرضًا بانتظار ردك",
       other: "{count} عرض بانتظار ردك",
     }),
+    toAnswerCount: plural({
+      one: "عرض واحد يحتاج ردك",
+      two: "عرضان يحتاجان ردك",
+      few: "{count} عروض تحتاج ردك",
+      many: "{count} عرضًا يحتاج ردك",
+      other: "{count} عرض يحتاج ردك",
+    }),
+    statToAnswer: "بانتظار ردك",
+    statWaiting: "بانتظار الطرف الآخر",
+    statDeals: "صفقات",
+    belowAsking: "أقل من السعر المطلوب بـ {pct}٪",
+    dealDone: "تم الاتفاق. تواصلا لإتمام الصفقة.",
     errors: {
       not_signed_in: "سجّل الدخول لتقديم عرض.",
       account_suspended: "حسابك موقوف.",
