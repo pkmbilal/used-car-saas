@@ -1,11 +1,11 @@
-import { ArrowUpRight, Crown, FileText, PlusCircle, Send, Star, Store } from "lucide-react";
+import { ArrowUpRight, ChartLine, Crown, FileText, PlusCircle, Send, Star, Store } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import Link from "@/components/locale-link";
 import { fmt } from "@/lib/dictionary";
 import type { Dictionary } from "@/lib/dictionaries";
 import { formatDay } from "@/lib/format";
 import type { Locale } from "@/lib/i18n";
-import { DRAFT_LIMIT, isDealerPlan, type ListingQuota } from "@/lib/plans";
+import { DRAFT_LIMIT, hasInsights, isDealerPlan, type ListingQuota } from "@/lib/plans";
 import { BuyExtraListings, type ExtraListingsOffer } from "./buy-extra-listings";
 
 type Props = {
@@ -94,7 +94,7 @@ export function PlanCard({ quota, openDrafts, t, locale, extraListings }: Props)
       )}
 
       {isDealerPlan(quota.plan) && (
-        <div className="mt-3 border-t border-white/10 pt-3">
+        <div className="mt-3 flex flex-wrap gap-x-1 border-t border-white/10 pt-3">
           <Link
             href="/account/storefront"
             className={`${linkClass} -ms-3.5 text-white/85 hover:bg-white/10 hover:text-white`}
@@ -102,6 +102,12 @@ export function PlanCard({ quota, openDrafts, t, locale, extraListings }: Props)
             <Store className="size-4" aria-hidden />
             {t.dashboard.editStorefront}
           </Link>
+          {hasInsights(quota.plan) && (
+            <Link href="/dashboard/insights" className={`${linkClass} text-white/85 hover:bg-white/10 hover:text-white`}>
+              <ChartLine className="size-4" aria-hidden />
+              {t.insights.open}
+            </Link>
+          )}
         </div>
       )}
     </section>

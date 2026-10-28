@@ -99,6 +99,25 @@ export function isDealerPlan(plan: Plan): boolean {
   return plan !== "free";
 }
 
+// Ranges offered on /dashboard/insights, shortest first; empty = no insights.
+// The longest must match plan_insights_days in the listing_daily_stats
+// migration, which enforces it.
+export const INSIGHTS_DAYS: Record<Plan, readonly number[]> = {
+  free: [],
+  dealer: [],
+  dealer_pro: [7, 30],
+  showroom: [7, 30, 90],
+};
+
+export function hasInsights(plan: Plan): boolean {
+  return INSIGHTS_DAYS[plan].length > 0;
+}
+
+// Showroom extras on the insights page: make/city breakdown, CSV, print report.
+export function hasInsightsReport(plan: Plan): boolean {
+  return plan === "showroom";
+}
+
 export type ListingQuota = {
   plan: Plan;
   planExpiresAt: string | null; // null = no expiry

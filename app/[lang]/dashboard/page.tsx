@@ -1,4 +1,4 @@
-import { Plus, Upload } from "lucide-react";
+import { ChartLine, Plus, Upload } from "lucide-react";
 import Link from "@/components/locale-link";
 import type { Metadata } from "next";
 import { rich } from "@/components/rich-text";
@@ -84,6 +84,13 @@ export default async function DashboardPage({ searchParams }: PageProps<"/[lang]
         </div>
         {/* Drafts are free, so new listings stay open at the limit; publishing is what's capped. */}
         <div className="flex shrink-0 items-center gap-2.5 max-sm:w-full">
+          <Link
+            href="/dashboard/insights"
+            className={`${buttonClass} border border-line bg-white px-5 text-zinc-800 shadow-sm hover:border-forest/30 hover:bg-forest/5 focus-visible:ring-forest/30 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100 dark:hover:bg-zinc-800`}
+          >
+            <ChartLine className="size-4" aria-hidden />
+            {t.insights.open}
+          </Link>
           {isDealerPlan(profile.plan) && (
             <Link
               href="/dashboard/listings/import"

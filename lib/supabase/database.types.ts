@@ -741,6 +741,38 @@ export type Database = {
           },
         ];
       };
+      listing_daily_stats: {
+        Row: {
+          listing_id: string;
+          day: string;
+          views: number;
+          calls: number;
+          whatsapps: number;
+        };
+        Insert: {
+          listing_id: string;
+          day: string;
+          views?: number;
+          calls?: number;
+          whatsapps?: number;
+        };
+        Update: {
+          listing_id?: string;
+          day?: string;
+          views?: number;
+          calls?: number;
+          whatsapps?: number;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "listing_daily_stats_listing_id_fkey";
+            columns: ["listing_id"];
+            isOneToOne: false;
+            referencedRelation: "listings";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       id_verification_requests: {
         Row: {
           id: string;
@@ -979,6 +1011,25 @@ export type Database = {
           p_note?: string | null;
         };
         Returns: string;
+      };
+      my_insights_days: {
+        Args: { p_days: number };
+        Returns: number;
+      };
+      seller_insights: {
+        Args: { p_days: number };
+        Returns: {
+          day: string;
+          views: number;
+          calls: number;
+          whatsapps: number;
+          saves: number;
+          offers: number;
+        }[];
+      };
+      seller_listing_insights: {
+        Args: { p_days: number };
+        Returns: { listing_id: string; views: number; calls: number; whatsapps: number; saves: number }[];
       };
       listing_quota_status: {
         Args: Record<PropertyKey, never>;

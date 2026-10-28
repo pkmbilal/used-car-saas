@@ -285,3 +285,12 @@
 html[lang="ar"] :not(input)[class*="tracking-"] {
   letter-spacing: normal;
 }
+
+/* Insights report: print just the page, without the site header, tab bar and footer. */
+@media print {
+  body:has([data-print-report]) header,
+  body:has([data-print-report]) footer,
+  body:has([data-print-report]) [data-tab-bar] {
+    display: none !important;
+  }
+}
