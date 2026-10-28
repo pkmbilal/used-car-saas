@@ -1082,6 +1082,7 @@ export const en = {
       listings: "Listings",
       views: "Views",
       contacts: "Contacts",
+      share: "{pct} of views",
     },
     report: {
       print: "Print report",
@@ -1121,7 +1122,6 @@ export const en = {
       plan: "Plan & add-ons",
     },
     descriptions: {
-      offers: "Price offers on your cars, and offers you've made as a buyer.",
       plan: "Your plan, this month's usage and add-ons.",
     },
     locked: "Upgrade to unlock",
@@ -1297,6 +1297,42 @@ export const en = {
         color: "Optional. Free text, e.g. Pearl white",
         description: "Optional. Free text; wrap in double quotes if it contains commas or line breaks",
       },
+      eyebrow: "Bulk upload",
+      stats: {
+        rows: "Rows per file",
+        drafts: "Draft slots left",
+        listings: "Listings left this month",
+        unlimited: "Unlimited",
+      },
+      steps: {
+        title: "How it works",
+        template: { title: "Download the template", body: "Start from our CSV so the columns are right." },
+        fill: { title: "Add one row per car", body: "Use the values listed under File format below." },
+        upload: { title: "Upload, then add photos", body: "Each row becomes a draft. Add photos and publish." },
+      },
+      dropzone: {
+        title: "Drop your CSV file here",
+        browse: "or click to choose a file",
+        hint: "CSV only, up to {size}",
+        replace: "Choose another file",
+      },
+      column: "Column",
+      whatToEnter: "What to enter",
+      required: "Required",
+      optional: "Optional",
+      locked: {
+        badge: "Dealer plans",
+        title: "Upload your whole stock in one go",
+        body: "Import up to {max} cars at a time from a spreadsheet. Each row becomes a draft you can finish with photos.",
+        points: {
+          bulk: "Bulk upload from Excel or Google Sheets",
+          drafts: "Rows checked before anything is saved",
+          storefront: "Your own dealer storefront page",
+        },
+      },
+      successTitle: "Import complete",
+      errorsTitle: "Rows to fix",
+      goToListings: "Go to your listings",
       importing: "Importing…",
       submit: "Import listings",
       imported: plural({

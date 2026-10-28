@@ -1,7 +1,8 @@
-import { formatNumber } from "@/lib/dictionary";
+import { fmt, formatNumber } from "@/lib/dictionary";
 import type { Dictionary } from "@/lib/dictionaries";
 import type { Locale } from "@/lib/i18n";
 import type { Breakdown } from "@/lib/insights";
+import { formatRate } from "./kpi-tiles";
 
 // Showroom: totals per make or per city, with a bar for share of views.
 export function BreakdownTable({
@@ -19,6 +20,7 @@ export function BreakdownTable({
 }) {
   const b = t.insights.breakdown;
   const maxViews = Math.max(1, ...rows.map((row) => row.views));
+  const totalViews = rows.reduce((total, row) => total + row.views, 0);
 
   return (
     <section className="rounded-2xl bg-card p-4 shadow-[0_2px_10px_rgba(20,30,25,.06)] ring-1 ring-black/5 break-inside-avoid sm:p-5 dark:ring-white/10">
@@ -42,10 +44,10 @@ export function BreakdownTable({
         </thead>
         <tbody>
           {rows.map((row) => (
-            <tr key={row.key} className="border-t border-zinc-100 dark:border-zinc-800">
+            <tr key={row.key} className="border-t border-zinc-100 align-top dark:border-zinc-800">
               <td className="py-2.5 pe-3">
                 <span className="block truncate font-medium">{name(row.key)}</span>
-                <span className="mt-1.5 block h-1 rounded-full bg-zinc-100 dark:bg-zinc-800" aria-hidden>
+                <span className="mt-1.5 block h-1.5 rounded-full bg-zinc-100 dark:bg-zinc-800" aria-hidden>
                   <span
                     className="block h-full rounded-full bg-[var(--viz-1)]"
                     style={{ width: `${(row.views / maxViews) * 100}%` }}
@@ -55,7 +57,14 @@ export function BreakdownTable({
               <td className="py-2.5 text-end text-zinc-600 tabular-nums dark:text-zinc-400">
                 {formatNumber(locale, row.listings)}
               </td>
-              <td className="py-2.5 text-end font-semibold tabular-nums">{formatNumber(locale, row.views)}</td>
+              <td className="py-2.5 text-end tabular-nums">
+                <span className="block font-semibold">{formatNumber(locale, row.views)}</span>
+                {totalViews > 0 && (
+                  <span className="block text-[0.6875rem] text-zinc-500 dark:text-zinc-400">
+                    {fmt(b.share, { pct: formatRate(locale, row.views / totalViews) })}
+                  </span>
+                )}
+              </td>
               <td className="py-2.5 text-end tabular-nums">{formatNumber(locale, row.contacts)}</td>
             </tr>
           ))}

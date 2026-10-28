@@ -28,9 +28,9 @@ export function RangeTabs({
             key={days}
             href={`/dashboard/insights?range=${days}&sort=${sort}`}
             aria-current={current ? "page" : undefined}
-            className={`inline-flex min-h-9 items-center rounded-full px-3.5 text-sm font-medium whitespace-nowrap transition-colors ${
+            className={`inline-flex min-h-10 items-center rounded-full px-4 text-sm font-semibold whitespace-nowrap transition-colors ${
               current
-                ? "bg-zinc-900 text-white hover:text-white dark:bg-zinc-100 dark:text-zinc-900"
+                ? "bg-zinc-900 text-white hover:text-white dark:bg-zinc-100 dark:text-zinc-900 dark:hover:text-zinc-900"
                 : "text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-100"
             }`}
           >

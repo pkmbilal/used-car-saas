@@ -74,6 +74,10 @@ export function TrendChart({ points }: { points: TrendPoint[] }) {
   const path = (key: (typeof series)[number]["key"]) =>
     points.map((p, i) => `${i ? "L" : "M"}${x(i).toFixed(1)},${y(p[key]).toFixed(1)}`).join("");
 
+  // Soft fill under the views line, closed along the baseline.
+  const viewsArea =
+    n > 1 ? `${path("views")}L${x(n - 1).toFixed(1)},${BOTTOM}L${x(0).toFixed(1)},${BOTTOM}Z` : "";
+
   const ticks = Array.from({ length: top / step + 1 }, (_, i) => i * step);
   const labelEvery = Math.max(1, Math.ceil(n / Math.max(2, Math.floor(W / 90))));
   const hovered = hover === null ? null : points[hover];
@@ -91,7 +95,7 @@ export function TrendChart({ points }: { points: TrendPoint[] }) {
       <div className="flex flex-wrap gap-x-5 gap-y-1 text-xs text-zinc-600 dark:text-zinc-400">
         {series.map((s) => (
           <span key={s.key} className="flex items-center gap-2">
-            <span className="h-0.5 w-4 rounded-full" style={{ background: s.color }} aria-hidden />
+            <span className="h-1 w-4 rounded-full" style={{ background: s.color }} aria-hidden />
             {s.label}
           </span>
         ))}
@@ -121,6 +125,14 @@ export function TrendChart({ points }: { points: TrendPoint[] }) {
             ) : null,
           )}
 
+          <defs>
+            <linearGradient id="trend-views-fill" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="var(--viz-1)" stopOpacity="0.18" />
+              <stop offset="100%" stopColor="var(--viz-1)" stopOpacity="0" />
+            </linearGradient>
+          </defs>
+          {viewsArea && <path d={viewsArea} fill="url(#trend-views-fill)" />}
+
           {series.map((s) => (
             <path
               key={s.key}
@@ -132,6 +144,20 @@ export function TrendChart({ points }: { points: TrendPoint[] }) {
               strokeLinecap="round"
             />
           ))}
+
+          {/* Today's values, marked at the end of each line. */}
+          {n > 0 && hover === null &&
+            series.map((s) => (
+              <circle
+                key={s.key}
+                cx={x(n - 1)}
+                cy={y(points[n - 1][s.key])}
+                r="4"
+                fill={s.color}
+                stroke="var(--viz-surface)"
+                strokeWidth="2"
+              />
+            ))}
 
           {hovered && hover !== null && (
             <g pointerEvents="none">
@@ -164,7 +190,7 @@ export function TrendChart({ points }: { points: TrendPoint[] }) {
 
         {hovered && hover !== null && (
           <div
-            className="pointer-events-none absolute top-2 z-10 rounded-md bg-zinc-900 px-3 py-2 text-xs leading-relaxed whitespace-nowrap text-white shadow-lg dark:bg-zinc-100 dark:text-zinc-900"
+            className="pointer-events-none absolute top-2 z-10 rounded-xl bg-zinc-900/95 px-3 py-2 text-xs leading-relaxed whitespace-nowrap text-white shadow-xl ring-1 ring-white/10 backdrop-blur dark:bg-zinc-100/95 dark:text-zinc-900 dark:ring-black/10"
             style={{
               left: `${(x(hover) / W) * 100}%`,
               transform: x(hover) > W / 2 ? "translateX(calc(-100% - 12px))" : "translateX(12px)",

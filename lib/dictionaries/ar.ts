@@ -1294,6 +1294,7 @@ export const ar: DictionaryShape<typeof en> = {
       listings: "الإعلانات",
       views: "المشاهدات",
       contacts: "التواصل",
+      share: "{pct} من المشاهدات",
     },
     report: {
       print: "طباعة التقرير",
@@ -1333,7 +1334,6 @@ export const ar: DictionaryShape<typeof en> = {
       plan: "الباقة والإضافات",
     },
     descriptions: {
-      offers: "عروض الأسعار على سياراتك، والعروض التي قدمتها كمشترٍ.",
       plan: "باقتك واستخدامك هذا الشهر والإضافات.",
     },
     locked: "رقِّ باقتك لفتحها",
@@ -1537,6 +1537,42 @@ export const ar: DictionaryShape<typeof en> = {
         color: "اختياري. نص حر، مثل أبيض لؤلؤي",
         description: "اختياري. نص حر؛ ضعه بين علامتي تنصيص مزدوجتين إذا احتوى على فواصل أو أسطر جديدة",
       },
+      eyebrow: "رفع جماعي",
+      stats: {
+        rows: "صف لكل ملف",
+        drafts: "مسودات متبقية",
+        listings: "إعلانات متبقية هذا الشهر",
+        unlimited: "غير محدود",
+      },
+      steps: {
+        title: "طريقة العمل",
+        template: { title: "حمّل النموذج", body: "ابدأ من ملف CSV الخاص بنا لتكون الأعمدة صحيحة." },
+        fill: { title: "أضف صفًا لكل سيارة", body: "استخدم القيم الموضحة في قسم صيغة الملف أدناه." },
+        upload: { title: "ارفع الملف ثم أضف الصور", body: "يصبح كل صف مسودة. أضف الصور ثم انشرها." },
+      },
+      dropzone: {
+        title: "أفلت ملف CSV هنا",
+        browse: "أو انقر لاختيار ملف",
+        hint: "ملفات CSV فقط، حتى {size}",
+        replace: "اختر ملفًا آخر",
+      },
+      column: "العمود",
+      whatToEnter: "ماذا تكتب",
+      required: "مطلوب",
+      optional: "اختياري",
+      locked: {
+        badge: "باقات المعارض",
+        title: "ارفع كل سياراتك دفعة واحدة",
+        body: "استورد حتى {max} سيارة في كل مرة من جدول بيانات. يصبح كل صف مسودة تكملها بالصور.",
+        points: {
+          bulk: "رفع جماعي من Excel أو Google Sheets",
+          drafts: "فحص الصفوف قبل حفظ أي شيء",
+          storefront: "صفحة معرض خاصة بك",
+        },
+      },
+      successTitle: "اكتمل الاستيراد",
+      errorsTitle: "صفوف تحتاج إلى تصحيح",
+      goToListings: "اذهب إلى إعلاناتك",
       importing: "جارٍ الاستيراد…",
       submit: "استيراد الإعلانات",
       imported: plural({

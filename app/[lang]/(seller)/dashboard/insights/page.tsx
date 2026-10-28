@@ -1,4 +1,4 @@
-import { ArrowUpRight, Download, Lock } from "lucide-react";
+import { ArrowUpRight, Crown, Download, Lock } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "@/components/locale-link";
 import { requireSeller } from "@/lib/auth";
@@ -20,6 +20,8 @@ import { getSellerListings } from "@/lib/listings";
 import { getPendingOfferCounts } from "@/lib/offers";
 import { getListingQuota, hasInsightsReport, INSIGHTS_DAYS } from "@/lib/plans";
 import { noIndex } from "@/lib/seo";
+import { Notice } from "../notice";
+import { PageHeader } from "../page-header";
 import { AttentionList } from "./attention-list";
 import { BreakdownTable } from "./breakdown-table";
 import { KpiTiles } from "./kpi-tiles";
@@ -69,40 +71,44 @@ export default async function InsightsPage({ searchParams }: PageProps<"/[lang]/
 
   return (
     <div data-print-report className="mx-auto w-full max-w-5xl print:max-w-none">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-          <p className="hidden text-sm text-zinc-500 print:block">
-            {[profile.business_name ?? profile.full_name, t.insights.report.title].filter(Boolean).join(" · ")}
-          </p>
-          <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">{t.insights.title}</h1>
-          <p className="mt-1.5 text-zinc-600 dark:text-zinc-400">
+      <p className="hidden text-sm text-zinc-500 print:block">
+        {[profile.business_name ?? profile.full_name, t.insights.report.title].filter(Boolean).join(" · ")}
+      </p>
+      <PageHeader
+        eyebrow={fmt(t.plans.summaryPlan, { plan: t.plans.labels[profile.plan] })}
+        eyebrowIcon={Crown}
+        title={t.insights.title}
+        intro={
+          <>
             {fmt(t.insights.subtitle, { range: rangeLabel })}{" "}
             <span className="whitespace-nowrap">
               ({fmt(t.insights.report.period, { from: formatDay(firstDay, locale), to: formatDay(lastDay, locale) })})
             </span>
-          </p>
-        </div>
+          </>
+        }
+      />
+
+      <div className="mt-6 flex flex-wrap items-center justify-between gap-3 print:hidden">
         <RangeTabs ranges={ranges} active={insights.days} sort={sort} t={t} locale={locale} />
+        {report && (
+          <div className="flex flex-wrap gap-2">
+            <PrintButton label={t.insights.report.print} className={buttonClass} />
+            <a
+              href={localizePath(locale, `/dashboard/insights/export?range=${insights.days}`)}
+              download
+              className={buttonClass}
+            >
+              <Download className="size-4" aria-hidden />
+              {t.insights.report.csv}
+            </a>
+          </div>
+        )}
       </div>
 
-      {report && (
-        <div className="mt-4 flex flex-wrap gap-2 print:hidden">
-          <PrintButton label={t.insights.report.print} className={buttonClass} />
-          <a
-            href={localizePath(locale, `/dashboard/insights/export?range=${insights.days}`)}
-            download
-            className={buttonClass}
-          >
-            <Download className="size-4" aria-hidden />
-            {t.insights.report.csv}
-          </a>
-        </div>
-      )}
-
       {firstDay < INSIGHTS_TRACKING_SINCE && (
-        <p className="mt-5 rounded-md bg-sky-50 px-4 py-3 text-sm text-sky-900 dark:bg-sky-950 dark:text-sky-200">
+        <Notice tone="info" className="mt-5">
           {fmt(t.insights.trackingSince, { date: formatDay(INSIGHTS_TRACKING_SINCE, locale) })}
-        </p>
+        </Notice>
       )}
 
       <KpiTiles current={insights.current} previous={insights.previous} range={rangeLabel} t={t} locale={locale} />
@@ -155,32 +161,49 @@ function Teaser({ t }: { t: Dictionary }) {
   const teaser = t.insights.teaser;
   return (
     <div className="mx-auto w-full max-w-5xl">
-      <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">{t.insights.title}</h1>
+      <PageHeader eyebrow={teaser.badge} eyebrowIcon={Lock} title={t.insights.title} />
 
       <div className="relative mt-6 overflow-hidden rounded-2xl ring-1 ring-black/5 dark:ring-white/10">
         <div aria-hidden className="pointer-events-none grid gap-3 p-4 blur-sm select-none sm:p-5">
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-            {[1240, 86, 31, 9].map((n) => (
-              <div key={n} className="rounded-xl bg-card p-4 ring-1 ring-black/5 dark:ring-white/10">
-                <div className="h-2.5 w-16 rounded-full bg-zinc-200 dark:bg-zinc-700" />
-                <p className="mt-3 text-2xl font-semibold tabular-nums">{n}</p>
+            {[1240, 86, 31, 9].map((n, i) => (
+              <div
+                key={n}
+                className={`rounded-xl p-4 ring-1 ${
+                  i === 0
+                    ? "bg-gradient-to-br from-forest to-brand text-white ring-transparent"
+                    : "bg-card ring-black/5 dark:ring-white/10"
+                }`}
+              >
+                <div className={`h-2.5 w-16 rounded-full ${i === 0 ? "bg-white/30" : "bg-zinc-200 dark:bg-zinc-700"}`} />
+                <p className="mt-3 text-3xl font-bold tabular-nums">{n}</p>
               </div>
             ))}
           </div>
-          <div className="h-40 rounded-xl bg-gradient-to-t from-[var(--viz-1)]/20 to-transparent ring-1 ring-black/5 dark:ring-white/10" />
+          <div className="relative h-44 overflow-hidden rounded-xl bg-card ring-1 ring-black/5 dark:ring-white/10">
+            <svg viewBox="0 0 400 120" preserveAspectRatio="none" className="absolute inset-0 size-full">
+              <path d="M0,95 C40,90 60,70 100,72 S160,40 200,48 S270,20 310,30 S370,12 400,8 L400,120 L0,120 Z" fill="var(--viz-1)" opacity="0.15" />
+              <path d="M0,95 C40,90 60,70 100,72 S160,40 200,48 S270,20 310,30 S370,12 400,8" fill="none" stroke="var(--viz-1)" strokeWidth="2.5" />
+              <path d="M0,110 C50,108 90,100 140,102 S230,88 280,90 S360,78 400,74" fill="none" stroke="var(--viz-3)" strokeWidth="2.5" />
+            </svg>
+          </div>
         </div>
 
-        <div className="absolute inset-0 grid place-items-center bg-white/60 p-6 text-center backdrop-blur-[2px] dark:bg-zinc-950/60">
-          <div className="max-w-md">
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-forest/5 px-2.5 py-1 text-xs font-semibold text-forest ring-1 ring-forest/15 dark:bg-lime/10 dark:text-lime dark:ring-lime/25">
+        <div className="absolute inset-0 grid place-items-center bg-white/55 p-6 text-center backdrop-blur-[2px] dark:bg-zinc-950/60">
+          <div className="relative max-w-md overflow-hidden rounded-2xl bg-gradient-to-br from-forest via-forest to-brand p-6 text-white shadow-xl shadow-forest/25">
+            <span
+              aria-hidden
+              className="absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-lime/50 to-transparent"
+            />
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-lime/15 px-2.5 py-1 text-xs font-semibold text-lime ring-1 ring-lime/30">
               <Lock className="size-3.5" aria-hidden />
               {teaser.badge}
             </span>
             <h2 className="mt-3 text-xl font-bold sm:text-2xl">{teaser.title}</h2>
-            <p className="mt-2 text-sm text-zinc-700 dark:text-zinc-300">{teaser.body}</p>
+            <p className="mt-2 text-sm text-white/80">{teaser.body}</p>
             <Link
               href="/pricing"
-              className="mt-4 inline-flex min-h-11 items-center gap-1.5 rounded-full bg-gradient-to-b from-brand to-forest px-5 text-sm font-semibold text-white shadow-md shadow-forest/25 hover:text-white hover:brightness-110"
+              className="mt-5 inline-flex min-h-11 items-center gap-1.5 rounded-full bg-gradient-to-b from-lime-light to-lime px-5 text-sm font-semibold text-on-lime shadow-[inset_0_1px_0_rgba(255,255,255,.45)] hover:text-on-lime hover:brightness-105"
             >
               {teaser.cta}
               <ArrowUpRight className="size-4 rtl:-scale-x-100" aria-hidden />
@@ -191,4 +214,3 @@ function Teaser({ t }: { t: Dictionary }) {
     </div>
   );
 }
-

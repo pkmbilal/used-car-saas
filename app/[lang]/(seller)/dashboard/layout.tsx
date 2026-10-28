@@ -35,12 +35,8 @@ export default async function SellerCenterLayout({ children }: LayoutProps<"/[la
     { href: "/dashboard", label: s.sections.overview },
     { href: "/dashboard/listings", label: s.sections.listings },
     { href: "/dashboard/insights", label: s.sections.insights, locked: !hasInsights(profile.plan) },
-    {
-      href: "/dashboard/offers",
-      label: s.sections.offers,
-      count: offersWaiting,
-      description: s.descriptions.offers,
-    },
+    // Offers renders its own heading.
+    { href: "/dashboard/offers", label: s.sections.offers, count: offersWaiting },
     { href: "/dashboard/listings/import", label: s.sections.import, locked: !dealer },
     { href: "/dashboard/storefront", label: s.sections.storefront, locked: !dealer },
     { href: "/dashboard/plan", label: s.sections.plan, description: s.descriptions.plan },

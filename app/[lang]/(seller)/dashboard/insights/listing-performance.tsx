@@ -33,15 +33,25 @@ export function ListingPerformance({
 
   return (
     <section className="rounded-2xl bg-card shadow-[0_2px_10px_rgba(20,30,25,.06)] ring-1 ring-black/5 dark:ring-white/10">
-      <h2 className="px-4 pt-4 text-lg font-semibold sm:px-5 sm:pt-5">{c.title}</h2>
+      <h2 className="flex items-center gap-2 px-4 pt-4 text-lg font-semibold sm:px-5 sm:pt-5">
+        {c.title}
+        {rows.length > 0 && (
+          <span className="grid min-w-6 place-items-center rounded-full bg-zinc-100 px-1.5 text-xs leading-6 font-semibold text-zinc-600 tabular-nums dark:bg-zinc-800 dark:text-zinc-300">
+            {formatNumber(locale, rows.length)}
+          </span>
+        )}
+      </h2>
       {rows.length === 0 ? (
         <p className="px-4 pt-2 pb-5 text-sm text-zinc-600 sm:px-5 dark:text-zinc-400">{c.empty}</p>
       ) : (
         <div className="mt-3 overflow-x-auto">
           <table className="w-full min-w-[40rem] text-sm">
             <thead>
-              <tr className="border-y border-zinc-100 text-xs text-zinc-500 dark:border-zinc-800 dark:text-zinc-400">
-                <th scope="col" className="px-4 py-2.5 text-start font-medium sm:ps-5">
+              <tr className="border-y border-zinc-100 bg-canvas text-xs text-zinc-500 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-400">
+                <th scope="col" className="w-10 py-2.5 ps-4 text-start font-medium sm:ps-5">
+                  #
+                </th>
+                <th scope="col" className="px-3 py-2.5 text-start font-medium">
                   {c.listing}
                 </th>
                 {columns.map((column) => (
@@ -67,12 +77,23 @@ export function ListingPerformance({
               </tr>
             </thead>
             <tbody className="divide-y divide-zinc-100 dark:divide-zinc-800">
-              {rows.map((row) => {
+              {rows.map((row, i) => {
                 const { listing } = row;
                 const cover = listing.images[0];
                 return (
-                  <tr key={listing.id} className="break-inside-avoid">
-                    <td className="px-4 py-3 sm:ps-5">
+                  <tr key={listing.id} className="break-inside-avoid transition-colors hover:bg-canvas/70 dark:hover:bg-zinc-900/60">
+                    <td className="py-3 ps-4 sm:ps-5">
+                      <span
+                        className={`grid size-6 place-items-center rounded-full text-xs font-semibold tabular-nums ${
+                          i < 3
+                            ? "bg-gradient-to-b from-brand to-forest text-white"
+                            : "bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300"
+                        }`}
+                      >
+                        {formatNumber(locale, i + 1)}
+                      </span>
+                    </td>
+                    <td className="px-3 py-3">
                       <Link
                         href={`/dashboard/listings/${listing.id}/edit`}
                         className="flex min-w-0 items-center gap-3 hover:text-forest dark:hover:text-lime"

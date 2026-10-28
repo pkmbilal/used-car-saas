@@ -6,7 +6,7 @@ import type { Dictionary } from "@/lib/dictionaries";
 import { formatDay, formatSAR } from "@/lib/format";
 import type { Locale } from "@/lib/i18n";
 import type { SellerListing } from "@/lib/insights";
-import { addonPrice, EXTRA_LISTING_PACKS, isPlanExpiringSoon, type ListingQuota } from "@/lib/plans";
+import { addonPrice, EXTRA_LISTING_PACKS, isDealerPlan, isPlanExpiringSoon, type ListingQuota } from "@/lib/plans";
 import { PlanCard } from "./plan-card";
 
 // The plan card with the extra-listings offer, plus the expiry and suspension
@@ -32,8 +32,14 @@ export function PlanSummary({
   const d = t.dashboard;
   const pendingExtra = pendingAddons.find((addon) => addon.kind === "extra_listings");
   const pendingRef = pendingExtra ? addonReference(pendingExtra.id) : null;
+  // Paid plans only get the offer once the monthly limit is used up (or while
+  // a request is waiting); free sellers always see it.
+  const offerExtra =
+    quota !== null &&
+    quota.limit !== null &&
+    (!isDealerPlan(quota.plan) || quota.used >= quota.limit || pendingExtra !== undefined);
   const extraListings =
-    quota && quota.limit !== null
+    offerExtra
       ? {
           packs: EXTRA_LISTING_PACKS.map((quantity) => ({
             quantity,

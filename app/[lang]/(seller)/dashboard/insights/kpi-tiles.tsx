@@ -69,22 +69,46 @@ export function KpiTiles({
 
   return (
     <ul className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
-      {tiles.map(({ icon: Icon, label, value, change, detail }, i) => (
-        <li
-          key={label}
-          className={`rounded-2xl bg-card p-4 shadow-[0_2px_10px_rgba(20,30,25,.06)] ring-1 ring-black/5 dark:ring-white/10 ${
-            i === 0 ? "max-sm:col-span-2" : ""
-          }`}
-        >
-          <p className="flex items-center gap-1.5 text-xs font-medium text-zinc-600 dark:text-zinc-400">
-            <Icon className="size-3.5 shrink-0" aria-hidden />
-            <span className="truncate">{label}</span>
-          </p>
-          <p className="mt-2 text-2xl font-semibold tracking-tight tabular-nums">{value}</p>
-          <ChangeNote change={change} range={range} t={t} locale={locale} />
-          {detail && <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">{detail}</p>}
-        </li>
-      ))}
+      {tiles.map(({ icon: Icon, label, value, change, detail }, i) => {
+        // Views lead the row in the brand panel style.
+        const hero = i === 0;
+        return (
+          <li
+            key={label}
+            className={`relative overflow-hidden rounded-2xl p-4 break-inside-avoid ${
+              hero
+                ? "bg-gradient-to-br from-forest via-forest to-brand text-white shadow-lg shadow-forest/20 max-sm:col-span-2 print:bg-none print:text-ink print:shadow-none print:ring-1 print:ring-black/10"
+                : "bg-card shadow-[0_2px_10px_rgba(20,30,25,.06)] ring-1 ring-black/5 dark:ring-white/10"
+            }`}
+          >
+            {hero && (
+              <span
+                aria-hidden
+                className="absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-lime/50 to-transparent"
+              />
+            )}
+            <p
+              className={`flex items-center gap-2 text-xs font-medium ${
+                hero ? "text-white/75 print:text-zinc-600" : "text-zinc-600 dark:text-zinc-400"
+              }`}
+            >
+              <span
+                className={`grid size-7 shrink-0 place-items-center rounded-lg ${
+                  hero ? "bg-white/10 text-lime ring-1 ring-white/15" : "bg-mint text-brand dark:bg-lime/10 dark:text-lime"
+                }`}
+              >
+                <Icon className="size-3.5" aria-hidden />
+              </span>
+              <span className="truncate">{label}</span>
+            </p>
+            <p className="mt-3 text-3xl font-bold tracking-tight tabular-nums">{value}</p>
+            <ChangeNote change={change} range={range} hero={hero} t={t} locale={locale} />
+            {detail && (
+              <p className={`mt-1.5 text-xs ${hero ? "text-white/65" : "text-zinc-500 dark:text-zinc-400"}`}>{detail}</p>
+            )}
+          </li>
+        );
+      })}
     </ul>
   );
 }
@@ -97,7 +121,19 @@ function change(current: number, previous: number): Change {
   return { kind: "ratio", value: (current - previous) / previous };
 }
 
-function ChangeNote({ change, range, t, locale }: { change: Change; range: string; t: Dictionary; locale: Locale }) {
+function ChangeNote({
+  change,
+  range,
+  hero,
+  t,
+  locale,
+}: {
+  change: Change;
+  range: string;
+  hero: boolean;
+  t: Dictionary;
+  locale: Locale;
+}) {
   if (change.kind === "none") return null;
   const label =
     change.kind === "new"
@@ -108,18 +144,27 @@ function ChangeNote({ change, range, t, locale }: { change: Change; range: strin
   const up = change.kind === "new" || (change.kind === "ratio" && change.value > 0);
   const down = change.kind === "ratio" && change.value < 0;
   const Arrow = down ? ArrowDownRight : ArrowUpRight;
+  const chip = hero
+    ? up
+      ? "bg-lime/20 text-lime ring-lime/30"
+      : down
+        ? "bg-red-400/20 text-red-100 ring-red-300/30"
+        : "bg-white/10 text-white/80 ring-white/15"
+    : up
+      ? "bg-emerald-50 text-emerald-700 ring-emerald-200 dark:bg-emerald-950 dark:text-emerald-300 dark:ring-emerald-900"
+      : down
+        ? "bg-red-50 text-red-700 ring-red-200 dark:bg-red-950 dark:text-red-300 dark:ring-red-900"
+        : "bg-zinc-100 text-zinc-600 ring-zinc-200 dark:bg-zinc-800 dark:text-zinc-300 dark:ring-zinc-700";
 
   return (
-    <p className="mt-1 flex flex-wrap items-center gap-x-1.5 text-xs">
-      <span
-        className={`inline-flex items-center gap-0.5 font-semibold ${
-          up ? "text-emerald-700 dark:text-emerald-400" : down ? "text-red-700 dark:text-red-400" : "text-zinc-500"
-        }`}
-      >
+    <p className="mt-2 flex flex-wrap items-center gap-x-1.5 gap-y-1 text-xs">
+      <span className={`inline-flex items-center gap-0.5 rounded-full px-1.5 py-0.5 font-semibold ring-1 ${chip}`}>
         {(up || down) && <Arrow className="size-3.5 rtl:-scale-x-100" aria-hidden />}
         {label}
       </span>
-      <span className="text-zinc-500 dark:text-zinc-400">{fmt(t.insights.vsPrevious, { range })}</span>
+      <span className={hero ? "text-white/65 print:text-zinc-500" : "text-zinc-500 dark:text-zinc-400"}>
+        {fmt(t.insights.vsPrevious, { range })}
+      </span>
     </p>
   );
 }
