@@ -1160,6 +1160,15 @@ export const en = {
       offers: plural({ one: "{count} offer to answer", other: "{count} offers to answer" }),
       addons: plural({ one: "{count} add-on awaiting payment", other: "{count} add-ons awaiting payment" }),
       planEnding: "Your plan ends on {date}",
+      hints: {
+        offers: "Accept, counter or decline",
+        addons: "Pay to activate it",
+        plan: "Renew to keep your plan's features",
+      },
+      itemCount: plural({ one: "{count} item", other: "{count} items" }),
+      caughtUp: "All caught up",
+      emptyHint: "New offers and plan reminders show up here.",
+      viewOverview: "Go to overview",
     },
     overview: {
       greeting: "Welcome back, {name}",

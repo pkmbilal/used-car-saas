@@ -1,11 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import {
   Bell,
+  CalendarClock,
   Car,
   ChartLine,
+  ChevronRight,
+  CircleCheck,
   CreditCard,
   ExternalLink,
   HandCoins,
@@ -27,11 +30,10 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { localizePath, stripLocale } from "@/lib/i18n";
+import { count } from "@/lib/dictionary";
+import { stripLocale } from "@/lib/i18n";
 
 // The Seller Center: the admin panel's layout (sidebar, top bar, phone tab
 // bar) for sellers, in both languages.
@@ -46,7 +48,7 @@ export type SellerSection = {
   description?: string;
 };
 
-export type SellerAlert = { href: string; label: string };
+export type SellerAlert = { kind: "offers" | "addons" | "plan"; href: string; label: string };
 
 const ICONS: Record<string, LucideIcon> = {
   "/dashboard": LayoutDashboard,
@@ -224,34 +226,88 @@ function SellerTabBar({
   );
 }
 
+const ALERT_STYLES: Record<SellerAlert["kind"], { icon: LucideIcon; tile: string }> = {
+  offers: { icon: HandCoins, tile: "bg-mint text-brand ring-brand/15" },
+  addons: { icon: CreditCard, tile: "bg-amber-50 text-amber-700 ring-amber-200" },
+  plan: { icon: CalendarClock, tile: "bg-red-50 text-red-600 ring-red-100" },
+};
+
+// The bell: what needs the seller's attention, styled like the account menu.
 function AlertsMenu({ alerts }: { alerts: SellerAlert[] }) {
-  const router = useRouter();
   const { t, locale } = useDictionary();
   const n = t.sellerCenter.notifications;
+  const total = alerts.length;
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
-        aria-label={n.label}
-        className="relative rounded-md p-2 text-zinc-600 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800"
+        aria-label={total > 0 ? `${n.label} (${total})` : n.label}
+        className="relative rounded-full p-2 text-zinc-600 transition-colors outline-none hover:bg-zinc-100 focus-visible:ring-2 focus-visible:ring-brand/40 aria-expanded:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800 dark:aria-expanded:bg-zinc-800"
       >
         <Bell className="size-5" />
-        {alerts.length > 0 && (
-          <span className="absolute end-1.5 top-1.5 size-2.5 rounded-full bg-red-500 ring-2 ring-white dark:ring-zinc-900" aria-hidden />
+        {total > 0 && (
+          <span
+            className="absolute -end-0.5 -top-0.5 grid h-[1.125rem] min-w-[1.125rem] place-items-center rounded-full bg-red-500 px-1 text-[0.625rem] leading-none font-bold text-white tabular-nums ring-2 ring-white dark:ring-zinc-900"
+            aria-hidden
+          >
+            {total > 9 ? "9+" : total}
+          </span>
         )}
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-72">
-        <DropdownMenuLabel>{n.title}</DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        {alerts.length === 0 ? (
-          <p className="px-2 py-3 text-sm text-muted-foreground">{n.none}</p>
+
+      <DropdownMenuContent
+        align="end"
+        sideOffset={8}
+        className="light w-72 overflow-hidden rounded-xl p-0 shadow-xl ring-1 ring-black/5"
+      >
+        <div className="flex items-center gap-2.5 bg-gradient-to-br from-forest via-forest to-brand px-3.5 py-3 text-white">
+          <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-white/10 ring-1 ring-white/20">
+            <Bell className="size-4" aria-hidden />
+          </span>
+          <div className="min-w-0">
+            <p className="text-sm font-semibold">{n.title}</p>
+            <p className="text-xs text-white/70">{total > 0 ? count(locale, total, n.itemCount) : n.caughtUp}</p>
+          </div>
+        </div>
+
+        {total === 0 ? (
+          <div className="flex flex-col items-center px-5 py-5 text-center">
+            <span className="grid size-10 place-items-center rounded-full bg-mint text-brand ring-6 ring-mint/40">
+              <CircleCheck className="size-5" aria-hidden />
+            </span>
+            <p className="mt-3 text-sm font-semibold text-ink">{n.none}</p>
+            <p className="mt-1 text-xs text-muted-foreground">{n.emptyHint}</p>
+          </div>
         ) : (
-          alerts.map((alert) => (
-            <DropdownMenuItem key={alert.label} onSelect={() => router.push(localizePath(locale, alert.href))}>
-              {alert.label}
-            </DropdownMenuItem>
-          ))
+          <div className="p-1.5">
+            {alerts.map((alert) => {
+              const { icon: Icon, tile } = ALERT_STYLES[alert.kind];
+              return (
+                <DropdownMenuItem key={alert.label} asChild className="gap-2.5 rounded-lg px-2 py-1.5">
+                  <Link href={alert.href}>
+                    <span className={`grid size-8 shrink-0 place-items-center rounded-lg ring-1 ${tile}`}>
+                      <Icon className="size-3.5" aria-hidden />
+                    </span>
+                    <span className="min-w-0 flex-1">
+                      <span className="block text-[0.8125rem] font-medium">{alert.label}</span>
+                      <span className="block truncate text-[0.6875rem] text-muted-foreground">{n.hints[alert.kind]}</span>
+                    </span>
+                    <ChevronRight className="size-3.5 shrink-0 text-zinc-400 rtl:rotate-180" aria-hidden />
+                  </Link>
+                </DropdownMenuItem>
+              );
+            })}
+          </div>
         )}
+
+        <div className="border-t border-line bg-canvas/70 p-1.5">
+          <DropdownMenuItem asChild className="justify-center rounded-lg py-1.5 text-xs font-medium text-brand">
+            <Link href="/dashboard">
+              {n.viewOverview}
+              <ChevronRight className="size-3.5 rtl:rotate-180" aria-hidden />
+            </Link>
+          </DropdownMenuItem>
+        </div>
       </DropdownMenuContent>
     </DropdownMenu>
   );

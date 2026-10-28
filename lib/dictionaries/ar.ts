@@ -1386,6 +1386,22 @@ export const ar: DictionaryShape<typeof en> = {
         other: "{count} إضافة بانتظار الدفع",
       }),
       planEnding: "تنتهي باقتك في {date}",
+      hints: {
+        offers: "اقبل أو قدّم عرضًا مقابلًا أو ارفض",
+        addons: "ادفع لتفعيلها",
+        plan: "جدّد للاحتفاظ بمزايا باقتك",
+      },
+      itemCount: plural({
+        zero: "لا عناصر",
+        one: "عنصر واحد",
+        two: "عنصران",
+        few: "{count} عناصر",
+        many: "{count} عنصرًا",
+        other: "{count} عنصر",
+      }),
+      caughtUp: "لا شيء جديد",
+      emptyHint: "ستظهر هنا العروض الجديدة وتذكيرات الباقة.",
+      viewOverview: "الانتقال إلى النظرة العامة",
     },
     overview: {
       greeting: "أهلًا بعودتك، {name}",
