@@ -7,6 +7,7 @@ import { requireSeller } from "@/lib/auth";
 import { IMAGE_TYPES, MAX_IMAGE_BYTES } from "@/lib/listing-options";
 import { getSellerListing, parseListing, type ListingStatus } from "@/lib/listings";
 import {
+  bumpOwnListing,
   DRAFT_LIMIT_DB_MESSAGE,
   draftLimitMessage,
   featureOwnListing,
@@ -51,6 +52,18 @@ export async function featureListing(listingId: string): Promise<ActionResult> {
   }
   const { t } = await getDictionary();
   return { error: t.plans.featureErrors[result.error] };
+}
+
+// Refreshing reorders "newest" on the home page and in search.
+export async function bumpListing(listingId: string): Promise<ActionResult> {
+  await requireSeller();
+  const result = await bumpOwnListing(listingId);
+  if (!result.error) {
+    revalidatePath("/", "layout");
+    return {};
+  }
+  const { t } = await getDictionary();
+  return { error: t.plans.bumpErrors[result.error] };
 }
 
 // One-off add-ons: these only file a request; an admin applies it once paid.

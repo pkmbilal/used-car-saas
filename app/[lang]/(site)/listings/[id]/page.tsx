@@ -139,7 +139,12 @@ export default async function ListingPage({ params }: PageProps<"/[lang]/listing
   const fuel = optionLabel(t.options.fuel, listing.fuel_type);
   const city = cityName(t, listing.city);
   const showContact = !isOwner && !!seller?.has_phone;
-  const listedAgo = formatRelativeDays(listing.first_published_at ?? listing.created_at, locale);
+  const listedAt = listing.first_published_at ?? listing.created_at;
+  // Refreshed to top since it was first published (bump_own_listing).
+  const refreshed = new Date(listing.bumped_at).getTime() > new Date(listedAt).getTime() + 60_000;
+  const listedAgo = refreshed
+    ? fmt(p.refreshedAgo, { when: formatRelativeDays(listing.bumped_at, locale) })
+    : fmt(p.listedAgo, { when: formatRelativeDays(listedAt, locale) });
   // Counting the model year itself, so a this-year car isn't divided by zero.
   const ageYears = Math.max(1, new Date().getFullYear() - listing.year + 1);
   const perYear = listing.mileage > 0 ? Math.round(listing.mileage / ageYears) : 0;
@@ -282,7 +287,7 @@ export default async function ListingPage({ params }: PageProps<"/[lang]/listing
             <p className="text-[1.6875rem] font-bold text-brand"><RiyalPrice amount={listing.price} /></p>
             <p className="mt-1 flex items-center gap-1.5 text-xs text-muted-foreground">
               <Clock className="size-3.5" />
-              {fmt(p.listedAgo, { when: listedAgo })}
+              {listedAgo}
             </p>
             {stats && (
               <p className="mt-1 text-xs text-muted-foreground">

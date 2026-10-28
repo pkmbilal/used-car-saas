@@ -55,15 +55,28 @@ export function formatDay(date: string, locale: Locale): string {
 
 const relativeFormatters = new Map<Locale, Intl.RelativeTimeFormat>();
 
-const DAY_MS = 24 * 60 * 60 * 1000;
+const HOUR_MS = 60 * 60 * 1000;
+const DAY_MS = 24 * HOUR_MS;
 
-// "today", "3 days ago", "2 weeks ago", "5 months ago".
-export function formatRelativeDays(date: string, locale: Locale): string {
+function relativeFormatter(locale: Locale): Intl.RelativeTimeFormat {
   let formatter = relativeFormatters.get(locale);
   if (!formatter) {
     formatter = new Intl.RelativeTimeFormat(INTL_LOCALE[locale], { numeric: "auto" });
     relativeFormatters.set(locale, formatter);
   }
+  return formatter;
+}
+
+// "in 5 hours", "tomorrow", "in 3 days", rounded up.
+export function formatRelativeUntil(date: string, locale: Locale): string {
+  const hours = Math.max(1, Math.ceil((new Date(date).getTime() - Date.now()) / HOUR_MS));
+  if (hours < 24) return relativeFormatter(locale).format(hours, "hour");
+  return relativeFormatter(locale).format(Math.ceil(hours / 24), "day");
+}
+
+// "today", "3 days ago", "2 weeks ago", "5 months ago".
+export function formatRelativeDays(date: string, locale: Locale): string {
+  const formatter = relativeFormatter(locale);
   const days = Math.max(0, Math.floor((Date.now() - new Date(date).getTime()) / DAY_MS));
   if (days < 7) return formatter.format(-days, "day");
   if (days < 30) return formatter.format(-Math.floor(days / 7), "week");

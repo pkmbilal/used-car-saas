@@ -6,6 +6,7 @@ import Link from "@/components/locale-link";
 import { useRouter } from "next/navigation";
 import {
   AlertCircle,
+  ArrowUpToLine,
   CircleCheck,
   Eye,
   Loader2,
@@ -30,6 +31,7 @@ import { fmt, translateMessage } from "@/lib/dictionary";
 import { localizePath } from "@/lib/i18n";
 import type { ListingStatus } from "@/lib/listings";
 import {
+  bumpListing,
   deleteListing,
   featureListing,
   requestFeaturedBoost,
@@ -48,6 +50,9 @@ type Props = {
   // hidden while a request waits for payment.
   boostLabel?: string;
   boostPending?: boolean;
+  // Refresh to top, for live listings; disabled while the listing waits out
+  // its plan's cooldown or the monthly refreshes are used up.
+  bump?: { label: string; disabled: boolean };
   // "card" shows full buttons (dashboard card view), "row" compact buttons
   // (dashboard list view), "inline" a pill toolbar (edit page header).
   variant?: "inline" | "card" | "row";
@@ -68,17 +73,19 @@ const tones = {
   publish: "bg-green-50 text-green-700 ring-1 ring-green-200 hover:bg-green-100 dark:bg-green-950 dark:text-green-400 dark:ring-green-900",
   markSold: "bg-zinc-100 text-zinc-800 ring-1 ring-zinc-200 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-100 dark:ring-zinc-700",
   feature: "bg-gradient-to-b from-lime-light to-lime text-on-lime shadow-[inset_0_1px_0_rgba(255,255,255,.45)] hover:brightness-105",
+  refresh: "bg-mint text-forest ring-1 ring-forest/15 hover:bg-forest/10 disabled:hover:bg-mint dark:bg-zinc-800 dark:text-lime dark:ring-zinc-700 dark:hover:bg-zinc-700",
 };
 
 // Card: row 1 is edit, view and the compact mark-sold and delete icons;
-// row 2 the full-width publish or feature/boost action.
+// row 2 the full-width publish, feature/boost and refresh actions.
 const cardLayout: Record<keyof typeof tones, string> = {
   edit: "order-1 flex-1",
   view: "order-2 flex-1",
   markSold: "order-3 size-11 shrink-0 px-0",
   delete: "order-4 size-11 shrink-0 px-0",
   publish: "flex-1",
-  feature: "flex-1",
+  feature: "basis-full",
+  refresh: "basis-full",
 };
 
 // Inline: publishing is the page's main action, and delete is a round icon
@@ -97,6 +104,7 @@ export function ListingActions({
   featureDays,
   boostLabel,
   boostPending = false,
+  bump,
   variant = "inline",
 }: Props) {
   const router = useRouter();
@@ -146,7 +154,8 @@ export function ListingActions({
 
   const canFeature = status === "active" && featureSlots > 0;
   const canBoost = status === "active" && featureSlots === 0 && !!boostLabel && !boostPending;
-  const hasStatusActions = status === "draft" || status === "sold" || canFeature || canBoost;
+  const canBump = status === "active" && !!bump;
+  const hasStatusActions = status === "draft" || status === "sold" || canFeature || canBoost || canBump;
 
   const markSoldButton = (
     <button
@@ -200,6 +209,18 @@ export function ListingActions({
           {label(boostLabel)}
         </button>
       )}
+      {canBump && (
+        <button
+          type="button"
+          disabled={pending || bump.disabled}
+          title={row ? bump.label : undefined}
+          className={cls("refresh")}
+          onClick={() => run(() => bumpListing(listingId), true)}
+        >
+          {icon(ArrowUpToLine)}
+          {label(bump.label)}
+        </button>
+      )}
     </>
   );
 
@@ -225,7 +246,7 @@ export function ListingActions({
         {card && status === "active" && markSoldButton}
         {card
           ? hasStatusActions && (
-              <div className="order-5 flex w-full gap-2">{statusActions}</div>
+              <div className="order-5 flex w-full flex-wrap gap-2">{statusActions}</div>
             )
           : statusActions}
         <button

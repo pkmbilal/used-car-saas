@@ -6,10 +6,10 @@ import { getMyPendingAddons } from "@/lib/addons";
 import { requireSeller } from "@/lib/auth";
 import { count, fmt } from "@/lib/dictionary";
 import { getDictionary } from "@/lib/i18n-server";
-import { formatSAR } from "@/lib/format";
-import { getSellerListings, isFeatured } from "@/lib/listings";
+import { formatRelativeUntil, formatSAR } from "@/lib/format";
+import { getSellerListings, isFeatured, type Listing } from "@/lib/listings";
 import { getPendingOfferCounts } from "@/lib/offers";
-import { addonPrice, getListingQuota, isDealerPlan } from "@/lib/plans";
+import { addonPrice, getBumpStatus, getListingQuota, isDealerPlan, nextBumpAt } from "@/lib/plans";
 import { noIndex } from "@/lib/seo";
 import { ListingCardItem, ListingListItem } from "../listing-items";
 import { ViewToggle } from "../view-toggle";
@@ -25,16 +25,27 @@ export default async function ListingsPage({ searchParams }: PageProps<"/[lang]/
   const d = t.dashboard;
   const view = (await searchParams).view === "list" ? "list" : "grid";
   const Item = view === "list" ? ListingListItem : ListingCardItem;
-  const [listings, quota, pendingAddons, pendingOffers] = await Promise.all([
+  const [listings, quota, pendingAddons, pendingOffers, bumps] = await Promise.all([
     getSellerListings(user.id),
     getListingQuota(),
     getMyPendingAddons(),
     getPendingOfferCounts(user.id),
+    getBumpStatus(),
   ]);
   const pendingBoosts = new Set(
     pendingAddons.flatMap((addon) => (addon.kind === "featured_boost" && addon.listingId ? [addon.listingId] : [])),
   );
   const boostLabel = fmt(t.addons.boostShort, { price: formatSAR(addonPrice("featured_boost"), locale) });
+  const a = d.actions;
+  // Waiting out the cooldown says when; otherwise the monthly refreshes left.
+  const bumpButton = (listing: Listing) => {
+    if (!bumps) return undefined;
+    const next = nextBumpAt(listing.bumped_at, bumps);
+    if (next) return { label: fmt(a.refreshAt, { when: formatRelativeUntil(next, locale) }), disabled: true };
+    if (bumps.remaining === 0) return { label: a.refreshNoneLeft, disabled: true };
+    const label = bumps.remaining === null ? a.refresh : fmt(a.refreshLeft, { left: bumps.remaining });
+    return { label, disabled: false };
+  };
   const buttonClass =
     "inline-flex min-h-11 items-center justify-center gap-2 rounded-full text-sm font-semibold transition-all focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none max-sm:flex-1 motion-safe:hover:-translate-y-px dark:focus-visible:ring-offset-zinc-950";
 
@@ -104,6 +115,7 @@ export default async function ListingsPage({ searchParams }: PageProps<"/[lang]/
                 featureSlots={isFeatured(listing) ? 0 : (quota?.featuredRemaining ?? 0)}
                 boostLabel={isFeatured(listing) ? null : boostLabel}
                 boostPending={pendingBoosts.has(listing.id)}
+                bump={bumpButton(listing)}
                 pendingOffers={pendingOffers.get(listing.id) ?? 0}
                 t={t}
                 locale={locale}
