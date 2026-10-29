@@ -72,8 +72,7 @@ export default async function ListingsPage({ searchParams }: PageProps<"/[lang]/
   // Featured cars sit in their own strip above, so don't repeat them in the grid.
   const featuredIds = new Set(featured.map((listing) => listing.id));
   const results = listings.filter((listing) => !featuredIds.has(listing.id));
-  // "Near me" isn't a saved-search filter, but it still narrows the results.
-  const filtered = hasActiveFilters(filters) || filters.near !== undefined;
+  const filtered = hasActiveFilters(filters);
   // Past-the-end pages also report total 0 (see searchListings), so only page 1 counts as "no results".
   const noResults = total === 0 && filters.page === 1;
 
@@ -128,11 +127,7 @@ export default async function ListingsPage({ searchParams }: PageProps<"/[lang]/
                   loginHref={`/login?next=${encodeURIComponent(searchHref)}`}
                 />
               )}
-              {filters.near ? (
-                <SortSelect value={filters.sort} options={{ nearest: t.nearMe.sortNearest, ...t.listings.sort }} />
-              ) : (
-                <SortSelect value={filters.sort} />
-              )}
+              <SortSelect value={filters.sort} />
             </div>
           </div>
           <ActiveFilters filters={filters} />
@@ -155,7 +150,7 @@ export default async function ListingsPage({ searchParams }: PageProps<"/[lang]/
           {featured.length > 0 && (
             <div className="mt-4 mb-8 border-b border-line pb-8">
               <p className="mb-3 text-caption font-bold tracking-[0.2em] text-brand-600">{t.listings.featured}</p>
-              <ListingGrid listings={featured} favoriteIds={favoriteIds} columns={3} near={filters.near} />
+              <ListingGrid listings={featured} favoriteIds={favoriteIds} columns={3} />
             </div>
           )}
           <div className="mt-4">
@@ -163,7 +158,7 @@ export default async function ListingsPage({ searchParams }: PageProps<"/[lang]/
               listings={results}
               // The no-results card covers page 1; otherwise this is a page past the end.
               empty={noResults || featured.length > 0 ? "" : t.listings.emptyPage}
-              favoriteIds={favoriteIds} columns={3} near={filters.near} />
+              favoriteIds={favoriteIds} columns={3} />
           </div>
           <Pagination page={filters.page} pageCount={pageCount} hrefFor={pageHref} />
         </section>

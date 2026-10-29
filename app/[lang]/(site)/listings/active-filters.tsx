@@ -6,8 +6,7 @@ import type { Dictionary } from "@/lib/dictionaries";
 import { formatKm, formatSAR } from "@/lib/format";
 import type { Locale } from "@/lib/i18n";
 import { getDictionary } from "@/lib/i18n-server";
-import { defaultSort, type ListingFilters } from "@/lib/listings";
-import { formatNear } from "@/lib/cities";
+import type { ListingFilters } from "@/lib/listings";
 import { listingsHref } from "@/lib/saved-searches";
 
 type Chip = { key: string; label: string; without: Partial<ListingFilters> };
@@ -38,13 +37,6 @@ function chipsFor(filters: ListingFilters, t: Dictionary, locale: Locale): Chip[
   if (filters.make) chips.push({ key: "make", label: makeName(locale, filters.make), without: { make: undefined, model: undefined } });
   if (filters.model) chips.push({ key: "model", label: modelName(locale, filters.make ?? "", filters.model), without: { model: undefined } });
   if (filters.city) chips.push({ key: "city", label: cityName(t, filters.city), without: { city: undefined } });
-  if (filters.near) {
-    chips.push({
-      key: "near",
-      label: fmt(t.nearMe.chip, { distance: formatKm(filters.radiusKm, locale) }),
-      without: { near: undefined },
-    });
-  }
   if (filters.minPrice !== undefined || filters.maxPrice !== undefined) {
     chips.push({
       key: "price",
@@ -70,18 +62,11 @@ function chipsFor(filters: ListingFilters, t: Dictionary, locale: Locale): Chip[
   return chips;
 }
 
-// Keeps the sort and location; page always resets. "Nearest" goes with the location.
+// Keeps the sort; page always resets.
 function hrefWithout(filters: ListingFilters, without: Partial<ListingFilters>): string {
-  const next = { ...filters, ...without };
-  const params = new URLSearchParams(listingsHref(next).split("?")[1]);
-  if (next.near) {
-    params.set("near", formatNear(next.near));
-    params.set("radius", String(next.radiusKm));
-  }
-  // The default sort stays out of the URL; "nearest" is only ever a default.
-  if (next.sort !== defaultSort(next.near !== undefined) && next.sort !== "nearest") params.set("sort", next.sort);
-  const search = params.toString();
-  return search ? `/listings?${search}` : "/listings";
+  const href = listingsHref({ ...filters, ...without });
+  if (filters.sort === "newest") return href;
+  return `${href}${href.includes("?") ? "&" : "?"}sort=${filters.sort}`;
 }
 
 export async function ActiveFilters({ filters }: { filters: ListingFilters }) {
@@ -103,7 +88,7 @@ export async function ActiveFilters({ filters }: { filters: ListingFilters }) {
         </Link>
       ))}
       <Link
-        href={filters.sort === "newest" || filters.sort === "nearest" ? "/listings" : `/listings?sort=${filters.sort}`}
+        href={filters.sort === "newest" ? "/listings" : `/listings?sort=${filters.sort}`}
         className="px-1 text-caption font-semibold text-brand hover:underline"
       >
         {t.listings.clearAll}

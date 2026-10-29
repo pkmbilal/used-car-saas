@@ -517,20 +517,6 @@ export const ar: DictionaryShape<typeof en> = {
       open: "الفلاتر",
     },
   },
-  nearMe: {
-    button: "بالقرب مني",
-    failed: {
-      denied: "الوصول إلى الموقع محظور. اسمح به من إعدادات الموقع في المتصفح، أو اختر مدينة.",
-      outside: "ميزة «بالقرب مني» متاحة داخل السعودية فقط. اختر مدينة بدلًا من ذلك.",
-      unavailable: "تعذّر تحديد موقعك. اختر مدينة بدلًا من ذلك.",
-    },
-    radius: "المسافة",
-    within: "ضمن {distance}",
-    chip: "بالقرب منك · {distance}",
-    away: "≈ {distance}",
-    inYourArea: "قريب منك",
-    sortNearest: "الأقرب أولًا",
-  },
   listingPage: {
     notFoundTitle: "الإعلان غير موجود",
     metaTitle: "{make} {model} {year} — {price} | كارسوق",

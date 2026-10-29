@@ -484,20 +484,6 @@ export const en = {
       open: "Filters",
     },
   },
-  nearMe: {
-    button: "Near Me",
-    failed: {
-      denied: "Location access is blocked. Allow it in your browser's site settings, or pick a city.",
-      outside: "Near Me only works inside Saudi Arabia. Pick a city instead.",
-      unavailable: "Couldn't find your location. Pick a city instead.",
-    },
-    radius: "Distance",
-    within: "Within {distance}",
-    chip: "Near you · {distance}",
-    away: "≈ {distance}",
-    inYourArea: "Near you",
-    sortNearest: "Nearest First",
-  },
   listingPage: {
     notFoundTitle: "Listing not found",
     metaTitle: "{year} {make} {model} — {price} | KarSouq",

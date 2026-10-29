@@ -4,13 +4,12 @@ import { useDictionary } from "@/components/i18n-provider";
 import Link from "@/components/locale-link";
 import { Search, SlidersHorizontal } from "lucide-react";
 import { FormSelect } from "@/components/form-select";
-import { NearMeButton } from "@/components/near-me-button";
 import { MakeModelSelects } from "@/components/make-model-selects";
 import { CheckboxGroup } from "./checkbox-group";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { CITIES, DEFAULT_NEAR_RADIUS, formatNear, NEAR_RADII } from "@/lib/cities";
+import { CITIES } from "@/lib/cities";
 import { cityName, fmt, optionLabel } from "@/lib/dictionary";
 import type { Dictionary } from "@/lib/dictionaries";
 import { formatKm } from "@/lib/format";
@@ -94,8 +93,7 @@ export function Filters({
 
   return (
     <form method="get" action={localizePath(locale, "/listings")} className="flex flex-col gap-5">
-      {filters.sort !== (filters.near ? "nearest" : "newest") && <input type="hidden" name="sort" value={filters.sort} />}
-      {filters.near && <input type="hidden" name="near" value={formatNear(filters.near)} />}
+      {filters.sort !== "newest" && <input type="hidden" name="sort" value={filters.sort} />}
       <div className="flex items-center gap-2 border-b border-line pb-3">
         <SlidersHorizontal className="size-4 text-brand-600" />
         <span className="text-sm font-bold">{f.title}</span>
@@ -138,25 +136,7 @@ export function Filters({
           placeholder={t.common.any}
           options={CITIES.map((city) => ({ value: city, label: cityName(t, city) }))}
         />
-        <NearMeButton keepFilters className="mt-1" />
       </div>
-      {filters.near && (
-        <div className="flex flex-col gap-1.5">
-          <Label htmlFor={id("radius")} className={labelClass}>
-            {t.nearMe.radius}
-          </Label>
-          <FormSelect
-            id={id("radius")}
-            name="radius"
-            defaultValue={filters.radiusKm === DEFAULT_NEAR_RADIUS ? undefined : String(filters.radiusKm)}
-            placeholder={fmt(t.nearMe.within, { distance: formatKm(DEFAULT_NEAR_RADIUS, locale) })}
-            options={NEAR_RADII.filter((km) => km !== DEFAULT_NEAR_RADIUS).map((km) => ({
-              value: String(km),
-              label: fmt(t.nearMe.within, { distance: formatKm(km, locale) }),
-            }))}
-          />
-        </div>
-      )}
       <Range t={t} label={f.priceRange} hint={f.currency} minName="min_price" maxName="max_price" min={filters.minPrice} max={filters.maxPrice} />
       <Range t={t} label={f.year} minName="min_year" maxName="max_year" min={filters.minYear} max={filters.maxYear} />
       <div className="flex flex-col gap-1.5">

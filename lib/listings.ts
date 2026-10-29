@@ -1,15 +1,7 @@
 import "server-only";
 import { cache } from "react";
 import { arabicToStoredNames } from "@/lib/car-names";
-import {
-  CITIES,
-  citiesWithin,
-  DEFAULT_NEAR_RADIUS,
-  isCity,
-  NEAR_RADII,
-  parseNear,
-  type GeoPoint,
-} from "@/lib/cities";
+import { CITIES, isCity } from "@/lib/cities";
 import {
   BODY_TYPES,
   CONDITIONS,
@@ -291,7 +283,7 @@ export async function getSellerListing(
 // ---------------------------------------------------------------------------
 
 export const PAGE_SIZE = 24;
-export const SORTS = ["newest", "price_asc", "price_desc", "mileage_asc", "year_desc", "nearest"] as const;
+export const SORTS = ["newest", "price_asc", "price_desc", "mileage_asc", "year_desc"] as const;
 export type Sort = (typeof SORTS)[number];
 
 export type ListingFilters = {
@@ -299,10 +291,6 @@ export type ListingFilters = {
   make?: string;
   model?: string;
   city?: string;
-  // "Near me": only listings whose city is within radiusKm. Never set together
-  // with city, and kept out of saved searches (see listingFiltersToParams).
-  near?: GeoPoint;
-  radiusKm: number;
   conditions: Condition[];
   fuelTypes: FuelType[];
   bodyTypes: BodyType[];
@@ -339,16 +327,6 @@ function numberParam(searchParams: SearchParams, key: string): number | undefine
   return number === null ? undefined : number;
 }
 
-// "Nearest" only makes sense with a location, and is the default when there is one.
-export function defaultSort(hasNear: boolean): Sort {
-  return hasNear ? "nearest" : "newest";
-}
-
-function parseSort(sort: string | undefined, hasNear: boolean): Sort {
-  if (!includes(SORTS, sort) || (sort === "nearest" && !hasNear)) return defaultSort(hasNear);
-  return sort;
-}
-
 // Invalid values are dropped rather than erroring: these come from the URL.
 export function parseListingFilters(searchParams: SearchParams): ListingFilters {
   const rawMake = param(searchParams, "make");
@@ -358,17 +336,12 @@ export function parseListingFilters(searchParams: SearchParams): ListingFilters 
   const city = param(searchParams, "city");
   const sort = param(searchParams, "sort");
   const page = numberParam(searchParams, "page");
-  // A picked city wins over "near me".
-  const near = isCity(city) ? undefined : parseNear(param(searchParams, "near"));
-  const radius = numberParam(searchParams, "radius");
 
   return {
     q: param(searchParams, "q")?.trim().slice(0, 100) || undefined,
     make,
     model: model ?? undefined,
     city: isCity(city) ? city : undefined,
-    near,
-    radiusKm: radius !== undefined && (NEAR_RADII as readonly number[]).includes(radius) ? radius : DEFAULT_NEAR_RADIUS,
     conditions: listParam(searchParams, "condition", CONDITIONS),
     fuelTypes: listParam(searchParams, "fuel_type", FUEL_TYPES),
     bodyTypes: listParam(searchParams, "body_type", BODY_TYPES),
@@ -379,7 +352,7 @@ export function parseListingFilters(searchParams: SearchParams): ListingFilters 
     maxPrice: numberParam(searchParams, "max_price"),
     minYear: numberParam(searchParams, "min_year"),
     maxYear: numberParam(searchParams, "max_year"),
-    sort: parseSort(sort, near !== undefined),
+    sort: includes(SORTS, sort) ? sort : "newest",
     page: page && page > 0 ? page : 1,
   };
 }
@@ -424,7 +397,6 @@ export function listingFiltersToParams(filters: ListingFilters): Record<string, 
 // listings (full rows or a head-only count) can share the same filters.
 interface ListingFilterQuery {
   eq(column: "status" | "make" | "city", value: string): this;
-  in(column: "city", values: readonly string[]): this;
   in(column: "condition", values: readonly Condition[]): this;
   in(column: "fuel_type", values: readonly FuelType[]): this;
   in(column: "body_type", values: readonly BodyType[]): this;
@@ -434,10 +406,6 @@ interface ListingFilterQuery {
   lte(column: "price" | "year" | "mileage", value: number): this;
   ilike(column: "model", pattern: string): this;
   textSearch(column: "search_vector", query: string, options: { config: string }): this;
-}
-
-function nearbyCities(near: GeoPoint, radiusKm: number): string[] {
-  return citiesWithin(near, radiusKm).map(({ city }) => city);
 }
 
 // Active listings matching the filters (sort and page are applied by callers).
@@ -453,7 +421,6 @@ export function applyListingFilters<Q extends ListingFilterQuery>(
   // Case-insensitive exact match; known model names contain no % or _.
   if (filters.model) query = query.ilike("model", filters.model);
   if (filters.city) query = query.eq("city", filters.city);
-  else if (filters.near) query = query.in("city", nearbyCities(filters.near, filters.radiusKm));
   if (filters.conditions.length) query = query.in("condition", filters.conditions);
   if (filters.fuelTypes.length) query = query.in("fuel_type", filters.fuelTypes);
   if (filters.bodyTypes.length) query = query.in("body_type", filters.bodyTypes);
@@ -467,10 +434,9 @@ export function applyListingFilters<Q extends ListingFilterQuery>(
   return query;
 }
 
-type SearchResult = { listings: ListingWithImages[]; total: number };
-
-export async function searchListings(filters: ListingFilters): Promise<SearchResult> {
-  if (filters.sort === "nearest" && filters.near) return searchNearest(filters, filters.near);
+export async function searchListings(
+  filters: ListingFilters,
+): Promise<{ listings: ListingWithImages[]; total: number }> {
   const supabase = await createClient();
   let query = applyListingFilters(
     supabase.from("listings").select(LISTING_CARD_SELECT, { count: "exact" }),
@@ -492,49 +458,6 @@ export async function searchListings(filters: ListingFilters): Promise<SearchRes
   // Out-of-range pages error in PostgREST; treat them as empty.
   if (error) return { listings: [], total: count ?? 0 };
   return { listings: data.map(toListingCard), total: count ?? 0 };
-}
-
-// Nearest city first, newest first within a city. Postgres can't order by a
-// per-request city ranking through PostgREST, so count each city in range,
-// then fetch only the slices of the cities that overlap the requested page.
-async function searchNearest(filters: ListingFilters, near: GeoPoint): Promise<SearchResult> {
-  const supabase = await createClient();
-  const cities = nearbyCities(near, filters.radiusKm);
-  const counts = await Promise.all(
-    cities.map(async (city) => {
-      const { count } = await applyListingFilters(
-        supabase.from("listings").select("id", { count: "exact", head: true }),
-        { ...filters, city, near: undefined },
-      );
-      return count ?? 0;
-    }),
-  );
-  const total = counts.reduce((sum, count) => sum + count, 0);
-
-  // Page window [from, to) mapped onto each city's own range.
-  const from = (filters.page - 1) * PAGE_SIZE;
-  const to = from + PAGE_SIZE;
-  const slices: { city: string; start: number; end: number }[] = [];
-  let offset = 0;
-  cities.forEach((city, i) => {
-    const start = Math.max(from - offset, 0);
-    const end = Math.min(to - offset, counts[i]);
-    if (start < end) slices.push({ city, start, end });
-    offset += counts[i];
-  });
-
-  const pages = await Promise.all(
-    slices.map(async ({ city, start, end }) => {
-      const { data, error } = await applyListingFilters(
-        supabase.from("listings").select(LISTING_CARD_SELECT),
-        { ...filters, city, near: undefined },
-      )
-        .order("bumped_at", { ascending: false })
-        .range(start, end - 1);
-      return error ? [] : data.map(toListingCard);
-    }),
-  );
-  return { listings: pages.flat(), total };
 }
 
 export function isFeatured(listing: Pick<Listing, "featured_until">): boolean {
