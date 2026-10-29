@@ -2,7 +2,6 @@
 
 import { useId, useRef, useState, type KeyboardEvent, type ReactNode } from "react";
 import { useDictionary } from "@/components/i18n-provider";
-import { NearMeButton } from "@/components/near-me-button";
 import { cityHref, isCity } from "@/lib/cities";
 import { cityName, fmt } from "@/lib/dictionary";
 import { SectionHeading } from "./section-heading";
@@ -50,7 +49,6 @@ export function CityBrowser({ cities }: { cities: City[] }) {
           label: fmt(t.home.viewAllIn, { city: cityName(t, current.name) }),
         }}
       />
-      <NearMeButton className="mt-4 w-fit" />
       <div
         role="tablist"
         aria-label={t.home.citiesLabel}
