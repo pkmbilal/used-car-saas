@@ -44,13 +44,14 @@ export default async function SellerCenterLayout({ children }: LayoutProps<"/[la
 
   const alerts: SellerAlert[] = [];
   if (offersWaiting) {
-    alerts.push({ href: "/dashboard/offers", label: count(locale, offersWaiting, s.notifications.offers) });
+    alerts.push({ kind: "offers", href: "/dashboard/offers", label: count(locale, offersWaiting, s.notifications.offers) });
   }
   if (pendingAddons.length) {
-    alerts.push({ href: "/dashboard/plan", label: count(locale, pendingAddons.length, s.notifications.addons) });
+    alerts.push({ kind: "addons", href: "/dashboard/plan", label: count(locale, pendingAddons.length, s.notifications.addons) });
   }
   if (quota?.planExpiresAt && isPlanExpiringSoon(quota)) {
     alerts.push({
+      kind: "plan",
       href: "/dashboard/plan",
       label: fmt(s.notifications.planEnding, { date: formatDay(quota.planExpiresAt, locale) }),
     });

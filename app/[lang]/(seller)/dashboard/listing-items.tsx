@@ -20,13 +20,15 @@ type Props = {
   // waiting for payment.
   boostLabel: string | null;
   boostPending: boolean;
+  // Refresh-to-top button for live listings; undefined hides it.
+  bump?: { label: string; disabled: boolean };
   // Offers on this listing waiting for the seller's answer.
   pendingOffers: number;
   t: Dictionary;
   locale: Locale;
 };
 
-type NotesProps = Omit<Props, "featureSlots" | "boostLabel">;
+type NotesProps = Omit<Props, "featureSlots" | "boostLabel" | "bump">;
 
 const editHref = (id: string) => `/dashboard/listings/${id}/edit`;
 
@@ -38,7 +40,7 @@ function listingStats({ listing, t, locale }: Pick<Props, "listing" | "t" | "loc
   ];
 }
 
-export function ListingCardItem({ listing, featureSlots, boostLabel, boostPending, pendingOffers, t, locale }: Props) {
+export function ListingCardItem({ listing, featureSlots, boostLabel, boostPending, bump, pendingOffers, t, locale }: Props) {
   const cover = listing.images[0];
   const featured = listing.status === "active" && isFeatured(listing);
   const stats = listingStats({ listing, t, locale });
@@ -114,6 +116,7 @@ export function ListingCardItem({ listing, featureSlots, boostLabel, boostPendin
             featureDays={SELF_FEATURE_DAYS}
             boostLabel={boostLabel ?? undefined}
             boostPending={boostPending}
+            bump={bump}
           />
         </div>
       </div>
@@ -121,7 +124,7 @@ export function ListingCardItem({ listing, featureSlots, boostLabel, boostPendin
   );
 }
 
-export function ListingListItem({ listing, featureSlots, boostLabel, boostPending, pendingOffers, t, locale }: Props) {
+export function ListingListItem({ listing, featureSlots, boostLabel, boostPending, bump, pendingOffers, t, locale }: Props) {
   const cover = listing.images[0];
   const featured = listing.status === "active" && isFeatured(listing);
   const stats = listingStats({ listing, t, locale });
@@ -199,6 +202,7 @@ export function ListingListItem({ listing, featureSlots, boostLabel, boostPendin
           featureDays={SELF_FEATURE_DAYS}
           boostLabel={boostLabel ?? undefined}
           boostPending={boostPending}
+          bump={bump}
         />
       </div>
     </li>

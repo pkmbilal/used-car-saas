@@ -98,6 +98,7 @@ export type Database = {
           fuel_type: "petrol" | "diesel" | "hybrid" | "electric";
           transmission: "automatic" | "manual" | null;
           body_type: "sedan" | "suv" | "hatchback" | "coupe" | "pickup" | "van" | null;
+          bumped_at: string;
           features: string[];
           color: string | null;
           description: string | null;
@@ -122,6 +123,7 @@ export type Database = {
           fuel_type: "petrol" | "diesel" | "hybrid" | "electric";
           transmission?: "automatic" | "manual" | null;
           body_type?: "sedan" | "suv" | "hatchback" | "coupe" | "pickup" | "van" | null;
+          bumped_at?: string;
           features?: string[];
           color?: string | null;
           description?: string | null;
@@ -146,6 +148,7 @@ export type Database = {
           fuel_type?: "petrol" | "diesel" | "hybrid" | "electric";
           transmission?: "automatic" | "manual" | null;
           body_type?: "sedan" | "suv" | "hatchback" | "coupe" | "pickup" | "van" | null;
+          bumped_at?: string;
           features?: string[];
           color?: string | null;
           description?: string | null;
@@ -256,6 +259,30 @@ export type Database = {
           month?: string;
           granted_at?: string;
           granted_by?: string | null;
+        };
+        Relationships: [];
+      };
+      listing_bumps: {
+        Row: {
+          id: string;
+          seller_id: string;
+          listing_id: string | null;
+          month: string;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          seller_id: string;
+          listing_id?: string | null;
+          month: string;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          seller_id?: string;
+          listing_id?: string | null;
+          month?: string;
+          created_at?: string;
         };
         Relationships: [];
       };
@@ -952,6 +979,14 @@ export type Database = {
       feature_listing: {
         Args: { p_listing_id: string; p_days: number; p_admin: string };
         Returns: string;
+      };
+      bump_own_listing: {
+        Args: { p_listing_id: string };
+        Returns: string;
+      };
+      bump_status: {
+        Args: Record<PropertyKey, never>;
+        Returns: { used: number; monthly_limit: number | null; cooldown_hours: number }[];
       };
       feature_own_listing: {
         Args: { p_listing_id: string };

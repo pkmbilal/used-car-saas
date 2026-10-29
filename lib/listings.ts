@@ -443,7 +443,7 @@ export async function searchListings(
     filters,
   );
 
-  // Newest first breaks ties for every other sort.
+  // Newest (latest published or refreshed) first breaks ties for every other sort.
   if (filters.sort === "price_asc" || filters.sort === "price_desc") {
     query = query.order("price", { ascending: filters.sort === "price_asc" });
   } else if (filters.sort === "mileage_asc") {
@@ -451,7 +451,7 @@ export async function searchListings(
   } else if (filters.sort === "year_desc") {
     query = query.order("year", { ascending: false });
   }
-  query = query.order("created_at", { ascending: false });
+  query = query.order("bumped_at", { ascending: false });
 
   const from = (filters.page - 1) * PAGE_SIZE;
   const { data, count, error } = await query.range(from, from + PAGE_SIZE - 1);
@@ -508,7 +508,7 @@ export async function getLatestListings(limit: number): Promise<ListingWithImage
     .from("listings")
     .select(LISTING_CARD_SELECT)
     .eq("status", "active")
-    .order("created_at", { ascending: false })
+    .order("bumped_at", { ascending: false })
     .limit(limit);
   if (error) throw error;
   return data.map(toListingCard);
@@ -567,7 +567,7 @@ export async function getLatestByCities(
     .select(LISTING_CARD_SELECT)
     .eq("status", "active")
     .in("city", cities)
-    .order("created_at", { ascending: false })
+    .order("bumped_at", { ascending: false })
     .limit(cities.length * perCity * 4);
   if (error) throw error;
 
@@ -590,7 +590,7 @@ export async function getSimilarListings(
       .select(LISTING_CARD_SELECT)
       .eq("status", "active")
       .neq("id", listing.id)
-      .order("created_at", { ascending: false })
+      .order("bumped_at", { ascending: false })
       .limit(limit);
 
   // Both run at once; the price-band results only fill what same-make leaves.
@@ -635,7 +635,7 @@ export async function getSellerProfile(sellerId: string) {
     .select("*, listing_images(*)")
     .eq("seller_id", sellerId)
     .eq("status", "active")
-    .order("created_at", { ascending: false });
+    .order("bumped_at", { ascending: false });
   if (error) throw error;
 
   return { profile, listings: listings.map(withImageUrls) };

@@ -171,6 +171,48 @@ export async function featureOwnListing(listingId: string): Promise<{ error?: Fe
   return { error: known ?? "failed" };
 }
 
+// Refresh to top: a wait between refreshes of the same listing and a monthly
+// cap per plan, both set by plan_bump_cooldown_hours / plan_monthly_bump_limit
+// in the listing_bumps migration, which enforces them.
+export type BumpStatus = {
+  used: number;
+  limit: number | null; // null = unlimited
+  remaining: number | null;
+  cooldownHours: number;
+};
+
+export async function getBumpStatus(): Promise<BumpStatus | null> {
+  const supabase = await createClient();
+  const { data, error } = await supabase.rpc("bump_status");
+  const row = data?.[0];
+  if (error || !row) return null;
+  return {
+    used: row.used,
+    limit: row.monthly_limit,
+    remaining: row.monthly_limit === null ? null : Math.max(0, row.monthly_limit - row.used),
+    cooldownHours: row.cooldown_hours,
+  };
+}
+
+// When the listing can next be refreshed; null = now.
+export function nextBumpAt(bumpedAt: string, status: Pick<BumpStatus, "cooldownHours">): string | null {
+  const next = new Date(bumpedAt).getTime() + status.cooldownHours * 60 * 60 * 1000;
+  return next > Date.now() ? new Date(next).toISOString() : null;
+}
+
+const BUMP_ERRORS = ["listing_not_active", "bump_too_soon", "bump_limit_reached"] as const;
+
+export type BumpError = (typeof BUMP_ERRORS)[number] | "failed";
+
+// Errors come back as keys of the dictionary's plans.bumpErrors.
+export async function bumpOwnListing(listingId: string): Promise<{ error?: BumpError }> {
+  const supabase = await createClient();
+  const { error } = await supabase.rpc("bump_own_listing", { p_listing_id: listingId });
+  if (!error) return {};
+  const known = BUMP_ERRORS.find((code) => code === error.message);
+  return { error: known ?? "failed" };
+}
+
 // Raised by the enforce_listing_quota trigger.
 export const QUOTA_EXCEEDED_DB_MESSAGE = "listing_quota_exceeded";
 
