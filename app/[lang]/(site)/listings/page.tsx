@@ -29,6 +29,7 @@ import { pageMetadata } from "@/lib/seo";
 import { ActiveFilters } from "./active-filters";
 import { Filters } from "./filters";
 import { MobileFilters } from "./mobile-filters";
+import { DistanceChips } from "./distance-chips";
 import { SortSelect } from "./sort-select";
 
 export async function generateMetadata({ searchParams }: PageProps<"/[lang]/listings">): Promise<Metadata> {
@@ -136,6 +137,7 @@ export default async function ListingsPage({ searchParams }: PageProps<"/[lang]/
             </div>
           </div>
           <ActiveFilters filters={filters} />
+          <DistanceChips filters={filters} params={params} />
 
           {noResults && (
             <Card className="mt-4 items-center gap-2 rounded-lg px-6 py-12 text-center shadow-[0_2px_10px_rgba(20,30,25,.05)] ring-0">
