@@ -531,9 +531,6 @@ export const ar: DictionaryShape<typeof en> = {
     away: "≈ {distance}",
     inYourArea: "قريب منك",
     sortNearest: "الأقرب أولًا",
-    showingNear: "سيارات بالقرب من {city}",
-    approximate: "موقع تقريبي حسب شبكتك.",
-    pickCity: "ليس صحيحًا؟ اختر مدينتك",
   },
   listingPage: {
     notFoundTitle: "الإعلان غير موجود",

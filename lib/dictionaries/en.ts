@@ -498,9 +498,6 @@ export const en = {
     away: "≈ {distance}",
     inYourArea: "Near you",
     sortNearest: "Nearest First",
-    showingNear: "Showing cars near {city}",
-    approximate: "Approximate, based on your network.",
-    pickCity: "Not right? Pick your city",
   },
   listingPage: {
     notFoundTitle: "Listing not found",

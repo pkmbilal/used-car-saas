@@ -269,10 +269,6 @@ export function citiesWithin(point: GeoPoint, radiusKm: number): { city: City; k
     .sort((a, b) => a.km - b.km);
 }
 
-export function nearestCity(point: GeoPoint): City {
-  return citiesWithin(point, Infinity)[0].city;
-}
-
 // Rounded to 2 decimals (about 1 km) so URLs never carry an exact position.
 export function roundPoint(lat: number, lng: number): GeoPoint {
   return { lat: Math.round(lat * 100) / 100, lng: Math.round(lng * 100) / 100 };

@@ -302,8 +302,6 @@ export type ListingFilters = {
   // "Near me": only listings whose city is within radiusKm. Never set together
   // with city, and kept out of saved searches (see listingFiltersToParams).
   near?: GeoPoint;
-  // The location came from the visitor's IP, so it may be a city or two off.
-  nearApprox: boolean;
   radiusKm: number;
   conditions: Condition[];
   fuelTypes: FuelType[];
@@ -370,7 +368,6 @@ export function parseListingFilters(searchParams: SearchParams): ListingFilters 
     model: model ?? undefined,
     city: isCity(city) ? city : undefined,
     near,
-    nearApprox: near !== undefined && param(searchParams, "loc") === "ip",
     radiusKm: radius !== undefined && (NEAR_RADII as readonly number[]).includes(radius) ? radius : DEFAULT_NEAR_RADIUS,
     conditions: listParam(searchParams, "condition", CONDITIONS),
     fuelTypes: listParam(searchParams, "fuel_type", FUEL_TYPES),
