@@ -18,7 +18,7 @@ function browserLocation(): Promise<GeoPoint | Failure> {
       ({ coords }) =>
         resolve(isInSaudi(coords.latitude, coords.longitude) ? roundPoint(coords.latitude, coords.longitude) : "outside"),
       (error) => resolve(error.code === error.PERMISSION_DENIED ? "denied" : "unavailable"),
-      { timeout: 10_000, maximumAge: 10 * 60_000 },
+      { enableHighAccuracy: true, timeout: 10_000, maximumAge: 2 * 60_000 },
     );
   });
 }
@@ -45,8 +45,9 @@ export function NearMeButton({ className, keepFilters = false }: { className?: s
     }
     // Read at click time rather than via useSearchParams, which would need a Suspense boundary.
     const params = new URLSearchParams(keepFilters ? window.location.search : undefined);
-    for (const key of ["city", "page", "sort"]) params.delete(key);
+    for (const key of ["city", "page", "sort", "loc"]) params.delete(key);
     params.set("near", formatNear(point));
+    if (typeof located === "string") params.set("loc", "ip");
     router.push(localizePath(locale, `/listings?${params}`));
   }
 
