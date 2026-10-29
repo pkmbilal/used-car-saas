@@ -525,6 +525,7 @@ export const ar: DictionaryShape<typeof en> = {
       unavailable: "تعذّر تحديد موقعك. اختر مدينة بدلًا من ذلك.",
     },
     radius: "المسافة",
+    radiusLabel: "المسافة:",
     within: "ضمن {distance}",
     chip: "بالقرب منك · {distance}",
     away: "≈ {distance}",

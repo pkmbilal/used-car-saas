@@ -492,6 +492,7 @@ export const en = {
       unavailable: "Couldn't find your location. Pick a city instead.",
     },
     radius: "Distance",
+    radiusLabel: "Distance:",
     within: "Within {distance}",
     chip: "Near you · {distance}",
     away: "≈ {distance}",
