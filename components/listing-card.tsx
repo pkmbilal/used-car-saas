@@ -6,21 +6,31 @@ import { RiyalPrice } from "@/components/riyal-price";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { carName } from "@/lib/car-names";
+import { cityDistanceKm, NEARBY_KM, type GeoPoint } from "@/lib/cities";
 import { formatKm } from "@/lib/format";
 import { getDictionary } from "@/lib/i18n-server";
 import { isFeatured, type ListingWithImages } from "@/lib/listings";
-import { cityName, optionLabel } from "@/lib/dictionary";
+import { cityName, fmt, optionLabel } from "@/lib/dictionary";
 
 type CardProps = {
   listing: ListingWithImages;
   // Omit to hide the save button (e.g. the seller's own dashboard).
   favorited?: boolean;
   sizes?: string;
+  // The viewer's "near me" position, to show how far away the car is.
+  near?: GeoPoint;
 };
 
-export async function ListingCard({ listing, favorited, sizes }: CardProps) {
+export async function ListingCard({ listing, favorited, sizes, near }: CardProps) {
   const { t, locale } = await getDictionary();
   const cover = listing.images[0];
+  const km = near ? cityDistanceKm(near, listing.city) : undefined;
+  const distance =
+    km === undefined
+      ? null
+      : km < NEARBY_KM
+        ? t.nearMe.inYourArea
+        : fmt(t.nearMe.away, { distance: formatKm(Math.round(km / 5) * 5, locale) });
 
   return (
     <div className="group relative h-full">
@@ -99,6 +109,7 @@ export async function ListingCard({ listing, favorited, sizes }: CardProps) {
               <span className="flex items-center gap-1.5">
                 <MapPin className="size-3.5 sm:size-3" />
                 {cityName(t, listing.city)}
+                {distance && <span className="text-brand-600">· {distance}</span>}
               </span>
               <span className="ms-auto flex size-5 items-center justify-center rounded-full border border-ink/80 transition group-hover:border-brand group-hover:bg-brand group-hover:text-white">
                 <ArrowRight className="size-2.5" strokeWidth={2.6} />
@@ -133,12 +144,14 @@ export async function ListingGrid({
   empty,
   favoriteIds,
   columns = 4,
+  near,
 }: {
   listings: ListingWithImages[];
   empty?: string;
   // Pass (even an empty set) to show save buttons on each card.
   favoriteIds?: Set<string>;
   columns?: keyof typeof gridColumns;
+  near?: GeoPoint;
 }) {
   if (listings.length === 0) {
     // Pass "" to render nothing.
@@ -155,6 +168,7 @@ export async function ListingGrid({
             listing={listing}
             favorited={favoriteIds?.has(listing.id)}
             sizes={gridSizes[columns]}
+            near={near}
           />
         </li>
       ))}
