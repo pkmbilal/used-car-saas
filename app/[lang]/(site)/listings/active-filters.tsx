@@ -77,6 +77,7 @@ function hrefWithout(filters: ListingFilters, without: Partial<ListingFilters>):
   if (next.near) {
     params.set("near", formatNear(next.near));
     params.set("radius", String(next.radiusKm));
+    if (next.nearApprox) params.set("loc", "ip");
   }
   // The default sort stays out of the URL; "nearest" is only ever a default.
   if (next.sort !== defaultSort(next.near !== undefined) && next.sort !== "nearest") params.set("sort", next.sort);

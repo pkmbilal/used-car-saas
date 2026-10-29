@@ -100,6 +100,7 @@ export function Filters({
         <>
           <input type="hidden" name="near" value={formatNear(filters.near)} />
           <input type="hidden" name="radius" value={filters.radiusKm} />
+          {filters.nearApprox && <input type="hidden" name="loc" value="ip" />}
         </>
       )}
       <div className="flex items-center gap-2 border-b border-line pb-3">
