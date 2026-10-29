@@ -4,7 +4,7 @@ import { MakeModelSelects } from "@/components/make-model-selects";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { CITIES } from "@/lib/cities";
+import { CITIES, formatNear } from "@/lib/cities";
 import { cityName, fmt } from "@/lib/dictionary";
 import { formatSAR } from "@/lib/format";
 import { localizePath } from "@/lib/i18n";
@@ -118,6 +118,12 @@ export async function SearchBar({
       )}
       <form method="get" action={action} className={style.form}>
         {filters?.sort && filters.sort !== "newest" && <input type="hidden" name="sort" value={filters.sort} />}
+        {filters?.near && (
+          <>
+            <input type="hidden" name="near" value={formatNear(filters.near)} />
+            <input type="hidden" name="radius" value={filters.radiusKm} />
+          </>
+        )}
         <MakeModelSelects
           make={filters?.make}
           model={filters?.model}
