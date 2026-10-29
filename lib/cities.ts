@@ -241,9 +241,8 @@ export const CITY_COORDS: Record<City, readonly [number, number]> = {
   "Wadi ad-Dawasir": [20.46, 44.8],
 };
 
-// Distances are between city centres, so 10 km in practice means "my city only".
-export const NEAR_RADII = [10, 25, 50, 100, 200] as const;
-export const DEFAULT_NEAR_RADIUS = 50;
+export const NEAR_RADII = [25, 50, 100, 200] as const;
+export const DEFAULT_NEAR_RADIUS = 100;
 // Under this, a car counts as "in your area" rather than showing a distance.
 export const NEARBY_KM = 15;
 
