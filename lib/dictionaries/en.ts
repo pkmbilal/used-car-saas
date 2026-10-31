@@ -145,6 +145,10 @@ export const en = {
     make: "Make",
     model: "Model",
     chooseMakeFirst: "Choose a make first",
+    searchMakes: "Search makes…",
+    searchModels: "Search models…",
+    noMatches: "No matches",
+    useTyped: "Use “{value}”",
   },
   options: {
     condition: { excellent: "Excellent", good: "Good", fair: "Fair" },
@@ -1415,7 +1419,6 @@ export const en = {
       chooseMake: "Choose a make",
       model: "Model",
       chooseModel: "Choose a model",
-      otherModel: "Other (type it)",
       chooseMakeFirst: "Choose a make first",
       typeModel: "Type the model",
       year: "Year",

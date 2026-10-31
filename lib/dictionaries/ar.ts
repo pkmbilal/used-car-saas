@@ -172,6 +172,10 @@ export const ar: DictionaryShape<typeof en> = {
     make: "الماركة",
     model: "الموديل",
     chooseMakeFirst: "اختر الماركة أولًا",
+    searchMakes: "ابحث عن الماركة…",
+    searchModels: "ابحث عن الموديل…",
+    noMatches: "لا توجد نتائج",
+    useTyped: "استخدم “{value}”",
   },
   options: {
     condition: { excellent: "ممتازة", good: "جيدة", fair: "مقبولة" },
@@ -1710,7 +1714,6 @@ export const ar: DictionaryShape<typeof en> = {
       chooseMake: "اختر الماركة",
       model: "الموديل",
       chooseModel: "اختر الموديل",
-      otherModel: "أخرى (اكتبها)",
       chooseMakeFirst: "اختر الماركة أولًا",
       typeModel: "اكتب الموديل",
       year: "سنة الصنع",

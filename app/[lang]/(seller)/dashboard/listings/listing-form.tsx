@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useActionState, useRef, useState } from "react";
 import { AlertCircle, CalendarClock, Check, CheckCircle2, Construction, Loader2, Tag } from "lucide-react";
 import { useDictionary } from "@/components/i18n-provider";
 import { CITIES } from "@/lib/cities";
@@ -80,6 +80,11 @@ function kindOf(listing: Props["listing"]): ListingKind | null {
 export function ListingForm({ listing, cover, action, submitLabel, defaultKind = "sale" }: Props) {
   const [state, formAction, pending] = useActionState(action, {});
   const [preview, setPreview] = useState(() => previewFromListing(listing));
+  const formRef = useRef<HTMLFormElement>(null);
+  const refreshPreview = () =>
+    requestAnimationFrame(() => {
+      if (formRef.current) setPreview(previewFromForm(formRef.current));
+    });
   const [kind, setKind] = useState<ListingKind>(kindOf(listing) ?? defaultKind);
   const { t } = useDictionary();
   const f = t.dashboard.form;
@@ -100,6 +105,7 @@ export function ListingForm({ listing, cover, action, submitLabel, defaultKind =
   return (
     <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_340px] lg:items-start lg:gap-8">
       <form
+        ref={formRef}
         action={formAction}
         // Inputs stay uncontrolled; the preview re-reads the form on every
         // change. A frame later, so MakeModelFields has cleared the model when
@@ -150,7 +156,7 @@ export function ListingForm({ listing, cover, action, submitLabel, defaultKind =
         ) : (
         <>
         <Section step={1} title={s.car.title} subtitle={s.car.subtitle}>
-          <MakeModelFields make={listing?.make} model={listing?.model} />
+          <MakeModelFields make={listing?.make} model={listing?.model} onChange={refreshPreview} />
           <Field id="year" label={f.year}>
             <input
               id="year"
