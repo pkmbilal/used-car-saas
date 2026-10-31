@@ -94,11 +94,12 @@ export function Filters({
   return (
     <form method="get" action={localizePath(locale, "/listings")} className="flex flex-col gap-5">
       {filters.sort !== "newest" && <input type="hidden" name="sort" value={filters.sort} />}
+      {filters.type === "rent" && <input type="hidden" name="type" value="rent" />}
       <div className="flex items-center gap-2 border-b border-line pb-3">
         <SlidersHorizontal className="size-4 text-brand-600" />
         <span className="text-sm font-bold">{f.title}</span>
         <Button asChild variant="link" size="sm" className="ms-auto h-auto p-0 max-sm:h-auto text-caption font-semibold text-brand">
-          <Link href="/listings">{f.clearAll}</Link>
+          <Link href={filters.type === "rent" ? "/listings?type=rent" : "/listings"}>{f.clearAll}</Link>
         </Button>
       </div>
       <div className="flex flex-col gap-1.5">
@@ -137,7 +138,7 @@ export function Filters({
           options={CITIES.map((city) => ({ value: city, label: cityName(t, city) }))}
         />
       </div>
-      <Range t={t} label={f.priceRange} hint={f.currency} minName="min_price" maxName="max_price" min={filters.minPrice} max={filters.maxPrice} />
+      <Range t={t} label={filters.type === "rent" ? t.rentals.dailyPriceRange : f.priceRange} hint={f.currency} minName="min_price" maxName="max_price" min={filters.minPrice} max={filters.maxPrice} />
       <Range t={t} label={f.year} minName="min_year" maxName="max_year" min={filters.minYear} max={filters.maxYear} />
       <div className="flex flex-col gap-1.5">
         <Label htmlFor={id("mileage")} className={labelClass}>

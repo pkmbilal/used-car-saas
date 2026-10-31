@@ -21,6 +21,7 @@ type SeoListing = Pick<
   | "color"
   | "status"
   | "images"
+  | "listing_type"
 >;
 
 // Meta description for a listing page, built from its specs.
@@ -38,7 +39,10 @@ export function listingDescription(listing: SeoListing, t: Dictionary, locale: L
     model: modelName(locale, listing.make, listing.model),
     city: cityName(t, listing.city),
     specs,
-    price: formatSAR(listing.price, locale),
+    price:
+      listing.listing_type === "rent"
+        ? `${formatSAR(listing.price, locale)} ${t.rentals.perDay}`
+        : formatSAR(listing.price, locale),
   });
 }
 
@@ -71,6 +75,16 @@ export function listingJsonLd(
       url,
       price: listing.price,
       priceCurrency: "SAR",
+      // Rentals: the price is a daily rate for leasing the car out.
+      ...(listing.listing_type === "rent" && {
+        businessFunction: "http://purl.org/goodrelations/v1#LeaseOut",
+        priceSpecification: {
+          "@type": "UnitPriceSpecification",
+          price: listing.price,
+          priceCurrency: "SAR",
+          unitCode: "DAY",
+        },
+      }),
       availability: listing.status === "active" ? "https://schema.org/InStock" : "https://schema.org/SoldOut",
       areaServed: { "@type": "City", name: listing.city },
       ...(seller && { seller: { "@type": seller.dealer ? "AutoDealer" : "Person", name: seller.name } }),

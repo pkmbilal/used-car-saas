@@ -42,8 +42,9 @@ export function listingsHref(filters: ListingFilters): string {
   return search ? `/listings?${search}` : "/listings";
 }
 
+// The sale/rent tab alone isn't a filter.
 export function hasActiveFilters(filters: ListingFilters): boolean {
-  return Object.keys(listingFiltersToParams(filters)).length > 0;
+  return Object.keys(listingFiltersToParams(filters)).some((key) => key !== "type");
 }
 
 // Human-readable parts, e.g. ["“camry”", "Toyota", "Riyadh", "Up to SAR 80,000"].
@@ -64,6 +65,7 @@ export function describeFilters(filters: ListingFilters, t: Dictionary, locale: 
   else if (maxYear !== undefined) year = fmt(s.yearMax, { year: maxYear });
 
   return [
+    filters.type === "rent" ? t.rentals.forRent : null,
     filters.q ? `“${filters.q}”` : null,
     filters.make ? makeName(locale, filters.make) : null,
     filters.model ? modelName(locale, filters.make ?? "", filters.model) : null,

@@ -13,6 +13,8 @@ import type { ListingFilters } from "@/lib/listings";
 import { cn } from "@/lib/utils";
 
 const MAX_PRICES = [50_000, 100_000, 150_000, 200_000, 300_000, 500_000];
+// Daily rates, for the rentals tab.
+const MAX_DAILY_PRICES = [100, 150, 200, 300, 500, 1_000];
 
 function minYears(): number[] {
   const year = new Date().getFullYear();
@@ -118,6 +120,7 @@ export async function SearchBar({
       )}
       <form method="get" action={action} className={style.form}>
         {filters?.sort && filters.sort !== "newest" && <input type="hidden" name="sort" value={filters.sort} />}
+        {filters?.type === "rent" && <input type="hidden" name="type" value="rent" />}
         <MakeModelSelects
           make={filters?.make}
           model={filters?.model}
@@ -142,7 +145,7 @@ export async function SearchBar({
             defaultValue={filters?.maxPrice?.toString()}
             placeholder={t.search.anyPrice}
             options={withCurrent(
-              MAX_PRICES.map((price) => ({ value: String(price), label: priceLabel(price) })),
+              (filters?.type === "rent" ? MAX_DAILY_PRICES : MAX_PRICES).map((price) => ({ value: String(price), label: priceLabel(price) })),
               filters?.maxPrice,
               priceLabel,
             )}

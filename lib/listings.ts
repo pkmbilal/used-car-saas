@@ -7,6 +7,7 @@ import {
   CONDITIONS,
   FEATURE_VALUES,
   FUEL_TYPES,
+  LISTING_TYPES,
   MAX_COLOR_LENGTH,
   MAX_DESCRIPTION_LENGTH,
   TRANSMISSIONS,
@@ -14,6 +15,7 @@ import {
   type Condition,
   type Feature,
   type FuelType,
+  type ListingType,
   type Transmission,
 } from "@/lib/listing-options";
 import { isMake, MAKES, modelsFor } from "@/lib/makes";
@@ -42,6 +44,12 @@ export type ListingInput = Pick<
   | "features"
   | "color"
   | "description"
+>;
+
+// Rental-only fields; all null on sale listings (enforced by a DB check).
+export type RentalInput = Pick<
+  Listing,
+  "listing_type" | "weekly_price" | "monthly_price" | "min_rental_days" | "deposit" | "daily_km_limit"
 >;
 
 function includes<T extends string>(list: readonly T[], value: unknown): value is T {
@@ -162,15 +170,91 @@ export function parseListingFields(
   };
 }
 
+export const RENTAL_BOUNDS = {
+  maxMinDays: 90,
+  maxKmLimit: 10_000,
+} as const;
+
+const SALE_FIELDS: RentalInput = {
+  listing_type: "sale",
+  weekly_price: null,
+  monthly_price: null,
+  min_rental_days: null,
+  deposit: null,
+  daily_km_limit: null,
+};
+
+// Blank means "not given"; anything else must be a whole number.
+function optionalWholeNumber(value: string | null): number | null | undefined {
+  const text = (value ?? "").replace(/[,\s]/g, "");
+  if (text === "") return null;
+  return /^\d+$/.test(text) ? Number(text) : undefined;
+}
+
+// The listing form's sale/rent fields. For rentals `price` is the daily rate,
+// so it's validated by parseListingFields; this checks the rest against it.
+// Limits must match supabase/migrations/*_rental_listings.sql.
+export function parseRentalFields(
+  get: (field: keyof RentalInput) => string | null,
+  dailyPrice: number,
+): { data: RentalInput } | { error: string } {
+  const type = matchOption(LISTING_TYPES, get("listing_type")) ?? "sale";
+  if (type === "sale") return { data: SALE_FIELDS };
+
+  const weekly = optionalWholeNumber(get("weekly_price"));
+  const monthly = optionalWholeNumber(get("monthly_price"));
+  const minDays = optionalWholeNumber(get("min_rental_days"));
+  const deposit = optionalWholeNumber(get("deposit"));
+  const kmLimit = optionalWholeNumber(get("daily_km_limit"));
+
+  if (weekly === undefined || weekly === 0 || (weekly !== null && weekly >= dailyPrice * 7)) {
+    return { error: "The weekly rate must be less than 7 days at the daily rate." };
+  }
+  if (monthly === undefined || monthly === 0 || (monthly !== null && monthly >= dailyPrice * 30)) {
+    return { error: "The monthly rate must be less than 30 days at the daily rate." };
+  }
+  if (minDays === undefined || (minDays !== null && (minDays < 1 || minDays > RENTAL_BOUNDS.maxMinDays))) {
+    return { error: `The minimum rental must be between 1 and ${RENTAL_BOUNDS.maxMinDays} days.` };
+  }
+  if (deposit === undefined || (deposit !== null && deposit > LISTING_BOUNDS.maxPrice)) {
+    return { error: "Enter the deposit in SAR." };
+  }
+  if (kmLimit === undefined || kmLimit === 0 || (kmLimit !== null && kmLimit > RENTAL_BOUNDS.maxKmLimit)) {
+    return { error: "Enter the daily km limit, or leave it blank for unlimited." };
+  }
+
+  return {
+    data: {
+      listing_type: "rent",
+      weekly_price: weekly,
+      monthly_price: monthly,
+      min_rental_days: minDays ?? 1,
+      deposit,
+      daily_km_limit: kmLimit,
+    },
+  };
+}
+
 export function parseListing(
   formData: FormData,
-): { data: ListingInput } | { error: string } {
-  return parseListingFields((field) => {
-    // Features are a checkbox group: one entry per ticked box.
-    if (field === "features") return formData.getAll(field).filter((v) => typeof v === "string").join(",");
+): { data: ListingInput & RentalInput } | { error: string } {
+  const read = (field: string) => {
     const value = formData.get(field);
     return typeof value === "string" ? value : null;
+  };
+  const parsed = parseListingFields((field) => {
+    // Features are a checkbox group: one entry per ticked box.
+    if (field === "features") return formData.getAll(field).filter((v) => typeof v === "string").join(",");
+    return read(field);
   });
+  if ("error" in parsed) return parsed;
+  const rental = parseRentalFields(read, parsed.data.price);
+  if ("error" in rental) return rental;
+  return { data: { ...parsed.data, ...rental.data } };
+}
+
+export function isRental(listing: Pick<Listing, "listing_type">): boolean {
+  return listing.listing_type === "rent";
 }
 
 export type SellerType = "dealer" | "private";
@@ -287,6 +371,8 @@ export const SORTS = ["newest", "price_asc", "price_desc", "mileage_asc", "year_
 export type Sort = (typeof SORTS)[number];
 
 export type ListingFilters = {
+  // Sale and rental listings are browsed separately; sale is the default.
+  type: ListingType;
   q?: string;
   make?: string;
   model?: string;
@@ -338,6 +424,7 @@ export function parseListingFilters(searchParams: SearchParams): ListingFilters 
   const page = numberParam(searchParams, "page");
 
   return {
+    type: param(searchParams, "type") === "rent" ? "rent" : "sale",
     q: param(searchParams, "q")?.trim().slice(0, 100) || undefined,
     make,
     model: model ?? undefined,
@@ -373,6 +460,8 @@ export function toPrefixTsQuery(q: string): string | null {
 export function listingFiltersToParams(filters: ListingFilters): Record<string, string> {
   const list = (values: string[]) => (values.length ? values.join(",") : undefined);
   const entries: [string, string | number | undefined][] = [
+    // Sale is the default, so it stays out of URLs.
+    ["type", filters.type === "rent" ? "rent" : undefined],
     ["q", filters.q],
     ["make", filters.make],
     ["model", filters.model],
@@ -396,7 +485,7 @@ export function listingFiltersToParams(filters: ListingFilters): Record<string, 
 // The subset of the PostgREST filter builder used below, so any select on
 // listings (full rows or a head-only count) can share the same filters.
 interface ListingFilterQuery {
-  eq(column: "status" | "make" | "city", value: string): this;
+  eq(column: "status" | "make" | "city" | "listing_type", value: string): this;
   in(column: "condition", values: readonly Condition[]): this;
   in(column: "fuel_type", values: readonly FuelType[]): this;
   in(column: "body_type", values: readonly BodyType[]): this;
@@ -413,7 +502,7 @@ export function applyListingFilters<Q extends ListingFilterQuery>(
   query: Q,
   filters: ListingFilters,
 ): Q {
-  query = query.eq("status", "active");
+  query = query.eq("status", "active").eq("listing_type", filters.type);
   // Arabic make/model names match their stored English spelling.
   const tsQuery = filters.q ? toPrefixTsQuery(arabicToStoredNames(filters.q)) : null;
   if (tsQuery) query = query.textSearch("search_vector", tsQuery, { config: "simple" });
@@ -502,12 +591,16 @@ export async function getSitemapListings(): Promise<Pick<Listing, "id" | "update
   return rows;
 }
 
-export async function getLatestListings(limit: number): Promise<ListingWithImages[]> {
+export async function getLatestListings(
+  limit: number,
+  type: ListingType = "sale",
+): Promise<ListingWithImages[]> {
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("listings")
     .select(LISTING_CARD_SELECT)
     .eq("status", "active")
+    .eq("listing_type", type)
     .order("bumped_at", { ascending: false })
     .limit(limit);
   if (error) throw error;
@@ -580,7 +673,7 @@ export async function getLatestByCities(
 
 // Same make first, then cars in a similar price band, excluding the listing itself.
 export async function getSimilarListings(
-  listing: Pick<Listing, "id" | "make" | "price">,
+  listing: Pick<Listing, "id" | "make" | "price" | "listing_type">,
   limit = 4,
 ): Promise<ListingWithImages[]> {
   const supabase = await createClient();
@@ -589,6 +682,7 @@ export async function getSimilarListings(
       .from("listings")
       .select(LISTING_CARD_SELECT)
       .eq("status", "active")
+      .eq("listing_type", listing.listing_type)
       .neq("id", listing.id)
       .order("bumped_at", { ascending: false })
       .limit(limit);

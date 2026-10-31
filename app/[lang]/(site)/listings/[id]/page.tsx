@@ -49,8 +49,9 @@ import {
 } from "@/lib/format";
 import { capitalize } from "@/lib/listing-options";
 import { listingDescription, listingJsonLd } from "@/lib/listing-seo";
-import { getListingStats, getPublicListing, getSimilarListings, isFeatured } from "@/lib/listings";
+import { getListingStats, getPublicListing, getSimilarListings, isFeatured, isRental } from "@/lib/listings";
 import { getMyOfferForListing } from "@/lib/offers";
+import { getBookedRanges, getMyRequestForListing } from "@/lib/rentals";
 import { isMake, makeHref } from "@/lib/makes";
 import { addonPrice, BOOST_DAYS, getListingQuota, SELF_FEATURE_DAYS } from "@/lib/plans";
 import { publicUrl } from "@/lib/r2";
@@ -62,6 +63,8 @@ import { Gallery } from "./gallery";
 import { MakeOfferButton } from "./make-offer-button";
 import { ListingDescription, ListingFeatures, SpecGrid } from "./listing-details";
 import { OwnerActions } from "./owner-actions";
+import { RentalRates } from "./rental-rates";
+import { RentalRequestPanel } from "./rental-request-panel";
 import { ShareButton } from "./share-button";
 import { ViewTracker } from "./view-tracker";
 
@@ -75,7 +78,7 @@ export async function generateMetadata({
   const { t, locale } = await getDictionary();
   const listing = await getListing(id);
   if (!listing) return { title: t.listingPage.notFoundTitle };
-  const title = fmt(t.listingPage.metaTitle, {
+  const title = fmt(isRental(listing) ? t.rentals.listingMetaTitle : t.listingPage.metaTitle, {
     year: listing.year,
     make: makeName(locale, listing.make),
     model: modelName(locale, listing.make, listing.model),
@@ -107,16 +110,20 @@ export default async function ListingPage({ params }: PageProps<"/[lang]/listing
   const seller = listing.seller;
   const storefront = seller ? getStorefront(seller) : null;
   const featured = isFeatured(listing);
-  const canOffer = !isOwner && listing.status === "active";
-  const [stats, quota, pendingAddons, favoriteIds, similar, myOffer] = await Promise.all([
+  const rent = isRental(listing);
+  const canOffer = !rent && !isOwner && listing.status === "active";
+  const canRequest = rent && !isOwner && listing.status === "active";
+  const [stats, quota, pendingAddons, favoriteIds, similar, myOffer, myRequest, booked] = await Promise.all([
     isOwner ? getListingStats(listing.id) : null,
     isOwner ? getListingQuota() : null,
     isOwner ? getMyPendingAddons(listing.id) : [],
     favoritesPromise,
     similarPromise,
     canOffer && current ? getMyOfferForListing(current.user.id, listing.id) : null,
+    canRequest && current ? getMyRequestForListing(current.user.id, listing.id) : null,
+    canRequest ? getBookedRanges(listing.id) : [],
   ]);
-  const whatsappText = fmt(p.whatsappText, {
+  const whatsappText = fmt(rent ? t.rentals.whatsappText : p.whatsappText, {
     title,
     price: formatSAR(listing.price, locale),
     url: await listingUrl(localizePath(locale, `/listings/${listing.id}`)),
@@ -250,6 +257,9 @@ export default async function ListingPage({ params }: PageProps<"/[lang]/listing
           <Breadcrumbs crumbs={crumbs} label={p.breadcrumbLabel} />
           <div className="mt-3 flex flex-wrap items-center gap-3.5">
             <h1 className="text-3xl font-semibold tracking-tight">{title}</h1>
+            {rent && (
+              <Badge className="h-6 bg-lime px-3 text-caption font-semibold text-on-lime">{t.rentals.forRent}</Badge>
+            )}
             {featured && (
               <Badge className="h-6 bg-[#4fc35f] px-3 text-caption font-semibold">{t.common.featured}</Badge>
             )}
@@ -266,7 +276,10 @@ export default async function ListingPage({ params }: PageProps<"/[lang]/listing
               {city}
             </span>
           </p>
-          <p className="mt-4 text-3xl font-bold text-lime"><RiyalPrice amount={listing.price} /></p>
+          <p className="mt-4 text-3xl font-bold text-lime">
+            <RiyalPrice amount={listing.price} />
+            {rent && <span className="ms-1.5 text-[0.5em] font-medium opacity-75">{t.rentals.perDay}</span>}
+          </p>
         </div>
       </section>
 
@@ -277,6 +290,7 @@ export default async function ListingPage({ params }: PageProps<"/[lang]/listing
             photos={listing.images.map(({ id, url }) => ({ id, url }))}
             featured={featured}
           />
+          {rent && <RentalRates listing={listing} />}
           <SpecGrid specs={specs} />
           <ListingFeatures features={listing.features} />
           <ListingDescription text={listing.description} />
@@ -284,7 +298,10 @@ export default async function ListingPage({ params }: PageProps<"/[lang]/listing
 
         <aside className="flex flex-col gap-5">
           <Card className="gap-0 rounded-lg px-5 pt-4 pb-5 shadow-[0_2px_12px_rgba(20,30,25,.06)] ring-0">
-            <p className="text-[1.6875rem] font-bold text-brand"><RiyalPrice amount={listing.price} /></p>
+            <p className="text-[1.6875rem] font-bold text-brand">
+              <RiyalPrice amount={listing.price} />
+              {rent && <span className="ms-1.5 text-[0.5em] font-medium opacity-75">{t.rentals.perDay}</span>}
+            </p>
             <p className="mt-1 flex items-center gap-1.5 text-xs text-muted-foreground">
               <Clock className="size-3.5" />
               {listedAgo}
@@ -314,10 +331,27 @@ export default async function ListingPage({ params }: PageProps<"/[lang]/listing
                 />
               </div>
             )}
+            {canRequest && (
+              <div className={`${showContact ? "mt-2.5" : "mt-4"} flex flex-col`}>
+                <RentalRequestPanel
+                  listingId={listing.id}
+                  rates={{
+                    daily: Number(listing.price),
+                    weekly: listing.weekly_price === null ? null : Number(listing.weekly_price),
+                    monthly: listing.monthly_price === null ? null : Number(listing.monthly_price),
+                  }}
+                  minDays={listing.min_rental_days ?? 1}
+                  booked={booked}
+                  signedIn={!!current}
+                  myRequest={myRequest}
+                />
+              </div>
+            )}
             {isOwner && (
               <OwnerActions
                 listingId={listing.id}
                 status={listing.status}
+                rent={rent}
                 featureSlots={featured ? 0 : (quota?.featuredRemaining ?? 0)}
                 featureDays={SELF_FEATURE_DAYS}
                 canUpgrade={!featured && !!quota && quota.plan !== "showroom"}
@@ -421,6 +455,7 @@ export default async function ListingPage({ params }: PageProps<"/[lang]/listing
           <div className="mx-auto flex w-full max-w-6xl items-center gap-2.5 px-4 py-3 sm:px-6">
             <p className="me-auto min-w-0 truncate text-base font-bold text-brand">
               <RiyalPrice amount={listing.price} />
+              {rent && <span className="ms-1.5 text-[0.5em] font-medium opacity-75">{t.rentals.perDay}</span>}
             </p>
             {seller && (
               <ContactButtons sellerId={seller.id} listingId={listing.id} whatsappText={whatsappText} variant="bar" />

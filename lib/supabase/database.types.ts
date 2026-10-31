@@ -108,6 +108,12 @@ export type Database = {
           first_published_at: string | null;
           created_at: string;
           updated_at: string;
+          listing_type: "sale" | "rent";
+          weekly_price: number | null;
+          monthly_price: number | null;
+          min_rental_days: number | null;
+          deposit: number | null;
+          daily_km_limit: number | null;
           search_vector: unknown;
         };
         Insert: {
@@ -133,6 +139,12 @@ export type Database = {
           first_published_at?: string | null;
           created_at?: string;
           updated_at?: string;
+          listing_type?: "sale" | "rent";
+          weekly_price?: number | null;
+          monthly_price?: number | null;
+          min_rental_days?: number | null;
+          deposit?: number | null;
+          daily_km_limit?: number | null;
           search_vector?: unknown;
         };
         Update: {
@@ -158,6 +170,12 @@ export type Database = {
           first_published_at?: string | null;
           created_at?: string;
           updated_at?: string;
+          listing_type?: "sale" | "rent";
+          weekly_price?: number | null;
+          monthly_price?: number | null;
+          min_rental_days?: number | null;
+          deposit?: number | null;
+          daily_km_limit?: number | null;
           search_vector?: unknown;
         };
         Relationships: [
@@ -652,6 +670,76 @@ export type Database = {
           },
         ];
       };
+      rental_requests: {
+        Row: {
+          id: string;
+          listing_id: string;
+          renter_id: string;
+          owner_id: string;
+          start_date: string;
+          end_date: string;
+          days: number;
+          quoted_total: number;
+          note: string | null;
+          status: "pending" | "accepted" | "declined" | "cancelled" | "expired";
+          responded_at: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          listing_id: string;
+          renter_id: string;
+          owner_id: string;
+          start_date: string;
+          end_date: string;
+          days: number;
+          quoted_total: number;
+          note?: string | null;
+          status?: "pending" | "accepted" | "declined" | "cancelled" | "expired";
+          responded_at?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          listing_id?: string;
+          renter_id?: string;
+          owner_id?: string;
+          start_date?: string;
+          end_date?: string;
+          days?: number;
+          quoted_total?: number;
+          note?: string | null;
+          status?: "pending" | "accepted" | "declined" | "cancelled" | "expired";
+          responded_at?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "rental_requests_listing_id_fkey";
+            columns: ["listing_id"];
+            isOneToOne: false;
+            referencedRelation: "listings";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "rental_requests_renter_id_fkey";
+            columns: ["renter_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "rental_requests_owner_id_fkey";
+            columns: ["owner_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       listing_reports: {
         Row: {
           id: string;
@@ -1015,6 +1103,30 @@ export type Database = {
       request_addon: {
         Args: { p_kind: "featured_boost" | "extra_listings"; p_listing_id: string | null; p_quantity: number };
         Returns: string;
+      };
+      request_rental: {
+        Args: { p_listing_id: string; p_start: string; p_end: string; p_note: string | null };
+        Returns: string;
+      };
+      owner_respond_rental: {
+        Args: { p_request_id: string; p_action: "accept" | "decline" };
+        Returns: undefined;
+      };
+      renter_cancel_rental: {
+        Args: { p_request_id: string };
+        Returns: undefined;
+      };
+      rental_contact: {
+        Args: { p_request_id: string };
+        Returns: { full_name: string | null; phone: string | null }[];
+      };
+      rental_booked_ranges: {
+        Args: { p_listing_id: string };
+        Returns: { start_date: string; end_date: string }[];
+      };
+      rental_quote: {
+        Args: { p_daily: number; p_weekly: number | null; p_monthly: number | null; p_days: number };
+        Returns: number;
       };
       make_offer: {
         Args: { p_listing_id: string; p_amount: number; p_note: string | null };

@@ -7,6 +7,7 @@ import { count, fmt } from "@/lib/dictionary";
 import { formatDay } from "@/lib/format";
 import { getDictionary } from "@/lib/i18n-server";
 import { countOffersAwaitingMe } from "@/lib/offers";
+import { countRentalRequestsAwaitingMe } from "@/lib/rentals";
 import { getListingQuota, hasInsights, isDealerPlan, isPlanExpiringSoon } from "@/lib/plans";
 import { publicUrl } from "@/lib/r2";
 import { noIndex } from "@/lib/seo";
@@ -23,8 +24,9 @@ export default async function SellerCenterLayout({ children }: LayoutProps<"/[la
   const { user, profile } = current;
   const { t, locale } = await getDictionary();
   const s = t.sellerCenter;
-  const [offersWaiting, pendingAddons, quota] = await Promise.all([
+  const [offersWaiting, bookingsWaiting, pendingAddons, quota] = await Promise.all([
     countOffersAwaitingMe(user.id),
+    countRentalRequestsAwaitingMe(user.id),
     getMyPendingAddons(),
     getListingQuota(),
   ]);
@@ -37,6 +39,7 @@ export default async function SellerCenterLayout({ children }: LayoutProps<"/[la
     { href: "/dashboard/insights", label: s.sections.insights, locked: !hasInsights(profile.plan) },
     // Offers renders its own heading.
     { href: "/dashboard/offers", label: s.sections.offers, count: offersWaiting },
+    { href: "/dashboard/bookings", label: t.rentals.inboxTitle, count: bookingsWaiting },
     { href: "/dashboard/listings/import", label: s.sections.import, locked: !dealer },
     { href: "/dashboard/storefront", label: s.sections.storefront, locked: !dealer },
     { href: "/dashboard/plan", label: s.sections.plan, description: s.descriptions.plan },
@@ -45,6 +48,9 @@ export default async function SellerCenterLayout({ children }: LayoutProps<"/[la
   const alerts: SellerAlert[] = [];
   if (offersWaiting) {
     alerts.push({ kind: "offers", href: "/dashboard/offers", label: count(locale, offersWaiting, s.notifications.offers) });
+  }
+  if (bookingsWaiting) {
+    alerts.push({ kind: "bookings", href: "/dashboard/bookings", label: count(locale, bookingsWaiting, s.notifications.bookings) });
   }
   if (pendingAddons.length) {
     alerts.push({ kind: "addons", href: "/dashboard/plan", label: count(locale, pendingAddons.length, s.notifications.addons) });
@@ -67,6 +73,7 @@ export default async function SellerCenterLayout({ children }: LayoutProps<"/[la
   };
   const accountLinks: HeaderLink[] = [
     { href: "/offers", label: t.nav.offers, hint: t.nav.hints.offers, icon: "offers" },
+    { href: "/bookings", label: t.nav.bookings, hint: t.nav.hints.bookings, icon: "bookings" },
     { href: "/favorites", label: t.nav.savedCars, hint: t.nav.hints.savedCars, icon: "saved" },
     { href: "/saved-searches", label: t.nav.savedSearches, hint: t.nav.hints.savedSearches, icon: "searches" },
     ...(profile.is_admin

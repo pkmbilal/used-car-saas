@@ -69,6 +69,15 @@ function hrefWithout(filters: ListingFilters, without: Partial<ListingFilters>):
   return `${href}${href.includes("?") ? "&" : "?"}sort=${filters.sort}`;
 }
 
+// Drops every filter but keeps the sale/rent tab and the sort.
+function clearAllHref(filters: ListingFilters): string {
+  const query = new URLSearchParams();
+  if (filters.type === "rent") query.set("type", "rent");
+  if (filters.sort !== "newest") query.set("sort", filters.sort);
+  const search = query.toString();
+  return search ? `/listings?${search}` : "/listings";
+}
+
 export async function ActiveFilters({ filters }: { filters: ListingFilters }) {
   const { t, locale } = await getDictionary();
   const chips = chipsFor(filters, t, locale);
@@ -88,7 +97,7 @@ export async function ActiveFilters({ filters }: { filters: ListingFilters }) {
         </Link>
       ))}
       <Link
-        href={filters.sort === "newest" ? "/listings" : `/listings?sort=${filters.sort}`}
+        href={clearAllHref(filters)}
         className="px-1 text-caption font-semibold text-brand hover:underline"
       >
         {t.listings.clearAll}

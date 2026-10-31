@@ -9,11 +9,12 @@ const styles: Record<ListingStatus, string> = {
 };
 
 // Also used by the admin panel, which gets the English labels.
-export async function StatusBadge({ status }: { status: ListingStatus }) {
+// Rentals use "sold" for "not available right now".
+export async function StatusBadge({ status, rent = false }: { status: ListingStatus; rent?: boolean }) {
   const { t } = await getDictionary();
   return (
     <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${styles[status]}`}>
-      {t.dashboard.status[status]}
+      {rent && status === "sold" ? t.rentals.unavailable : t.dashboard.status[status]}
     </span>
   );
 }

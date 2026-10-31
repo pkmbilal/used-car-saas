@@ -42,6 +42,8 @@ import {
 type Props = {
   listingId: string;
   status: ListingStatus;
+  // Rentals say "unavailable" where sales say "sold".
+  rent?: boolean;
   showEdit?: boolean;
   // Featured slots left this month; the button shows when this is above 0.
   featureSlots?: number;
@@ -99,6 +101,7 @@ const inlineTones: Record<keyof typeof tones, string> = {
 export function ListingActions({
   listingId,
   status,
+  rent = false,
   showEdit = false,
   featureSlots = 0,
   featureDays,
@@ -128,7 +131,8 @@ export function ListingActions({
     row ? <span className="truncate max-sm:sr-only">{text}</span> : text;
   const tip = (text: string) => (card ? undefined : text);
   const featureLabel = fmt(a.feature, { days: featureDays ?? "", slots: featureSlots });
-  const publishLabel = status === "sold" ? a.relist : a.publish;
+  const publishLabel = status === "sold" ? (rent ? t.rentals.relist : a.relist) : a.publish;
+  const markSoldLabel = rent ? t.rentals.markUnavailable : a.markSold;
 
   function run(action: () => Promise<ActionResult>, refresh = false) {
     setError(undefined);
@@ -161,12 +165,12 @@ export function ListingActions({
     <button
       type="button"
       disabled={pending}
-      title={card || row ? a.markSold : undefined}
+      title={card || row ? markSoldLabel : undefined}
       className={cls("markSold")}
       onClick={() => run(() => setListingStatus(listingId, "sold"))}
     >
       {icon(CircleCheck)}
-      {card ? <span className="sr-only">{a.markSold}</span> : label(a.markSold)}
+      {card ? <span className="sr-only">{markSoldLabel}</span> : label(markSoldLabel)}
     </button>
   );
 

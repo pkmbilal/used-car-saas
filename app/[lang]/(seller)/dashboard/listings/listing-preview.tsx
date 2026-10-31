@@ -76,7 +76,7 @@ function Skeleton({ className }: { className: string }) {
 
 // A client-side copy of components/listing-card.tsx (a server component), fed
 // from the form as the seller types.
-export function ListingPreview({ data, cover }: { data: PreviewData; cover?: string }) {
+export function ListingPreview({ data, cover, rent = false }: { data: PreviewData; cover?: string; rent?: boolean }) {
   const { t, locale } = useDictionary();
   const f = t.dashboard.form;
   const year = positive(data.year);
@@ -131,6 +131,7 @@ export function ListingPreview({ data, cover }: { data: PreviewData; cover?: str
                 />
                 <span className="sr-only">{t.common.sarSr}</span>
                 {formatAmount(price)}
+                {rent && <span className="ms-1 text-xs font-medium text-muted-foreground">{t.rentals.perDay}</span>}
               </span>
             ) : (
               <Skeleton className="h-4 w-20" />

@@ -1,7 +1,7 @@
 "use client";
 
 import { useActionState, useState } from "react";
-import { AlertCircle, Check, CheckCircle2, Loader2 } from "lucide-react";
+import { AlertCircle, CalendarClock, Check, CheckCircle2, Loader2, Tag } from "lucide-react";
 import { useDictionary } from "@/components/i18n-provider";
 import { CITIES } from "@/lib/cities";
 import { cityName, fmt, optionLabel, translateMessage } from "@/lib/dictionary";
@@ -13,15 +13,18 @@ import {
   MAX_COLOR_LENGTH,
   MAX_DESCRIPTION_LENGTH,
   TRANSMISSIONS,
+  type ListingType,
 } from "@/lib/listing-options";
-import type { ListingInput } from "@/lib/listings";
+import type { ListingInput, RentalInput } from "@/lib/listings";
 import type { ListingFormState } from "./actions";
 import { Field, inputClass, Section, selectClass } from "./form-fields";
 import { ListingPreview, previewFromForm, previewFromListing } from "./listing-preview";
 import { MakeModelFields } from "./make-model-fields";
 
 type Props = {
-  listing?: ListingInput;
+  listing?: ListingInput & Partial<RentalInput>;
+  // For new listings: preselects Sell or Rent (e.g. from ?type=rent).
+  defaultType?: ListingType;
   // The first photo, for the preview. New listings have none yet.
   cover?: string;
   action: (prev: ListingFormState, formData: FormData) => Promise<ListingFormState>;
@@ -64,12 +67,15 @@ function RiyalSymbol() {
   );
 }
 
-export function ListingForm({ listing, cover, action, submitLabel }: Props) {
+export function ListingForm({ listing, cover, action, submitLabel, defaultType = "sale" }: Props) {
   const [state, formAction, pending] = useActionState(action, {});
   const [preview, setPreview] = useState(() => previewFromListing(listing));
+  const [listingType, setListingType] = useState<ListingType>(listing?.listing_type ?? defaultType);
   const { t } = useDictionary();
   const f = t.dashboard.form;
   const s = f.sections;
+  const r = t.rentals;
+  const isRent = listingType === "rent";
   const maxYear = new Date().getFullYear() + 1;
 
   return (
@@ -85,6 +91,43 @@ export function ListingForm({ listing, cover, action, submitLabel }: Props) {
         }}
         className="flex flex-col gap-5"
       >
+        <fieldset className="rounded-2xl border border-line bg-white p-5 shadow-[0_2px_10px_rgba(20,30,25,.05)] sm:p-6 dark:border-zinc-800 dark:bg-zinc-950">
+          <legend className="sr-only">{r.typeTitle}</legend>
+          <p className="font-semibold tracking-tight" aria-hidden>
+            {r.typeTitle}
+          </p>
+          <p className="text-sm text-zinc-500 dark:text-zinc-400">{r.typeSubtitle}</p>
+          <div className="mt-4 grid gap-3 sm:grid-cols-2">
+            {(
+              [
+                { value: "sale", label: r.sellOption, hint: r.sellHint, Icon: Tag },
+                { value: "rent", label: r.rentOption, hint: r.rentHint, Icon: CalendarClock },
+              ] as const
+            ).map(({ value, label, hint, Icon }) => (
+              <label
+                key={value}
+                className="flex cursor-pointer items-center gap-3 rounded-xl border border-line bg-white px-4 py-3 shadow-sm transition select-none hover:border-forest/30 has-[:checked]:border-brand has-[:checked]:bg-forest/5 has-[:focus-visible]:ring-4 has-[:focus-visible]:ring-brand/20 dark:border-zinc-700 dark:bg-zinc-900 dark:has-[:checked]:border-lime dark:has-[:checked]:bg-lime/10"
+              >
+                <input
+                  type="radio"
+                  name="listing_type"
+                  value={value}
+                  checked={listingType === value}
+                  onChange={() => setListingType(value)}
+                  className="sr-only"
+                />
+                <span className="grid size-9 shrink-0 place-items-center rounded-full bg-mint text-forest dark:bg-zinc-800 dark:text-lime">
+                  <Icon className="size-4.5" aria-hidden />
+                </span>
+                <span className="flex flex-col">
+                  <span className="text-sm font-semibold">{label}</span>
+                  <span className="text-xs text-zinc-500 dark:text-zinc-400">{hint}</span>
+                </span>
+              </label>
+            ))}
+          </div>
+        </fieldset>
+
         <Section step={1} title={s.car.title} subtitle={s.car.subtitle}>
           <MakeModelFields make={listing?.make} model={listing?.model} />
           <Field id="year" label={f.year}>
@@ -164,7 +207,7 @@ export function ListingForm({ listing, cover, action, submitLabel }: Props) {
         </Section>
 
         <Section step={3} title={s.price.title} subtitle={s.price.subtitle}>
-          <Field id="price" label={f.price} suffix={<RiyalSymbol />}>
+          <Field id="price" label={isRent ? r.dailyRate : f.price} suffix={<RiyalSymbol />}>
             <input
               id="price"
               name="price"
@@ -185,9 +228,76 @@ export function ListingForm({ listing, cover, action, submitLabel }: Props) {
               format={(city) => cityName(t, city)}
             />
           </Field>
+          {isRent && (
+            <>
+              <Field id="weekly_price" label={r.weeklyRate} hint={r.weeklyHint} suffix={<RiyalSymbol />}>
+                <input
+                  id="weekly_price"
+                  name="weekly_price"
+                  type="number"
+                  inputMode="numeric"
+                  min={1}
+                  defaultValue={listing?.weekly_price ?? undefined}
+                  className={`${inputClass} pe-12`}
+                />
+              </Field>
+              <Field id="monthly_price" label={r.monthlyRate} hint={r.monthlyHint} suffix={<RiyalSymbol />}>
+                <input
+                  id="monthly_price"
+                  name="monthly_price"
+                  type="number"
+                  inputMode="numeric"
+                  min={1}
+                  defaultValue={listing?.monthly_price ?? undefined}
+                  className={`${inputClass} pe-12`}
+                />
+              </Field>
+            </>
+          )}
         </Section>
 
-        <Section step={4} title={s.details.title} subtitle={s.details.subtitle}>
+        {isRent && (
+          <Section step={4} title={r.termsTitle} subtitle={r.termsSubtitle}>
+            <Field id="min_rental_days" label={r.minDays}>
+              <input
+                id="min_rental_days"
+                name="min_rental_days"
+                type="number"
+                inputMode="numeric"
+                required
+                min={1}
+                max={90}
+                defaultValue={listing?.min_rental_days ?? 1}
+                className={inputClass}
+              />
+            </Field>
+            <Field id="deposit" label={r.deposit} suffix={<RiyalSymbol />}>
+              <input
+                id="deposit"
+                name="deposit"
+                type="number"
+                inputMode="numeric"
+                min={0}
+                defaultValue={listing?.deposit ?? undefined}
+                className={`${inputClass} pe-12`}
+              />
+            </Field>
+            <Field id="daily_km_limit" label={r.kmLimit} hint={r.kmLimitHint} suffix={f.km}>
+              <input
+                id="daily_km_limit"
+                name="daily_km_limit"
+                type="number"
+                inputMode="numeric"
+                min={1}
+                max={10000}
+                defaultValue={listing?.daily_km_limit ?? undefined}
+                className={`${inputClass} pe-12`}
+              />
+            </Field>
+          </Section>
+        )}
+
+        <Section step={isRent ? 5 : 4} title={s.details.title} subtitle={s.details.subtitle}>
           <div className="sm:col-span-2">
             <Field
               id="description"
@@ -261,7 +371,7 @@ export function ListingForm({ listing, cover, action, submitLabel }: Props) {
       </form>
 
       <aside className="hidden lg:sticky lg:top-24 lg:block">
-        <ListingPreview data={preview} cover={cover} />
+        <ListingPreview data={preview} cover={cover} rent={isRent} />
       </aside>
     </div>
   );

@@ -46,9 +46,10 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function Home() {
   const { t, locale } = await getDictionary();
-  const [featured, latest, facets, favoriteIds, byCity] = await Promise.all([
+  const [featured, latest, rentals, facets, favoriteIds, byCity] = await Promise.all([
     getFeaturedListings(parseListingFilters({}), 4),
     getLatestListings(4),
+    getLatestListings(4, "rent"),
     getActiveFacetCounts(),
     getViewerFavoriteIds(),
     // Runs while the queries above are in flight.
@@ -153,6 +154,20 @@ export default async function Home() {
           </div>
         </div>
       </section>
+
+      {/* Cars for rent: hidden until there are some. */}
+      {rentals.length > 0 && (
+        <section className={sectionClass}>
+          <SectionHeading
+            eyebrow={t.rentals.forRent}
+            title={t.rentals.homeTitle}
+            link={{ href: "/listings?type=rent", label: t.rentals.viewAll }}
+          />
+          <div className="mt-6 sm:mt-8">
+            <ListingGrid listings={rentals} favoriteIds={favoriteIds} />
+          </div>
+        </section>
+      )}
 
       {/* Cars near you */}
       {cityNames.length > 0 && (

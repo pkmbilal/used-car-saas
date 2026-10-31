@@ -8,7 +8,7 @@ import { Card } from "@/components/ui/card";
 import { carName } from "@/lib/car-names";
 import { formatKm } from "@/lib/format";
 import { getDictionary } from "@/lib/i18n-server";
-import { isFeatured, type ListingWithImages } from "@/lib/listings";
+import { isFeatured, isRental, type ListingWithImages } from "@/lib/listings";
 import { cityName, optionLabel } from "@/lib/dictionary";
 
 type CardProps = {
@@ -61,10 +61,15 @@ export async function ListingCard({ listing, favorited, sizes }: CardProps) {
                 )}
               </div>
             )}
-            {isFeatured(listing) && (
-              <Badge className="absolute top-3 start-3 bg-lime text-caption font-semibold text-on-lime">
-                {t.common.featured}
-              </Badge>
+            {(isFeatured(listing) || isRental(listing)) && (
+              <div className="absolute top-3 start-3 flex gap-1.5">
+                {isFeatured(listing) && (
+                  <Badge className="bg-lime text-caption font-semibold text-on-lime">{t.common.featured}</Badge>
+                )}
+                {isRental(listing) && (
+                  <Badge className="bg-brand text-caption font-semibold text-white">{t.rentals.rentBadge}</Badge>
+                )}
+              </div>
             )}
           </div>
           <div className="flex flex-1 flex-col px-4 pt-3.5 pb-4">
@@ -84,6 +89,9 @@ export async function ListingCard({ listing, favorited, sizes }: CardProps) {
             </p>
             <p className="mt-3 text-base font-bold sm:text-[0.9375rem] text-brand">
               <RiyalPrice amount={listing.price} />
+              {isRental(listing) && (
+                <span className="ms-1 text-caption font-medium text-muted-foreground">{t.rentals.perDay}</span>
+              )}
             </p>
             <div className="mt-auto flex items-center gap-4 pt-3 text-caption text-muted-foreground">
               {listing.body_type && (

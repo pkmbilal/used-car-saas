@@ -25,6 +25,7 @@ import {
   listingsHref,
   MAX_SAVED_SEARCH_NAME,
 } from "@/lib/saved-searches";
+import type { ListingType } from "@/lib/listing-options";
 import { pageMetadata } from "@/lib/seo";
 import { ActiveFilters } from "./active-filters";
 import { Filters } from "./filters";
@@ -34,10 +35,11 @@ import { SortSelect } from "./sort-select";
 export async function generateMetadata({ searchParams }: PageProps<"/[lang]/listings">): Promise<Metadata> {
   const { t } = await getDictionary();
   const filters = parseListingFilters(await searchParams);
+  const rent = filters.type === "rent";
   return pageMetadata({
-    title: t.listings.metaTitle,
-    description: t.listings.metaDescription,
-    path: "/listings",
+    title: rent ? t.rentals.metaTitle : t.listings.metaTitle,
+    description: rent ? t.rentals.metaDescription : t.listings.metaDescription,
+    path: rent ? "/listings?type=rent" : "/listings",
     // Filtered results all canonicalize to the plain list; only its pages stand alone.
     page: hasActiveFilters(filters) ? 1 : filters.page,
   });
@@ -47,6 +49,7 @@ export default async function ListingsPage({ searchParams }: PageProps<"/[lang]/
   const params = await searchParams;
   const { t, locale } = await getDictionary();
   const filters = parseListingFilters(params);
+  const rent = filters.type === "rent";
   const [{ listings, total }, featured, favoriteIds, current, facets] = await Promise.all([
     searchListings(filters),
     filters.page === 1 ? getFeaturedListings(filters, 3) : [],
@@ -88,13 +91,25 @@ export default async function ListingsPage({ searchParams }: PageProps<"/[lang]/
       <section className="relative overflow-hidden bg-charcoal">
         <div className="absolute inset-y-0 end-0 w-2/3 bg-[radial-gradient(ellipse_at_70%_60%,rgba(111,224,124,.16),transparent_60%)] rtl:bg-[radial-gradient(ellipse_at_30%_60%,rgba(111,224,124,.16),transparent_60%)]" />
         <div className="relative mx-auto w-full max-w-6xl px-4 pt-10 pb-20 sm:px-6">
-          <p className="text-eyebrow font-bold tracking-[0.24em] text-[#5fd06e]">{t.listings.eyebrow}</p>
-          <h1 className="mt-2.5 max-w-md text-3xl leading-tight font-medium tracking-tight text-white md:text-4xl">
-            {t.listings.titleStart} <span className="text-lime">{t.listings.titleHighlight}</span> {t.listings.titleEnd}
-          </h1>
-          <p className="mt-3.5 max-w-sm text-label leading-relaxed text-white/85">
-            {t.listings.intro}
-          </p>
+          <TypeTabs active={filters.type} buyLabel={t.rentals.buyTab} rentLabel={t.rentals.rentTab} />
+          {rent ? (
+            <>
+              <h1 className="mt-4 max-w-md text-3xl leading-tight font-medium tracking-tight text-white md:text-4xl">
+                <span className="text-lime">{t.rentals.browseTitle}</span>
+              </h1>
+              <p className="mt-3.5 max-w-sm text-label leading-relaxed text-white/85">{t.rentals.browseIntro}</p>
+            </>
+          ) : (
+            <>
+              <p className="mt-4 text-eyebrow font-bold tracking-[0.24em] text-[#5fd06e]">{t.listings.eyebrow}</p>
+              <h1 className="mt-2.5 max-w-md text-3xl leading-tight font-medium tracking-tight text-white md:text-4xl">
+                {t.listings.titleStart} <span className="text-lime">{t.listings.titleHighlight}</span> {t.listings.titleEnd}
+              </h1>
+              <p className="mt-3.5 max-w-sm text-label leading-relaxed text-white/85">
+                {t.listings.intro}
+              </p>
+            </>
+          )}
         </div>
       </section>
 
@@ -113,7 +128,7 @@ export default async function ListingsPage({ searchParams }: PageProps<"/[lang]/
         <section>
           <div className="flex flex-wrap items-center justify-between gap-3">
             <p className="text-label font-semibold">
-              {count(locale, total, t.listings.found)}
+              {count(locale, total, rent ? t.rentals.found : t.listings.found)}
               {filters.q && <span className="font-normal text-muted-foreground">{fmt(t.listings.matching, { q: filters.q })}</span>}
             </p>
             <div className="flex flex-wrap items-center gap-3">
@@ -137,11 +152,11 @@ export default async function ListingsPage({ searchParams }: PageProps<"/[lang]/
               <SearchX className="size-8 text-brand-600" strokeWidth={1.6} />
               <p className="mt-1 text-sm font-semibold">{t.listings.noMatchTitle}</p>
               <p className="max-w-sm text-xs text-muted-foreground">
-                {filtered ? t.listings.noMatchFiltered : t.listings.noMatchEmpty}
+                {filtered ? t.listings.noMatchFiltered : rent ? t.rentals.noMatchEmpty : t.listings.noMatchEmpty}
               </p>
               {filtered && (
                 <Button asChild size="sm" className="mt-3 text-xs max-sm:text-sm font-semibold">
-                  <Link href="/listings">{t.listings.clearAllFilters}</Link>
+                  <Link href={rent ? "/listings?type=rent" : "/listings"}>{t.listings.clearAllFilters}</Link>
                 </Button>
               )}
             </Card>
@@ -164,5 +179,30 @@ export default async function ListingsPage({ searchParams }: PageProps<"/[lang]/
         </section>
       </div>
     </main>
+  );
+}
+
+// Buy | Rent switch. Switching drops the other tab's filters, since prices
+// mean different things on each.
+function TypeTabs({ active, buyLabel, rentLabel }: { active: ListingType; buyLabel: string; rentLabel: string }) {
+  const tabs = [
+    { type: "sale", label: buyLabel, href: "/listings" },
+    { type: "rent", label: rentLabel, href: "/listings?type=rent" },
+  ] as const;
+  return (
+    <nav className="inline-flex rounded-full bg-white/10 p-1 ring-1 ring-white/15">
+      {tabs.map((tab) => (
+        <Link
+          key={tab.type}
+          href={tab.href}
+          aria-current={tab.type === active ? "page" : undefined}
+          className={`rounded-full px-5 py-1.5 text-sm font-semibold transition ${
+            tab.type === active ? "bg-lime text-on-lime" : "text-white/80 hover:text-white"
+          }`}
+        >
+          {tab.label}
+        </Link>
+      ))}
+    </nav>
   );
 }

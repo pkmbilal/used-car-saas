@@ -7,8 +7,10 @@ type ListingRow = Database["public"]["Tables"]["listings"]["Row"];
 export const CONDITIONS = ["excellent", "good", "fair"] as const satisfies readonly ListingRow["condition"][];
 export const FUEL_TYPES = ["petrol", "diesel", "hybrid", "electric"] as const satisfies readonly ListingRow["fuel_type"][];
 export const TRANSMISSIONS = ["automatic", "manual"] as const satisfies readonly NonNullable<ListingRow["transmission"]>[];
+export const LISTING_TYPES = ["sale", "rent"] as const satisfies readonly ListingRow["listing_type"][];
 export const BODY_TYPES = ["sedan", "suv", "hatchback", "coupe", "pickup", "van"] as const satisfies readonly NonNullable<ListingRow["body_type"]>[];
 
+export type ListingType = (typeof LISTING_TYPES)[number];
 export type Condition = (typeof CONDITIONS)[number];
 export type FuelType = (typeof FUEL_TYPES)[number];
 export type Transmission = (typeof TRANSMISSIONS)[number];

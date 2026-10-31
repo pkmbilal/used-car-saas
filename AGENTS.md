@@ -113,6 +113,10 @@ Goal: turn traffic into revenue.
 - Dealer accounts: bulk upload (CSV import), dealer storefront page
 - Payment integration: Moyasar/Tap/PayTabs (Mada, STC Pay support)
 - Subscription billing for dealer plans
+- Car rentals (added on request): `listings.listing_type` is `sale` or `rent`
+  (`price` is the daily rate for rentals). Renters send date requests
+  (`rental_requests`); owners accept/decline; WhatsApp is shared on accept.
+  No in-app payment. Browse via `/listings?type=rent`.
 
 ### Phase 4 — Trust Infrastructure (differentiators)
 Goal: solve the real pain point of buying used cars in KSA.
