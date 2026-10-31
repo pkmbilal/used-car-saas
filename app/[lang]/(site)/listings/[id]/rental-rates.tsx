@@ -6,7 +6,7 @@ import { getDictionary } from "@/lib/i18n-server";
 import type { Listing } from "@/lib/listings";
 
 type Props = {
-  listing: Pick<Listing, "price" | "weekly_price" | "monthly_price" | "min_rental_days" | "deposit" | "daily_km_limit">;
+  listing: Pick<Listing, "price" | "weekly_price" | "monthly_price" | "min_rental_days" | "deposit" | "daily_km_limit" | "category">;
 };
 
 // Daily / weekly / monthly rates and the rental terms, on a rental listing's page.
@@ -25,14 +25,15 @@ export async function RentalRates({ listing }: Props) {
       Icon: ShieldCheck,
       text: deposit ? fmt(r.depositValue, { amount: formatSAR(deposit, locale) }) : r.noDeposit,
     },
-    {
+    // Equipment has no km limit.
+    listing.category === "car" && {
       Icon: Gauge,
       text:
         listing.daily_km_limit === null
           ? r.unlimitedKm
           : fmt(r.kmLimitValue, { km: formatKm(listing.daily_km_limit, locale) }),
     },
-  ];
+  ].filter((term) => term !== false);
 
   return (
     <section>

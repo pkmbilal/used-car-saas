@@ -95,6 +95,8 @@ export type RentalRequestListing = {
   year: number;
   price: number;
   status: string;
+  category: string;
+  equipment_type: string | null;
   imageKey: string | null;
 };
 
@@ -113,7 +115,8 @@ export type RentalRequest = {
   otherName: string | null;
 };
 
-const LISTING_FIELDS = "id, make, model, year, price, status, listing_images(r2_key, position)";
+const LISTING_FIELDS =
+  "id, make, model, year, price, status, category, equipment_type, listing_images(r2_key, position)";
 
 type RequestQueryRow = RequestRow & {
   listing: {
@@ -123,6 +126,8 @@ type RequestQueryRow = RequestRow & {
     year: number;
     price: number;
     status: string;
+    category: string;
+    equipment_type: string | null;
     listing_images: { r2_key: string; position: number }[];
   } | null;
   other: { full_name: string | null } | null;
@@ -147,6 +152,8 @@ function toRequest(row: RequestQueryRow): RentalRequest {
       year: row.listing.year,
       price: Number(row.listing.price),
       status: row.listing.status,
+      category: row.listing.category,
+      equipment_type: row.listing.equipment_type,
       imageKey: cover?.r2_key ?? null,
     },
     otherName: row.other?.full_name ?? null,

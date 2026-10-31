@@ -1,0 +1,321 @@
+- generic [active] [ref=f11e1]:
+  - banner [ref=f11e2]:
+    - navigation [ref=f11e3]:
+      - link [ref=f11e4] [cursor=pointer]:
+        - /url: /en
+        - img "KarSouq" [ref=f11e5]
+      - generic [ref=f11e6]:
+        - link "Buy Cars" [ref=f11e7] [cursor=pointer]:
+          - /url: /en/listings
+        - link "Rentals" [ref=f11e9] [cursor=pointer]:
+          - /url: /en/rentals
+        - link "Dealers" [ref=f11e10] [cursor=pointer]:
+          - /url: /en/dealers
+        - link "Pricing" [ref=f11e11] [cursor=pointer]:
+          - /url: /en/pricing
+        - link "Sell" [ref=f11e12] [cursor=pointer]:
+          - /url: /en/dashboard/listings/new
+      - generic [ref=f11e13]:
+        - link "العربية" [ref=f11e14] [cursor=pointer]:
+          - /url: /ar/listings/49b92fab-c94a-4de1-947f-308845acd0c8
+          - text: ع
+        - button "Account menu" [ref=f11e18] [cursor=pointer]:
+          - generic [aria-hidden] [ref=f11e20]: DU
+          - generic [ref=f11e22]:
+            - generic [ref=f11e23]: Demo User
+            - generic [ref=f11e24]: Seller · Pro
+  - main [ref=f11e28]:
+    - generic [ref=f11e32]:
+      - navigation "Breadcrumb" [ref=f11e33]:
+        - list [ref=f11e34]:
+          - listitem [ref=f11e35]:
+            - link "Cars for sale" [ref=f11e36] [cursor=pointer]:
+              - /url: /en/listings
+          - listitem [aria-hidden] [ref=f11e37]
+          - listitem [ref=f11e40]:
+            - link "Toyota" [ref=f11e41] [cursor=pointer]:
+              - /url: /en/brands/toyota
+          - listitem [aria-hidden] [ref=f11e42]
+          - listitem [ref=f11e45]:
+            - link "Camry" [ref=f11e46] [cursor=pointer]:
+              - /url: /en/listings?make=Toyota&model=Camry
+      - generic [ref=f11e47]:
+        - heading "2019 Toyota Camry" [level=1] [ref=f11e48]
+        - generic [ref=f11e49]: Featured
+      - paragraph [ref=f11e50]:
+        - generic [ref=f11e51]: "2019"
+        - generic [ref=f11e52]: ·
+        - generic [ref=f11e53]: 142,000 km
+        - generic [ref=f11e54]: ·
+        - generic [ref=f11e55]: Automatic
+        - generic [ref=f11e56]: ·
+        - generic [ref=f11e57]: Dammam
+      - paragraph [ref=f11e61]:
+        - generic [ref=f11e62]:
+          - generic [ref=f11e64]: SAR
+          - text: 58,000
+    - generic [ref=f11e65]:
+      - generic [ref=f11e66]:
+        - generic "Photo gallery, use arrow keys to browse" [ref=f11e67]:
+          - generic [ref=f11e68]:
+            - button "View fullscreen" [ref=f11e69]:
+              - img "2019 Toyota Camry, photo 1 of 4" [ref=f11e70]
+            - generic [ref=f11e71]: Featured
+            - button "View fullscreen" [ref=f11e72] [cursor=pointer]
+            - button "Previous photo" [ref=f11e73] [cursor=pointer]
+            - button "Next photo" [ref=f11e74] [cursor=pointer]
+            - generic: 1 / 4
+          - list [ref=f11e75]:
+            - listitem [ref=f11e76]:
+              - button "Show photo 1" [ref=f11e77] [cursor=pointer]
+            - listitem [ref=f11e78]:
+              - button "Show photo 2" [ref=f11e79] [cursor=pointer]
+            - listitem [ref=f11e80]:
+              - button "Show photo 3" [ref=f11e81] [cursor=pointer]
+            - listitem [ref=f11e82]:
+              - button "Show photo 4" [ref=f11e83] [cursor=pointer]
+        - generic [ref=f11e84]:
+          - heading "Overview" [level=2] [ref=f11e85]
+          - generic [ref=f11e86]:
+            - generic [ref=f11e92]:
+              - term [ref=f11e93]: Make
+              - definition [ref=f11e94]: Toyota
+            - generic [ref=f11e101]:
+              - term [ref=f11e102]: Model
+              - definition [ref=f11e103]: Camry
+            - generic [ref=f11e108]:
+              - term [ref=f11e109]: Year
+              - definition [ref=f11e110]: "2019"
+            - generic [ref=f11e116]:
+              - term [ref=f11e117]: Mileage
+              - definition [ref=f11e118]: 142,000 km
+            - generic [ref=f11e124]:
+              - term [ref=f11e125]: Avg. per Year
+              - definition [ref=f11e126]: 17,750 km / yr
+            - generic [ref=f11e132]:
+              - term [ref=f11e133]: Fuel Type
+              - definition [ref=f11e134]: Petrol
+            - generic [ref=f11e140]:
+              - term [ref=f11e141]: Condition
+              - definition [ref=f11e142]: Good
+            - generic [ref=f11e156]:
+              - term [ref=f11e157]: Transmission
+              - definition [ref=f11e158]: Automatic
+            - generic [ref=f11e165]:
+              - term [ref=f11e166]: Body Style
+              - definition [ref=f11e167]: Sedan
+            - generic [ref=f11e173]:
+              - term [ref=f11e174]: City
+              - definition [ref=f11e175]: Dammam
+            - generic [ref=f11e181]:
+              - term [ref=f11e182]: Listed
+              - definition [ref=f11e183]: October 2026
+        - generic [ref=f11e184]:
+          - heading "Features" [level=2] [ref=f11e185]
+          - list [ref=f11e186]:
+            - listitem [ref=f11e187]: Bluetooth
+            - listitem [ref=f11e191]: Rear Camera
+            - listitem [ref=f11e196]: Cruise Control
+      - complementary [ref=f11e201]:
+        - generic [ref=f11e202]:
+          - paragraph [ref=f11e203]:
+            - generic [ref=f11e204]:
+              - generic [ref=f11e206]: SAR
+              - text: 58,000
+          - paragraph [ref=f11e207]: Listed 4 weeks ago
+          - button "Show phone number" [ref=f11e212] [cursor=pointer]
+          - button "Make an offer" [ref=f11e214] [cursor=pointer]
+          - generic [ref=f11e215]:
+            - button "Save" [ref=f11e217] [cursor=pointer]
+            - button "Share" [ref=f11e218] [cursor=pointer]
+          - generic [ref=f11e221]:
+            - paragraph [ref=f11e222]: Mohammed Bilal
+            - generic [ref=f11e223]:
+              - generic [ref=f11e224]: Private seller
+              - generic [ref=f11e225]:
+                - generic "Identity checked by our team" [ref=f11e226]: ID verified
+                - generic [ref=f11e227]: Email verified
+          - generic [ref=f11e228]:
+            - paragraph [ref=f11e229]:
+              - generic [ref=f11e233]:
+                - text: Location
+                - link "Dammam, Saudi Arabia" [ref=f11e234] [cursor=pointer]:
+                  - /url: /en/locations/dammam
+            - paragraph [ref=f11e235]:
+              - generic [ref=f11e238]: Member sinceSeptember 2026
+          - link "View seller’s listings →" [ref=f11e239] [cursor=pointer]:
+            - /url: /en/sellers/b6996089-e12d-4f4b-97e6-2486908e6a3d
+        - generic [ref=f11e240]:
+          - heading "Stay safe when buying" [level=2] [ref=f11e241]
+          - list [ref=f11e244]:
+            - listitem [ref=f11e245]: Meet in a busy public place, in daylight.
+            - listitem [ref=f11e246]: Never pay a deposit or transfer money before you've seen the car.
+            - listitem [ref=f11e247]: Check the Istimara matches the seller's ID and the car's VIN.
+            - listitem [ref=f11e248]: Have the car inspected by a mechanic you trust.
+        - button "Report this listing" [ref=f11e250] [cursor=pointer]
+    - generic [ref=f11e251]:
+      - generic [ref=f11e252]:
+        - heading "Similar Cars You May Like" [level=2] [ref=f11e253]
+        - link "View All →" [ref=f11e254] [cursor=pointer]:
+          - /url: /en/listings?make=Toyota&model=Camry
+      - list [ref=f11e256]:
+        - listitem [ref=f11e257]:
+          - generic [ref=f11e258]:
+            - link "2023 Toyota Yaris Dealer Toyota Yaris 2023 110,000 km Automatic SAR 47,000 Sedan Petrol Jubail" [ref=f11e260] [cursor=pointer]:
+              - /url: /en/listings/98bdba56-f372-4f09-ae90-12e0ca26e51a
+              - generic [ref=f11e261]:
+                - img "2023 Toyota Yaris" [ref=f11e262]
+                - generic [ref=f11e263]: Dealer
+              - generic [ref=f11e265]:
+                - paragraph [ref=f11e266]: Toyota Yaris
+                - paragraph [ref=f11e267]:
+                  - generic [ref=f11e268]: "2023"
+                  - generic [aria-hidden] [ref=f11e269]: ·
+                  - generic [ref=f11e270]: 110,000 km
+                  - generic [aria-hidden] [ref=f11e271]: ·
+                  - generic [ref=f11e272]: Automatic
+                - paragraph [ref=f11e273]:
+                  - generic [ref=f11e274]:
+                    - generic [ref=f11e276]: SAR
+                    - text: 47,000
+                - generic [ref=f11e277]:
+                  - generic [ref=f11e278]: Sedan
+                  - generic [ref=f11e283]: Petrol
+                  - generic [ref=f11e287]: Jubail
+            - button "Save this car" [ref=f11e294] [cursor=pointer]
+        - listitem [ref=f11e295]:
+          - generic [ref=f11e296]:
+            - link "2018 Toyota Hilux Private seller ID verified Toyota Hilux 2018 210,000 km Manual SAR 62,000 Pickup Diesel Al Ahsa" [ref=f11e298] [cursor=pointer]:
+              - /url: /en/listings/f0c27368-5897-4515-9df3-cc3f23e23ff7
+              - generic [ref=f11e299]:
+                - img "2018 Toyota Hilux" [ref=f11e300]
+                - generic [ref=f11e301]:
+                  - generic [ref=f11e302]: Private seller
+                  - generic "Identity checked by our team" [ref=f11e303]: ID verified
+              - generic [ref=f11e304]:
+                - paragraph [ref=f11e305]: Toyota Hilux
+                - paragraph [ref=f11e306]:
+                  - generic [ref=f11e307]: "2018"
+                  - generic [aria-hidden] [ref=f11e308]: ·
+                  - generic [ref=f11e309]: 210,000 km
+                  - generic [aria-hidden] [ref=f11e310]: ·
+                  - generic [ref=f11e311]: Manual
+                - paragraph [ref=f11e312]:
+                  - generic [ref=f11e313]:
+                    - generic [ref=f11e315]: SAR
+                    - text: 62,000
+                - generic [ref=f11e316]:
+                  - generic [ref=f11e317]: Pickup
+                  - generic [ref=f11e322]: Diesel
+                  - generic [ref=f11e326]: Al Ahsa
+            - button "Save this car" [ref=f11e333] [cursor=pointer]
+        - listitem [ref=f11e334]:
+          - generic [ref=f11e335]:
+            - link "2022 Toyota Land Cruiser Dealer Toyota Land Cruiser 2022 45,000 km Automatic SAR 335,000 SUV Petrol Jubail" [ref=f11e337] [cursor=pointer]:
+              - /url: /en/listings/ea953000-8b7b-45d1-b13e-31ea447dca45
+              - generic [ref=f11e338]:
+                - img "2022 Toyota Land Cruiser" [ref=f11e339]
+                - generic [ref=f11e340]: Dealer
+              - generic [ref=f11e342]:
+                - paragraph [ref=f11e343]: Toyota Land Cruiser
+                - paragraph [ref=f11e344]:
+                  - generic [ref=f11e345]: "2022"
+                  - generic [aria-hidden] [ref=f11e346]: ·
+                  - generic [ref=f11e347]: 45,000 km
+                  - generic [aria-hidden] [ref=f11e348]: ·
+                  - generic [ref=f11e349]: Automatic
+                - paragraph [ref=f11e350]:
+                  - generic [ref=f11e351]:
+                    - generic [ref=f11e353]: SAR
+                    - text: 335,000
+                - generic [ref=f11e354]:
+                  - generic [ref=f11e355]: SUV
+                  - generic [ref=f11e360]: Petrol
+                  - generic [ref=f11e364]: Jubail
+            - button "Save this car" [ref=f11e371] [cursor=pointer]
+        - listitem [ref=f11e372]:
+          - generic [ref=f11e373]:
+            - link "2020 Hyundai Elantra Private seller ID verified Featured Hyundai Elantra 2020 98,000 km Automatic SAR 46,500 Sedan Petrol Khobar" [ref=f11e375] [cursor=pointer]:
+              - /url: /en/listings/be70b3c4-6ccd-4829-9e28-63e26407420d
+              - generic [ref=f11e376]:
+                - img "2020 Hyundai Elantra" [ref=f11e377]
+                - generic [ref=f11e378]:
+                  - generic [ref=f11e379]: Private seller
+                  - generic "Identity checked by our team" [ref=f11e380]: ID verified
+                - generic [ref=f11e381]: Featured
+              - generic [ref=f11e383]:
+                - paragraph [ref=f11e384]: Hyundai Elantra
+                - paragraph [ref=f11e385]:
+                  - generic [ref=f11e386]: "2020"
+                  - generic [aria-hidden] [ref=f11e387]: ·
+                  - generic [ref=f11e388]: 98,000 km
+                  - generic [aria-hidden] [ref=f11e389]: ·
+                  - generic [ref=f11e390]: Automatic
+                - paragraph [ref=f11e391]:
+                  - generic [ref=f11e392]:
+                    - generic [ref=f11e394]: SAR
+                    - text: 46,500
+                - generic [ref=f11e395]:
+                  - generic [ref=f11e396]: Sedan
+                  - generic [ref=f11e401]: Petrol
+                  - generic [ref=f11e405]: Khobar
+            - button "Save this car" [ref=f11e412] [cursor=pointer]
+  - contentinfo [ref=f11e413]:
+    - generic [ref=f11e414]:
+      - generic [ref=f11e415]:
+        - link [ref=f11e416] [cursor=pointer]:
+          - /url: /en
+          - img "KarSouq" [ref=f11e417]
+        - paragraph [ref=f11e418]: Saudi Arabia's marketplace for used cars. Buy and sell directly with sellers.
+      - generic [ref=f11e419]:
+        - paragraph [ref=f11e420]: BUY
+        - link "Browse Cars" [ref=f11e421] [cursor=pointer]:
+          - /url: /en/listings
+        - link "Saved Cars" [ref=f11e422] [cursor=pointer]:
+          - /url: /en/favorites
+        - link "Saved Searches" [ref=f11e423] [cursor=pointer]:
+          - /url: /en/saved-searches
+      - generic [ref=f11e424]:
+        - paragraph [ref=f11e425]: POPULAR MAKES
+        - link "Toyota" [ref=f11e426] [cursor=pointer]:
+          - /url: /en/brands/toyota
+        - link "Hyundai" [ref=f11e427] [cursor=pointer]:
+          - /url: /en/brands/hyundai
+        - link "Nissan" [ref=f11e428] [cursor=pointer]:
+          - /url: /en/brands/nissan
+        - link "Lexus" [ref=f11e429] [cursor=pointer]:
+          - /url: /en/brands/lexus
+      - generic [ref=f11e430]:
+        - paragraph [ref=f11e431]: CITIES
+        - link "Dammam" [ref=f11e432] [cursor=pointer]:
+          - /url: /en/locations/dammam
+        - link "Jubail" [ref=f11e433] [cursor=pointer]:
+          - /url: /en/locations/jubail
+        - link "Khobar" [ref=f11e434] [cursor=pointer]:
+          - /url: /en/locations/khobar
+        - link "Dhahran" [ref=f11e435] [cursor=pointer]:
+          - /url: /en/locations/dhahran
+        - link "All Cities" [ref=f11e436] [cursor=pointer]:
+          - /url: /en/locations
+      - generic [ref=f11e437]:
+        - paragraph [ref=f11e438]: SELL
+        - link "Sell Your Car" [ref=f11e439] [cursor=pointer]:
+          - /url: /en/account/become-seller
+        - link "Pricing" [ref=f11e440] [cursor=pointer]:
+          - /url: /en/pricing
+        - link "Seller Dashboard" [ref=f11e441] [cursor=pointer]:
+          - /url: /en/dashboard
+        - link "My Account" [ref=f11e442] [cursor=pointer]:
+          - /url: /en/account
+    - generic [ref=f11e444]:
+      - paragraph [ref=f11e445]: © 2026 KarSouq, a CodeSudio product. All rights reserved.
+      - navigation [ref=f11e446]:
+        - link "Contact" [ref=f11e447] [cursor=pointer]:
+          - /url: /en/contact
+        - link "Privacy Policy" [ref=f11e448] [cursor=pointer]:
+          - /url: /en/privacy
+        - link "Terms of Use" [ref=f11e449] [cursor=pointer]:
+          - /url: /en/terms
+  - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=f11e455] [cursor=pointer]
+  - alert [ref=f11e459]

@@ -1,12 +1,13 @@
 import Image from "next/image";
 import Link from "@/components/locale-link";
 import { FavoriteButton } from "@/components/favorite-button";
-import { ArrowRight, BadgeCheck, Car, Fuel, MapPin } from "lucide-react";
+import { ArrowRight, BadgeCheck, Car, Construction, Fuel, MapPin } from "lucide-react";
 import { RiyalPrice } from "@/components/riyal-price";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
-import { carName } from "@/lib/car-names";
-import { formatKm } from "@/lib/format";
+import { listingName } from "@/lib/car-names";
+import { equipmentTypeName } from "@/lib/equipment";
+import { formatHours, formatKm } from "@/lib/format";
 import { getDictionary } from "@/lib/i18n-server";
 import { isFeatured, isRental, type ListingWithImages } from "@/lib/listings";
 import { cityName, optionLabel } from "@/lib/dictionary";
@@ -33,7 +34,7 @@ export async function ListingCard({ listing, favorited, sizes }: CardProps) {
             {cover && (
               <Image
                 src={cover.url}
-                alt={carName(locale, listing.make, listing.model, listing.year)}
+                alt={listingName(locale, listing, listing.year)}
                 fill
                 sizes={
                   sizes ??
@@ -74,12 +75,28 @@ export async function ListingCard({ listing, favorited, sizes }: CardProps) {
           </div>
           <div className="flex flex-1 flex-col px-4 pt-3.5 pb-4">
             <p className="truncate text-sm font-semibold">
-              {carName(locale, listing.make, listing.model)}
+              {listingName(locale, listing)}
             </p>
             <p className="mt-2 flex flex-wrap gap-x-2 text-caption text-muted-foreground">
               <span>{listing.year}</span>
-              <span aria-hidden>·</span>
-              <span>{formatKm(listing.mileage, locale)}</span>
+              {listing.mileage !== null && (
+                <>
+                  <span aria-hidden>·</span>
+                  <span>{formatKm(listing.mileage, locale)}</span>
+                </>
+              )}
+              {listing.operating_hours !== null && (
+                <>
+                  <span aria-hidden>·</span>
+                  <span>{formatHours(listing.operating_hours, locale)}</span>
+                </>
+              )}
+              {listing.operator_included && (
+                <>
+                  <span aria-hidden>·</span>
+                  <span>{t.equipment.withOperator}</span>
+                </>
+              )}
               {listing.transmission && (
                 <>
                   <span aria-hidden>·</span>
@@ -94,6 +111,12 @@ export async function ListingCard({ listing, favorited, sizes }: CardProps) {
               )}
             </p>
             <div className="mt-auto flex items-center gap-4 pt-3 text-caption text-muted-foreground">
+              {listing.equipment_type && (
+                <span className="flex items-center gap-1.5">
+                  <Construction className="size-3.5 sm:size-3" />
+                  {equipmentTypeName(locale, listing.equipment_type)}
+                </span>
+              )}
               {listing.body_type && (
                 <span className="flex items-center gap-1.5">
                   <Car className="size-3.5 sm:size-3" />

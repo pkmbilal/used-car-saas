@@ -2,11 +2,13 @@ import "server-only";
 import { cache } from "react";
 import { arabicToStoredNames } from "@/lib/car-names";
 import { CITIES, isCity } from "@/lib/cities";
+import { EQUIPMENT_BRANDS, EQUIPMENT_TYPES, type EquipmentType } from "@/lib/equipment";
 import {
   BODY_TYPES,
   CONDITIONS,
   FEATURE_VALUES,
   FUEL_TYPES,
+  LISTING_CATEGORIES,
   LISTING_TYPES,
   MAX_COLOR_LENGTH,
   MAX_DESCRIPTION_LENGTH,
@@ -15,6 +17,7 @@ import {
   type Condition,
   type Feature,
   type FuelType,
+  type ListingCategory,
   type ListingType,
   type Transmission,
 } from "@/lib/listing-options";
@@ -45,6 +48,19 @@ export type ListingInput = Pick<
   | "color"
   | "description"
 >;
+
+// Equipment-only fields; null on cars (enforced by a DB check).
+export type EquipmentInput = Pick<
+  Listing,
+  "category" | "equipment_type" | "operating_hours" | "operator_included"
+>;
+
+const CAR_FIELDS: EquipmentInput = {
+  category: "car",
+  equipment_type: null,
+  operating_hours: null,
+  operator_included: null,
+};
 
 // Rental-only fields; all null on sale listings (enforced by a DB check).
 export type RentalInput = Pick<
@@ -82,6 +98,7 @@ export const LISTING_BOUNDS = {
   minYear: 1950,
   maxModelLength: 60,
   maxMileage: 2_000_000,
+  maxOperatingHours: 1_000_000,
   maxPrice: 100_000_000,
   maxColorLength: MAX_COLOR_LENGTH,
   maxDescriptionLength: MAX_DESCRIPTION_LENGTH,
@@ -235,13 +252,85 @@ export function parseRentalFields(
   };
 }
 
+// Equipment listings: `make` holds the brand; car-only specs stay empty.
+// Limits must match supabase/migrations/*_equipment_rentals.sql.
+export function parseEquipmentFields(
+  get: (field: string) => string | null,
+): { data: ListingInput & EquipmentInput } | { error: string } {
+  const equipmentType = matchOption(EQUIPMENT_TYPES, get("equipment_type"));
+  const brand = matchOption(EQUIPMENT_BRANDS, get("make"));
+  const model = (get("model") ?? "").trim();
+  const year = parseWholeNumber(get("year"));
+  const hours = optionalWholeNumber(get("operating_hours"));
+  const price = parseWholeNumber(get("price"));
+  const condition = matchOption(CONDITIONS, get("condition"));
+  const city = matchOption(CITIES, get("city"));
+  const fuelType = matchOption(FUEL_TYPES, get("fuel_type"));
+  const description = optionalText(get("description")?.replace(/\r\n/g, "\n") ?? null);
+  const maxYear = maxListingYear();
+  const { minYear, maxModelLength, maxOperatingHours, maxPrice, maxDescriptionLength } = LISTING_BOUNDS;
+
+  if (!equipmentType) return { error: "Choose the equipment type." };
+  if (!brand) return { error: "Choose the brand." };
+  if (model.length < 1 || model.length > maxModelLength) return { error: "Enter the model." };
+  if (year === null || year < minYear || year > maxYear) {
+    return { error: `Enter a year between ${minYear} and ${maxYear}.` };
+  }
+  if (hours === undefined || (hours !== null && hours > maxOperatingHours)) {
+    return { error: "Enter the operating hours, or leave them blank." };
+  }
+  if (price === null || price <= 0 || price > maxPrice) return { error: "Enter the price in SAR." };
+  if (!condition) return { error: "Choose the condition." };
+  if (!city) return { error: "Choose a city." };
+  if (!fuelType) return { error: "Choose the fuel type." };
+  if (description && description.length > maxDescriptionLength) {
+    return { error: `Keep the description under ${maxDescriptionLength.toLocaleString("en")} characters.` };
+  }
+
+  return {
+    data: {
+      category: "equipment",
+      equipment_type: equipmentType,
+      operating_hours: hours,
+      operator_included: get("operator_included") === "on" || get("operator_included") === "true",
+      make: brand,
+      model,
+      year,
+      mileage: null,
+      price,
+      condition,
+      city,
+      fuel_type: fuelType,
+      transmission: null,
+      body_type: null,
+      features: [],
+      color: null,
+      description,
+    },
+  };
+}
+
 export function parseListing(
   formData: FormData,
-): { data: ListingInput & RentalInput } | { error: string } {
+): { data: ListingInput & RentalInput & EquipmentInput } | { error: string } {
   const read = (field: string) => {
     const value = formData.get(field);
     return typeof value === "string" ? value : null;
   };
+  const category = matchOption(LISTING_CATEGORIES, read("category")) ?? "car";
+
+  if (category === "equipment") {
+    const parsed = parseEquipmentFields(read);
+    if ("error" in parsed) return parsed;
+    // Equipment is rent-only and has no km limit.
+    const rental = parseRentalFields(
+      (field) => (field === "listing_type" ? "rent" : field === "daily_km_limit" ? null : read(field)),
+      parsed.data.price,
+    );
+    if ("error" in rental) return rental;
+    return { data: { ...parsed.data, ...rental.data } };
+  }
+
   const parsed = parseListingFields((field) => {
     // Features are a checkbox group: one entry per ticked box.
     if (field === "features") return formData.getAll(field).filter((v) => typeof v === "string").join(",");
@@ -250,7 +339,11 @@ export function parseListing(
   if ("error" in parsed) return parsed;
   const rental = parseRentalFields(read, parsed.data.price);
   if ("error" in rental) return rental;
-  return { data: { ...parsed.data, ...rental.data } };
+  return { data: { ...parsed.data, ...rental.data, ...CAR_FIELDS } };
+}
+
+export function isEquipment(listing: Pick<Listing, "category">): boolean {
+  return listing.category === "equipment";
 }
 
 export function isRental(listing: Pick<Listing, "listing_type">): boolean {
@@ -373,6 +466,11 @@ export type Sort = (typeof SORTS)[number];
 export type ListingFilters = {
   // Sale and rental listings are browsed separately; sale is the default.
   type: ListingType;
+  // Cars or equipment; equipment is only ever browsed under rentals.
+  category: ListingCategory;
+  equipmentTypes: EquipmentType[];
+  // Equipment rented with an operator.
+  withOperator?: boolean;
   q?: string;
   make?: string;
   model?: string;
@@ -415,16 +513,24 @@ function numberParam(searchParams: SearchParams, key: string): number | undefine
 
 // Invalid values are dropped rather than erroring: these come from the URL.
 export function parseListingFilters(searchParams: SearchParams): ListingFilters {
+  const type = param(searchParams, "type") === "rent" ? "rent" : "sale";
+  const category = type === "rent" && param(searchParams, "category") === "equipment" ? "equipment" : "car";
   const rawMake = param(searchParams, "make");
-  const make = isMake(rawMake) ? rawMake : undefined;
+  // Equipment brands share the `make` param and column.
+  const carMake = category === "car" && isMake(rawMake) ? rawMake : undefined;
+  const make =
+    category === "equipment" ? (matchOption(EQUIPMENT_BRANDS, rawMake ?? null) ?? undefined) : carMake;
   // A model only counts alongside its make, and only if it's a known one.
-  const model = make ? matchOption(modelsFor(make), param(searchParams, "model") ?? null) : null;
+  const model = carMake ? matchOption(modelsFor(carMake), param(searchParams, "model") ?? null) : null;
   const city = param(searchParams, "city");
   const sort = param(searchParams, "sort");
   const page = numberParam(searchParams, "page");
 
   return {
-    type: param(searchParams, "type") === "rent" ? "rent" : "sale",
+    type,
+    category,
+    equipmentTypes: category === "equipment" ? listParam(searchParams, "equipment_type", EQUIPMENT_TYPES) : [],
+    withOperator: category === "equipment" && param(searchParams, "operator") === "1" ? true : undefined,
     q: param(searchParams, "q")?.trim().slice(0, 100) || undefined,
     make,
     model: model ?? undefined,
@@ -462,6 +568,10 @@ export function listingFiltersToParams(filters: ListingFilters): Record<string, 
   const entries: [string, string | number | undefined][] = [
     // Sale is the default, so it stays out of URLs.
     ["type", filters.type === "rent" ? "rent" : undefined],
+    // Cars are the default, so they stay out of URLs.
+    ["category", filters.category === "equipment" ? "equipment" : undefined],
+    ["equipment_type", list(filters.equipmentTypes)],
+    ["operator", filters.withOperator ? "1" : undefined],
     ["q", filters.q],
     ["make", filters.make],
     ["model", filters.model],
@@ -485,7 +595,9 @@ export function listingFiltersToParams(filters: ListingFilters): Record<string, 
 // The subset of the PostgREST filter builder used below, so any select on
 // listings (full rows or a head-only count) can share the same filters.
 interface ListingFilterQuery {
-  eq(column: "status" | "make" | "city" | "listing_type", value: string): this;
+  eq(column: "status" | "make" | "city" | "listing_type" | "category", value: string): this;
+  eq(column: "operator_included", value: boolean): this;
+  in(column: "equipment_type", values: readonly EquipmentType[]): this;
   in(column: "condition", values: readonly Condition[]): this;
   in(column: "fuel_type", values: readonly FuelType[]): this;
   in(column: "body_type", values: readonly BodyType[]): this;
@@ -502,7 +614,9 @@ export function applyListingFilters<Q extends ListingFilterQuery>(
   query: Q,
   filters: ListingFilters,
 ): Q {
-  query = query.eq("status", "active").eq("listing_type", filters.type);
+  query = query.eq("status", "active").eq("listing_type", filters.type).eq("category", filters.category);
+  if (filters.equipmentTypes.length) query = query.in("equipment_type", filters.equipmentTypes);
+  if (filters.withOperator) query = query.eq("operator_included", true);
   // Arabic make/model names match their stored English spelling.
   const tsQuery = filters.q ? toPrefixTsQuery(arabicToStoredNames(filters.q)) : null;
   if (tsQuery) query = query.textSearch("search_vector", tsQuery, { config: "simple" });
@@ -594,6 +708,7 @@ export async function getSitemapListings(): Promise<Pick<Listing, "id" | "update
 export async function getLatestListings(
   limit: number,
   type: ListingType = "sale",
+  category: ListingCategory = "car",
 ): Promise<ListingWithImages[]> {
   const supabase = await createClient();
   const { data, error } = await supabase
@@ -601,6 +716,7 @@ export async function getLatestListings(
     .select(LISTING_CARD_SELECT)
     .eq("status", "active")
     .eq("listing_type", type)
+    .eq("category", category)
     .order("bumped_at", { ascending: false })
     .limit(limit);
   if (error) throw error;
@@ -633,7 +749,8 @@ export const getActiveFacetCounts = cache(async (): Promise<FacetCounts> => {
   const { data, error } = await supabase
     .from("listings")
     .select("make, city, condition, fuel_type, body_type, transmission")
-    .eq("status", "active");
+    .eq("status", "active")
+    .eq("category", "car");
   if (error) throw error;
   return {
     total: data.length,
@@ -659,6 +776,7 @@ export async function getLatestByCities(
     .from("listings")
     .select(LISTING_CARD_SELECT)
     .eq("status", "active")
+    .eq("category", "car")
     .in("city", cities)
     .order("bumped_at", { ascending: false })
     .limit(cities.length * perCity * 4);
@@ -673,7 +791,7 @@ export async function getLatestByCities(
 
 // Same make first, then cars in a similar price band, excluding the listing itself.
 export async function getSimilarListings(
-  listing: Pick<Listing, "id" | "make" | "price" | "listing_type">,
+  listing: Pick<Listing, "id" | "make" | "price" | "listing_type" | "category">,
   limit = 4,
 ): Promise<ListingWithImages[]> {
   const supabase = await createClient();
@@ -683,6 +801,7 @@ export async function getSimilarListings(
       .select(LISTING_CARD_SELECT)
       .eq("status", "active")
       .eq("listing_type", listing.listing_type)
+      .eq("category", listing.category)
       .neq("id", listing.id)
       .order("bumped_at", { ascending: false })
       .limit(limit);

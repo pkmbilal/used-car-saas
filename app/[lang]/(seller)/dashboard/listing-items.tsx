@@ -3,10 +3,10 @@ import { Eye, Gauge, MapPin, MessageCircle, Phone } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { RiyalPrice } from "@/components/riyal-price";
 import Link from "@/components/locale-link";
-import { carName } from "@/lib/car-names";
+import { listingName } from "@/lib/car-names";
 import { cityName, count, fmt, translateMessage } from "@/lib/dictionary";
 import type { Dictionary } from "@/lib/dictionaries";
-import { formatDay, formatKm } from "@/lib/format";
+import { formatDay, formatUsage } from "@/lib/format";
 import type { Locale } from "@/lib/i18n";
 import { isFeatured, isRental, type ListingStats, type ListingWithImages } from "@/lib/listings";
 import { SELF_FEATURE_DAYS } from "@/lib/plans";
@@ -76,17 +76,19 @@ export function ListingCardItem({ listing, featureSlots, boostLabel, boostPendin
 
       <div className="min-w-0 px-4 pt-3.5">
         <Link href={editHref(listing.id)} className="block truncate font-semibold">
-          {carName(locale, listing.make, listing.model, listing.year)}
+          {listingName(locale, listing, listing.year)}
         </Link>
         <p className="mt-1 text-lg font-bold text-brand">
           <RiyalPrice amount={listing.price} />
           {isRental(listing) && <span className="ms-1 text-xs font-medium text-zinc-500">{t.rentals.perDay}</span>}
         </p>
         <p className="mt-1.5 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-zinc-600 dark:text-zinc-400">
-          <span className="flex items-center gap-1.5">
-            <Gauge className="size-3.5" aria-hidden />
-            {formatKm(listing.mileage, locale)}
-          </span>
+          {formatUsage(listing, locale) && (
+            <span className="flex items-center gap-1.5">
+              <Gauge className="size-3.5" aria-hidden />
+              {formatUsage(listing, locale)}
+            </span>
+          )}
           <span className="flex items-center gap-1.5">
             <MapPin className="size-3.5" aria-hidden />
             {cityName(t, listing.city)}
@@ -162,7 +164,7 @@ export function ListingListItem({ listing, featureSlots, boostLabel, boostPendin
                 href={editHref(listing.id)}
                 className="mt-1.5 block truncate font-semibold sm:text-lg"
               >
-                {carName(locale, listing.make, listing.model, listing.year)}
+                {listingName(locale, listing, listing.year)}
               </Link>
             </div>
             <p className="shrink-0 text-lg font-bold text-brand sm:text-xl">
@@ -171,10 +173,12 @@ export function ListingListItem({ listing, featureSlots, boostLabel, boostPendin
             </p>
           </div>
           <p className="mt-1.5 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-zinc-600 sm:text-sm dark:text-zinc-400">
-            <span className="flex items-center gap-1.5">
-              <Gauge className="size-3.5 sm:size-4" aria-hidden />
-              {formatKm(listing.mileage, locale)}
-            </span>
+            {formatUsage(listing, locale) && (
+              <span className="flex items-center gap-1.5">
+                <Gauge className="size-3.5 sm:size-4" aria-hidden />
+                {formatUsage(listing, locale)}
+              </span>
+            )}
             <span className="flex items-center gap-1.5">
               <MapPin className="size-3.5 sm:size-4" aria-hidden />
               {cityName(t, listing.city)}

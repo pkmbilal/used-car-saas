@@ -1,5 +1,5 @@
 import { requireSeller } from "@/lib/auth";
-import { carName } from "@/lib/car-names";
+import { listingName } from "@/lib/car-names";
 import { cityName } from "@/lib/dictionary";
 import { getDictionary } from "@/lib/i18n-server";
 import { getSellerInsights, sortListingInsights } from "@/lib/insights";
@@ -24,7 +24,7 @@ export async function GET(request: Request) {
   const rows: (string | number)[][] = [
     [c.listing, c.year, c.city, c.status, c.views, c.calls, c.whatsapps, c.rate, c.saves, c.daysLive],
     ...sortListingInsights(insights.listings, "views").map(({ listing, ...row }) => [
-      carName(locale, listing.make, listing.model),
+      listingName(locale, listing),
       listing.year,
       cityName(t, listing.city),
       t.dashboard.status[listing.status],

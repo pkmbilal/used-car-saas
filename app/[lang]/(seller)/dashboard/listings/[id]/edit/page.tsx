@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "@/components/locale-link";
 import { notFound } from "next/navigation";
 import { requireSeller } from "@/lib/auth";
-import { carName } from "@/lib/car-names";
+import { listingName } from "@/lib/car-names";
 import { getDictionary } from "@/lib/i18n-server";
 import { getSellerListing } from "@/lib/listings";
 import { PHOTO_LIMIT } from "@/lib/plans";
@@ -36,7 +36,7 @@ export default async function EditListingPage({
       <div className="mt-2 flex flex-wrap items-start justify-between gap-4">
         <div className="flex items-center gap-3">
           <h1 className="text-2xl font-semibold tracking-tight">
-            {carName(locale, listing.make, listing.model, listing.year)}
+            {listingName(locale, listing, listing.year)}
           </h1>
           <StatusBadge status={listing.status} />
         </div>

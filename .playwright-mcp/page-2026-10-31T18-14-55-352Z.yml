@@ -1,0 +1,212 @@
+- generic [active] [ref=f8e1]:
+  - banner [ref=f8e2]:
+    - navigation [ref=f8e3]:
+      - link [ref=f8e4] [cursor=pointer]:
+        - /url: /en
+        - img "KarSouq" [ref=f8e5]
+      - generic [ref=f8e6]:
+        - link "Buy Cars" [ref=f8e7] [cursor=pointer]:
+          - /url: /en/listings
+        - link "Rentals" [ref=f8e9] [cursor=pointer]:
+          - /url: /en/rentals
+        - link "Dealers" [ref=f8e10] [cursor=pointer]:
+          - /url: /en/dealers
+        - link "Pricing" [ref=f8e11] [cursor=pointer]:
+          - /url: /en/pricing
+        - link "Sell" [ref=f8e12] [cursor=pointer]:
+          - /url: /en/dashboard/listings/new
+      - generic [ref=f8e13]:
+        - link "العربية" [ref=f8e14] [cursor=pointer]:
+          - /url: /ar/listings/381bfd44-ec61-49c3-9a4f-13a4c4327be7
+          - text: ع
+        - button "Account menu" [ref=f8e18] [cursor=pointer]:
+          - generic [aria-hidden] [ref=f8e20]: DU
+          - generic [ref=f8e22]:
+            - generic [ref=f8e23]: Demo User
+            - generic [ref=f8e24]: Seller · Pro
+  - main [ref=f8e28]:
+    - generic [ref=f8e30]:
+      - generic [ref=f8e31]: This listing is a draft and is not visible to buyers.
+      - link "Edit listing" [ref=f8e32] [cursor=pointer]:
+        - /url: /en/dashboard/listings/381bfd44-ec61-49c3-9a4f-13a4c4327be7/edit
+    - generic [ref=f8e35]:
+      - navigation "Breadcrumb" [ref=f8e36]:
+        - list [ref=f8e37]:
+          - listitem [ref=f8e38]:
+            - link "Equipment for rent" [ref=f8e39] [cursor=pointer]:
+              - /url: /en/rentals?category=equipment
+          - listitem [aria-hidden] [ref=f8e40]
+          - listitem [ref=f8e43]:
+            - link "Caterpillar" [ref=f8e44] [cursor=pointer]:
+              - /url: /en/rentals?category=equipment&make=Caterpillar
+      - generic [ref=f8e45]:
+        - heading "2018 Excavator Caterpillar 320D TEST" [level=1] [ref=f8e46]
+        - generic [ref=f8e47]: For rent
+      - paragraph [ref=f8e48]:
+        - generic [ref=f8e49]: "2018"
+        - generic [ref=f8e50]: ·
+        - generic [ref=f8e51]: 4,200 hrs
+        - generic [ref=f8e52]: ·
+        - generic [ref=f8e53]: With operator
+        - generic [ref=f8e54]: ·
+        - generic [ref=f8e55]: Riyadh
+      - paragraph [ref=f8e59]:
+        - generic [ref=f8e60]:
+          - generic [ref=f8e62]: SAR
+          - text: "900"
+        - text: / day
+    - generic [ref=f8e63]:
+      - generic [ref=f8e64]:
+        - generic [ref=f8e66]:
+          - heading "Rental rates" [level=2] [ref=f8e67]
+          - generic [ref=f8e68]:
+            - generic [ref=f8e69]:
+              - term [ref=f8e70]: Daily
+              - definition [ref=f8e71]:
+                - generic [ref=f8e72]:
+                  - generic [ref=f8e74]: SAR
+                  - text: "900"
+                - text: / day
+            - generic [ref=f8e75]:
+              - term [ref=f8e76]: Weekly
+              - definition [ref=f8e77]:
+                - generic [ref=f8e78]:
+                  - generic [ref=f8e80]: SAR
+                  - text: 5,000
+                - text: / week
+            - generic [ref=f8e81]:
+              - term [ref=f8e82]: Monthly
+              - definition [ref=f8e83]:
+                - generic [ref=f8e84]:
+                  - generic [ref=f8e86]: SAR
+                  - text: 18,000
+                - text: / month
+          - heading "Terms" [level=3] [ref=f8e87]
+          - list [ref=f8e88]:
+            - listitem [ref=f8e89]: 2 days minimum
+            - listitem [ref=f8e94]: Deposit SAR 3,000
+        - generic [ref=f8e98]:
+          - heading "Overview" [level=2] [ref=f8e99]
+          - generic [ref=f8e100]:
+            - generic [ref=f8e108]:
+              - term [ref=f8e109]: Equipment type
+              - definition [ref=f8e110]: Excavator
+            - generic [ref=f8e116]:
+              - term [ref=f8e117]: Brand
+              - definition [ref=f8e118]: Caterpillar
+            - generic [ref=f8e125]:
+              - term [ref=f8e126]: Model
+              - definition [ref=f8e127]: 320D TEST
+            - generic [ref=f8e132]:
+              - term [ref=f8e133]: Year
+              - definition [ref=f8e134]: "2018"
+            - generic [ref=f8e140]:
+              - term [ref=f8e141]: Operating hours
+              - definition [ref=f8e142]: 4,200 hrs
+            - generic [ref=f8e150]:
+              - term [ref=f8e151]: Operator
+              - definition [ref=f8e152]: With operator
+            - generic [ref=f8e158]:
+              - term [ref=f8e159]: Fuel Type
+              - definition [ref=f8e160]: Diesel
+            - generic [ref=f8e166]:
+              - term [ref=f8e167]: Condition
+              - definition [ref=f8e168]: Good
+            - generic [ref=f8e174]:
+              - term [ref=f8e175]: City
+              - definition [ref=f8e176]: Riyadh
+            - generic [ref=f8e182]:
+              - term [ref=f8e183]: Listed
+              - definition [ref=f8e184]: October 2026
+        - generic [ref=f8e185]:
+          - heading "Description" [level=2] [ref=f8e186]
+          - paragraph [ref=f8e187]: Playwright test listing - safe to delete.
+      - complementary [ref=f8e188]:
+        - generic [ref=f8e189]:
+          - paragraph [ref=f8e190]:
+            - generic [ref=f8e191]:
+              - generic [ref=f8e193]: SAR
+              - text: "900"
+            - text: / day
+          - paragraph [ref=f8e194]: Listed today
+          - paragraph [ref=f8e198]: 0 views · 0 calls · 0 WhatsApps
+          - generic [ref=f8e200]:
+            - link "Edit" [ref=f8e201] [cursor=pointer]:
+              - /url: /en/dashboard/listings/381bfd44-ec61-49c3-9a4f-13a4c4327be7/edit
+            - button "Publish" [ref=f8e202] [cursor=pointer]
+          - button "Share" [ref=f8e204] [cursor=pointer]
+          - generic [ref=f8e205]:
+            - img "Dammam Cars logo" [ref=f8e207]
+            - generic [ref=f8e208]:
+              - paragraph [ref=f8e209]: Dammam Cars
+              - generic [ref=f8e210]:
+                - generic [ref=f8e211]: Dealer
+                - generic [ref=f8e212]: Email verified
+          - generic [ref=f8e214]:
+            - paragraph [ref=f8e215]:
+              - generic [ref=f8e219]:
+                - text: Location
+                - link "Riyadh, Saudi Arabia" [ref=f8e220] [cursor=pointer]:
+                  - /url: /en/locations/riyadh
+            - paragraph [ref=f8e221]:
+              - generic [ref=f8e224]: Member sinceOctober 2026
+          - link "Visit dealer storefront →" [ref=f8e225] [cursor=pointer]:
+            - /url: /en/sellers/f85a72d4-29a5-4a96-a0b4-4ab15bd061c5
+  - contentinfo [ref=f8e226]:
+    - generic [ref=f8e227]:
+      - generic [ref=f8e228]:
+        - link [ref=f8e229] [cursor=pointer]:
+          - /url: /en
+          - img "KarSouq" [ref=f8e230]
+        - paragraph [ref=f8e231]: Saudi Arabia's marketplace for used cars. Buy and sell directly with sellers.
+      - generic [ref=f8e232]:
+        - paragraph [ref=f8e233]: BUY
+        - link "Browse Cars" [ref=f8e234] [cursor=pointer]:
+          - /url: /en/listings
+        - link "Saved Cars" [ref=f8e235] [cursor=pointer]:
+          - /url: /en/favorites
+        - link "Saved Searches" [ref=f8e236] [cursor=pointer]:
+          - /url: /en/saved-searches
+      - generic [ref=f8e237]:
+        - paragraph [ref=f8e238]: POPULAR MAKES
+        - link "Toyota" [ref=f8e239] [cursor=pointer]:
+          - /url: /en/brands/toyota
+        - link "Hyundai" [ref=f8e240] [cursor=pointer]:
+          - /url: /en/brands/hyundai
+        - link "Nissan" [ref=f8e241] [cursor=pointer]:
+          - /url: /en/brands/nissan
+        - link "Lexus" [ref=f8e242] [cursor=pointer]:
+          - /url: /en/brands/lexus
+      - generic [ref=f8e243]:
+        - paragraph [ref=f8e244]: CITIES
+        - link "Dammam" [ref=f8e245] [cursor=pointer]:
+          - /url: /en/locations/dammam
+        - link "Jubail" [ref=f8e246] [cursor=pointer]:
+          - /url: /en/locations/jubail
+        - link "Khobar" [ref=f8e247] [cursor=pointer]:
+          - /url: /en/locations/khobar
+        - link "Dhahran" [ref=f8e248] [cursor=pointer]:
+          - /url: /en/locations/dhahran
+        - link "All Cities" [ref=f8e249] [cursor=pointer]:
+          - /url: /en/locations
+      - generic [ref=f8e250]:
+        - paragraph [ref=f8e251]: SELL
+        - link "Sell Your Car" [ref=f8e252] [cursor=pointer]:
+          - /url: /en/account/become-seller
+        - link "Pricing" [ref=f8e253] [cursor=pointer]:
+          - /url: /en/pricing
+        - link "Seller Dashboard" [ref=f8e254] [cursor=pointer]:
+          - /url: /en/dashboard
+        - link "My Account" [ref=f8e255] [cursor=pointer]:
+          - /url: /en/account
+    - generic [ref=f8e257]:
+      - paragraph [ref=f8e258]: © 2026 KarSouq, a CodeSudio product. All rights reserved.
+      - navigation [ref=f8e259]:
+        - link "Contact" [ref=f8e260] [cursor=pointer]:
+          - /url: /en/contact
+        - link "Privacy Policy" [ref=f8e261] [cursor=pointer]:
+          - /url: /en/privacy
+        - link "Terms of Use" [ref=f8e262] [cursor=pointer]:
+          - /url: /en/terms
+  - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=f8e268] [cursor=pointer]

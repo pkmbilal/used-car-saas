@@ -21,7 +21,7 @@ export async function GET(request: Request) {
         listing.year,
         listing.make,
         listing.model,
-        listing.mileage,
+        listing.mileage ?? "",
         listing.price,
         listing.city,
         listing.fuel_type,

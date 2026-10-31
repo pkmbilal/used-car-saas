@@ -4,6 +4,7 @@
 // Saudi car sites; so do models sellers typed themselves. Safe to import from
 // client components.
 import type { Locale } from "@/lib/i18n";
+import { EQUIPMENT_AR_TO_EN, equipmentBrandName, equipmentTypeName } from "@/lib/equipment";
 import { isMake, type Make } from "@/lib/makes";
 
 const AR_MAKES: Record<Make, string> = {
@@ -286,8 +287,10 @@ const AR_MODELS: Partial<Record<Make, Record<string, string>>> = {
   },
 };
 
+// Also covers equipment brands (stored in the same `make` column).
 export function makeName(locale: Locale, make: string): string {
-  return locale === "ar" && isMake(make) ? AR_MAKES[make] : make;
+  if (locale !== "ar") return make;
+  return isMake(make) ? AR_MAKES[make] : equipmentBrandName(locale, make);
 }
 
 export function modelName(locale: Locale, make: string, model: string): string {
@@ -302,8 +305,24 @@ export function carName(locale: Locale, make: string, model: string, year?: numb
   return locale === "ar" ? `${name} ${year}` : `${year} ${name}`;
 }
 
+// A listing's display name: carName() for cars; for equipment the type comes
+// first ("Excavator Caterpillar 320D" / "حفار كاتربيلر 320D").
+export function listingName(
+  locale: Locale,
+  listing: { category: string; make: string; model: string; equipment_type: string | null },
+  year?: number,
+): string {
+  if (listing.category !== "equipment" || !listing.equipment_type) {
+    return carName(locale, listing.make, listing.model, year);
+  }
+  const name = `${equipmentTypeName(locale, listing.equipment_type)} ${makeName(locale, listing.make)} ${listing.model}`;
+  if (year === undefined) return name;
+  return locale === "ar" ? `${name} ${year}` : `${year} ${name}`;
+}
+
 // Arabic make/model names, longest first, for rewriting a keyword search.
 const AR_TO_EN: [string, string][] = [
+  ...EQUIPMENT_AR_TO_EN,
   ...Object.entries(AR_MAKES).map(([en, ar]): [string, string] => [ar, en]),
   ...Object.values(AR_MODELS).flatMap((models) =>
     Object.entries(models ?? {}).map(([en, ar]): [string, string] => [ar, en]),

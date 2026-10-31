@@ -4,7 +4,7 @@ import { ArrowRight, Car, CircleCheck, Download, MapPin, MessageCircle, Users } 
 import { RiyalPrice } from "@/components/riyal-price";
 import { StatusBadge } from "@/app/[lang]/(seller)/dashboard/listings/status-badge";
 import { DASHBOARD_RANGES, EXPIRING_WINDOW_DAYS, getDashboard, isDashboardRange } from "@/lib/admin";
-import { formatCount, formatDay, formatKm } from "@/lib/format";
+import { formatCount, formatDay, formatUsage } from "@/lib/format";
 import { isFeatured } from "@/lib/listings";
 import { PLAN_LABELS, PLANS } from "@/lib/plans";
 import { cn } from "@/lib/utils";
@@ -174,7 +174,7 @@ export default async function AdminOverviewPage({ searchParams }: PageProps<"/ad
                             {listing.year} {listing.make} {listing.model}
                           </p>
                           <p className="mt-0.5 text-xs text-zinc-500 capitalize">
-                            {formatKm(listing.mileage, "en")} · {listing.fuel_type}
+                            {[formatUsage(listing, "en"), listing.fuel_type].filter(Boolean).join(" · ")}
                             {featured && <span className="ml-1.5 normal-case text-amber-700 dark:text-amber-400">· Featured</span>}
                           </p>
                         </div>

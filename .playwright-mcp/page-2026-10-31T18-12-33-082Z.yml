@@ -1,0 +1,97 @@
+- generic [active] [ref=f7e1]:
+  - banner [ref=f7e2]:
+    - navigation [ref=f7e3]:
+      - link [ref=f7e4] [cursor=pointer]:
+        - /url: /en
+        - img "KarSouq" [ref=f7e5]
+      - generic [ref=f7e6]:
+        - link "Buy Cars" [ref=f7e7] [cursor=pointer]:
+          - /url: /en/listings
+        - link "Rentals" [ref=f7e8] [cursor=pointer]:
+          - /url: /en/rentals
+        - link "Dealers" [ref=f7e9] [cursor=pointer]:
+          - /url: /en/dealers
+        - link "Pricing" [ref=f7e10] [cursor=pointer]:
+          - /url: /en/pricing
+        - link "Sell" [ref=f7e11] [cursor=pointer]:
+          - /url: /en/account/become-seller
+      - generic [ref=f7e12]:
+        - link "العربية" [ref=f7e13] [cursor=pointer]:
+          - /url: /ar/login
+          - text: ع
+        - link "Sign in" [ref=f7e17] [cursor=pointer]:
+          - /url: /en/login
+  - main [ref=f7e19]:
+    - generic [ref=f7e20]:
+      - generic [ref=f7e22]:
+        - paragraph [ref=f7e23]: WELCOME BACK
+        - heading "Sign in to KarSouq" [level=1] [ref=f7e25]
+        - paragraph [ref=f7e26]: Pick up where you left off with your saved cars and listings.
+      - generic [ref=f7e28]:
+        - generic [ref=f7e29]:
+          - generic [ref=f7e30]: Email
+          - textbox "Email" [ref=f7e33]:
+            - /placeholder: you@example.com
+        - generic [ref=f7e34]:
+          - generic [ref=f7e35]:
+            - generic [ref=f7e36]: Password
+            - link "Forgot password?" [ref=f7e37] [cursor=pointer]:
+              - /url: /en/forgot-password?next=%2Fen%2Fdashboard%2Flistings%2Fnew%3Fcategory%3Dequipment
+          - generic [ref=f7e38]:
+            - textbox "Password" [ref=f7e39]
+            - button "Show password" [ref=f7e40] [cursor=pointer]
+        - button "Sign in" [ref=f7e44] [cursor=pointer]
+        - paragraph [ref=f7e45]:
+          - text: New here?
+          - link "Create an account" [ref=f7e46] [cursor=pointer]:
+            - /url: /en/signup?next=%2Fen%2Fdashboard%2Flistings%2Fnew%3Fcategory%3Dequipment
+  - contentinfo [ref=f7e47]:
+    - generic [ref=f7e48]:
+      - generic [ref=f7e49]:
+        - link [ref=f7e50] [cursor=pointer]:
+          - /url: /en
+          - img "KarSouq" [ref=f7e51]
+        - paragraph [ref=f7e52]: Saudi Arabia's marketplace for used cars. Buy and sell directly with sellers.
+      - generic [ref=f7e53]:
+        - paragraph [ref=f7e54]: BUY
+        - link "Browse Cars" [ref=f7e55] [cursor=pointer]:
+          - /url: /en/listings
+        - link "Saved Cars" [ref=f7e56] [cursor=pointer]:
+          - /url: /en/favorites
+        - link "Saved Searches" [ref=f7e57] [cursor=pointer]:
+          - /url: /en/saved-searches
+      - generic [ref=f7e58]:
+        - paragraph [ref=f7e59]: POPULAR MAKES
+        - link "Toyota" [ref=f7e60] [cursor=pointer]:
+          - /url: /en/brands/toyota
+        - link "Hyundai" [ref=f7e61] [cursor=pointer]:
+          - /url: /en/brands/hyundai
+        - link "Nissan" [ref=f7e62] [cursor=pointer]:
+          - /url: /en/brands/nissan
+        - link "Lexus" [ref=f7e63] [cursor=pointer]:
+          - /url: /en/brands/lexus
+      - generic [ref=f7e64]:
+        - paragraph [ref=f7e65]: CITIES
+        - link "All Cities" [ref=f7e66] [cursor=pointer]:
+          - /url: /en/locations
+      - generic [ref=f7e67]:
+        - paragraph [ref=f7e68]: SELL
+        - link "Sell Your Car" [ref=f7e69] [cursor=pointer]:
+          - /url: /en/account/become-seller
+        - link "Pricing" [ref=f7e70] [cursor=pointer]:
+          - /url: /en/pricing
+        - link "Seller Dashboard" [ref=f7e71] [cursor=pointer]:
+          - /url: /en/dashboard
+        - link "My Account" [ref=f7e72] [cursor=pointer]:
+          - /url: /en/account
+    - generic [ref=f7e74]:
+      - paragraph [ref=f7e75]: © 2026 KarSouq, a CodeSudio product. All rights reserved.
+      - navigation [ref=f7e76]:
+        - link "Contact" [ref=f7e77] [cursor=pointer]:
+          - /url: /en/contact
+        - link "Privacy Policy" [ref=f7e78] [cursor=pointer]:
+          - /url: /en/privacy
+        - link "Terms of Use" [ref=f7e79] [cursor=pointer]:
+          - /url: /en/terms
+  - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=f7e85] [cursor=pointer]

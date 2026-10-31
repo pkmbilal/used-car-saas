@@ -4,7 +4,7 @@ import { Car, Search } from "lucide-react";
 import { RiyalPrice } from "@/components/riyal-price";
 import { StatusBadge } from "@/app/[lang]/(seller)/dashboard/listings/status-badge";
 import { ADMIN_PAGE_SIZE, atFeaturedLimit, getAllListings, type FeaturedStatus } from "@/lib/admin";
-import { formatDay, formatKm } from "@/lib/format";
+import { formatDay, formatUsage } from "@/lib/format";
 import { isFeatured, type ListingStatus } from "@/lib/listings";
 import { PLAN_LABELS } from "@/lib/plans";
 import { cn } from "@/lib/utils";
@@ -139,7 +139,7 @@ export default async function AdminListingsPage({ searchParams }: PageProps<"/ad
                               <span className="block truncate font-medium">{title}</span>
                             )}
                             <span className="mt-0.5 block text-xs text-zinc-500">
-                              {formatKm(listing.mileage, "en")}, {listing.city}
+                              {[formatUsage(listing, "en"), listing.city].filter(Boolean).join(", ")}
                             </span>
                             {listing.removed_reason && (
                               <span className="mt-0.5 block max-w-64 truncate text-xs text-red-700 dark:text-red-400" title={listing.removed_reason}>

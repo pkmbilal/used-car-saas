@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { ArrowDown } from "lucide-react";
 import Link from "@/components/locale-link";
-import { carName } from "@/lib/car-names";
+import { listingName } from "@/lib/car-names";
 import { cityName, fmt, formatNumber } from "@/lib/dictionary";
 import type { Dictionary } from "@/lib/dictionaries";
 import type { Locale } from "@/lib/i18n";
@@ -103,7 +103,7 @@ export function ListingPerformance({
                         </span>
                         <span className="min-w-0">
                           <span className="block truncate font-medium">
-                            {carName(locale, listing.make, listing.model, listing.year)}
+                            {listingName(locale, listing, listing.year)}
                           </span>
                           <span className="mt-0.5 flex items-center gap-2 text-xs text-zinc-500 dark:text-zinc-400">
                             <StatusBadge status={listing.status} />

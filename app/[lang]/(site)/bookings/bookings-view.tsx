@@ -2,7 +2,7 @@ import Image from "next/image";
 import { CalendarCheck, CalendarDays, Hourglass, MessageCircle, Phone, Search } from "lucide-react";
 import Link from "@/components/locale-link";
 import { RiyalPrice } from "@/components/riyal-price";
-import { carName } from "@/lib/car-names";
+import { listingName } from "@/lib/car-names";
 import { count, fmt } from "@/lib/dictionary";
 import type { Dictionary } from "@/lib/dictionaries";
 import { formatDay, formatRelativeDays, whatsappUrl } from "@/lib/format";
@@ -59,7 +59,7 @@ export async function BookingsView({ userId, side }: { userId: string; side: Sid
           <p className="mt-4 max-w-sm text-zinc-600 dark:text-zinc-400">
             {side === "owner" ? r.emptyReceived : r.emptySent}
           </p>
-          <Link href="/listings?type=rent" className={`${ctaClass} mt-5`}>
+          <Link href="/rentals" className={`${ctaClass} mt-5`}>
             <Search className="size-4" aria-hidden />
             {r.browseRentals}
           </Link>
@@ -116,7 +116,7 @@ function RequestItem({
 }) {
   const r = t.rentals;
   const { listing } = request;
-  const title = listing ? carName(locale, listing.make, listing.model, listing.year) : null;
+  const title = listing ? listingName(locale, listing, listing.year) : null;
   const otherName = request.otherName || (side === "owner" ? r.aRenter : r.theOwner);
   const live = listing?.status === "active";
   const settled = request.status !== "pending";

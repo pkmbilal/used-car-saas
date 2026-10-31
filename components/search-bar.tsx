@@ -96,7 +96,7 @@ export async function SearchBar({
   const hero = variant === "hero";
   const style = styles[variant];
   const { t, locale } = await getDictionary();
-  const action = localizePath(locale, "/listings");
+  const action = localizePath(locale, filters?.type === "rent" ? "/rentals" : "/listings");
   const priceLabel = (price: number) => fmt(t.search.upTo, { price: formatSAR(price, locale) });
   const yearLabel = (year: number) => fmt(t.search.yearAndNewer, { year });
 
@@ -120,7 +120,6 @@ export async function SearchBar({
       )}
       <form method="get" action={action} className={style.form}>
         {filters?.sort && filters.sort !== "newest" && <input type="hidden" name="sort" value={filters.sort} />}
-        {filters?.type === "rent" && <input type="hidden" name="type" value="rent" />}
         <MakeModelSelects
           make={filters?.make}
           model={filters?.model}

@@ -12,6 +12,8 @@ import {
   CalendarDays,
   Car,
   Clock,
+  Construction,
+  HardHat,
   Cog,
   Fuel,
   Gauge,
@@ -33,7 +35,8 @@ import { Separator } from "@/components/ui/separator";
 import { addonReference, getMyPendingAddons } from "@/lib/addons";
 import { getCurrentUser } from "@/lib/auth";
 import { salesWhatsappUrl } from "@/lib/contact";
-import { carName, makeName, modelName } from "@/lib/car-names";
+import { listingName, makeName, modelName } from "@/lib/car-names";
+import { equipmentTypeName } from "@/lib/equipment";
 import { cityHref, isCity } from "@/lib/cities";
 import { cityName, fmt, optionLabel, translateMessage } from "@/lib/dictionary";
 import { getFavoriteIds } from "@/lib/favorites";
@@ -41,7 +44,9 @@ import { localizePath } from "@/lib/i18n";
 import { getDictionary } from "@/lib/i18n-server";
 import {
   formatDay,
+  formatHours,
   formatKm,
+  formatUsage,
   formatMonthYear,
   formatListingStats,
   formatRelativeDays,
@@ -49,7 +54,7 @@ import {
 } from "@/lib/format";
 import { capitalize } from "@/lib/listing-options";
 import { listingDescription, listingJsonLd } from "@/lib/listing-seo";
-import { getListingStats, getPublicListing, getSimilarListings, isFeatured, isRental } from "@/lib/listings";
+import { getListingStats, getPublicListing, getSimilarListings, isEquipment, isFeatured, isRental } from "@/lib/listings";
 import { getMyOfferForListing } from "@/lib/offers";
 import { getBookedRanges, getMyRequestForListing } from "@/lib/rentals";
 import { isMake, makeHref } from "@/lib/makes";
@@ -78,12 +83,20 @@ export async function generateMetadata({
   const { t, locale } = await getDictionary();
   const listing = await getListing(id);
   if (!listing) return { title: t.listingPage.notFoundTitle };
-  const title = fmt(isRental(listing) ? t.rentals.listingMetaTitle : t.listingPage.metaTitle, {
+  const title = fmt(
+    isEquipment(listing)
+      ? t.equipment.listingMetaTitle
+      : isRental(listing)
+        ? t.rentals.listingMetaTitle
+        : t.listingPage.metaTitle,
+    {
+    type: listing.equipment_type ? equipmentTypeName(locale, listing.equipment_type) : "",
     year: listing.year,
     make: makeName(locale, listing.make),
     model: modelName(locale, listing.make, listing.model),
     price: formatSAR(listing.price, locale),
-  });
+    },
+  );
   return pageMetadata({
     title,
     description: listingDescription(listing, t, locale),
@@ -104,7 +117,8 @@ export default async function ListingPage({ params }: PageProps<"/[lang]/listing
   const similarPromise = getSimilarListings(listing, 4);
   const current = await currentPromise;
 
-  const name = carName(locale, listing.make, listing.model);
+  const name = listingName(locale, listing);
+  const equipment = isEquipment(listing);
   const title = `${listing.year} ${name}`;
   const isOwner = current?.user.id === listing.seller_id;
   const seller = listing.seller;
@@ -154,31 +168,65 @@ export default async function ListingPage({ params }: PageProps<"/[lang]/listing
     : fmt(p.listedAgo, { when: formatRelativeDays(listedAt, locale) });
   // Counting the model year itself, so a this-year car isn't divided by zero.
   const ageYears = Math.max(1, new Date().getFullYear() - listing.year + 1);
-  const perYear = listing.mileage > 0 ? Math.round(listing.mileage / ageYears) : 0;
+  const perYear = listing.mileage ? Math.round(listing.mileage / ageYears) : 0;
+  // Rentals live in their own section, with their own make filter.
+  const sectionHref = equipment ? "/rentals?category=equipment" : rent ? "/rentals" : "/listings";
+  const sectionSearch = (params: Record<string, string>) =>
+    `${rent ? "/rentals" : "/listings"}?${new URLSearchParams({ ...(equipment && { category: "equipment" }), ...params })}`;
   const crumbs: Crumb[] = [
-    { name: p.breadcrumbListings, href: "/listings" },
+    { name: equipment ? t.equipment.browseTitle : rent ? t.rentals.browseTitle : p.breadcrumbListings, href: sectionHref },
     {
       name: makeName(locale, listing.make),
       // The brand page where there is one, so listings link to it rather than a filtered search.
       href:
-        isMake(listing.make) && listing.make !== "Other"
+        !rent && isMake(listing.make) && listing.make !== "Other"
           ? makeHref(listing.make)
-          : `/listings?${new URLSearchParams({ make: listing.make })}`,
+          : sectionSearch({ make: listing.make }),
     },
-    {
-      name: modelName(locale, listing.make, listing.model),
-      href: `/listings?${new URLSearchParams({ make: listing.make, model: listing.model })}`,
-    },
+    // Equipment models are free text, so there is no model filter to link to.
+    ...(equipment
+      ? []
+      : [
+          {
+            name: modelName(locale, listing.make, listing.model),
+            href: sectionSearch({ make: listing.make, model: listing.model }),
+          },
+        ]),
   ];
   const listingPath = `/listings/${listing.id}`;
   const sellerName = storefront?.name ?? seller?.full_name;
 
   const specIcon = { className: "size-4", strokeWidth: 1.8 };
-  const specs = [
+  const specs = equipment
+    ? [
+        {
+          label: t.equipment.type,
+          value: listing.equipment_type && equipmentTypeName(locale, listing.equipment_type),
+          icon: <Construction {...specIcon} />,
+        },
+        { label: t.equipment.brand, value: makeName(locale, listing.make), icon: <BadgeCheck {...specIcon} /> },
+        { label: p.specs.model, value: listing.model, icon: <Car {...specIcon} /> },
+        { label: p.specs.year, value: String(listing.year), icon: <CalendarDays {...specIcon} /> },
+        {
+          label: t.equipment.hours,
+          value: listing.operating_hours !== null ? formatHours(listing.operating_hours, locale) : null,
+          icon: <Gauge {...specIcon} />,
+        },
+        {
+          label: t.equipment.operator,
+          value: listing.operator_included ? t.equipment.withOperator : t.equipment.withoutOperator,
+          icon: <HardHat {...specIcon} />,
+        },
+        { label: p.specs.fuelType, value: fuel, icon: <Fuel {...specIcon} /> },
+        { label: p.specs.condition, value: optionLabel(t.options.condition, listing.condition), icon: <Sparkles {...specIcon} /> },
+        { label: p.specs.city, value: city, icon: <MapPin {...specIcon} /> },
+        { label: p.specs.listed, value: formatMonthYear(listing.created_at, locale), icon: <Clock {...specIcon} /> },
+      ]
+    : [
     { label: p.specs.make, value: makeName(locale, listing.make), icon: <BadgeCheck {...specIcon} /> },
     { label: p.specs.model, value: modelName(locale, listing.make, listing.model), icon: <Car {...specIcon} /> },
     { label: p.specs.year, value: String(listing.year), icon: <CalendarDays {...specIcon} /> },
-    { label: p.specs.mileage, value: formatKm(listing.mileage, locale), icon: <Gauge {...specIcon} /> },
+    { label: p.specs.mileage, value: formatUsage(listing, locale), icon: <Gauge {...specIcon} /> },
     {
       label: p.specs.perYear,
       value: perYear > 0 ? fmt(p.perYearValue, { km: formatKm(perYear, locale) }) : null,
@@ -266,10 +314,14 @@ export default async function ListingPage({ params }: PageProps<"/[lang]/listing
           </div>
           <p className="mt-2.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-base sm:text-[0.9375rem]">
             <span>{listing.year}</span>
+            {formatUsage(listing, locale) && (
+              <>
+                <span className="opacity-60">·</span>
+                <span>{formatUsage(listing, locale)}</span>
+              </>
+            )}
             <span className="opacity-60">·</span>
-            <span>{formatKm(listing.mileage, locale)}</span>
-            <span className="opacity-60">·</span>
-            <span>{transmission ?? fuel}</span>
+            <span>{equipment && listing.operator_included ? t.equipment.withOperator : (transmission ?? fuel)}</span>
             <span className="opacity-60">·</span>
             <span className="flex items-center gap-1.5">
               <MapPin className="size-3.5" />
@@ -437,7 +489,7 @@ export default async function ListingPage({ params }: PageProps<"/[lang]/listing
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-semibold">{p.similar}</h2>
             <Link
-              href={`/listings?${new URLSearchParams({ make: listing.make, model: listing.model })}`}
+              href={equipment ? sectionSearch({ make: listing.make }) : sectionSearch({ make: listing.make, model: listing.model })}
               className="text-caption font-semibold text-brand"
             >
               {p.viewAll}

@@ -1,13 +1,14 @@
 import Link from "@/components/locale-link";
 import { X } from "lucide-react";
 import { makeName, modelName } from "@/lib/car-names";
+import { equipmentTypeName } from "@/lib/equipment";
 import { cityName, fmt, optionLabel } from "@/lib/dictionary";
 import type { Dictionary } from "@/lib/dictionaries";
 import { formatKm, formatSAR } from "@/lib/format";
 import type { Locale } from "@/lib/i18n";
 import { getDictionary } from "@/lib/i18n-server";
 import type { ListingFilters } from "@/lib/listings";
-import { listingsHref } from "@/lib/saved-searches";
+import { browseBaseHref, listingsHref } from "@/lib/saved-searches";
 
 type Chip = { key: string; label: string; without: Partial<ListingFilters> };
 
@@ -54,6 +55,8 @@ function chipsFor(filters: ListingFilters, t: Dictionary, locale: Locale): Chip[
   if (filters.maxMileage !== undefined) {
     chips.push({ key: "mileage", label: fmt(t.filtersSummary.mileageUpTo, { km: formatKm(filters.maxMileage, locale) }), without: { maxMileage: undefined } });
   }
+  many("equipmentTypes", filters.equipmentTypes, (value) => equipmentTypeName(locale, value));
+  if (filters.withOperator) chips.push({ key: "operator", label: t.equipment.withOperator, without: { withOperator: undefined } });
   many("conditions", filters.conditions, (value) => optionLabel(t.options.condition, value));
   many("bodyTypes", filters.bodyTypes, (value) => optionLabel(t.options.bodyType, value));
   many("fuelTypes", filters.fuelTypes, (value) => optionLabel(t.options.fuel, value));
@@ -69,13 +72,11 @@ function hrefWithout(filters: ListingFilters, without: Partial<ListingFilters>):
   return `${href}${href.includes("?") ? "&" : "?"}sort=${filters.sort}`;
 }
 
-// Drops every filter but keeps the sale/rent tab and the sort.
+// Drops every filter but keeps the section/tab and the sort.
 function clearAllHref(filters: ListingFilters): string {
-  const query = new URLSearchParams();
-  if (filters.type === "rent") query.set("type", "rent");
-  if (filters.sort !== "newest") query.set("sort", filters.sort);
-  const search = query.toString();
-  return search ? `/listings?${search}` : "/listings";
+  const base = browseBaseHref(filters);
+  if (filters.sort === "newest") return base;
+  return `${base}${base.includes("?") ? "&" : "?"}sort=${filters.sort}`;
 }
 
 export async function ActiveFilters({ filters }: { filters: ListingFilters }) {

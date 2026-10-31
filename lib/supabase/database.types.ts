@@ -91,7 +91,7 @@ export type Database = {
           make: string;
           model: string;
           year: number;
-          mileage: number;
+          mileage: number | null;
           price: number;
           condition: "excellent" | "good" | "fair";
           city: string;
@@ -114,6 +114,10 @@ export type Database = {
           min_rental_days: number | null;
           deposit: number | null;
           daily_km_limit: number | null;
+          category: "car" | "equipment";
+          equipment_type: "excavator" | "backhoe_loader" | "wheel_loader" | "bulldozer" | "skid_steer" | "forklift" | "mobile_crane" | "boom_lift" | "scissor_lift" | "dump_truck" | "roller" | "generator" | "compressor" | "water_tanker" | "other" | null;
+          operating_hours: number | null;
+          operator_included: boolean | null;
           search_vector: unknown;
         };
         Insert: {
@@ -122,7 +126,7 @@ export type Database = {
           make: string;
           model: string;
           year: number;
-          mileage: number;
+          mileage?: number | null;
           price: number;
           condition: "excellent" | "good" | "fair";
           city: string;
@@ -145,6 +149,10 @@ export type Database = {
           min_rental_days?: number | null;
           deposit?: number | null;
           daily_km_limit?: number | null;
+          category?: "car" | "equipment";
+          equipment_type?: "excavator" | "backhoe_loader" | "wheel_loader" | "bulldozer" | "skid_steer" | "forklift" | "mobile_crane" | "boom_lift" | "scissor_lift" | "dump_truck" | "roller" | "generator" | "compressor" | "water_tanker" | "other" | null;
+          operating_hours?: number | null;
+          operator_included?: boolean | null;
           search_vector?: unknown;
         };
         Update: {
@@ -153,7 +161,7 @@ export type Database = {
           make?: string;
           model?: string;
           year?: number;
-          mileage?: number;
+          mileage?: number | null;
           price?: number;
           condition?: "excellent" | "good" | "fair";
           city?: string;
@@ -176,6 +184,10 @@ export type Database = {
           min_rental_days?: number | null;
           deposit?: number | null;
           daily_km_limit?: number | null;
+          category?: "car" | "equipment";
+          equipment_type?: "excavator" | "backhoe_loader" | "wheel_loader" | "bulldozer" | "skid_steer" | "forklift" | "mobile_crane" | "boom_lift" | "scissor_lift" | "dump_truck" | "roller" | "generator" | "compressor" | "water_tanker" | "other" | null;
+          operating_hours?: number | null;
+          operator_included?: boolean | null;
           search_vector?: unknown;
         };
         Relationships: [

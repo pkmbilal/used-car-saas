@@ -1,0 +1,80 @@
+- generic [active] [ref=f3e1]:
+  - banner [ref=f3e2]:
+    - navigation [ref=f3e3]:
+      - link [ref=f3e4] [cursor=pointer]:
+        - /url: /ar
+        - img "KarSouq" [ref=f3e5]
+      - generic [ref=f3e6]:
+        - link "شراء سيارة" [ref=f3e7] [cursor=pointer]:
+          - /url: /ar/listings
+        - link "الإيجار" [ref=f3e8] [cursor=pointer]:
+          - /url: /ar/rentals
+        - link "المعارض" [ref=f3e10] [cursor=pointer]:
+          - /url: /ar/dealers
+        - link "الباقات" [ref=f3e11] [cursor=pointer]:
+          - /url: /ar/pricing
+        - link "بيع" [ref=f3e12] [cursor=pointer]:
+          - /url: /ar/account/become-seller
+      - generic [ref=f3e13]:
+        - link "English" [ref=f3e14] [cursor=pointer]:
+          - /url: /en/rentals
+          - text: EN
+        - link "تسجيل الدخول" [ref=f3e18] [cursor=pointer]:
+          - /url: /ar/login
+  - status [ref=f3e20]:
+    - paragraph [aria-hidden] [ref=f3e33]:
+      - generic [ref=f3e34]: اشترِ
+      - generic [ref=f3e36]: بِع
+      - generic [ref=f3e39]: انطلق
+    - generic [ref=f3e42]: جارٍ تحميل السيارات…
+  - contentinfo [ref=f3e43]:
+    - generic [ref=f3e44]:
+      - generic [ref=f3e45]:
+        - link [ref=f3e46] [cursor=pointer]:
+          - /url: /ar
+          - img "KarSouq" [ref=f3e47]
+        - paragraph [ref=f3e48]: سوق السيارات المستعملة في المملكة العربية السعودية. اشترِ وبِع مباشرة مع البائعين.
+      - generic [ref=f3e49]:
+        - paragraph [ref=f3e50]: شراء
+        - link "تصفح السيارات" [ref=f3e51] [cursor=pointer]:
+          - /url: /ar/listings
+        - link "السيارات المحفوظة" [ref=f3e52] [cursor=pointer]:
+          - /url: /ar/favorites
+        - link "عمليات البحث المحفوظة" [ref=f3e53] [cursor=pointer]:
+          - /url: /ar/saved-searches
+      - generic [ref=f3e54]:
+        - paragraph [ref=f3e55]: الماركات الأكثر طلبًا
+        - link "تويوتا" [ref=f3e56] [cursor=pointer]:
+          - /url: /ar/brands/toyota
+        - link "هيونداي" [ref=f3e57] [cursor=pointer]:
+          - /url: /ar/brands/hyundai
+        - link "نيسان" [ref=f3e58] [cursor=pointer]:
+          - /url: /ar/brands/nissan
+        - link "لكزس" [ref=f3e59] [cursor=pointer]:
+          - /url: /ar/brands/lexus
+      - generic [ref=f3e60]:
+        - paragraph [ref=f3e61]: المدن
+        - link "جميع المدن" [ref=f3e62] [cursor=pointer]:
+          - /url: /ar/locations
+      - generic [ref=f3e63]:
+        - paragraph [ref=f3e64]: بيع
+        - link "بِع سيارتك" [ref=f3e65] [cursor=pointer]:
+          - /url: /ar/account/become-seller
+        - link "الباقات" [ref=f3e66] [cursor=pointer]:
+          - /url: /ar/pricing
+        - link "لوحة البائع" [ref=f3e67] [cursor=pointer]:
+          - /url: /ar/dashboard
+        - link "حسابي" [ref=f3e68] [cursor=pointer]:
+          - /url: /ar/account
+    - generic [ref=f3e70]:
+      - paragraph [ref=f3e71]: © 2026 كارسوق، أحد منتجات CodeSudio. جميع الحقوق محفوظة.
+      - navigation [ref=f3e72]:
+        - link "تواصل معنا" [ref=f3e73] [cursor=pointer]:
+          - /url: /ar/contact
+        - link "سياسة الخصوصية" [ref=f3e74] [cursor=pointer]:
+          - /url: /ar/privacy
+        - link "شروط الاستخدام" [ref=f3e75] [cursor=pointer]:
+          - /url: /ar/terms
+  - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=f3e81] [cursor=pointer]
+  - alert [ref=f3e85]

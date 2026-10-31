@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { CITIES } from "@/lib/cities";
+import { EQUIPMENT_BRANDS, EQUIPMENT_TYPES, equipmentBrandName, equipmentTypeName } from "@/lib/equipment";
 import { cityName, fmt, optionLabel } from "@/lib/dictionary";
 import type { Dictionary } from "@/lib/dictionaries";
 import { formatKm } from "@/lib/format";
@@ -78,11 +79,17 @@ function mileageOptions(t: Dictionary, locale: Locale, current: number | undefin
 export function Filters({
   filters,
   counts,
+  basePath,
+  clearHref,
   idPrefix = "filters",
 }: {
   filters: ListingFilters;
-  // Active-listing counts per option, keyed by value.
-  counts: FilterCounts;
+  // The section the form submits to (/listings or /rentals).
+  basePath: string;
+  // The section's unfiltered page.
+  clearHref: string;
+  // Active-listing counts per option, keyed by value; omitted where they would mislead (rentals).
+  counts?: FilterCounts;
   // Filters render twice (sidebar and mobile sheet), so ids need a prefix.
   idPrefix?: string;
 }) {
@@ -90,16 +97,18 @@ export function Filters({
   const f = t.listings.filters;
   const id = (name: string) => `${idPrefix}-${name}`;
   const groupProps = { idPrefix, legendClassName: labelClass };
+  const equipment = filters.category === "equipment";
+  const rent = filters.type === "rent";
 
   return (
-    <form method="get" action={localizePath(locale, "/listings")} className="flex flex-col gap-5">
+    <form method="get" action={localizePath(locale, basePath)} className="flex flex-col gap-5">
       {filters.sort !== "newest" && <input type="hidden" name="sort" value={filters.sort} />}
-      {filters.type === "rent" && <input type="hidden" name="type" value="rent" />}
+      {equipment && <input type="hidden" name="category" value="equipment" />}
       <div className="flex items-center gap-2 border-b border-line pb-3">
         <SlidersHorizontal className="size-4 text-brand-600" />
         <span className="text-sm font-bold">{f.title}</span>
         <Button asChild variant="link" size="sm" className="ms-auto h-auto p-0 max-sm:h-auto text-caption font-semibold text-brand">
-          <Link href={filters.type === "rent" ? "/listings?type=rent" : "/listings"}>{f.clearAll}</Link>
+          <Link href={clearHref}>{f.clearAll}</Link>
         </Button>
       </div>
       <div className="flex flex-col gap-1.5">
@@ -116,16 +125,50 @@ export function Filters({
           className={inputClass}
         />
       </div>
-      <MakeModelSelects
-        make={filters.make}
-        model={filters.model}
-        makeId={id("make")}
-        modelId={id("model")}
-        makePlaceholder={t.common.any}
-        modelPlaceholder={t.common.any}
-        fieldClassName="flex flex-col gap-1.5"
-        labelClassName={labelClass}
-      />
+      {equipment ? (
+        <>
+          <CheckboxGroup
+            {...groupProps}
+            title={t.equipment.type}
+            name="equipment_type"
+            selected={filters.equipmentTypes}
+            options={EQUIPMENT_TYPES.map((value) => ({ value, label: equipmentTypeName(locale, value) }))}
+          />
+          <div className="flex flex-col gap-1.5">
+            <Label htmlFor={id("make")} className={labelClass}>
+              {t.equipment.brand}
+            </Label>
+            <FormSelect
+              id={id("make")}
+              name="make"
+              defaultValue={filters.make}
+              placeholder={t.common.any}
+              options={EQUIPMENT_BRANDS.map((brand) => ({ value: brand, label: equipmentBrandName(locale, brand) }))}
+            />
+          </div>
+          <label className="flex cursor-pointer items-center gap-2 text-caption font-semibold text-ink">
+            <input
+              type="checkbox"
+              name="operator"
+              value="1"
+              defaultChecked={filters.withOperator}
+              className="size-4 accent-brand"
+            />
+            {t.equipment.operatorFilter}
+          </label>
+        </>
+      ) : (
+        <MakeModelSelects
+          make={filters.make}
+          model={filters.model}
+          makeId={id("make")}
+          modelId={id("model")}
+          makePlaceholder={t.common.any}
+          modelPlaceholder={t.common.any}
+          fieldClassName="flex flex-col gap-1.5"
+          labelClassName={labelClass}
+        />
+      )}
       <div className="flex flex-col gap-1.5">
         <Label htmlFor={id("city")} className={labelClass}>
           {f.city}
@@ -138,8 +181,9 @@ export function Filters({
           options={CITIES.map((city) => ({ value: city, label: cityName(t, city) }))}
         />
       </div>
-      <Range t={t} label={filters.type === "rent" ? t.rentals.dailyPriceRange : f.priceRange} hint={f.currency} minName="min_price" maxName="max_price" min={filters.minPrice} max={filters.maxPrice} />
+      <Range t={t} label={rent ? t.rentals.dailyPriceRange : f.priceRange} hint={f.currency} minName="min_price" maxName="max_price" min={filters.minPrice} max={filters.maxPrice} />
       <Range t={t} label={f.year} minName="min_year" maxName="max_year" min={filters.minYear} max={filters.maxYear} />
+      {!rent && (
       <div className="flex flex-col gap-1.5">
         <Label htmlFor={id("mileage")} className={labelClass}>
           {f.mileage}
@@ -152,33 +196,38 @@ export function Filters({
           options={mileageOptions(t, locale, filters.maxMileage)}
         />
       </div>
+      )}
       <CheckboxGroup
         {...groupProps}
         title={f.condition}
         name="condition"
         selected={filters.conditions}
-        options={CONDITIONS.map((value) => ({ value, label: optionLabel(t.options.condition, value), count: counts.conditions[value] ?? 0 }))}
+        options={CONDITIONS.map((value) => ({ value, label: optionLabel(t.options.condition, value), count: counts && (counts.conditions[value] ?? 0) }))}
       />
+      {!equipment && (
       <CheckboxGroup
         {...groupProps}
         title={f.bodyStyle}
         name="body_type"
         selected={filters.bodyTypes}
-        options={BODY_TYPES.map((value) => ({ value, label: optionLabel(t.options.bodyType, value), count: counts.bodyTypes[value] ?? 0 }))}
+        options={BODY_TYPES.map((value) => ({ value, label: optionLabel(t.options.bodyType, value), count: counts && (counts.bodyTypes[value] ?? 0) }))}
       />
+      )}
       <CheckboxGroup
         {...groupProps}
         title={f.fuelType}
         name="fuel_type"
         selected={filters.fuelTypes}
-        options={FUEL_TYPES.map((value) => ({ value, label: optionLabel(t.options.fuel, value), count: counts.fuelTypes[value] ?? 0 }))}
+        options={FUEL_TYPES.map((value) => ({ value, label: optionLabel(t.options.fuel, value), count: counts && (counts.fuelTypes[value] ?? 0) }))}
       />
+      {!equipment && (
+      <>
       <CheckboxGroup
         {...groupProps}
         title={f.transmission}
         name="transmission"
         selected={filters.transmissions}
-        options={TRANSMISSIONS.map((value) => ({ value, label: optionLabel(t.options.transmission, value), count: counts.transmissions[value] ?? 0 }))}
+        options={TRANSMISSIONS.map((value) => ({ value, label: optionLabel(t.options.transmission, value), count: counts && (counts.transmissions[value] ?? 0) }))}
       />
       <CheckboxGroup
         {...groupProps}
@@ -187,6 +236,8 @@ export function Filters({
         selected={filters.features}
         options={FEATURES.map(({ value }) => ({ value, label: optionLabel(t.options.features, value) }))}
       />
+      </>
+      )}
       <Button type="submit" className="h-9 text-xs max-sm:text-sm font-semibold">
         <Search className="size-3.5" />
         {f.apply}

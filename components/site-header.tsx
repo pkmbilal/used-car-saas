@@ -23,7 +23,7 @@ export async function SiteHeader() {
   // Locations in the footer.
   const mainLinks: HeaderLink[] = [
     { href: "/listings", label: t.nav.buyCars },
-    { href: "/listings?type=rent", label: t.nav.rentCars },
+    { href: "/rentals", label: t.nav.rentCars },
     { href: "/dealers", label: t.nav.dealers },
     { href: "/pricing", label: t.nav.pricing },
   ];

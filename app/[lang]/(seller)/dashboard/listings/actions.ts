@@ -134,12 +134,15 @@ export async function updateListing(
   if ("error" in parsed) return { error: parsed.error };
 
   const supabase = await createClient();
-  const { error } = await supabase
+  // Category is fixed at creation: a car can't become equipment or back.
+  const { data, error } = await supabase
     .from("listings")
     .update(parsed.data)
     .eq("id", listingId)
-    .eq("seller_id", user.id);
-  if (error) return { error: "Could not save the listing. Try again." };
+    .eq("seller_id", user.id)
+    .eq("category", parsed.data.category)
+    .select("id");
+  if (error || data.length === 0) return { error: "Could not save the listing. Try again." };
 
   revalidateDashboard();
   return { saved: true };
