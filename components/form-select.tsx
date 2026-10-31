@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { filterTriggerClass, SearchableSelect } from "@/components/searchable-select";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 
@@ -20,6 +21,7 @@ export function FormSelect({
   icon,
   className,
   onValueChange,
+  search,
 }: {
   id?: string;
   name: string;
@@ -30,8 +32,29 @@ export function FormSelect({
   className?: string;
   // Called with undefined when "Any" is picked.
   onValueChange?: (value: string | undefined) => void;
+  // Adds a search box that filters the options as you type.
+  search?: { placeholder: string; emptyText: string };
 }) {
   const [value, setValue] = useState(defaultValue || ANY);
+
+  if (search) {
+    return (
+      <SearchableSelect
+        id={id}
+        name={name}
+        value={value === ANY ? "" : value}
+        onValueChange={(next) => {
+          setValue(next || ANY);
+          onValueChange?.(next || undefined);
+        }}
+        placeholder={placeholder}
+        searchPlaceholder={search.placeholder}
+        emptyText={search.emptyText}
+        options={[{ value: "", label: placeholder }, ...options]}
+        triggerClassName={cn(filterTriggerClass, className)}
+      />
+    );
+  }
 
   return (
     <>

@@ -1,6 +1,8 @@
 "use client";
 
+import { useState } from "react";
 import { useDictionary } from "@/components/i18n-provider";
+import { SearchableSelect } from "@/components/searchable-select";
 import { optionLabel } from "@/lib/dictionary";
 import {
   EQUIPMENT_BRANDS,
@@ -42,9 +44,19 @@ function Select({
 }
 
 // Steps 1–2 of the listing form for equipment rentals. The brand is sent as
-// `make`, like a car's make.
-export function EquipmentFields({ listing }: { listing?: ListingInput & Partial<EquipmentInput> }) {
+// `make`, like a car's make. Type and brand are searchable; `onChange` fires
+// after a pick, since their hidden inputs don't emit change events for the
+// form's live preview.
+export function EquipmentFields({
+  listing,
+  onChange,
+}: {
+  listing?: ListingInput & Partial<EquipmentInput>;
+  onChange?: () => void;
+}) {
   const { t, locale } = useDictionary();
+  const [type, setType] = useState(listing?.equipment_type ?? "");
+  const [brand, setBrand] = useState(listing?.make ?? "");
   const f = t.dashboard.form;
   const e = t.equipment;
   const maxYear = new Date().getFullYear() + 1;
@@ -53,22 +65,37 @@ export function EquipmentFields({ listing }: { listing?: ListingInput & Partial<
     <>
       <Section step={1} title={e.detailsTitle} subtitle={e.detailsSubtitle}>
         <Field id="equipment_type" label={e.type}>
-          <Select
+          <SearchableSelect
             id="equipment_type"
-            options={EQUIPMENT_TYPES}
-            defaultValue={listing?.equipment_type ?? undefined}
+            name="equipment_type"
+            required
+            value={type}
+            onValueChange={(next) => {
+              setType(next);
+              onChange?.();
+            }}
             placeholder={e.chooseType}
-            format={(value) => equipmentTypeName(locale, value)}
+            searchPlaceholder={t.select.searchTypes}
+            emptyText={t.select.noMatches}
+            options={EQUIPMENT_TYPES.map((value) => ({ value, label: equipmentTypeName(locale, value) }))}
+            triggerClassName={inputClass}
           />
         </Field>
         <Field id="equipment_brand" label={e.brand}>
-          <Select
+          <SearchableSelect
             id="equipment_brand"
             name="make"
-            options={EQUIPMENT_BRANDS}
-            defaultValue={listing?.make}
+            required
+            value={brand}
+            onValueChange={(next) => {
+              setBrand(next);
+              onChange?.();
+            }}
             placeholder={e.chooseBrand}
-            format={(value) => equipmentBrandName(locale, value)}
+            searchPlaceholder={t.select.searchBrands}
+            emptyText={t.select.noMatches}
+            options={EQUIPMENT_BRANDS.map((value) => ({ value, label: equipmentBrandName(locale, value) }))}
+            triggerClassName={inputClass}
           />
         </Field>
         <Field id="model" label={f.model}>

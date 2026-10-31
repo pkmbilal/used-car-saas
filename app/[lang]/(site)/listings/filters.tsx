@@ -143,6 +143,7 @@ export function Filters({
               name="make"
               defaultValue={filters.make}
               placeholder={t.common.any}
+              search={{ placeholder: t.select.searchBrands, emptyText: t.select.noMatches }}
               options={EQUIPMENT_BRANDS.map((brand) => ({ value: brand, label: equipmentBrandName(locale, brand) }))}
             />
           </div>

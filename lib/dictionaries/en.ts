@@ -149,6 +149,8 @@ export const en = {
     searchModels: "Search models…",
     noMatches: "No matches",
     useTyped: "Use “{value}”",
+    searchTypes: "Search types…",
+    searchBrands: "Search brands…",
   },
   options: {
     condition: { excellent: "Excellent", good: "Good", fair: "Fair" },
@@ -289,6 +291,11 @@ export const en = {
     searchCars: "Search Cars",
     upTo: "Up to {price}",
     yearAndNewer: "{year} & newer",
+    equipmentType: "Equipment type",
+    anyType: "Any type",
+    brand: "Brand",
+    anyBrand: "Any brand",
+    searchEquipment: "Search equipment",
   },
   list: {
     separator: ", ",

@@ -14,7 +14,7 @@ import { cn } from "@/lib/utils";
 
 const MAX_PRICES = [50_000, 100_000, 150_000, 200_000, 300_000, 500_000];
 // Daily rates, for the rentals tab.
-const MAX_DAILY_PRICES = [100, 150, 200, 300, 500, 1_000];
+export const MAX_DAILY_PRICES = [100, 150, 200, 300, 500, 1_000];
 
 function minYears(): number[] {
   const year = new Date().getFullYear();
@@ -22,14 +22,14 @@ function minYears(): number[] {
 }
 
 // Keep a custom value (e.g. typed in the sidebar filters) instead of dropping it.
-function withCurrent(options: FormSelectOption[], value: number | undefined, label: (v: number) => string) {
+export function withCurrent(options: FormSelectOption[], value: number | undefined, label: (v: number) => string) {
   if (value === undefined || options.some((option) => option.value === String(value))) return options;
   return [{ value: String(value), label: label(value) }, ...options];
 }
 
-type Variant = "default" | "hero";
+export type Variant = "default" | "hero";
 
-const styles = {
+export const styles = {
   default: {
     form: "grid gap-4 p-5 sm:grid-cols-2 lg:grid-cols-[repeat(5,minmax(0,1fr))_auto] lg:items-end lg:gap-3 lg:ps-7",
     field: "flex min-w-0 flex-col gap-2 lg:border-e lg:border-line lg:pe-3",
@@ -58,7 +58,7 @@ function FieldLabel({ icon: Icon, children }: { icon: React.ComponentType<{ clas
   );
 }
 
-function Field({
+export function Field({
   id,
   label,
   variant,

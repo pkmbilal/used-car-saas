@@ -176,6 +176,8 @@ export const ar: DictionaryShape<typeof en> = {
     searchModels: "ابحث عن الموديل…",
     noMatches: "لا توجد نتائج",
     useTyped: "استخدم “{value}”",
+    searchTypes: "ابحث عن النوع…",
+    searchBrands: "ابحث عن العلامة التجارية…",
   },
   options: {
     condition: { excellent: "ممتازة", good: "جيدة", fair: "مقبولة" },
@@ -315,6 +317,11 @@ export const ar: DictionaryShape<typeof en> = {
     searchCars: "ابحث عن سيارة",
     upTo: "حتى {price}",
     yearAndNewer: "{year} وأحدث",
+    equipmentType: "نوع المعدة",
+    anyType: "كل الأنواع",
+    brand: "العلامة التجارية",
+    anyBrand: "كل العلامات",
+    searchEquipment: "ابحث عن المعدات",
   },
   list: {
     separator: "، ",

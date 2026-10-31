@@ -3,6 +3,7 @@ import { SearchX } from "lucide-react";
 import { ListingGrid } from "@/components/listing-card";
 import { Pagination } from "@/components/pagination";
 import { SaveSearchButton } from "@/components/save-search-button";
+import { EquipmentSearchBar } from "@/components/equipment-search-bar";
 import { SearchBar } from "@/components/search-bar";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -92,12 +93,14 @@ export async function Browse({
     <main className="light bg-canvas text-ink">
       {hero}
 
-      {/* The quick search is make/model based, so equipment uses the sidebar filters only. */}
-      {!equipment && (
-        <div className="relative mx-auto -mt-10 w-full max-w-6xl px-4 sm:px-6">
+      {/* Cars search by make/model; equipment has its own type/brand bar. */}
+      <div className="relative mx-auto -mt-10 w-full max-w-6xl px-4 sm:px-6">
+        {equipment ? (
+          <EquipmentSearchBar key={searchHref} filters={filters} />
+        ) : (
           <SearchBar key={searchHref} filters={filters} />
-        </div>
-      )}
+        )}
+      </div>
 
       <div className="mx-auto mt-6 grid w-full max-w-6xl items-start gap-6 px-4 sm:px-6 lg:grid-cols-[16.0625rem_minmax(0,1fr)]">
         <Card className="gap-0 rounded-lg p-4 shadow-[0_2px_10px_rgba(20,30,25,.05)] ring-0 max-lg:hidden">

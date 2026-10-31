@@ -2,14 +2,11 @@
 
 import { useState } from "react";
 import { useDictionary } from "@/components/i18n-provider";
-import { SearchableSelect } from "@/components/searchable-select";
+import { filterTriggerClass, SearchableSelect } from "@/components/searchable-select";
 import { Label } from "@/components/ui/label";
 import { makeName, modelName } from "@/lib/car-names";
 import { MAKES, modelsFor } from "@/lib/makes";
 import { cn } from "@/lib/utils";
-
-const triggerClass =
-  "h-9 w-full rounded-lg border border-input bg-white px-2.5 text-xs whitespace-nowrap transition-colors outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 data-[size=default]:h-9 max-sm:text-sm max-sm:data-[size=default]:h-10 dark:bg-input/30";
 
 // Make and Model filters for GET search forms. Both dropdowns can be searched
 // by typing. Model choices follow the selected make, and the model resets to
@@ -43,7 +40,7 @@ export function MakeModelSelects({
   const [make, setMake] = useState(initialMake ?? "");
   const [model, setModel] = useState(initialModel ?? "");
   const models = make ? modelsFor(make) : [];
-  const trigger = cn(triggerClass, triggerClassName);
+  const trigger = cn(filterTriggerClass, triggerClassName);
 
   return (
     <>

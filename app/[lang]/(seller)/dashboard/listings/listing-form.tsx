@@ -152,7 +152,7 @@ export function ListingForm({ listing, cover, action, submitLabel, defaultKind =
 
         {isEquipment ? (
           // Keyed so switching kinds remounts fresh, uncontrolled inputs.
-          <EquipmentFields key="equipment" listing={listing} />
+          <EquipmentFields key="equipment" listing={listing} onChange={refreshPreview} />
         ) : (
         <>
         <Section step={1} title={s.car.title} subtitle={s.car.subtitle}>

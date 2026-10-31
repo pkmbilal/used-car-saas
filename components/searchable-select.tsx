@@ -7,6 +7,10 @@ import { cn } from "@/lib/utils";
 
 export type SearchableOption = { value: string; label: string };
 
+// Trigger look for the browse filters and search bars (matches the shadcn Select trigger).
+export const filterTriggerClass =
+  "h-9 w-full rounded-lg border border-input bg-white px-2.5 text-xs whitespace-nowrap transition-colors outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 data-[size=default]:h-9 max-sm:text-sm max-sm:data-[size=default]:h-10 dark:bg-input/30";
+
 const normalize = (text: string) => text.trim().toLowerCase();
 
 // A dropdown with a search box at the top that filters the options as you
