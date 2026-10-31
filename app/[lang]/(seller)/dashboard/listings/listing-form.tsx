@@ -3,6 +3,7 @@
 import { useActionState, useRef, useState } from "react";
 import { AlertCircle, CalendarClock, Check, CheckCircle2, Construction, Loader2, Tag } from "lucide-react";
 import { useDictionary } from "@/components/i18n-provider";
+import { SearchableSelect } from "@/components/searchable-select";
 import { CITIES } from "@/lib/cities";
 import { cityName, fmt, optionLabel, translateMessage } from "@/lib/dictionary";
 import {
@@ -80,6 +81,7 @@ function kindOf(listing: Props["listing"]): ListingKind | null {
 export function ListingForm({ listing, cover, action, submitLabel, defaultKind = "sale" }: Props) {
   const [state, formAction, pending] = useActionState(action, {});
   const [preview, setPreview] = useState(() => previewFromListing(listing));
+  const [city, setCity] = useState(listing?.city ?? "");
   const formRef = useRef<HTMLFormElement>(null);
   const refreshPreview = () =>
     requestAnimationFrame(() => {
@@ -249,12 +251,20 @@ export function ListingForm({ listing, cover, action, submitLabel, defaultKind =
             />
           </Field>
           <Field id="city" label={f.city}>
-            <Select
+            <SearchableSelect
               id="city"
-              options={CITIES}
-              defaultValue={listing?.city}
+              name="city"
+              required
+              value={city}
+              onValueChange={(next) => {
+                setCity(next);
+                refreshPreview();
+              }}
               placeholder={f.chooseCity}
-              format={(city) => cityName(t, city)}
+              searchPlaceholder={t.select.searchCities}
+              emptyText={t.select.noMatches}
+              options={CITIES.map((value) => ({ value, label: cityName(t, value) }))}
+              triggerClassName={inputClass}
             />
           </Field>
           {isRent && (

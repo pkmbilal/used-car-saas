@@ -1,0 +1,238 @@
+- generic [ref=f15e1]:
+  - generic [ref=f15e2]:
+    - complementary [ref=f15e3]:
+      - link [ref=f15e5] [cursor=pointer]:
+        - /url: /en/dashboard
+        - img "KarSouq" [ref=f15e6]
+        - paragraph [ref=f15e7]: Seller Center
+      - navigation "Seller Center" [ref=f15e8]:
+        - link "Overview" [ref=f15e9] [cursor=pointer]:
+          - /url: /en/dashboard
+        - link "Listings" [ref=f15e16] [cursor=pointer]:
+          - /url: /en/dashboard/listings
+        - link "Insights" [ref=f15e22] [cursor=pointer]:
+          - /url: /en/dashboard/insights
+        - link "Offers" [ref=f15e27] [cursor=pointer]:
+          - /url: /en/dashboard/offers
+        - link "Rental requests" [ref=f15e35] [cursor=pointer]:
+          - /url: /en/dashboard/bookings
+        - link "Import CSV" [ref=f15e39] [cursor=pointer]:
+          - /url: /en/dashboard/listings/import
+        - link "Storefront" [ref=f15e44] [cursor=pointer]:
+          - /url: /en/dashboard/storefront
+        - link "Plan & add-ons" [ref=f15e50] [cursor=pointer]:
+          - /url: /en/dashboard/plan
+      - generic [ref=f15e54]:
+        - generic [ref=f15e55]:
+          - text: Language
+          - group "Language" [ref=f15e59]:
+            - link "العربية" [ref=f15e60] [cursor=pointer]:
+              - /url: /ar/dashboard/listings/new
+              - text: ع
+            - generic "English" [ref=f15e61]: EN
+        - link "View site" [ref=f15e63] [cursor=pointer]:
+          - /url: /en
+    - generic [ref=f15e68]:
+      - banner [ref=f15e70]:
+        - paragraph [ref=f15e71]: Listings
+        - generic [ref=f15e72]:
+          - link "New listing" [ref=f15e73] [cursor=pointer]:
+            - /url: /en/dashboard/listings/new
+          - button "Notifications" [ref=f15e76] [cursor=pointer]
+          - button "Account menu" [ref=f15e81] [cursor=pointer]:
+            - generic [aria-hidden] [ref=f15e83]: DC
+            - generic [ref=f15e85]:
+              - generic [ref=f15e86]: Dammam Cars
+              - generic [ref=f15e87]: Seller · Pro
+      - main [ref=f15e90]:
+        - generic [ref=f15e92]:
+          - link "← Your listings" [ref=f15e93] [cursor=pointer]:
+            - /url: /en/dashboard/listings
+          - generic [ref=f15e96]:
+            - generic [ref=f15e97]: Pro plan until 26 Nov 2026 · 1 of 100 listings published this month
+            - heading "Sell your car" [level=1] [ref=f15e99]
+            - paragraph [ref=f15e101]: Enter the details first. You'll add photos and publish on the next step.
+          - generic [ref=f15e103]:
+            - generic [ref=f15e104]:
+              - group "What do you want to do?" [ref=f15e105]:
+                - paragraph [aria-hidden] [ref=f15e107]: What do you want to do?
+                - paragraph [ref=f15e108]: Sell or rent out a car, or rent out equipment by the day, week or month.
+                - generic [ref=f15e109]:
+                  - generic [ref=f15e110] [cursor=pointer]:
+                    - radio "Sell it One-time sale price" [checked] [ref=f15e111]
+                    - generic [ref=f15e116]:
+                      - generic [ref=f15e117]: Sell it
+                      - generic [ref=f15e118]: One-time sale price
+                  - generic [ref=f15e119] [cursor=pointer]:
+                    - radio "Rent it out Daily, weekly and monthly rates" [ref=f15e120]
+                    - generic [ref=f15e126]:
+                      - generic [ref=f15e127]: Rent it out
+                      - generic [ref=f15e128]: Daily, weekly and monthly rates
+                  - generic [ref=f15e129] [cursor=pointer]:
+                    - radio "Rent out equipment Excavators, forklifts, cranes and more" [ref=f15e130]
+                    - generic [ref=f15e137]:
+                      - generic [ref=f15e138]: Rent out equipment
+                      - generic [ref=f15e139]: Excavators, forklifts, cranes and more
+              - generic [ref=f15e140]:
+                - generic [ref=f15e141]:
+                  - generic [ref=f15e142]: "1"
+                  - generic [ref=f15e143]:
+                    - heading "The car" [level=2] [ref=f15e144]
+                    - paragraph [ref=f15e145]: Make, model and body style
+                - generic [ref=f15e146]:
+                  - generic [ref=f15e147]:
+                    - generic [ref=f15e148]: Make
+                    - generic [ref=f15e149]:
+                      - button "Make" [ref=f15e150] [cursor=pointer]:
+                        - generic [ref=f15e151]: Choose a make
+                      - textbox [aria-hidden]
+                  - generic [ref=f15e155]:
+                    - generic [ref=f15e156]: Model
+                    - generic [ref=f15e157]:
+                      - button "Model" [disabled] [ref=f15e158]:
+                        - generic [ref=f15e159]: Choose a make first
+                      - textbox [aria-hidden]
+                  - generic [ref=f15e163]:
+                    - generic [ref=f15e164]: Year
+                    - spinbutton "Year" [ref=f15e165]
+                  - generic [ref=f15e166]:
+                    - generic [ref=f15e167]: Body style
+                    - combobox "Body style" [ref=f15e168]:
+                      - option "Choose the body style" [disabled] [selected]
+                      - option "Sedan"
+                      - option "SUV"
+                      - option "Hatchback"
+                      - option "Coupe"
+                      - option "Pickup"
+                      - option "Van"
+              - generic [ref=f15e169]:
+                - generic [ref=f15e170]:
+                  - generic [ref=f15e171]: "2"
+                  - generic [ref=f15e172]:
+                    - heading "Condition & specs" [level=2] [ref=f15e173]
+                    - paragraph [ref=f15e174]: Mileage, fuel, gearbox and color
+                - generic [ref=f15e175]:
+                  - generic [ref=f15e176]:
+                    - generic [ref=f15e177]: Mileage
+                    - generic [ref=f15e178]:
+                      - spinbutton "Mileage" [ref=f15e179]
+                      - generic: km
+                  - generic [ref=f15e180]:
+                    - generic [ref=f15e181]: Condition
+                    - combobox "Condition" [ref=f15e182]:
+                      - option "Choose the condition" [disabled] [selected]
+                      - option "Excellent"
+                      - option "Good"
+                      - option "Fair"
+                  - generic [ref=f15e183]:
+                    - generic [ref=f15e184]: Fuel type
+                    - combobox "Fuel type" [ref=f15e185]:
+                      - option "Choose the fuel type" [disabled] [selected]
+                      - option "Petrol"
+                      - option "Diesel"
+                      - option "Hybrid"
+                      - option "Electric"
+                  - generic [ref=f15e186]:
+                    - generic [ref=f15e187]: Transmission
+                    - combobox "Transmission" [ref=f15e188]:
+                      - option "Choose the transmission" [disabled] [selected]
+                      - option "Automatic"
+                      - option "Manual"
+                  - generic [ref=f15e189]:
+                    - generic [ref=f15e190]: Color (optional)
+                    - textbox "Color (optional)" [ref=f15e191]:
+                      - /placeholder: e.g. Pearl white
+              - generic [ref=f15e192]:
+                - generic [ref=f15e193]:
+                  - generic [ref=f15e194]: "3"
+                  - generic [ref=f15e195]:
+                    - heading "Price & location" [level=2] [ref=f15e196]
+                    - paragraph [ref=f15e197]: Your asking price and where the car is
+                - generic [ref=f15e198]:
+                  - generic [ref=f15e199]:
+                    - generic [ref=f15e200]: Price
+                    - spinbutton "Price" [ref=f15e202]
+                  - generic [ref=f15e203]:
+                    - generic [ref=f15e204]: City
+                    - generic [ref=f15e205]:
+                      - button "City" [active] [ref=f15e206] [cursor=pointer]:
+                        - generic [ref=f15e207]: Jeddah
+                      - textbox [aria-hidden]: Jeddah
+              - generic [ref=f15e211]:
+                - generic [ref=f15e212]:
+                  - generic [ref=f15e213]: "4"
+                  - generic [ref=f15e214]:
+                    - heading "Description & features" [level=2] [ref=f15e215]
+                    - paragraph [ref=f15e216]: Detailed listings get more calls
+                - generic [ref=f15e217]:
+                  - generic [ref=f15e219]:
+                    - generic [ref=f15e220]: Description (optional)
+                    - textbox "Description (optional)" [ref=f15e221]:
+                      - /placeholder: Service history, recent repairs, anything a buyer should know
+                    - paragraph [ref=f15e222]:
+                      - generic [ref=f15e223]: 0 / 4000
+                  - group "Features" [ref=f15e224]:
+                    - generic [ref=f15e226]:
+                      - generic [ref=f15e227] [cursor=pointer]:
+                        - checkbox "Sunroof" [ref=f15e228]
+                        - text: Sunroof
+                      - generic [ref=f15e229] [cursor=pointer]:
+                        - checkbox "Leather Seats" [ref=f15e230]
+                        - text: Leather Seats
+                      - generic [ref=f15e231] [cursor=pointer]:
+                        - checkbox "Navigation" [ref=f15e232]
+                        - text: Navigation
+                      - generic [ref=f15e233] [cursor=pointer]:
+                        - checkbox "Rear Camera" [ref=f15e234]
+                        - text: Rear Camera
+                      - generic [ref=f15e235] [cursor=pointer]:
+                        - checkbox "Bluetooth" [ref=f15e236]
+                        - text: Bluetooth
+                      - generic [ref=f15e237] [cursor=pointer]:
+                        - checkbox "Parking Sensors" [ref=f15e238]
+                        - text: Parking Sensors
+                      - generic [ref=f15e239] [cursor=pointer]:
+                        - checkbox "Cruise Control" [ref=f15e240]
+                        - text: Cruise Control
+                      - generic [ref=f15e241] [cursor=pointer]:
+                        - checkbox "Apple CarPlay" [ref=f15e242]
+                        - text: Apple CarPlay
+                      - generic [ref=f15e243] [cursor=pointer]:
+                        - checkbox "Android Auto" [ref=f15e244]
+                        - text: Android Auto
+                      - generic [ref=f15e245] [cursor=pointer]:
+                        - checkbox "Keyless Entry" [ref=f15e246]
+                        - text: Keyless Entry
+                      - generic [ref=f15e247] [cursor=pointer]:
+                        - checkbox "Climate Control" [ref=f15e248]
+                        - text: Climate Control
+                      - generic [ref=f15e249] [cursor=pointer]:
+                        - checkbox "Alloy Wheels" [ref=f15e250]
+                        - text: Alloy Wheels
+              - button "Continue to photos" [ref=f15e252] [cursor=pointer]
+            - complementary [ref=f15e253]:
+              - generic [ref=f15e254]:
+                - generic [ref=f15e255]:
+                  - paragraph [ref=f15e256]: Live preview
+                  - paragraph [ref=f15e257]: This is how buyers will see your listing.
+                - generic [ref=f15e258]:
+                  - generic [ref=f15e259]: Photos are added after saving
+                  - generic [ref=f15e264]:
+                    - paragraph [ref=f15e265]
+                    - paragraph [ref=f15e267]:
+                      - generic [aria-hidden] [ref=f15e269]: ·
+                    - paragraph [ref=f15e271]
+                - generic [ref=f15e275]:
+                  - generic [ref=f15e276]:
+                    - generic [ref=f15e277]: Listing strength
+                    - generic [ref=f15e278]: 0 / 3
+                  - list [ref=f15e280]:
+                    - listitem [ref=f15e281]:
+                      - generic [ref=f15e283]: A detailed description
+                    - listitem [ref=f15e284]:
+                      - generic [ref=f15e286]: 3 or more features
+                    - listitem [ref=f15e287]:
+                      - generic [ref=f15e289]: Color added
+  - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=f15e303] [cursor=pointer]
+  - alert [ref=f15e307]
