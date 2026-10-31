@@ -1,0 +1,282 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - navigation [ref=e3]:
+      - link [ref=e4] [cursor=pointer]:
+        - /url: /ar
+        - img "KarSouq" [ref=e5]
+      - generic [ref=e6]:
+        - link "شراء سيارة" [ref=e7] [cursor=pointer]:
+          - /url: /ar/listings
+        - link "الإيجار" [ref=e8] [cursor=pointer]:
+          - /url: /ar/rentals
+        - link "المعارض" [ref=e10] [cursor=pointer]:
+          - /url: /ar/dealers
+        - link "الباقات" [ref=e11] [cursor=pointer]:
+          - /url: /ar/pricing
+        - link "بيع" [ref=e12] [cursor=pointer]:
+          - /url: /ar/dashboard/listings/new
+      - generic [ref=e13]:
+        - link "English" [ref=e14] [cursor=pointer]:
+          - /url: /en/rentals
+          - text: EN
+        - button "قائمة الحساب" [ref=e18] [cursor=pointer]:
+          - generic [aria-hidden] [ref=e20]: DU
+          - generic [ref=e22]:
+            - generic [ref=e23]: Demo User
+            - generic [ref=e24]: بائع · باقة برو
+  - main [ref=e28]:
+    - generic [ref=e31]:
+      - heading "سيارات للإيجار" [level=1] [ref=e32]
+      - paragraph [ref=e33]: استأجر سيارة باليوم أو الأسبوع أو الشهر من الملاك والمعارض القريبة منك.
+    - generic [ref=e34]:
+      - navigation [ref=e35]:
+        - link "سيارات" [ref=e36] [cursor=pointer]:
+          - /url: /ar/rentals
+        - link "معدات" [ref=e40] [cursor=pointer]:
+          - /url: /ar/rentals?category=equipment
+      - generic [ref=e47]:
+        - generic [ref=e48]:
+          - generic [ref=e49]: الماركة
+          - button "الماركة" [ref=e51] [cursor=pointer]:
+            - generic [ref=e52]: كل الماركات
+        - generic [ref=e56]:
+          - generic [ref=e57]: الموديل
+          - button "الموديل" [disabled] [ref=e59]:
+            - generic [ref=e60]: كل الموديلات
+        - generic [ref=e64]:
+          - generic [ref=e65]: أعلى سعر
+          - combobox "أعلى سعر" [ref=e66] [cursor=pointer]
+          - combobox [aria-hidden] [ref=e67]
+        - generic [ref=e68]:
+          - generic [ref=e69]: سنة الصنع
+          - combobox "سنة الصنع" [ref=e70] [cursor=pointer]
+          - combobox [aria-hidden] [ref=e71]
+        - generic [ref=e72]:
+          - generic [ref=e73]: المدينة
+          - button "المدينة" [ref=e75] [cursor=pointer]:
+            - generic [ref=e76]: كل المدن
+        - button "ابحث عن سيارة" [ref=e83] [cursor=pointer]
+    - generic [ref=e84]:
+      - generic [ref=e86]:
+        - generic [ref=e87]:
+          - generic [ref=e89]: الفلاتر
+          - link "مسح الكل" [ref=e90] [cursor=pointer]:
+            - /url: /ar/rentals
+        - generic [ref=e91]:
+          - generic [ref=e92]: كلمة البحث
+          - searchbox "كلمة البحث" [ref=e93]
+        - generic [ref=e94]:
+          - generic [ref=e95]: الماركة
+          - button "الماركة" [ref=e97] [cursor=pointer]:
+            - generic [ref=e98]: الكل
+        - generic [ref=e102]:
+          - generic [ref=e103]: الموديل
+          - button "الموديل" [disabled] [ref=e105]:
+            - generic [ref=e106]: الكل
+        - generic [ref=e110]:
+          - generic [ref=e111]: المدينة
+          - button "المدينة" [ref=e113] [cursor=pointer]:
+            - generic [ref=e114]: الكل
+        - group "السعر اليومي ر.س" [ref=e118]:
+          - generic [ref=e119]:
+            - generic [ref=e120]: السعر اليومي
+            - generic [ref=e121]: ر.س
+          - generic [ref=e122]:
+            - spinbutton "السعر اليومي من" [ref=e123]
+            - generic [ref=e124]: –
+            - spinbutton "السعر اليومي إلى" [ref=e125]
+        - group "سنة الصنع" [ref=e126]:
+          - generic [ref=e129]:
+            - spinbutton "سنة الصنع من" [ref=e130]
+            - generic [ref=e131]: –
+            - spinbutton "سنة الصنع إلى" [ref=e132]
+        - group "الحالة" [ref=e133]:
+          - generic [ref=e135]:
+            - generic [ref=e136] [cursor=pointer]:
+              - checkbox "ممتازة" [ref=e137]
+              - text: ممتازة
+            - generic [ref=e138] [cursor=pointer]:
+              - checkbox "جيدة" [ref=e139]
+              - text: جيدة
+            - generic [ref=e140] [cursor=pointer]:
+              - checkbox "مقبولة" [ref=e141]
+              - text: مقبولة
+        - group "نوع الهيكل" [ref=e142]:
+          - generic [ref=e144]:
+            - generic [ref=e145] [cursor=pointer]:
+              - checkbox "سيدان" [ref=e146]
+              - text: سيدان
+            - generic [ref=e147] [cursor=pointer]:
+              - checkbox "SUV" [ref=e148]
+              - text: SUV
+            - generic [ref=e149] [cursor=pointer]:
+              - checkbox "هاتشباك" [ref=e150]
+              - text: هاتشباك
+            - generic [ref=e151] [cursor=pointer]:
+              - checkbox "كوبيه" [ref=e152]
+              - text: كوبيه
+            - generic [ref=e153] [cursor=pointer]:
+              - checkbox "بيك أب" [ref=e154]
+              - text: بيك أب
+            - generic [ref=e155] [cursor=pointer]:
+              - checkbox "فان" [ref=e156]
+              - text: فان
+        - group "نوع الوقود" [ref=e157]:
+          - generic [ref=e159]:
+            - generic [ref=e160] [cursor=pointer]:
+              - checkbox "بنزين" [ref=e161]
+              - text: بنزين
+            - generic [ref=e162] [cursor=pointer]:
+              - checkbox "ديزل" [ref=e163]
+              - text: ديزل
+            - generic [ref=e164] [cursor=pointer]:
+              - checkbox "هجين" [ref=e165]
+              - text: هجين
+            - generic [ref=e166] [cursor=pointer]:
+              - checkbox "كهربائي" [ref=e167]
+              - text: كهربائي
+        - group "ناقل الحركة" [ref=e168]:
+          - generic [ref=e170]:
+            - generic [ref=e171] [cursor=pointer]:
+              - checkbox "أوتوماتيك" [ref=e172]
+              - text: أوتوماتيك
+            - generic [ref=e173] [cursor=pointer]:
+              - checkbox "عادي" [ref=e174]
+              - text: عادي
+        - group "المزايا" [ref=e175]:
+          - generic [ref=e177]:
+            - generic [ref=e178] [cursor=pointer]:
+              - checkbox "فتحة سقف" [ref=e179]
+              - text: فتحة سقف
+            - generic [ref=e180] [cursor=pointer]:
+              - checkbox "مقاعد جلد" [ref=e181]
+              - text: مقاعد جلد
+            - generic [ref=e182] [cursor=pointer]:
+              - checkbox "نظام ملاحة" [ref=e183]
+              - text: نظام ملاحة
+            - generic [ref=e184] [cursor=pointer]:
+              - checkbox "كاميرا خلفية" [ref=e185]
+              - text: كاميرا خلفية
+            - generic [ref=e186] [cursor=pointer]:
+              - checkbox "بلوتوث" [ref=e187]
+              - text: بلوتوث
+            - generic [ref=e188] [cursor=pointer]:
+              - checkbox "حساسات ركن" [ref=e189]
+              - text: حساسات ركن
+            - generic [ref=e190] [cursor=pointer]:
+              - checkbox "مثبت سرعة" [ref=e191]
+              - text: مثبت سرعة
+            - generic [ref=e192] [cursor=pointer]:
+              - checkbox "Apple CarPlay" [ref=e193]
+              - text: Apple CarPlay
+            - generic [ref=e194] [cursor=pointer]:
+              - checkbox "Android Auto" [ref=e195]
+              - text: Android Auto
+            - generic [ref=e196] [cursor=pointer]:
+              - checkbox "دخول بدون مفتاح" [ref=e197]
+              - text: دخول بدون مفتاح
+            - generic [ref=e198] [cursor=pointer]:
+              - checkbox "تكييف أوتوماتيكي" [ref=e199]
+              - text: تكييف أوتوماتيكي
+            - generic [ref=e200] [cursor=pointer]:
+              - checkbox "جنوط ألمنيوم" [ref=e201]
+              - text: جنوط ألمنيوم
+        - button "تطبيق الفلاتر" [ref=e202] [cursor=pointer]
+      - generic [ref=e203]:
+        - generic [ref=e204]:
+          - paragraph [ref=e205]: سيارة واحدة للإيجار
+          - generic [ref=e207]:
+            - generic [ref=e208]: ترتيب حسب
+            - combobox "ترتيب حسب" [ref=e209] [cursor=pointer]
+            - combobox [aria-hidden] [ref=e210]
+        - list [ref=e212]:
+          - listitem [ref=e213]:
+            - generic [ref=e214]:
+              - link "تويوتا فورتشنر 2025 معرض للإيجار تويوتا فورتشنر 2025 100,000 كم أوتوماتيك ريال سعودي 250 / يوم SUV بنزين الجبيل" [ref=e216] [cursor=pointer]:
+                - /url: /ar/listings/8bd2eee4-6b3d-4bd6-a450-758dac5ac047
+                - generic [ref=e217]:
+                  - img "تويوتا فورتشنر 2025" [ref=e218]
+                  - generic [ref=e219]: معرض
+                  - generic [ref=e221]: للإيجار
+                - generic [ref=e223]:
+                  - paragraph [ref=e224]: تويوتا فورتشنر
+                  - paragraph [ref=e225]:
+                    - generic [ref=e226]: "2025"
+                    - generic [aria-hidden] [ref=e227]: ·
+                    - generic [ref=e228]: 100,000 كم
+                    - generic [aria-hidden] [ref=e229]: ·
+                    - generic [ref=e230]: أوتوماتيك
+                  - paragraph [ref=e231]:
+                    - generic [ref=e232]:
+                      - generic [ref=e234]: ريال سعودي
+                      - text: "250"
+                    - text: / يوم
+                  - generic [ref=e235]:
+                    - generic [ref=e236]: SUV
+                    - generic [ref=e241]: بنزين
+                    - generic [ref=e245]: الجبيل
+              - button "احفظ هذه السيارة" [ref=e252] [cursor=pointer]
+  - contentinfo [ref=e253]:
+    - generic [ref=e254]:
+      - generic [ref=e255]:
+        - link [ref=e256] [cursor=pointer]:
+          - /url: /ar
+          - img "KarSouq" [ref=e257]
+        - paragraph [ref=e258]: سوق السيارات المستعملة في المملكة العربية السعودية. اشترِ وبِع مباشرة مع البائعين.
+      - generic [ref=e259]:
+        - paragraph [ref=e260]: شراء
+        - link "تصفح السيارات" [ref=e261] [cursor=pointer]:
+          - /url: /ar/listings
+        - link "السيارات المحفوظة" [ref=e262] [cursor=pointer]:
+          - /url: /ar/favorites
+        - link "عمليات البحث المحفوظة" [ref=e263] [cursor=pointer]:
+          - /url: /ar/saved-searches
+      - generic [ref=e264]:
+        - paragraph [ref=e265]: الماركات الأكثر طلبًا
+        - link "تويوتا" [ref=e266] [cursor=pointer]:
+          - /url: /ar/brands/toyota
+        - link "هيونداي" [ref=e267] [cursor=pointer]:
+          - /url: /ar/brands/hyundai
+        - link "نيسان" [ref=e268] [cursor=pointer]:
+          - /url: /ar/brands/nissan
+        - link "لكزس" [ref=e269] [cursor=pointer]:
+          - /url: /ar/brands/lexus
+      - generic [ref=e270]:
+        - paragraph [ref=e271]: المدن
+        - link "الدمام" [ref=e272] [cursor=pointer]:
+          - /url: /ar/locations/dammam
+        - link "الجبيل" [ref=e273] [cursor=pointer]:
+          - /url: /ar/locations/jubail
+        - link "الخبر" [ref=e274] [cursor=pointer]:
+          - /url: /ar/locations/khobar
+        - link "الظهران" [ref=e275] [cursor=pointer]:
+          - /url: /ar/locations/dhahran
+        - link "جميع المدن" [ref=e276] [cursor=pointer]:
+          - /url: /ar/locations
+      - generic [ref=e277]:
+        - paragraph [ref=e278]: بيع
+        - link "بِع سيارتك" [ref=e279] [cursor=pointer]:
+          - /url: /ar/account/become-seller
+        - link "الباقات" [ref=e280] [cursor=pointer]:
+          - /url: /ar/pricing
+        - link "لوحة البائع" [ref=e281] [cursor=pointer]:
+          - /url: /ar/dashboard
+        - link "حسابي" [ref=e282] [cursor=pointer]:
+          - /url: /ar/account
+    - generic [ref=e284]:
+      - paragraph [ref=e285]: © 2026 كارسوق، أحد منتجات CodeSudio. جميع الحقوق محفوظة.
+      - navigation [ref=e286]:
+        - link "تواصل معنا" [ref=e287] [cursor=pointer]:
+          - /url: /ar/contact
+        - link "سياسة الخصوصية" [ref=e288] [cursor=pointer]:
+          - /url: /ar/privacy
+        - link "شروط الاستخدام" [ref=e289] [cursor=pointer]:
+          - /url: /ar/terms
+  - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=e295] [cursor=pointer]:
+    - generic [ref=e298]:
+      - text: Compiling
+      - generic [ref=e299]:
+        - generic [ref=e300]: .
+        - generic [ref=e301]: .
+        - generic [ref=e302]: .
