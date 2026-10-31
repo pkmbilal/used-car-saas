@@ -1,0 +1,213 @@
+- generic [active] [ref=f10e1]:
+  - banner [ref=f10e2]:
+    - navigation [ref=f10e3]:
+      - link [ref=f10e4] [cursor=pointer]:
+        - /url: /ar
+        - img "KarSouq" [ref=f10e5]
+      - generic [ref=f10e6]:
+        - link "شراء سيارة" [ref=f10e7] [cursor=pointer]:
+          - /url: /ar/listings
+        - link "الإيجار" [ref=f10e9] [cursor=pointer]:
+          - /url: /ar/rentals
+        - link "المعارض" [ref=f10e10] [cursor=pointer]:
+          - /url: /ar/dealers
+        - link "الباقات" [ref=f10e11] [cursor=pointer]:
+          - /url: /ar/pricing
+        - link "بيع" [ref=f10e12] [cursor=pointer]:
+          - /url: /ar/dashboard/listings/new
+      - generic [ref=f10e13]:
+        - link "English" [ref=f10e14] [cursor=pointer]:
+          - /url: /en/listings/381bfd44-ec61-49c3-9a4f-13a4c4327be7
+          - text: EN
+        - button "قائمة الحساب" [ref=f10e18] [cursor=pointer]:
+          - generic [aria-hidden] [ref=f10e20]: DU
+          - generic [ref=f10e22]:
+            - generic [ref=f10e23]: Demo User
+            - generic [ref=f10e24]: بائع · باقة برو
+  - main [ref=f10e28]:
+    - generic [ref=f10e30]:
+      - generic [ref=f10e31]: هذا الإعلان مسودة ولا يظهر للمشترين.
+      - link "تعديل الإعلان" [ref=f10e32] [cursor=pointer]:
+        - /url: /ar/dashboard/listings/381bfd44-ec61-49c3-9a4f-13a4c4327be7/edit
+    - generic [ref=f10e35]:
+      - navigation "مسار التنقل" [ref=f10e36]:
+        - list [ref=f10e37]:
+          - listitem [ref=f10e38]:
+            - link "معدات للإيجار" [ref=f10e39] [cursor=pointer]:
+              - /url: /ar/rentals?category=equipment
+          - listitem [aria-hidden] [ref=f10e40]
+          - listitem [ref=f10e43]:
+            - link "كاتربيلر" [ref=f10e44] [cursor=pointer]:
+              - /url: /ar/rentals?category=equipment&make=Caterpillar
+      - generic [ref=f10e45]:
+        - heading "2018 حفار كاتربيلر 320D TEST" [level=1] [ref=f10e46]
+        - generic [ref=f10e47]: للإيجار
+      - paragraph [ref=f10e48]:
+        - generic [ref=f10e49]: "2018"
+        - generic [ref=f10e50]: ·
+        - generic [ref=f10e51]: 4,200 ساعة تشغيل
+        - generic [ref=f10e52]: ·
+        - generic [ref=f10e53]: مع مشغّل
+        - generic [ref=f10e54]: ·
+        - generic [ref=f10e55]: الرياض
+      - paragraph [ref=f10e59]:
+        - generic [ref=f10e60]:
+          - generic [ref=f10e62]: ريال سعودي
+          - text: "900"
+        - text: / يوم
+    - generic [ref=f10e63]:
+      - generic [ref=f10e64]:
+        - generic [ref=f10e66]:
+          - heading "أسعار الإيجار" [level=2] [ref=f10e67]
+          - generic [ref=f10e68]:
+            - generic [ref=f10e69]:
+              - term [ref=f10e70]: يومي
+              - definition [ref=f10e71]:
+                - generic [ref=f10e72]:
+                  - generic [ref=f10e74]: ريال سعودي
+                  - text: "900"
+                - text: / يوم
+            - generic [ref=f10e75]:
+              - term [ref=f10e76]: أسبوعي
+              - definition [ref=f10e77]:
+                - generic [ref=f10e78]:
+                  - generic [ref=f10e80]: ريال سعودي
+                  - text: 5,000
+                - text: / أسبوع
+            - generic [ref=f10e81]:
+              - term [ref=f10e82]: شهري
+              - definition [ref=f10e83]:
+                - generic [ref=f10e84]:
+                  - generic [ref=f10e86]: ريال سعودي
+                  - text: 18,000
+                - text: / شهر
+          - heading "الشروط" [level=3] [ref=f10e87]
+          - list [ref=f10e88]:
+            - listitem [ref=f10e89]: يومان كحد أدنى
+            - listitem [ref=f10e94]: تأمين 3,000 ر.س
+        - generic [ref=f10e98]:
+          - heading "نظرة عامة" [level=2] [ref=f10e99]
+          - generic [ref=f10e100]:
+            - generic [ref=f10e108]:
+              - term [ref=f10e109]: نوع المعدة
+              - definition [ref=f10e110]: حفار
+            - generic [ref=f10e116]:
+              - term [ref=f10e117]: الماركة
+              - definition [ref=f10e118]: كاتربيلر
+            - generic [ref=f10e125]:
+              - term [ref=f10e126]: الموديل
+              - definition [ref=f10e127]: 320D TEST
+            - generic [ref=f10e132]:
+              - term [ref=f10e133]: سنة الصنع
+              - definition [ref=f10e134]: "2018"
+            - generic [ref=f10e140]:
+              - term [ref=f10e141]: ساعات التشغيل
+              - definition [ref=f10e142]: 4,200 ساعة تشغيل
+            - generic [ref=f10e150]:
+              - term [ref=f10e151]: المشغّل
+              - definition [ref=f10e152]: مع مشغّل
+            - generic [ref=f10e158]:
+              - term [ref=f10e159]: نوع الوقود
+              - definition [ref=f10e160]: ديزل
+            - generic [ref=f10e166]:
+              - term [ref=f10e167]: الحالة
+              - definition [ref=f10e168]: جيدة
+            - generic [ref=f10e174]:
+              - term [ref=f10e175]: المدينة
+              - definition [ref=f10e176]: الرياض
+            - generic [ref=f10e182]:
+              - term [ref=f10e183]: تاريخ الإعلان
+              - definition [ref=f10e184]: أكتوبر 2026
+        - generic [ref=f10e185]:
+          - heading "الوصف" [level=2] [ref=f10e186]
+          - paragraph [ref=f10e187]: Playwright test listing - safe to delete.
+      - complementary [ref=f10e188]:
+        - generic [ref=f10e189]:
+          - paragraph [ref=f10e190]:
+            - generic [ref=f10e191]:
+              - generic [ref=f10e193]: ريال سعودي
+              - text: "900"
+            - text: / يوم
+          - paragraph [ref=f10e194]: نُشر اليوم
+          - paragraph [ref=f10e198]: لا مشاهدات · لا اتصالات · لا رسائل واتساب
+          - generic [ref=f10e200]:
+            - link "تعديل" [ref=f10e201] [cursor=pointer]:
+              - /url: /ar/dashboard/listings/381bfd44-ec61-49c3-9a4f-13a4c4327be7/edit
+            - button "نشر" [ref=f10e202] [cursor=pointer]
+          - button "مشاركة" [ref=f10e204] [cursor=pointer]
+          - generic [ref=f10e205]:
+            - img "شعار Dammam Cars" [ref=f10e207]
+            - generic [ref=f10e208]:
+              - paragraph [ref=f10e209]: Dammam Cars
+              - generic [ref=f10e210]:
+                - generic [ref=f10e211]: معرض
+                - generic [ref=f10e212]: بريد موثق
+          - generic [ref=f10e214]:
+            - paragraph [ref=f10e215]:
+              - generic [ref=f10e219]:
+                - text: الموقع
+                - link "الرياض، المملكة العربية السعودية" [ref=f10e220] [cursor=pointer]:
+                  - /url: /ar/locations/riyadh
+            - paragraph [ref=f10e221]:
+              - generic [ref=f10e224]: عضو منذأكتوبر 2026
+          - link "زيارة صفحة المعرض ←" [ref=f10e225] [cursor=pointer]:
+            - /url: /ar/sellers/f85a72d4-29a5-4a96-a0b4-4ab15bd061c5
+  - contentinfo [ref=f10e226]:
+    - generic [ref=f10e227]:
+      - generic [ref=f10e228]:
+        - link [ref=f10e229] [cursor=pointer]:
+          - /url: /ar
+          - img "KarSouq" [ref=f10e230]
+        - paragraph [ref=f10e231]: سوق السيارات المستعملة في المملكة العربية السعودية. اشترِ وبِع مباشرة مع البائعين.
+      - generic [ref=f10e232]:
+        - paragraph [ref=f10e233]: شراء
+        - link "تصفح السيارات" [ref=f10e234] [cursor=pointer]:
+          - /url: /ar/listings
+        - link "السيارات المحفوظة" [ref=f10e235] [cursor=pointer]:
+          - /url: /ar/favorites
+        - link "عمليات البحث المحفوظة" [ref=f10e236] [cursor=pointer]:
+          - /url: /ar/saved-searches
+      - generic [ref=f10e237]:
+        - paragraph [ref=f10e238]: الماركات الأكثر طلبًا
+        - link "تويوتا" [ref=f10e239] [cursor=pointer]:
+          - /url: /ar/brands/toyota
+        - link "هيونداي" [ref=f10e240] [cursor=pointer]:
+          - /url: /ar/brands/hyundai
+        - link "نيسان" [ref=f10e241] [cursor=pointer]:
+          - /url: /ar/brands/nissan
+        - link "لكزس" [ref=f10e242] [cursor=pointer]:
+          - /url: /ar/brands/lexus
+      - generic [ref=f10e243]:
+        - paragraph [ref=f10e244]: المدن
+        - link "الدمام" [ref=f10e245] [cursor=pointer]:
+          - /url: /ar/locations/dammam
+        - link "الجبيل" [ref=f10e246] [cursor=pointer]:
+          - /url: /ar/locations/jubail
+        - link "الخبر" [ref=f10e247] [cursor=pointer]:
+          - /url: /ar/locations/khobar
+        - link "الظهران" [ref=f10e248] [cursor=pointer]:
+          - /url: /ar/locations/dhahran
+        - link "جميع المدن" [ref=f10e249] [cursor=pointer]:
+          - /url: /ar/locations
+      - generic [ref=f10e250]:
+        - paragraph [ref=f10e251]: بيع
+        - link "بِع سيارتك" [ref=f10e252] [cursor=pointer]:
+          - /url: /ar/account/become-seller
+        - link "الباقات" [ref=f10e253] [cursor=pointer]:
+          - /url: /ar/pricing
+        - link "لوحة البائع" [ref=f10e254] [cursor=pointer]:
+          - /url: /ar/dashboard
+        - link "حسابي" [ref=f10e255] [cursor=pointer]:
+          - /url: /ar/account
+    - generic [ref=f10e257]:
+      - paragraph [ref=f10e258]: © 2026 كارسوق، أحد منتجات CodeSudio. جميع الحقوق محفوظة.
+      - navigation [ref=f10e259]:
+        - link "تواصل معنا" [ref=f10e260] [cursor=pointer]:
+          - /url: /ar/contact
+        - link "سياسة الخصوصية" [ref=f10e261] [cursor=pointer]:
+          - /url: /ar/privacy
+        - link "شروط الاستخدام" [ref=f10e262] [cursor=pointer]:
+          - /url: /ar/terms
+  - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=f10e268] [cursor=pointer]
+  - alert [ref=f10e272]

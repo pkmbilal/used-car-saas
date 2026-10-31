@@ -19,6 +19,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const entries: Entry[] = [
     { path: "/", changeFrequency: "daily", priority: 1 },
     { path: "/listings", changeFrequency: "hourly", priority: 0.9 },
+    { path: "/rentals", changeFrequency: "daily", priority: 0.8 },
+    { path: "/rentals?category=equipment", changeFrequency: "daily", priority: 0.8 },
     { path: "/locations", changeFrequency: "weekly", priority: 0.6 },
     { path: "/brands", changeFrequency: "weekly", priority: 0.6 },
     { path: "/dealers", changeFrequency: "weekly", priority: 0.6 },

@@ -7,6 +7,8 @@ import { isContactKind, recordListingContact, recordListingView } from "@/lib/li
 import { parseReport } from "@/lib/moderation";
 import { MAX_OFFER_NOTE, parseAmount } from "@/lib/offer-limits";
 import { makeOffer, type OfferError } from "@/lib/offers";
+import { MAX_RENTAL_NOTE } from "@/lib/rental-quote";
+import { requestRental, type RentalError } from "@/lib/rentals";
 import { createClient } from "@/lib/supabase/server";
 
 // "signin" tells the client to send the visitor to the login page.
@@ -76,6 +78,35 @@ export async function sendOffer(
 
   revalidateLocalized(`/listings/${listingId}`);
   revalidateLocalized("/offers");
+  revalidateLocalized("/dashboard", "layout");
+  return { sent: true };
+}
+
+// "signin" tells the client to send the visitor to the login page.
+export type RentalRequestState = { error?: "signin" | RentalError; sent?: boolean };
+
+const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
+
+export async function sendRentalRequest(
+  listingId: string,
+  _prev: RentalRequestState,
+  formData: FormData,
+): Promise<RentalRequestState> {
+  if (!UUID.test(listingId)) return { error: "listing_not_active" };
+  const current = await getCurrentUser();
+  if (!current) return { error: "signin" };
+
+  const start = String(formData.get("start") ?? "");
+  const end = String(formData.get("end") ?? "");
+  if (!ISO_DATE.test(start) || !ISO_DATE.test(end)) return { error: "invalid_dates" };
+  const note = String(formData.get("note") ?? "").trim();
+  if (note.length > MAX_RENTAL_NOTE) return { error: "note_too_long" };
+
+  const result = await requestRental(listingId, start, end, note || null);
+  if (result.error) return { error: result.error };
+
+  revalidateLocalized(`/listings/${listingId}`);
+  revalidateLocalized("/bookings");
   revalidateLocalized("/dashboard", "layout");
   return { sent: true };
 }

@@ -3,12 +3,12 @@ import { Eye, Gauge, MapPin, MessageCircle, Phone } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { RiyalPrice } from "@/components/riyal-price";
 import Link from "@/components/locale-link";
-import { carName } from "@/lib/car-names";
+import { listingName } from "@/lib/car-names";
 import { cityName, count, fmt, translateMessage } from "@/lib/dictionary";
 import type { Dictionary } from "@/lib/dictionaries";
-import { formatDay, formatKm } from "@/lib/format";
+import { formatDay, formatUsage } from "@/lib/format";
 import type { Locale } from "@/lib/i18n";
-import { isFeatured, type ListingStats, type ListingWithImages } from "@/lib/listings";
+import { isFeatured, isRental, type ListingStats, type ListingWithImages } from "@/lib/listings";
 import { SELF_FEATURE_DAYS } from "@/lib/plans";
 import { ListingActions } from "./listings/listing-actions";
 import { StatusBadge } from "./listings/status-badge";
@@ -65,7 +65,7 @@ export function ListingCardItem({ listing, featureSlots, boostLabel, boostPendin
           className="absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-black/30 to-transparent"
         />
         <span className="absolute top-3 start-3 shadow-sm">
-          <StatusBadge status={listing.status} />
+          <StatusBadge status={listing.status} rent={isRental(listing)} />
         </span>
         {featured && (
           <span className="absolute top-3 end-3 rounded-full bg-lime px-2 py-0.5 text-xs font-semibold text-on-lime shadow-sm">
@@ -76,16 +76,19 @@ export function ListingCardItem({ listing, featureSlots, boostLabel, boostPendin
 
       <div className="min-w-0 px-4 pt-3.5">
         <Link href={editHref(listing.id)} className="block truncate font-semibold">
-          {carName(locale, listing.make, listing.model, listing.year)}
+          {listingName(locale, listing, listing.year)}
         </Link>
         <p className="mt-1 text-lg font-bold text-brand">
           <RiyalPrice amount={listing.price} />
+          {isRental(listing) && <span className="ms-1 text-xs font-medium text-zinc-500">{t.rentals.perDay}</span>}
         </p>
         <p className="mt-1.5 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-zinc-600 dark:text-zinc-400">
-          <span className="flex items-center gap-1.5">
-            <Gauge className="size-3.5" aria-hidden />
-            {formatKm(listing.mileage, locale)}
-          </span>
+          {formatUsage(listing, locale) && (
+            <span className="flex items-center gap-1.5">
+              <Gauge className="size-3.5" aria-hidden />
+              {formatUsage(listing, locale)}
+            </span>
+          )}
           <span className="flex items-center gap-1.5">
             <MapPin className="size-3.5" aria-hidden />
             {cityName(t, listing.city)}
@@ -110,6 +113,7 @@ export function ListingCardItem({ listing, featureSlots, boostLabel, boostPendin
           <ListingActions
             listingId={listing.id}
             status={listing.status}
+            rent={isRental(listing)}
             showEdit
             variant="card"
             featureSlots={featureSlots}
@@ -155,23 +159,26 @@ export function ListingListItem({ listing, featureSlots, boostLabel, boostPendin
         <div className="min-w-0 flex-1">
           <div className="flex flex-col gap-1 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
             <div className="min-w-0">
-              <StatusBadge status={listing.status} />
+              <StatusBadge status={listing.status} rent={isRental(listing)} />
               <Link
                 href={editHref(listing.id)}
                 className="mt-1.5 block truncate font-semibold sm:text-lg"
               >
-                {carName(locale, listing.make, listing.model, listing.year)}
+                {listingName(locale, listing, listing.year)}
               </Link>
             </div>
             <p className="shrink-0 text-lg font-bold text-brand sm:text-xl">
               <RiyalPrice amount={listing.price} />
+              {isRental(listing) && <span className="ms-1 text-xs font-medium text-zinc-500">{t.rentals.perDay}</span>}
             </p>
           </div>
           <p className="mt-1.5 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-zinc-600 sm:text-sm dark:text-zinc-400">
-            <span className="flex items-center gap-1.5">
-              <Gauge className="size-3.5 sm:size-4" aria-hidden />
-              {formatKm(listing.mileage, locale)}
-            </span>
+            {formatUsage(listing, locale) && (
+              <span className="flex items-center gap-1.5">
+                <Gauge className="size-3.5 sm:size-4" aria-hidden />
+                {formatUsage(listing, locale)}
+              </span>
+            )}
             <span className="flex items-center gap-1.5">
               <MapPin className="size-3.5 sm:size-4" aria-hidden />
               {cityName(t, listing.city)}
@@ -196,6 +203,7 @@ export function ListingListItem({ listing, featureSlots, boostLabel, boostPendin
         <ListingActions
           listingId={listing.id}
           status={listing.status}
+          rent={isRental(listing)}
           showEdit
           variant="row"
           featureSlots={featureSlots}
@@ -236,10 +244,10 @@ function ListingNotes({
       )}
       {listing.status === "active" && pendingOffers > 0 && (
         <Link
-          href="/dashboard/offers"
+          href={isRental(listing) ? "/dashboard/bookings" : "/dashboard/offers"}
           className={`text-brand ${card ? "mt-3 me-2 inline-block rounded-full bg-mint px-2.5 py-1 text-xs font-semibold" : "mt-1 block text-sm font-medium"} hover:underline`}
         >
-          {count(locale, pendingOffers, t.offers.pendingOnListing)}
+          {count(locale, pendingOffers, isRental(listing) ? t.rentals.pendingOnListing : t.offers.pendingOnListing)}
         </Link>
       )}
       {listing.status === "removed" && listing.removed_reason && (

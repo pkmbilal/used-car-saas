@@ -12,6 +12,8 @@ import {
   CalendarDays,
   Car,
   Clock,
+  Construction,
+  HardHat,
   Cog,
   Fuel,
   Gauge,
@@ -33,7 +35,8 @@ import { Separator } from "@/components/ui/separator";
 import { addonReference, getMyPendingAddons } from "@/lib/addons";
 import { getCurrentUser } from "@/lib/auth";
 import { salesWhatsappUrl } from "@/lib/contact";
-import { carName, makeName, modelName } from "@/lib/car-names";
+import { listingName, makeName, modelName } from "@/lib/car-names";
+import { equipmentTypeName } from "@/lib/equipment";
 import { cityHref, isCity } from "@/lib/cities";
 import { cityName, fmt, optionLabel, translateMessage } from "@/lib/dictionary";
 import { getFavoriteIds } from "@/lib/favorites";
@@ -41,7 +44,9 @@ import { localizePath } from "@/lib/i18n";
 import { getDictionary } from "@/lib/i18n-server";
 import {
   formatDay,
+  formatHours,
   formatKm,
+  formatUsage,
   formatMonthYear,
   formatListingStats,
   formatRelativeDays,
@@ -49,8 +54,9 @@ import {
 } from "@/lib/format";
 import { capitalize } from "@/lib/listing-options";
 import { listingDescription, listingJsonLd } from "@/lib/listing-seo";
-import { getListingStats, getPublicListing, getSimilarListings, isFeatured } from "@/lib/listings";
+import { getListingStats, getPublicListing, getSimilarListings, isEquipment, isFeatured, isRental } from "@/lib/listings";
 import { getMyOfferForListing } from "@/lib/offers";
+import { getBookedRanges, getMyRequestForListing } from "@/lib/rentals";
 import { isMake, makeHref } from "@/lib/makes";
 import { addonPrice, BOOST_DAYS, getListingQuota, SELF_FEATURE_DAYS } from "@/lib/plans";
 import { publicUrl } from "@/lib/r2";
@@ -62,6 +68,8 @@ import { Gallery } from "./gallery";
 import { MakeOfferButton } from "./make-offer-button";
 import { ListingDescription, ListingFeatures, SpecGrid } from "./listing-details";
 import { OwnerActions } from "./owner-actions";
+import { RentalRates } from "./rental-rates";
+import { RentalRequestPanel } from "./rental-request-panel";
 import { ShareButton } from "./share-button";
 import { ViewTracker } from "./view-tracker";
 
@@ -75,12 +83,20 @@ export async function generateMetadata({
   const { t, locale } = await getDictionary();
   const listing = await getListing(id);
   if (!listing) return { title: t.listingPage.notFoundTitle };
-  const title = fmt(t.listingPage.metaTitle, {
+  const title = fmt(
+    isEquipment(listing)
+      ? t.equipment.listingMetaTitle
+      : isRental(listing)
+        ? t.rentals.listingMetaTitle
+        : t.listingPage.metaTitle,
+    {
+    type: listing.equipment_type ? equipmentTypeName(locale, listing.equipment_type) : "",
     year: listing.year,
     make: makeName(locale, listing.make),
     model: modelName(locale, listing.make, listing.model),
     price: formatSAR(listing.price, locale),
-  });
+    },
+  );
   return pageMetadata({
     title,
     description: listingDescription(listing, t, locale),
@@ -101,22 +117,27 @@ export default async function ListingPage({ params }: PageProps<"/[lang]/listing
   const similarPromise = getSimilarListings(listing, 4);
   const current = await currentPromise;
 
-  const name = carName(locale, listing.make, listing.model);
+  const name = listingName(locale, listing);
+  const equipment = isEquipment(listing);
   const title = `${listing.year} ${name}`;
   const isOwner = current?.user.id === listing.seller_id;
   const seller = listing.seller;
   const storefront = seller ? getStorefront(seller) : null;
   const featured = isFeatured(listing);
-  const canOffer = !isOwner && listing.status === "active";
-  const [stats, quota, pendingAddons, favoriteIds, similar, myOffer] = await Promise.all([
+  const rent = isRental(listing);
+  const canOffer = !rent && !isOwner && listing.status === "active";
+  const canRequest = rent && !isOwner && listing.status === "active";
+  const [stats, quota, pendingAddons, favoriteIds, similar, myOffer, myRequest, booked] = await Promise.all([
     isOwner ? getListingStats(listing.id) : null,
     isOwner ? getListingQuota() : null,
     isOwner ? getMyPendingAddons(listing.id) : [],
     favoritesPromise,
     similarPromise,
     canOffer && current ? getMyOfferForListing(current.user.id, listing.id) : null,
+    canRequest && current ? getMyRequestForListing(current.user.id, listing.id) : null,
+    canRequest ? getBookedRanges(listing.id) : [],
   ]);
-  const whatsappText = fmt(p.whatsappText, {
+  const whatsappText = fmt(rent ? t.rentals.whatsappText : p.whatsappText, {
     title,
     price: formatSAR(listing.price, locale),
     url: await listingUrl(localizePath(locale, `/listings/${listing.id}`)),
@@ -147,31 +168,65 @@ export default async function ListingPage({ params }: PageProps<"/[lang]/listing
     : fmt(p.listedAgo, { when: formatRelativeDays(listedAt, locale) });
   // Counting the model year itself, so a this-year car isn't divided by zero.
   const ageYears = Math.max(1, new Date().getFullYear() - listing.year + 1);
-  const perYear = listing.mileage > 0 ? Math.round(listing.mileage / ageYears) : 0;
+  const perYear = listing.mileage ? Math.round(listing.mileage / ageYears) : 0;
+  // Rentals live in their own section, with their own make filter.
+  const sectionHref = equipment ? "/rentals?category=equipment" : rent ? "/rentals" : "/listings";
+  const sectionSearch = (params: Record<string, string>) =>
+    `${rent ? "/rentals" : "/listings"}?${new URLSearchParams({ ...(equipment && { category: "equipment" }), ...params })}`;
   const crumbs: Crumb[] = [
-    { name: p.breadcrumbListings, href: "/listings" },
+    { name: equipment ? t.equipment.browseTitle : rent ? t.rentals.browseTitle : p.breadcrumbListings, href: sectionHref },
     {
       name: makeName(locale, listing.make),
       // The brand page where there is one, so listings link to it rather than a filtered search.
       href:
-        isMake(listing.make) && listing.make !== "Other"
+        !rent && isMake(listing.make) && listing.make !== "Other"
           ? makeHref(listing.make)
-          : `/listings?${new URLSearchParams({ make: listing.make })}`,
+          : sectionSearch({ make: listing.make }),
     },
-    {
-      name: modelName(locale, listing.make, listing.model),
-      href: `/listings?${new URLSearchParams({ make: listing.make, model: listing.model })}`,
-    },
+    // Equipment models are free text, so there is no model filter to link to.
+    ...(equipment
+      ? []
+      : [
+          {
+            name: modelName(locale, listing.make, listing.model),
+            href: sectionSearch({ make: listing.make, model: listing.model }),
+          },
+        ]),
   ];
   const listingPath = `/listings/${listing.id}`;
   const sellerName = storefront?.name ?? seller?.full_name;
 
   const specIcon = { className: "size-4", strokeWidth: 1.8 };
-  const specs = [
+  const specs = equipment
+    ? [
+        {
+          label: t.equipment.type,
+          value: listing.equipment_type && equipmentTypeName(locale, listing.equipment_type),
+          icon: <Construction {...specIcon} />,
+        },
+        { label: t.equipment.brand, value: makeName(locale, listing.make), icon: <BadgeCheck {...specIcon} /> },
+        { label: p.specs.model, value: listing.model, icon: <Car {...specIcon} /> },
+        { label: p.specs.year, value: String(listing.year), icon: <CalendarDays {...specIcon} /> },
+        {
+          label: t.equipment.hours,
+          value: listing.operating_hours !== null ? formatHours(listing.operating_hours, locale) : null,
+          icon: <Gauge {...specIcon} />,
+        },
+        {
+          label: t.equipment.operator,
+          value: listing.operator_included ? t.equipment.withOperator : t.equipment.withoutOperator,
+          icon: <HardHat {...specIcon} />,
+        },
+        { label: p.specs.fuelType, value: fuel, icon: <Fuel {...specIcon} /> },
+        { label: p.specs.condition, value: optionLabel(t.options.condition, listing.condition), icon: <Sparkles {...specIcon} /> },
+        { label: p.specs.city, value: city, icon: <MapPin {...specIcon} /> },
+        { label: p.specs.listed, value: formatMonthYear(listing.created_at, locale), icon: <Clock {...specIcon} /> },
+      ]
+    : [
     { label: p.specs.make, value: makeName(locale, listing.make), icon: <BadgeCheck {...specIcon} /> },
     { label: p.specs.model, value: modelName(locale, listing.make, listing.model), icon: <Car {...specIcon} /> },
     { label: p.specs.year, value: String(listing.year), icon: <CalendarDays {...specIcon} /> },
-    { label: p.specs.mileage, value: formatKm(listing.mileage, locale), icon: <Gauge {...specIcon} /> },
+    { label: p.specs.mileage, value: formatUsage(listing, locale), icon: <Gauge {...specIcon} /> },
     {
       label: p.specs.perYear,
       value: perYear > 0 ? fmt(p.perYearValue, { km: formatKm(perYear, locale) }) : null,
@@ -250,23 +305,33 @@ export default async function ListingPage({ params }: PageProps<"/[lang]/listing
           <Breadcrumbs crumbs={crumbs} label={p.breadcrumbLabel} />
           <div className="mt-3 flex flex-wrap items-center gap-3.5">
             <h1 className="text-3xl font-semibold tracking-tight">{title}</h1>
+            {rent && (
+              <Badge className="h-6 bg-lime px-3 text-caption font-semibold text-on-lime">{t.rentals.forRent}</Badge>
+            )}
             {featured && (
               <Badge className="h-6 bg-[#4fc35f] px-3 text-caption font-semibold">{t.common.featured}</Badge>
             )}
           </div>
           <p className="mt-2.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-base sm:text-[0.9375rem]">
             <span>{listing.year}</span>
+            {formatUsage(listing, locale) && (
+              <>
+                <span className="opacity-60">·</span>
+                <span>{formatUsage(listing, locale)}</span>
+              </>
+            )}
             <span className="opacity-60">·</span>
-            <span>{formatKm(listing.mileage, locale)}</span>
-            <span className="opacity-60">·</span>
-            <span>{transmission ?? fuel}</span>
+            <span>{equipment && listing.operator_included ? t.equipment.withOperator : (transmission ?? fuel)}</span>
             <span className="opacity-60">·</span>
             <span className="flex items-center gap-1.5">
               <MapPin className="size-3.5" />
               {city}
             </span>
           </p>
-          <p className="mt-4 text-3xl font-bold text-lime"><RiyalPrice amount={listing.price} /></p>
+          <p className="mt-4 text-3xl font-bold text-lime">
+            <RiyalPrice amount={listing.price} />
+            {rent && <span className="ms-1.5 text-[0.5em] font-medium opacity-75">{t.rentals.perDay}</span>}
+          </p>
         </div>
       </section>
 
@@ -277,6 +342,7 @@ export default async function ListingPage({ params }: PageProps<"/[lang]/listing
             photos={listing.images.map(({ id, url }) => ({ id, url }))}
             featured={featured}
           />
+          {rent && <RentalRates listing={listing} />}
           <SpecGrid specs={specs} />
           <ListingFeatures features={listing.features} />
           <ListingDescription text={listing.description} />
@@ -284,7 +350,10 @@ export default async function ListingPage({ params }: PageProps<"/[lang]/listing
 
         <aside className="flex flex-col gap-5">
           <Card className="gap-0 rounded-lg px-5 pt-4 pb-5 shadow-[0_2px_12px_rgba(20,30,25,.06)] ring-0">
-            <p className="text-[1.6875rem] font-bold text-brand"><RiyalPrice amount={listing.price} /></p>
+            <p className="text-[1.6875rem] font-bold text-brand">
+              <RiyalPrice amount={listing.price} />
+              {rent && <span className="ms-1.5 text-[0.5em] font-medium opacity-75">{t.rentals.perDay}</span>}
+            </p>
             <p className="mt-1 flex items-center gap-1.5 text-xs text-muted-foreground">
               <Clock className="size-3.5" />
               {listedAgo}
@@ -314,10 +383,27 @@ export default async function ListingPage({ params }: PageProps<"/[lang]/listing
                 />
               </div>
             )}
+            {canRequest && (
+              <div className={`${showContact ? "mt-2.5" : "mt-4"} flex flex-col`}>
+                <RentalRequestPanel
+                  listingId={listing.id}
+                  rates={{
+                    daily: Number(listing.price),
+                    weekly: listing.weekly_price === null ? null : Number(listing.weekly_price),
+                    monthly: listing.monthly_price === null ? null : Number(listing.monthly_price),
+                  }}
+                  minDays={listing.min_rental_days ?? 1}
+                  booked={booked}
+                  signedIn={!!current}
+                  myRequest={myRequest}
+                />
+              </div>
+            )}
             {isOwner && (
               <OwnerActions
                 listingId={listing.id}
                 status={listing.status}
+                rent={rent}
                 featureSlots={featured ? 0 : (quota?.featuredRemaining ?? 0)}
                 featureDays={SELF_FEATURE_DAYS}
                 canUpgrade={!featured && !!quota && quota.plan !== "showroom"}
@@ -403,7 +489,7 @@ export default async function ListingPage({ params }: PageProps<"/[lang]/listing
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-semibold">{p.similar}</h2>
             <Link
-              href={`/listings?${new URLSearchParams({ make: listing.make, model: listing.model })}`}
+              href={equipment ? sectionSearch({ make: listing.make }) : sectionSearch({ make: listing.make, model: listing.model })}
               className="text-caption font-semibold text-brand"
             >
               {p.viewAll}
@@ -421,6 +507,7 @@ export default async function ListingPage({ params }: PageProps<"/[lang]/listing
           <div className="mx-auto flex w-full max-w-6xl items-center gap-2.5 px-4 py-3 sm:px-6">
             <p className="me-auto min-w-0 truncate text-base font-bold text-brand">
               <RiyalPrice amount={listing.price} />
+              {rent && <span className="ms-1.5 text-[0.5em] font-medium opacity-75">{t.rentals.perDay}</span>}
             </p>
             {seller && (
               <ContactButtons sellerId={seller.id} listingId={listing.id} whatsappText={whatsappText} variant="bar" />

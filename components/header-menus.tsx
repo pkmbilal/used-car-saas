@@ -3,6 +3,7 @@
 import Link, { useLocale } from "@/components/locale-link";
 import {
   Bell,
+  CalendarDays,
   Car,
   ChevronDown,
   HandCoins,
@@ -36,7 +37,7 @@ export type HeaderLink = {
   href: string;
   label: string;
   hint?: string;
-  icon?: "listings" | "offers" | "saved" | "searches" | "admin" | "account";
+  icon?: "listings" | "offers" | "bookings" | "saved" | "searches" | "admin" | "account";
   // Items waiting on the user, e.g. offers to answer.
   badge?: number;
 };
@@ -66,6 +67,7 @@ export type HeaderUser = {
 const LINK_ICONS: Record<NonNullable<HeaderLink["icon"]>, LucideIcon> = {
   listings: Car,
   offers: HandCoins,
+  bookings: CalendarDays,
   saved: Heart,
   searches: Bell,
   admin: ShieldCheck,

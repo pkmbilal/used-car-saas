@@ -1,7 +1,7 @@
 import { ArrowUpRight, CircleCheck, Clock, HandCoins, ImagePlus, PhoneOff, Star } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import Link from "@/components/locale-link";
-import { carName } from "@/lib/car-names";
+import { listingName } from "@/lib/car-names";
 import { count, fmt } from "@/lib/dictionary";
 import type { Dictionary } from "@/lib/dictionaries";
 import { formatDay } from "@/lib/format";
@@ -81,7 +81,7 @@ function describe(
       return {
         icon: Clock,
         text: fmt(a.featuredEnding, {
-          car: carName(locale, item.listing.make, item.listing.model, item.listing.year),
+          car: listingName(locale, item.listing, item.listing.year),
           date: formatDay(item.until, locale),
         }),
         href: editHref(item.listing.id),
@@ -93,7 +93,7 @@ function describe(
       return {
         icon: PhoneOff,
         text: fmt(a.noContacts, {
-          car: carName(locale, item.listing.make, item.listing.model, item.listing.year),
+          car: listingName(locale, item.listing, item.listing.year),
           days: item.days,
         }),
         href: editHref(item.listing.id),
@@ -103,7 +103,7 @@ function describe(
       return {
         icon: ImagePlus,
         text: count(locale, item.photos, a.fewPhotos, {
-          car: carName(locale, item.listing.make, item.listing.model, item.listing.year),
+          car: listingName(locale, item.listing, item.listing.year),
           min: RECOMMENDED_PHOTOS,
         }),
         href: editHref(item.listing.id),

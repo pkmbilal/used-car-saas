@@ -2,11 +2,11 @@
 
 import { useState } from "react";
 import { useDictionary } from "@/components/i18n-provider";
+import { SearchableSelect } from "@/components/searchable-select";
 import { makeName, modelName } from "@/lib/car-names";
+import { fmt } from "@/lib/dictionary";
 import { MAKES, modelsFor } from "@/lib/makes";
-import { Field, inputClass, selectClass } from "./form-fields";
-
-const TYPE_MODEL = "__other__";
+import { Field, inputClass } from "./form-fields";
 
 function findModel(make: string, model: string): string | undefined {
   const key = model.trim().toLowerCase();
@@ -14,85 +14,76 @@ function findModel(make: string, model: string): string | undefined {
 }
 
 // Make and model live together because the model choices depend on the make.
-// Exactly one element is named "model" at a time, so FormData is unchanged.
+// Both are searchable; a model that isn't listed can be used as typed.
+// `onChange` fires after a pick, since the hidden inputs don't emit change
+// events for the form's live preview.
 export function MakeModelFields({
   make: initialMake,
   model: initialModel,
+  onChange,
 }: {
   make?: string;
   model?: string;
+  onChange?: () => void;
 }) {
   const { t, locale } = useDictionary();
   const f = t.dashboard.form;
   const [make, setMake] = useState(initialMake ?? "");
-  const known = initialModel ? findModel(make, initialModel) : undefined;
-  const [selected, setSelected] = useState(known ?? (initialModel ? TYPE_MODEL : ""));
-  const [typed, setTyped] = useState(known ? "" : (initialModel ?? ""));
+  const [model, setModel] = useState(() =>
+    initialMake && initialModel ? (findModel(initialMake, initialModel) ?? initialModel) : "",
+  );
 
   const models = modelsFor(make);
-  const typing = make !== "" && (models.length === 0 || selected === TYPE_MODEL);
 
   return (
     <>
       <Field id="make" label={f.make}>
-        <select
+        <SearchableSelect
           id="make"
           name="make"
           required
           value={make}
-          onChange={(event) => {
-            setMake(event.target.value);
-            setSelected("");
-            setTyped("");
+          onValueChange={(next) => {
+            if (next !== make) setModel("");
+            setMake(next);
+            onChange?.();
           }}
-          className={selectClass}
-        >
-          <option value="" disabled>
-            {f.chooseMake}
-          </option>
-          {MAKES.map((option) => (
-            <option key={option} value={option}>
-              {makeName(locale, option)}
-            </option>
-          ))}
-        </select>
+          placeholder={f.chooseMake}
+          searchPlaceholder={t.select.searchMakes}
+          emptyText={t.select.noMatches}
+          options={MAKES.map((option) => ({ value: option, label: makeName(locale, option) }))}
+          triggerClassName={inputClass}
+        />
       </Field>
       <Field id="model" label={f.model}>
-        {models.length > 0 && (
-          <select
-            id={typing ? "model-choice" : "model"}
-            name={typing ? undefined : "model"}
-            required
-            value={selected}
-            onChange={(event) => setSelected(event.target.value)}
-            className={selectClass}
-          >
-            <option value="" disabled>
-              {f.chooseModel}
-            </option>
-            {models.map((option) => (
-              <option key={option} value={option}>
-                {modelName(locale, make, option)}
-              </option>
-            ))}
-            <option value={TYPE_MODEL}>{f.otherModel}</option>
-          </select>
-        )}
-        {make === "" && (
-          <select id="model" disabled value="" className={selectClass}>
-            <option value="">{f.chooseMakeFirst}</option>
-          </select>
-        )}
-        {typing && (
+        {make !== "" && models.length === 0 ? (
           <input
             id="model"
             name="model"
             required
             maxLength={60}
             placeholder={f.typeModel}
-            value={typed}
-            onChange={(event) => setTyped(event.target.value)}
+            value={model}
+            onChange={(event) => setModel(event.target.value)}
             className={inputClass}
+          />
+        ) : (
+          <SearchableSelect
+            id="model"
+            name="model"
+            required
+            disabled={make === ""}
+            value={model}
+            onValueChange={(next) => {
+              setModel(next.slice(0, 60));
+              onChange?.();
+            }}
+            placeholder={make === "" ? f.chooseMakeFirst : f.chooseModel}
+            searchPlaceholder={t.select.searchModels}
+            emptyText={t.select.noMatches}
+            customOption={(query) => fmt(t.select.useTyped, { value: query })}
+            options={models.map((option) => ({ value: option, label: modelName(locale, make, option) }))}
+            triggerClassName={inputClass}
           />
         )}
       </Field>

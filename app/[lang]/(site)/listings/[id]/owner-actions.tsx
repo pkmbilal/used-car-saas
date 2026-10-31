@@ -18,6 +18,8 @@ import {
 type Props = {
   listingId: string;
   status: ListingStatus;
+  // Rentals say "unavailable" where sales say "sold".
+  rent?: boolean;
   // Featured slots left this month; Boost shows when this is above 0.
   featureSlots: number;
   featureDays: number;
@@ -34,7 +36,7 @@ type Props = {
 const buttonClass = "h-10 w-full text-xs max-sm:text-sm font-medium";
 
 // The seller's controls on their own listing page.
-export function OwnerActions({ listingId, status, featureSlots, featureDays, canUpgrade, boost }: Props) {
+export function OwnerActions({ listingId, status, rent = false, featureSlots, featureDays, canUpgrade, boost }: Props) {
   const router = useRouter();
   const { t } = useDictionary();
   const a = t.dashboard.actions;
@@ -77,7 +79,7 @@ export function OwnerActions({ listingId, status, featureSlots, featureDays, can
             onClick={() => run(() => setListingStatus(listingId, "sold"))}
           >
             <CheckCircle2 className="size-3.5" />
-            {a.markSold}
+            {rent ? t.rentals.markUnavailable : a.markSold}
           </Button>
         ) : (
           <Button
@@ -88,7 +90,7 @@ export function OwnerActions({ listingId, status, featureSlots, featureDays, can
             onClick={() => run(() => setListingStatus(listingId, "active"))}
           >
             <RotateCcw className="size-3.5" />
-            {status === "sold" ? a.relist : a.publish}
+            {status === "sold" ? (rent ? t.rentals.relist : a.relist) : a.publish}
           </Button>
         )}
       </div>

@@ -1,0 +1,280 @@
+- generic [active] [ref=f13e1]:
+  - banner [ref=f13e2]:
+    - navigation [ref=f13e3]:
+      - link [ref=f13e4] [cursor=pointer]:
+        - /url: /en
+        - img "KarSouq" [ref=f13e5]
+      - generic [ref=f13e6]:
+        - link "Buy Cars" [ref=f13e7] [cursor=pointer]:
+          - /url: /en/listings
+        - link "Rentals" [ref=f13e9] [cursor=pointer]:
+          - /url: /en/rentals
+        - link "Dealers" [ref=f13e10] [cursor=pointer]:
+          - /url: /en/dealers
+        - link "Pricing" [ref=f13e11] [cursor=pointer]:
+          - /url: /en/pricing
+        - link "Sell" [ref=f13e12] [cursor=pointer]:
+          - /url: /en/dashboard/listings/new
+      - generic [ref=f13e13]:
+        - link "العربية" [ref=f13e14] [cursor=pointer]:
+          - /url: /ar/listings
+          - text: ع
+        - button "Account menu" [ref=f13e18] [cursor=pointer]:
+          - generic [aria-hidden] [ref=f13e20]: DU
+          - generic [ref=f13e22]:
+            - generic [ref=f13e23]: Demo User
+            - generic [ref=f13e24]: Seller · Pro
+  - main [ref=f13e28]:
+    - generic [ref=f13e31]:
+      - paragraph [ref=f13e32]: USED CARS FOR SALE
+      - heading "Find Your Perfect Car With Easy Filters" [level=1] [ref=f13e33]
+      - paragraph [ref=f13e34]: Set your preferences, find the right match, and contact the seller directly.
+    - generic [ref=f13e37]:
+      - generic [ref=f13e38]:
+        - generic [ref=f13e39]: Make
+        - button "Make" [ref=f13e41] [cursor=pointer]:
+          - generic [ref=f13e42]: Any Make
+      - generic [ref=f13e46]:
+        - generic [ref=f13e47]: Model
+        - button "Model" [disabled] [ref=f13e49]:
+          - generic [ref=f13e50]: Any Model
+      - generic [ref=f13e54]:
+        - generic [ref=f13e55]: Max Price
+        - combobox "Max Price" [ref=f13e56] [cursor=pointer]:
+          - generic [ref=f13e57]: Any Price
+        - combobox [aria-hidden] [ref=f13e58]
+      - generic [ref=f13e59]:
+        - generic [ref=f13e60]: Year
+        - combobox "Year" [ref=f13e61] [cursor=pointer]:
+          - generic [ref=f13e62]: Any Year
+        - combobox [aria-hidden] [ref=f13e63]
+      - generic [ref=f13e64]:
+        - generic [ref=f13e65]: Location
+        - button "Location" [ref=f13e67] [cursor=pointer]:
+          - generic [ref=f13e68]: Riyadh
+      - button "Search Cars" [ref=f13e75] [cursor=pointer]
+    - generic [ref=f13e76]:
+      - generic [ref=f13e78]:
+        - generic [ref=f13e79]:
+          - generic [ref=f13e81]: Filters
+          - link "Clear All" [ref=f13e82] [cursor=pointer]:
+            - /url: /en/listings
+        - generic [ref=f13e83]:
+          - generic [ref=f13e84]: Keyword
+          - searchbox "Keyword" [ref=f13e85]
+        - generic [ref=f13e86]:
+          - generic [ref=f13e87]: Make
+          - button "Make" [ref=f13e89] [cursor=pointer]:
+            - generic [ref=f13e90]: Any
+        - generic [ref=f13e94]:
+          - generic [ref=f13e95]: Model
+          - button "Model" [disabled] [ref=f13e97]:
+            - generic [ref=f13e98]: Any
+        - generic [ref=f13e102]:
+          - generic [ref=f13e103]: City
+          - button "City" [ref=f13e105] [cursor=pointer]:
+            - generic [ref=f13e106]: Riyadh
+        - group "Price Range SAR" [ref=f13e110]:
+          - generic [ref=f13e111]:
+            - generic [ref=f13e112]: Price Range
+            - generic [ref=f13e113]: SAR
+          - generic [ref=f13e114]:
+            - spinbutton "Price Range min" [ref=f13e115]
+            - generic [ref=f13e116]: –
+            - spinbutton "Price Range max" [ref=f13e117]
+        - group "Year" [ref=f13e118]:
+          - generic [ref=f13e121]:
+            - spinbutton "Year min" [ref=f13e122]
+            - generic [ref=f13e123]: –
+            - spinbutton "Year max" [ref=f13e124]
+        - generic [ref=f13e125]:
+          - generic [ref=f13e126]: Mileage
+          - combobox "Mileage" [ref=f13e127] [cursor=pointer]:
+            - generic [ref=f13e128]: Any Mileage
+          - combobox [aria-hidden] [ref=f13e129]
+        - group "Condition" [ref=f13e130]:
+          - generic [ref=f13e132]:
+            - generic [ref=f13e133] [cursor=pointer]:
+              - checkbox "Excellent (10)" [ref=f13e134]
+              - text: Excellent
+              - generic [ref=f13e135]: (10)
+            - generic [ref=f13e136] [cursor=pointer]:
+              - checkbox "Good (7)" [ref=f13e137]
+              - text: Good
+              - generic [ref=f13e138]: (7)
+            - generic [ref=f13e139] [cursor=pointer]:
+              - checkbox "Fair (1)" [ref=f13e140]
+              - text: Fair
+              - generic [ref=f13e141]: (1)
+        - group "Body Style" [ref=f13e142]:
+          - generic [ref=f13e144]:
+            - generic [ref=f13e145] [cursor=pointer]:
+              - checkbox "Sedan (6)" [ref=f13e146]
+              - text: Sedan
+              - generic [ref=f13e147]: (6)
+            - generic [ref=f13e148] [cursor=pointer]:
+              - checkbox "SUV (10)" [ref=f13e149]
+              - text: SUV
+              - generic [ref=f13e150]: (10)
+            - generic [ref=f13e151] [cursor=pointer]:
+              - checkbox "Hatchback (0)" [ref=f13e152]
+              - text: Hatchback
+              - generic [ref=f13e153]: (0)
+            - generic [ref=f13e154] [cursor=pointer]:
+              - checkbox "Coupe (0)" [ref=f13e155]
+              - text: Coupe
+              - generic [ref=f13e156]: (0)
+            - generic [ref=f13e157] [cursor=pointer]:
+              - checkbox "Pickup (2)" [ref=f13e158]
+              - text: Pickup
+              - generic [ref=f13e159]: (2)
+            - generic [ref=f13e160] [cursor=pointer]:
+              - checkbox "Van (0)" [ref=f13e161]
+              - text: Van
+              - generic [ref=f13e162]: (0)
+        - group "Fuel Type" [ref=f13e163]:
+          - generic [ref=f13e165]:
+            - generic [ref=f13e166] [cursor=pointer]:
+              - checkbox "Petrol (15)" [ref=f13e167]
+              - text: Petrol
+              - generic [ref=f13e168]: (15)
+            - generic [ref=f13e169] [cursor=pointer]:
+              - checkbox "Diesel (1)" [ref=f13e170]
+              - text: Diesel
+              - generic [ref=f13e171]: (1)
+            - generic [ref=f13e172] [cursor=pointer]:
+              - checkbox "Hybrid (1)" [ref=f13e173]
+              - text: Hybrid
+              - generic [ref=f13e174]: (1)
+            - generic [ref=f13e175] [cursor=pointer]:
+              - checkbox "Electric (1)" [ref=f13e176]
+              - text: Electric
+              - generic [ref=f13e177]: (1)
+        - group "Transmission" [ref=f13e178]:
+          - generic [ref=f13e180]:
+            - generic [ref=f13e181] [cursor=pointer]:
+              - checkbox "Automatic (17)" [ref=f13e182]
+              - text: Automatic
+              - generic [ref=f13e183]: (17)
+            - generic [ref=f13e184] [cursor=pointer]:
+              - checkbox "Manual (1)" [ref=f13e185]
+              - text: Manual
+              - generic [ref=f13e186]: (1)
+        - group "Features" [ref=f13e187]:
+          - generic [ref=f13e189]:
+            - generic [ref=f13e190] [cursor=pointer]:
+              - checkbox "Sunroof" [ref=f13e191]
+              - text: Sunroof
+            - generic [ref=f13e192] [cursor=pointer]:
+              - checkbox "Leather Seats" [ref=f13e193]
+              - text: Leather Seats
+            - generic [ref=f13e194] [cursor=pointer]:
+              - checkbox "Navigation" [ref=f13e195]
+              - text: Navigation
+            - generic [ref=f13e196] [cursor=pointer]:
+              - checkbox "Rear Camera" [ref=f13e197]
+              - text: Rear Camera
+            - generic [ref=f13e198] [cursor=pointer]:
+              - checkbox "Bluetooth" [ref=f13e199]
+              - text: Bluetooth
+            - generic [ref=f13e200] [cursor=pointer]:
+              - checkbox "Parking Sensors" [ref=f13e201]
+              - text: Parking Sensors
+            - generic [ref=f13e202] [cursor=pointer]:
+              - checkbox "Cruise Control" [ref=f13e203]
+              - text: Cruise Control
+            - generic [ref=f13e204] [cursor=pointer]:
+              - checkbox "Apple CarPlay" [ref=f13e205]
+              - text: Apple CarPlay
+            - generic [ref=f13e206] [cursor=pointer]:
+              - checkbox "Android Auto" [ref=f13e207]
+              - text: Android Auto
+            - generic [ref=f13e208] [cursor=pointer]:
+              - checkbox "Keyless Entry" [ref=f13e209]
+              - text: Keyless Entry
+            - generic [ref=f13e210] [cursor=pointer]:
+              - checkbox "Climate Control" [ref=f13e211]
+              - text: Climate Control
+            - generic [ref=f13e212] [cursor=pointer]:
+              - checkbox "Alloy Wheels" [ref=f13e213]
+              - text: Alloy Wheels
+        - button "Apply Filters" [ref=f13e214] [cursor=pointer]
+      - generic [ref=f13e215]:
+        - generic [ref=f13e216]:
+          - paragraph [ref=f13e217]: 0 Cars Found
+          - generic [ref=f13e218]:
+            - button "Save this search" [ref=f13e219] [cursor=pointer]
+            - generic [ref=f13e220]:
+              - generic [ref=f13e221]: Sort by
+              - combobox "Sort by" [ref=f13e222] [cursor=pointer]:
+                - generic: Newest First
+        - generic [ref=f13e223]:
+          - 'link "Remove filter: Riyadh" [ref=f13e224] [cursor=pointer]':
+            - /url: /en/listings
+            - text: Riyadh
+          - link "Clear all" [ref=f13e228] [cursor=pointer]:
+            - /url: /en/listings
+        - generic [ref=f13e229]:
+          - paragraph [ref=f13e235]: No cars match these filters
+          - paragraph [ref=f13e236]: Try removing a filter or widening your price and year range. Save this search to hear when a match is listed.
+          - link "Clear all filters" [ref=f13e237] [cursor=pointer]:
+            - /url: /en/listings
+  - contentinfo [ref=f13e238]:
+    - generic [ref=f13e239]:
+      - generic [ref=f13e240]:
+        - link [ref=f13e241] [cursor=pointer]:
+          - /url: /en
+          - img "KarSouq" [ref=f13e242]
+        - paragraph [ref=f13e243]: Saudi Arabia's marketplace for used cars. Buy and sell directly with sellers.
+      - generic [ref=f13e244]:
+        - paragraph [ref=f13e245]: BUY
+        - link "Browse Cars" [ref=f13e246] [cursor=pointer]:
+          - /url: /en/listings
+        - link "Saved Cars" [ref=f13e247] [cursor=pointer]:
+          - /url: /en/favorites
+        - link "Saved Searches" [ref=f13e248] [cursor=pointer]:
+          - /url: /en/saved-searches
+      - generic [ref=f13e249]:
+        - paragraph [ref=f13e250]: POPULAR MAKES
+        - link "Toyota" [ref=f13e251] [cursor=pointer]:
+          - /url: /en/brands/toyota
+        - link "Hyundai" [ref=f13e252] [cursor=pointer]:
+          - /url: /en/brands/hyundai
+        - link "Nissan" [ref=f13e253] [cursor=pointer]:
+          - /url: /en/brands/nissan
+        - link "Lexus" [ref=f13e254] [cursor=pointer]:
+          - /url: /en/brands/lexus
+      - generic [ref=f13e255]:
+        - paragraph [ref=f13e256]: CITIES
+        - link "Dammam" [ref=f13e257] [cursor=pointer]:
+          - /url: /en/locations/dammam
+        - link "Jubail" [ref=f13e258] [cursor=pointer]:
+          - /url: /en/locations/jubail
+        - link "Khobar" [ref=f13e259] [cursor=pointer]:
+          - /url: /en/locations/khobar
+        - link "Dhahran" [ref=f13e260] [cursor=pointer]:
+          - /url: /en/locations/dhahran
+        - link "All Cities" [ref=f13e261] [cursor=pointer]:
+          - /url: /en/locations
+      - generic [ref=f13e262]:
+        - paragraph [ref=f13e263]: SELL
+        - link "Sell Your Car" [ref=f13e264] [cursor=pointer]:
+          - /url: /en/account/become-seller
+        - link "Pricing" [ref=f13e265] [cursor=pointer]:
+          - /url: /en/pricing
+        - link "Seller Dashboard" [ref=f13e266] [cursor=pointer]:
+          - /url: /en/dashboard
+        - link "My Account" [ref=f13e267] [cursor=pointer]:
+          - /url: /en/account
+    - generic [ref=f13e269]:
+      - paragraph [ref=f13e270]: © 2026 KarSouq, a CodeSudio product. All rights reserved.
+      - navigation [ref=f13e271]:
+        - link "Contact" [ref=f13e272] [cursor=pointer]:
+          - /url: /en/contact
+        - link "Privacy Policy" [ref=f13e273] [cursor=pointer]:
+          - /url: /en/privacy
+        - link "Terms of Use" [ref=f13e274] [cursor=pointer]:
+          - /url: /en/terms
+  - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=f13e280] [cursor=pointer]
+  - alert [ref=f13e284]

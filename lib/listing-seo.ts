@@ -1,7 +1,8 @@
-import { makeName, modelName } from "@/lib/car-names";
+import { listingName, makeName, modelName } from "@/lib/car-names";
+import { equipmentTypeName } from "@/lib/equipment";
 import { cityName, fmt, optionLabel } from "@/lib/dictionary";
 import type { Dictionary } from "@/lib/dictionaries";
-import { formatKm, formatSAR } from "@/lib/format";
+import { formatSAR, formatUsage } from "@/lib/format";
 import type { Locale } from "@/lib/i18n";
 import { bodyTypeLabel, capitalize } from "@/lib/listing-options";
 import type { ListingWithImages } from "@/lib/listings";
@@ -21,12 +22,17 @@ type SeoListing = Pick<
   | "color"
   | "status"
   | "images"
+  | "listing_type"
+  | "category"
+  | "equipment_type"
+  | "operating_hours"
 >;
 
 // Meta description for a listing page, built from its specs.
 export function listingDescription(listing: SeoListing, t: Dictionary, locale: Locale): string {
   const specs = [
-    formatKm(listing.mileage, locale),
+    formatUsage(listing, locale),
+    listing.equipment_type && equipmentTypeName(locale, listing.equipment_type),
     listing.transmission && optionLabel(t.options.transmission, listing.transmission),
     optionLabel(t.options.fuel, listing.fuel_type),
   ]
@@ -38,7 +44,10 @@ export function listingDescription(listing: SeoListing, t: Dictionary, locale: L
     model: modelName(locale, listing.make, listing.model),
     city: cityName(t, listing.city),
     specs,
-    price: formatSAR(listing.price, locale),
+    price:
+      listing.listing_type === "rent"
+        ? `${formatSAR(listing.price, locale)} ${t.rentals.perDay}`
+        : formatSAR(listing.price, locale),
   });
 }
 
@@ -50,6 +59,31 @@ export function listingJsonLd(
   description: string,
   seller: { name: string; dealer: boolean } | null,
 ) {
+  if (listing.category === "equipment") {
+    // Equipment: a generic Product leased out by the day.
+    return {
+      "@context": "https://schema.org",
+      "@type": "Product",
+      name: listingName("en", listing, listing.year),
+      description,
+      url,
+      image: listing.images.map((image) => image.url),
+      brand: { "@type": "Brand", name: listing.make },
+      model: listing.model,
+      offers: {
+        "@type": "Offer",
+        url,
+        price: listing.price,
+        priceCurrency: "SAR",
+        businessFunction: "http://purl.org/goodrelations/v1#LeaseOut",
+        priceSpecification: { "@type": "UnitPriceSpecification", price: listing.price, priceCurrency: "SAR", unitCode: "DAY" },
+        availability: listing.status === "active" ? "https://schema.org/InStock" : "https://schema.org/SoldOut",
+        areaServed: { "@type": "City", name: listing.city },
+        ...(seller && { seller: { "@type": seller.dealer ? "Organization" : "Person", name: seller.name } }),
+      },
+    };
+  }
+
   return {
     "@context": "https://schema.org",
     "@type": "Car",
@@ -71,6 +105,16 @@ export function listingJsonLd(
       url,
       price: listing.price,
       priceCurrency: "SAR",
+      // Rentals: the price is a daily rate for leasing the car out.
+      ...(listing.listing_type === "rent" && {
+        businessFunction: "http://purl.org/goodrelations/v1#LeaseOut",
+        priceSpecification: {
+          "@type": "UnitPriceSpecification",
+          price: listing.price,
+          priceCurrency: "SAR",
+          unitCode: "DAY",
+        },
+      }),
       availability: listing.status === "active" ? "https://schema.org/InStock" : "https://schema.org/SoldOut",
       areaServed: { "@type": "City", name: listing.city },
       ...(seller && { seller: { "@type": seller.dealer ? "AutoDealer" : "Person", name: seller.name } }),

@@ -34,7 +34,7 @@ export async function pageMetadata({
   if (Number.isInteger(n) && n > 1) {
     // "Used Toyota cars | KarSouq" -> "Used Toyota cars – Page 2 | KarSouq"
     title = title.replace(/( \| [^|]*)?$/, (suffix) => ` – ${fmt(t.common.page, { page: n })}${suffix}`);
-    path = `${path}?page=${n}`;
+    path = `${path}${path.includes("?") ? "&" : "?"}page=${n}`;
   }
   // A page's own openGraph replaces the layout's, file-based image included,
   // so the default card has to be named here. Its size and type go with it:

@@ -1,5 +1,6 @@
 import "server-only";
 import { makeName, modelName } from "@/lib/car-names";
+import { equipmentTypeName } from "@/lib/equipment";
 import { cityName, fmt, optionLabel } from "@/lib/dictionary";
 import type { Dictionary } from "@/lib/dictionaries";
 import type { Locale } from "@/lib/i18n";
@@ -37,13 +38,26 @@ function parseStoredFilters(filters: Json): ListingFilters {
   return parseListingFilters(params);
 }
 
+// Rentals have their own section (/rentals, which implies type=rent); sale
+// cars are under /listings.
 export function listingsHref(filters: ListingFilters): string {
-  const search = new URLSearchParams(listingFiltersToParams(filters)).toString();
-  return search ? `/listings?${search}` : "/listings";
+  const params = listingFiltersToParams(filters);
+  const rent = filters.type === "rent";
+  if (rent) delete params.type;
+  const path = rent ? "/rentals" : "/listings";
+  const search = new URLSearchParams(params).toString();
+  return search ? `${path}?${search}` : path;
 }
 
+// The section's unfiltered page: /listings, /rentals or /rentals?category=equipment.
+export function browseBaseHref(filters: Pick<ListingFilters, "type" | "category">): string {
+  if (filters.type !== "rent") return "/listings";
+  return filters.category === "equipment" ? "/rentals?category=equipment" : "/rentals";
+}
+
+// The sale/rent and car/equipment tabs alone aren't filters.
 export function hasActiveFilters(filters: ListingFilters): boolean {
-  return Object.keys(listingFiltersToParams(filters)).length > 0;
+  return Object.keys(listingFiltersToParams(filters)).some((key) => key !== "type" && key !== "category");
 }
 
 // Human-readable parts, e.g. ["“camry”", "Toyota", "Riyadh", "Up to SAR 80,000"].
@@ -64,6 +78,9 @@ export function describeFilters(filters: ListingFilters, t: Dictionary, locale: 
   else if (maxYear !== undefined) year = fmt(s.yearMax, { year: maxYear });
 
   return [
+    filters.category === "equipment" ? t.equipment.browseTitle : filters.type === "rent" ? t.rentals.forRent : null,
+    joined(filters.equipmentTypes.map((value) => equipmentTypeName(locale, value))),
+    filters.withOperator ? t.equipment.withOperator : null,
     filters.q ? `“${filters.q}”` : null,
     filters.make ? makeName(locale, filters.make) : null,
     filters.model ? modelName(locale, filters.make ?? "", filters.model) : null,

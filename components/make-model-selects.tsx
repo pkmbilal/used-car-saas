@@ -1,18 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import { FormSelect } from "@/components/form-select";
 import { useDictionary } from "@/components/i18n-provider";
+import { filterTriggerClass, SearchableSelect } from "@/components/searchable-select";
 import { Label } from "@/components/ui/label";
-import { Select, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { makeName, modelName } from "@/lib/car-names";
 import { MAKES, modelsFor } from "@/lib/makes";
 import { cn } from "@/lib/utils";
 
-const triggerClass = "h-9 w-full bg-white text-xs data-[size=default]:h-9 max-sm:text-sm max-sm:data-[size=default]:h-10";
-
-// Make and Model filters for GET search forms. Model choices follow the
-// selected make, and the model resets to "Any" when the make changes.
+// Make and Model filters for GET search forms. Both dropdowns can be searched
+// by typing. Model choices follow the selected make, and the model resets to
+// "Any" when the make changes. "Any" submits nothing, so URLs stay clean.
 export function MakeModelSelects({
   make: initialMake,
   model: initialModel,
@@ -39,8 +37,10 @@ export function MakeModelSelects({
   modelLabel?: React.ReactNode;
 }) {
   const { t, locale } = useDictionary();
-  const [make, setMake] = useState(initialMake);
+  const [make, setMake] = useState(initialMake ?? "");
+  const [model, setModel] = useState(initialModel ?? "");
   const models = make ? modelsFor(make) : [];
+  const trigger = cn(filterTriggerClass, triggerClassName);
 
   return (
     <>
@@ -48,37 +48,43 @@ export function MakeModelSelects({
         <Label htmlFor={makeId} className={labelClassName}>
           {makeLabel ?? t.select.make}
         </Label>
-        <FormSelect
+        <SearchableSelect
           id={makeId}
           name="make"
-          defaultValue={initialMake}
+          value={make}
+          onValueChange={(next) => {
+            if (next !== make) setModel("");
+            setMake(next);
+          }}
           placeholder={makePlaceholder}
-          options={MAKES.map((option) => ({ value: option, label: makeName(locale, option) }))}
-          onValueChange={setMake}
-          className={triggerClassName}
+          searchPlaceholder={t.select.searchMakes}
+          emptyText={t.select.noMatches}
+          options={[
+            { value: "", label: makePlaceholder },
+            ...MAKES.map((option) => ({ value: option, label: makeName(locale, option) })),
+          ]}
+          triggerClassName={trigger}
         />
       </div>
       <div className={fieldClassName}>
         <Label htmlFor={modelId} className={labelClassName}>
           {modelLabel ?? t.select.model}
         </Label>
-        {models.length > 0 ? (
-          <FormSelect
-            key={make}
-            id={modelId}
-            name="model"
-            defaultValue={make === initialMake ? initialModel : undefined}
-            placeholder={modelPlaceholder}
-            options={models.map((option) => ({ value: option, label: modelName(locale, make ?? "", option) }))}
-            className={triggerClassName}
-          />
-        ) : (
-          <Select disabled>
-            <SelectTrigger id={modelId} className={cn(triggerClass, triggerClassName)}>
-              <SelectValue placeholder={make ? modelPlaceholder : t.select.chooseMakeFirst} />
-            </SelectTrigger>
-          </Select>
-        )}
+        <SearchableSelect
+          id={modelId}
+          name="model"
+          value={models.length > 0 ? model : ""}
+          onValueChange={setModel}
+          disabled={models.length === 0}
+          placeholder={make ? modelPlaceholder : t.select.chooseMakeFirst}
+          searchPlaceholder={t.select.searchModels}
+          emptyText={t.select.noMatches}
+          options={[
+            { value: "", label: modelPlaceholder },
+            ...models.map((option) => ({ value: option, label: modelName(locale, make, option) })),
+          ]}
+          triggerClassName={trigger}
+        />
       </div>
     </>
   );

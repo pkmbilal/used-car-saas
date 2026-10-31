@@ -2,11 +2,14 @@ import "server-only";
 import { cache } from "react";
 import { arabicToStoredNames } from "@/lib/car-names";
 import { CITIES, isCity } from "@/lib/cities";
+import { EQUIPMENT_BRANDS, EQUIPMENT_TYPES, type EquipmentType } from "@/lib/equipment";
 import {
   BODY_TYPES,
   CONDITIONS,
   FEATURE_VALUES,
   FUEL_TYPES,
+  LISTING_CATEGORIES,
+  LISTING_TYPES,
   MAX_COLOR_LENGTH,
   MAX_DESCRIPTION_LENGTH,
   TRANSMISSIONS,
@@ -14,6 +17,8 @@ import {
   type Condition,
   type Feature,
   type FuelType,
+  type ListingCategory,
+  type ListingType,
   type Transmission,
 } from "@/lib/listing-options";
 import { isMake, MAKES, modelsFor } from "@/lib/makes";
@@ -42,6 +47,25 @@ export type ListingInput = Pick<
   | "features"
   | "color"
   | "description"
+>;
+
+// Equipment-only fields; null on cars (enforced by a DB check).
+export type EquipmentInput = Pick<
+  Listing,
+  "category" | "equipment_type" | "operating_hours" | "operator_included"
+>;
+
+const CAR_FIELDS: EquipmentInput = {
+  category: "car",
+  equipment_type: null,
+  operating_hours: null,
+  operator_included: null,
+};
+
+// Rental-only fields; all null on sale listings (enforced by a DB check).
+export type RentalInput = Pick<
+  Listing,
+  "listing_type" | "weekly_price" | "monthly_price" | "min_rental_days" | "deposit" | "daily_km_limit"
 >;
 
 function includes<T extends string>(list: readonly T[], value: unknown): value is T {
@@ -74,6 +98,7 @@ export const LISTING_BOUNDS = {
   minYear: 1950,
   maxModelLength: 60,
   maxMileage: 2_000_000,
+  maxOperatingHours: 1_000_000,
   maxPrice: 100_000_000,
   maxColorLength: MAX_COLOR_LENGTH,
   maxDescriptionLength: MAX_DESCRIPTION_LENGTH,
@@ -162,15 +187,167 @@ export function parseListingFields(
   };
 }
 
+export const RENTAL_BOUNDS = {
+  maxMinDays: 90,
+  maxKmLimit: 10_000,
+} as const;
+
+const SALE_FIELDS: RentalInput = {
+  listing_type: "sale",
+  weekly_price: null,
+  monthly_price: null,
+  min_rental_days: null,
+  deposit: null,
+  daily_km_limit: null,
+};
+
+// Blank means "not given"; anything else must be a whole number.
+function optionalWholeNumber(value: string | null): number | null | undefined {
+  const text = (value ?? "").replace(/[,\s]/g, "");
+  if (text === "") return null;
+  return /^\d+$/.test(text) ? Number(text) : undefined;
+}
+
+// The listing form's sale/rent fields. For rentals `price` is the daily rate,
+// so it's validated by parseListingFields; this checks the rest against it.
+// Limits must match supabase/migrations/*_rental_listings.sql.
+export function parseRentalFields(
+  get: (field: keyof RentalInput) => string | null,
+  dailyPrice: number,
+): { data: RentalInput } | { error: string } {
+  const type = matchOption(LISTING_TYPES, get("listing_type")) ?? "sale";
+  if (type === "sale") return { data: SALE_FIELDS };
+
+  const weekly = optionalWholeNumber(get("weekly_price"));
+  const monthly = optionalWholeNumber(get("monthly_price"));
+  const minDays = optionalWholeNumber(get("min_rental_days"));
+  const deposit = optionalWholeNumber(get("deposit"));
+  const kmLimit = optionalWholeNumber(get("daily_km_limit"));
+
+  if (weekly === undefined || weekly === 0 || (weekly !== null && weekly >= dailyPrice * 7)) {
+    return { error: "The weekly rate must be less than 7 days at the daily rate." };
+  }
+  if (monthly === undefined || monthly === 0 || (monthly !== null && monthly >= dailyPrice * 30)) {
+    return { error: "The monthly rate must be less than 30 days at the daily rate." };
+  }
+  if (minDays === undefined || (minDays !== null && (minDays < 1 || minDays > RENTAL_BOUNDS.maxMinDays))) {
+    return { error: `The minimum rental must be between 1 and ${RENTAL_BOUNDS.maxMinDays} days.` };
+  }
+  if (deposit === undefined || (deposit !== null && deposit > LISTING_BOUNDS.maxPrice)) {
+    return { error: "Enter the deposit in SAR." };
+  }
+  if (kmLimit === undefined || kmLimit === 0 || (kmLimit !== null && kmLimit > RENTAL_BOUNDS.maxKmLimit)) {
+    return { error: "Enter the daily km limit, or leave it blank for unlimited." };
+  }
+
+  return {
+    data: {
+      listing_type: "rent",
+      weekly_price: weekly,
+      monthly_price: monthly,
+      min_rental_days: minDays ?? 1,
+      deposit,
+      daily_km_limit: kmLimit,
+    },
+  };
+}
+
+// Equipment listings: `make` holds the brand; car-only specs stay empty.
+// Limits must match supabase/migrations/*_equipment_rentals.sql.
+export function parseEquipmentFields(
+  get: (field: string) => string | null,
+): { data: ListingInput & EquipmentInput } | { error: string } {
+  const equipmentType = matchOption(EQUIPMENT_TYPES, get("equipment_type"));
+  const brand = matchOption(EQUIPMENT_BRANDS, get("make"));
+  const model = (get("model") ?? "").trim();
+  const year = parseWholeNumber(get("year"));
+  const hours = optionalWholeNumber(get("operating_hours"));
+  const price = parseWholeNumber(get("price"));
+  const condition = matchOption(CONDITIONS, get("condition"));
+  const city = matchOption(CITIES, get("city"));
+  const fuelType = matchOption(FUEL_TYPES, get("fuel_type"));
+  const description = optionalText(get("description")?.replace(/\r\n/g, "\n") ?? null);
+  const maxYear = maxListingYear();
+  const { minYear, maxModelLength, maxOperatingHours, maxPrice, maxDescriptionLength } = LISTING_BOUNDS;
+
+  if (!equipmentType) return { error: "Choose the equipment type." };
+  if (!brand) return { error: "Choose the brand." };
+  if (model.length < 1 || model.length > maxModelLength) return { error: "Enter the model." };
+  if (year === null || year < minYear || year > maxYear) {
+    return { error: `Enter a year between ${minYear} and ${maxYear}.` };
+  }
+  if (hours === undefined || (hours !== null && hours > maxOperatingHours)) {
+    return { error: "Enter the operating hours, or leave them blank." };
+  }
+  if (price === null || price <= 0 || price > maxPrice) return { error: "Enter the price in SAR." };
+  if (!condition) return { error: "Choose the condition." };
+  if (!city) return { error: "Choose a city." };
+  if (!fuelType) return { error: "Choose the fuel type." };
+  if (description && description.length > maxDescriptionLength) {
+    return { error: `Keep the description under ${maxDescriptionLength.toLocaleString("en")} characters.` };
+  }
+
+  return {
+    data: {
+      category: "equipment",
+      equipment_type: equipmentType,
+      operating_hours: hours,
+      operator_included: get("operator_included") === "on" || get("operator_included") === "true",
+      make: brand,
+      model,
+      year,
+      mileage: null,
+      price,
+      condition,
+      city,
+      fuel_type: fuelType,
+      transmission: null,
+      body_type: null,
+      features: [],
+      color: null,
+      description,
+    },
+  };
+}
+
 export function parseListing(
   formData: FormData,
-): { data: ListingInput } | { error: string } {
-  return parseListingFields((field) => {
-    // Features are a checkbox group: one entry per ticked box.
-    if (field === "features") return formData.getAll(field).filter((v) => typeof v === "string").join(",");
+): { data: ListingInput & RentalInput & EquipmentInput } | { error: string } {
+  const read = (field: string) => {
     const value = formData.get(field);
     return typeof value === "string" ? value : null;
+  };
+  const category = matchOption(LISTING_CATEGORIES, read("category")) ?? "car";
+
+  if (category === "equipment") {
+    const parsed = parseEquipmentFields(read);
+    if ("error" in parsed) return parsed;
+    // Equipment is rent-only and has no km limit.
+    const rental = parseRentalFields(
+      (field) => (field === "listing_type" ? "rent" : field === "daily_km_limit" ? null : read(field)),
+      parsed.data.price,
+    );
+    if ("error" in rental) return rental;
+    return { data: { ...parsed.data, ...rental.data } };
+  }
+
+  const parsed = parseListingFields((field) => {
+    // Features are a checkbox group: one entry per ticked box.
+    if (field === "features") return formData.getAll(field).filter((v) => typeof v === "string").join(",");
+    return read(field);
   });
+  if ("error" in parsed) return parsed;
+  const rental = parseRentalFields(read, parsed.data.price);
+  if ("error" in rental) return rental;
+  return { data: { ...parsed.data, ...rental.data, ...CAR_FIELDS } };
+}
+
+export function isEquipment(listing: Pick<Listing, "category">): boolean {
+  return listing.category === "equipment";
+}
+
+export function isRental(listing: Pick<Listing, "listing_type">): boolean {
+  return listing.listing_type === "rent";
 }
 
 export type SellerType = "dealer" | "private";
@@ -287,6 +464,13 @@ export const SORTS = ["newest", "price_asc", "price_desc", "mileage_asc", "year_
 export type Sort = (typeof SORTS)[number];
 
 export type ListingFilters = {
+  // Sale and rental listings are browsed separately; sale is the default.
+  type: ListingType;
+  // Cars or equipment; equipment is only ever browsed under rentals.
+  category: ListingCategory;
+  equipmentTypes: EquipmentType[];
+  // Equipment rented with an operator.
+  withOperator?: boolean;
   q?: string;
   make?: string;
   model?: string;
@@ -329,15 +513,24 @@ function numberParam(searchParams: SearchParams, key: string): number | undefine
 
 // Invalid values are dropped rather than erroring: these come from the URL.
 export function parseListingFilters(searchParams: SearchParams): ListingFilters {
+  const type = param(searchParams, "type") === "rent" ? "rent" : "sale";
+  const category = type === "rent" && param(searchParams, "category") === "equipment" ? "equipment" : "car";
   const rawMake = param(searchParams, "make");
-  const make = isMake(rawMake) ? rawMake : undefined;
+  // Equipment brands share the `make` param and column.
+  const carMake = category === "car" && isMake(rawMake) ? rawMake : undefined;
+  const make =
+    category === "equipment" ? (matchOption(EQUIPMENT_BRANDS, rawMake ?? null) ?? undefined) : carMake;
   // A model only counts alongside its make, and only if it's a known one.
-  const model = make ? matchOption(modelsFor(make), param(searchParams, "model") ?? null) : null;
+  const model = carMake ? matchOption(modelsFor(carMake), param(searchParams, "model") ?? null) : null;
   const city = param(searchParams, "city");
   const sort = param(searchParams, "sort");
   const page = numberParam(searchParams, "page");
 
   return {
+    type,
+    category,
+    equipmentTypes: category === "equipment" ? listParam(searchParams, "equipment_type", EQUIPMENT_TYPES) : [],
+    withOperator: category === "equipment" && param(searchParams, "operator") === "1" ? true : undefined,
     q: param(searchParams, "q")?.trim().slice(0, 100) || undefined,
     make,
     model: model ?? undefined,
@@ -373,6 +566,12 @@ export function toPrefixTsQuery(q: string): string | null {
 export function listingFiltersToParams(filters: ListingFilters): Record<string, string> {
   const list = (values: string[]) => (values.length ? values.join(",") : undefined);
   const entries: [string, string | number | undefined][] = [
+    // Sale is the default, so it stays out of URLs.
+    ["type", filters.type === "rent" ? "rent" : undefined],
+    // Cars are the default, so they stay out of URLs.
+    ["category", filters.category === "equipment" ? "equipment" : undefined],
+    ["equipment_type", list(filters.equipmentTypes)],
+    ["operator", filters.withOperator ? "1" : undefined],
     ["q", filters.q],
     ["make", filters.make],
     ["model", filters.model],
@@ -396,7 +595,9 @@ export function listingFiltersToParams(filters: ListingFilters): Record<string, 
 // The subset of the PostgREST filter builder used below, so any select on
 // listings (full rows or a head-only count) can share the same filters.
 interface ListingFilterQuery {
-  eq(column: "status" | "make" | "city", value: string): this;
+  eq(column: "status" | "make" | "city" | "listing_type" | "category", value: string): this;
+  eq(column: "operator_included", value: boolean): this;
+  in(column: "equipment_type", values: readonly EquipmentType[]): this;
   in(column: "condition", values: readonly Condition[]): this;
   in(column: "fuel_type", values: readonly FuelType[]): this;
   in(column: "body_type", values: readonly BodyType[]): this;
@@ -413,7 +614,9 @@ export function applyListingFilters<Q extends ListingFilterQuery>(
   query: Q,
   filters: ListingFilters,
 ): Q {
-  query = query.eq("status", "active");
+  query = query.eq("status", "active").eq("listing_type", filters.type).eq("category", filters.category);
+  if (filters.equipmentTypes.length) query = query.in("equipment_type", filters.equipmentTypes);
+  if (filters.withOperator) query = query.eq("operator_included", true);
   // Arabic make/model names match their stored English spelling.
   const tsQuery = filters.q ? toPrefixTsQuery(arabicToStoredNames(filters.q)) : null;
   if (tsQuery) query = query.textSearch("search_vector", tsQuery, { config: "simple" });
@@ -502,12 +705,18 @@ export async function getSitemapListings(): Promise<Pick<Listing, "id" | "update
   return rows;
 }
 
-export async function getLatestListings(limit: number): Promise<ListingWithImages[]> {
+export async function getLatestListings(
+  limit: number,
+  type: ListingType = "sale",
+  category: ListingCategory = "car",
+): Promise<ListingWithImages[]> {
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("listings")
     .select(LISTING_CARD_SELECT)
     .eq("status", "active")
+    .eq("listing_type", type)
+    .eq("category", category)
     .order("bumped_at", { ascending: false })
     .limit(limit);
   if (error) throw error;
@@ -540,7 +749,8 @@ export const getActiveFacetCounts = cache(async (): Promise<FacetCounts> => {
   const { data, error } = await supabase
     .from("listings")
     .select("make, city, condition, fuel_type, body_type, transmission")
-    .eq("status", "active");
+    .eq("status", "active")
+    .eq("category", "car");
   if (error) throw error;
   return {
     total: data.length,
@@ -566,6 +776,7 @@ export async function getLatestByCities(
     .from("listings")
     .select(LISTING_CARD_SELECT)
     .eq("status", "active")
+    .eq("category", "car")
     .in("city", cities)
     .order("bumped_at", { ascending: false })
     .limit(cities.length * perCity * 4);
@@ -580,7 +791,7 @@ export async function getLatestByCities(
 
 // Same make first, then cars in a similar price band, excluding the listing itself.
 export async function getSimilarListings(
-  listing: Pick<Listing, "id" | "make" | "price">,
+  listing: Pick<Listing, "id" | "make" | "price" | "listing_type" | "category">,
   limit = 4,
 ): Promise<ListingWithImages[]> {
   const supabase = await createClient();
@@ -589,6 +800,8 @@ export async function getSimilarListings(
       .from("listings")
       .select(LISTING_CARD_SELECT)
       .eq("status", "active")
+      .eq("listing_type", listing.listing_type)
+      .eq("category", listing.category)
       .neq("id", listing.id)
       .order("bumped_at", { ascending: false })
       .limit(limit);

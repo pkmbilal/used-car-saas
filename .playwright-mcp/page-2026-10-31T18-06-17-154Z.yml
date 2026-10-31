@@ -1,0 +1,123 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - navigation [ref=e3]:
+      - link [ref=e4] [cursor=pointer]:
+        - /url: /en
+        - img "KarSouq" [ref=e5]
+      - generic [ref=e6]:
+        - link "Buy Cars" [ref=e7] [cursor=pointer]:
+          - /url: /en/listings
+        - link "Rentals" [ref=e8] [cursor=pointer]:
+          - /url: /en/rentals
+        - link "Dealers" [ref=e10] [cursor=pointer]:
+          - /url: /en/dealers
+        - link "Pricing" [ref=e11] [cursor=pointer]:
+          - /url: /en/pricing
+        - link "Sell" [ref=e12] [cursor=pointer]:
+          - /url: /en/account/become-seller
+      - generic [ref=e13]:
+        - link "العربية" [ref=e14] [cursor=pointer]:
+          - /url: /ar/rentals
+          - text: ع
+        - link "Sign in" [ref=e18] [cursor=pointer]:
+          - /url: /en/login
+  - main [ref=e20]:
+    - generic [ref=e23]:
+      - navigation [ref=e24]:
+        - link "Cars" [ref=e25] [cursor=pointer]:
+          - /url: /en/rentals
+        - link "Equipment" [ref=e26] [cursor=pointer]:
+          - /url: /en/rentals?category=equipment
+      - heading "Cars for rent" [level=1] [ref=e27]
+      - paragraph [ref=e28]: Rent a car by the day, week or month from owners and dealers near you.
+    - generic [ref=e31]:
+      - generic [ref=e32]:
+        - generic [ref=e33]: Make
+        - combobox "Make" [ref=e34] [cursor=pointer]
+        - combobox [aria-hidden] [ref=e35]
+      - generic [ref=e36]:
+        - generic [ref=e37]: Model
+        - combobox "Model" [disabled] [ref=e38]:
+          - generic: Choose a make first
+        - combobox [disabled] [aria-hidden] [ref=e39]
+      - generic [ref=e40]:
+        - generic [ref=e41]: Max Price
+        - combobox "Max Price" [ref=e42] [cursor=pointer]
+        - combobox [aria-hidden] [ref=e43]
+      - generic [ref=e44]:
+        - generic [ref=e45]: Year
+        - combobox "Year" [ref=e46] [cursor=pointer]
+        - combobox [aria-hidden] [ref=e47]
+      - generic [ref=e48]:
+        - generic [ref=e49]: Location
+        - combobox "Location" [ref=e50] [cursor=pointer]
+        - combobox [aria-hidden] [ref=e52]
+      - button "Search Cars" [ref=e53] [cursor=pointer]
+    - generic [ref=e54]:
+      - button "Filters" [ref=e55] [cursor=pointer]
+      - generic [ref=e56]:
+        - generic [ref=e57]:
+          - paragraph [ref=e58]: 0 Cars for Rent
+          - generic [ref=e60]:
+            - generic [ref=e61]: Sort by
+            - combobox "Sort by" [ref=e62] [cursor=pointer]
+            - combobox [aria-hidden] [ref=e63]
+        - generic [ref=e64]:
+          - paragraph [ref=e70]: No cars match these filters
+          - paragraph [ref=e71]: There are no cars for rent right now. Check back soon.
+  - contentinfo [ref=e72]:
+    - generic [ref=e73]:
+      - generic [ref=e74]:
+        - link [ref=e75] [cursor=pointer]:
+          - /url: /en
+          - img "KarSouq" [ref=e76]
+        - paragraph [ref=e77]: Saudi Arabia's marketplace for used cars. Buy and sell directly with sellers.
+      - generic [ref=e78]:
+        - paragraph [ref=e79]: BUY
+        - link "Browse Cars" [ref=e80] [cursor=pointer]:
+          - /url: /en/listings
+        - link "Saved Cars" [ref=e81] [cursor=pointer]:
+          - /url: /en/favorites
+        - link "Saved Searches" [ref=e82] [cursor=pointer]:
+          - /url: /en/saved-searches
+      - generic [ref=e83]:
+        - paragraph [ref=e84]: POPULAR MAKES
+        - link "Toyota" [ref=e85] [cursor=pointer]:
+          - /url: /en/brands/toyota
+        - link "Hyundai" [ref=e86] [cursor=pointer]:
+          - /url: /en/brands/hyundai
+        - link "Nissan" [ref=e87] [cursor=pointer]:
+          - /url: /en/brands/nissan
+        - link "Lexus" [ref=e88] [cursor=pointer]:
+          - /url: /en/brands/lexus
+      - generic [ref=e89]:
+        - paragraph [ref=e90]: CITIES
+        - link "All Cities" [ref=e91] [cursor=pointer]:
+          - /url: /en/locations
+      - generic [ref=e92]:
+        - paragraph [ref=e93]: SELL
+        - link "Sell Your Car" [ref=e94] [cursor=pointer]:
+          - /url: /en/account/become-seller
+        - link "Pricing" [ref=e95] [cursor=pointer]:
+          - /url: /en/pricing
+        - link "Seller Dashboard" [ref=e96] [cursor=pointer]:
+          - /url: /en/dashboard
+        - link "My Account" [ref=e97] [cursor=pointer]:
+          - /url: /en/account
+    - generic [ref=e99]:
+      - paragraph [ref=e100]: © 2026 KarSouq, a CodeSudio product. All rights reserved.
+      - navigation [ref=e101]:
+        - link "Contact" [ref=e102] [cursor=pointer]:
+          - /url: /en/contact
+        - link "Privacy Policy" [ref=e103] [cursor=pointer]:
+          - /url: /en/privacy
+        - link "Terms of Use" [ref=e104] [cursor=pointer]:
+          - /url: /en/terms
+  - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=e110] [cursor=pointer]:
+    - generic [ref=e113]:
+      - text: Compiling
+      - generic [ref=e114]:
+        - generic [ref=e115]: .
+        - generic [ref=e116]: .
+        - generic [ref=e117]: .

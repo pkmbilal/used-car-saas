@@ -1,0 +1,315 @@
+- generic [ref=f10e1]:
+  - banner [ref=f10e2]:
+    - navigation [ref=f10e3]:
+      - link [ref=f10e4] [cursor=pointer]:
+        - /url: /ar
+        - img "KarSouq" [ref=f10e5]
+      - generic [ref=f10e6]:
+        - link "شراء سيارة" [ref=f10e7] [cursor=pointer]:
+          - /url: /ar/listings
+        - link "الإيجار" [ref=f10e8] [cursor=pointer]:
+          - /url: /ar/rentals
+        - link "المعارض" [ref=f10e10] [cursor=pointer]:
+          - /url: /ar/dealers
+        - link "الباقات" [ref=f10e11] [cursor=pointer]:
+          - /url: /ar/pricing
+        - link "بيع" [ref=f10e12] [cursor=pointer]:
+          - /url: /ar/dashboard/listings/new
+      - generic [ref=f10e13]:
+        - link "English" [ref=f10e14] [cursor=pointer]:
+          - /url: /en/rentals
+          - text: EN
+        - button "قائمة الحساب" [ref=f10e18] [cursor=pointer]:
+          - generic [aria-hidden] [ref=f10e20]: DU
+          - generic [ref=f10e22]:
+            - generic [ref=f10e23]: Demo User
+            - generic [ref=f10e24]: بائع · باقة برو
+  - main [ref=f10e28]:
+    - generic [ref=f10e31]:
+      - navigation [ref=f10e32]:
+        - link "سيارات" [ref=f10e33] [cursor=pointer]:
+          - /url: /ar/rentals
+        - link "معدات" [ref=f10e34] [cursor=pointer]:
+          - /url: /ar/rentals?category=equipment
+      - heading "معدات للإيجار" [level=1] [ref=f10e35]
+      - paragraph [ref=f10e36]: استأجر الحفارات والشيولات والرافعات الشوكية والكرينات والمولدات باليوم أو الأسبوع أو الشهر.
+    - generic [ref=f10e39]:
+      - generic [ref=f10e40]:
+        - generic [ref=f10e41]: نوع المعدة
+        - button "نوع المعدة" [ref=f10e43] [cursor=pointer]:
+          - generic [ref=f10e44]: كل الأنواع
+      - generic [ref=f10e48]:
+        - generic [ref=f10e49]: العلامة التجارية
+        - button "العلامة التجارية" [ref=f10e51] [cursor=pointer]:
+          - generic [ref=f10e52]: كل العلامات
+      - generic [ref=f10e56]:
+        - generic [ref=f10e57]: أعلى سعر
+        - combobox "أعلى سعر" [ref=f10e58] [cursor=pointer]:
+          - generic [ref=f10e231]: أي سعر
+        - combobox [aria-hidden] [ref=f10e232]
+      - generic [ref=f10e60]:
+        - generic [ref=f10e61]: المدينة
+        - button "المدينة" [ref=f10e63] [cursor=pointer]:
+          - generic [ref=f10e64]: كل المدن
+      - button "ابحث عن المعدات" [ref=f10e71] [cursor=pointer]
+    - generic [ref=f10e72]:
+      - generic [ref=f10e74]:
+        - generic [ref=f10e75]:
+          - generic [ref=f10e77]: الفلاتر
+          - link "مسح الكل" [ref=f10e78] [cursor=pointer]:
+            - /url: /ar/rentals?category=equipment
+        - generic [ref=f10e79]:
+          - generic [ref=f10e80]: كلمة البحث
+          - searchbox "كلمة البحث" [ref=f10e81]
+        - group "نوع المعدة" [ref=f10e82]:
+          - generic [ref=f10e84]:
+            - generic [ref=f10e85] [cursor=pointer]:
+              - checkbox "حفار" [ref=f10e86]
+              - text: حفار
+            - generic [ref=f10e87] [cursor=pointer]:
+              - checkbox "باكهو" [ref=f10e88]
+              - text: باكهو
+            - generic [ref=f10e89] [cursor=pointer]:
+              - checkbox "شيول" [ref=f10e90]
+              - text: شيول
+            - generic [ref=f10e91] [cursor=pointer]:
+              - checkbox "بلدوزر" [ref=f10e92]
+              - text: بلدوزر
+            - generic [ref=f10e93] [cursor=pointer]:
+              - checkbox "بوبكات" [ref=f10e94]
+              - text: بوبكات
+            - generic [ref=f10e95] [cursor=pointer]:
+              - checkbox "رافعة شوكية" [ref=f10e96]
+              - text: رافعة شوكية
+            - generic [ref=f10e97] [cursor=pointer]:
+              - checkbox "كرين" [ref=f10e98]
+              - text: كرين
+            - generic [ref=f10e99] [cursor=pointer]:
+              - checkbox "رافعة سلة" [ref=f10e100]
+              - text: رافعة سلة
+            - generic [ref=f10e101] [cursor=pointer]:
+              - checkbox "رافعة مقصية" [ref=f10e102]
+              - text: رافعة مقصية
+            - generic [ref=f10e103] [cursor=pointer]:
+              - checkbox "قلاب" [ref=f10e104]
+              - text: قلاب
+            - generic [ref=f10e105] [cursor=pointer]:
+              - checkbox "مدحلة" [ref=f10e106]
+              - text: مدحلة
+            - generic [ref=f10e107] [cursor=pointer]:
+              - checkbox "مولد كهرباء" [ref=f10e108]
+              - text: مولد كهرباء
+            - generic [ref=f10e109] [cursor=pointer]:
+              - checkbox "كمبروسر هواء" [ref=f10e110]
+              - text: كمبروسر هواء
+            - generic [ref=f10e111] [cursor=pointer]:
+              - checkbox "وايت ماء" [ref=f10e112]
+              - text: وايت ماء
+            - generic [ref=f10e113] [cursor=pointer]:
+              - checkbox "معدات أخرى" [ref=f10e114]
+              - text: معدات أخرى
+        - generic [ref=f10e115]:
+          - generic [ref=f10e116]: الماركة
+          - button "الماركة" [ref=f10e118] [cursor=pointer]:
+            - generic [ref=f10e119]: الكل
+        - generic [ref=f10e123] [cursor=pointer]:
+          - checkbox "مع مشغّل فقط" [ref=f10e124]
+          - text: مع مشغّل فقط
+        - generic [ref=f10e125]:
+          - generic [ref=f10e126]: المدينة
+          - button "المدينة" [expanded] [ref=f10e128] [cursor=pointer]:
+            - generic [ref=f10e129]: الكل
+        - group "السعر اليومي ر.س" [ref=f10e133]:
+          - generic [ref=f10e134]:
+            - generic [ref=f10e135]: السعر اليومي
+            - generic [ref=f10e136]: ر.س
+          - generic [ref=f10e137]:
+            - spinbutton "السعر اليومي من" [ref=f10e138]
+            - generic [ref=f10e139]: –
+            - spinbutton "السعر اليومي إلى" [ref=f10e140]
+        - group "سنة الصنع" [ref=f10e141]:
+          - generic [ref=f10e144]:
+            - spinbutton "سنة الصنع من" [ref=f10e145]
+            - generic [ref=f10e146]: –
+            - spinbutton "سنة الصنع إلى" [ref=f10e147]
+        - group "الحالة" [ref=f10e148]:
+          - generic [ref=f10e150]:
+            - generic [ref=f10e151] [cursor=pointer]:
+              - checkbox "ممتازة" [ref=f10e152]
+              - text: ممتازة
+            - generic [ref=f10e153] [cursor=pointer]:
+              - checkbox "جيدة" [ref=f10e154]
+              - text: جيدة
+            - generic [ref=f10e155] [cursor=pointer]:
+              - checkbox "مقبولة" [ref=f10e156]
+              - text: مقبولة
+        - group "نوع الوقود" [ref=f10e157]:
+          - generic [ref=f10e159]:
+            - generic [ref=f10e160] [cursor=pointer]:
+              - checkbox "بنزين" [ref=f10e161]
+              - text: بنزين
+            - generic [ref=f10e162] [cursor=pointer]:
+              - checkbox "ديزل" [ref=f10e163]
+              - text: ديزل
+            - generic [ref=f10e164] [cursor=pointer]:
+              - checkbox "هجين" [ref=f10e165]
+              - text: هجين
+            - generic [ref=f10e166] [cursor=pointer]:
+              - checkbox "كهربائي" [ref=f10e167]
+              - text: كهربائي
+        - button "تطبيق الفلاتر" [ref=f10e168] [cursor=pointer]
+      - generic [ref=f10e169]:
+        - generic [ref=f10e170]:
+          - paragraph [ref=f10e171]: لا توجد معدات للإيجار
+          - generic [ref=f10e173]:
+            - generic [ref=f10e174]: ترتيب حسب
+            - combobox "ترتيب حسب" [ref=f10e175] [cursor=pointer]:
+              - generic: الأحدث أولًا
+        - generic [ref=f10e177]:
+          - paragraph [ref=f10e183]: لا توجد معدات تطابق هذه الفلاتر
+          - paragraph [ref=f10e184]: لا توجد معدات للإيجار حالياً. تابعنا قريباً.
+  - contentinfo [ref=f10e185]:
+    - generic [ref=f10e186]:
+      - generic [ref=f10e187]:
+        - link [ref=f10e188] [cursor=pointer]:
+          - /url: /ar
+          - img "KarSouq" [ref=f10e189]
+        - paragraph [ref=f10e190]: سوق السيارات المستعملة في المملكة العربية السعودية. اشترِ وبِع مباشرة مع البائعين.
+      - generic [ref=f10e191]:
+        - paragraph [ref=f10e192]: شراء
+        - link "تصفح السيارات" [ref=f10e193] [cursor=pointer]:
+          - /url: /ar/listings
+        - link "السيارات المحفوظة" [ref=f10e194] [cursor=pointer]:
+          - /url: /ar/favorites
+        - link "عمليات البحث المحفوظة" [ref=f10e195] [cursor=pointer]:
+          - /url: /ar/saved-searches
+      - generic [ref=f10e196]:
+        - paragraph [ref=f10e197]: الماركات الأكثر طلبًا
+        - link "تويوتا" [ref=f10e198] [cursor=pointer]:
+          - /url: /ar/brands/toyota
+        - link "هيونداي" [ref=f10e199] [cursor=pointer]:
+          - /url: /ar/brands/hyundai
+        - link "نيسان" [ref=f10e200] [cursor=pointer]:
+          - /url: /ar/brands/nissan
+        - link "لكزس" [ref=f10e201] [cursor=pointer]:
+          - /url: /ar/brands/lexus
+      - generic [ref=f10e202]:
+        - paragraph [ref=f10e203]: المدن
+        - link "الدمام" [ref=f10e204] [cursor=pointer]:
+          - /url: /ar/locations/dammam
+        - link "الجبيل" [ref=f10e205] [cursor=pointer]:
+          - /url: /ar/locations/jubail
+        - link "الخبر" [ref=f10e206] [cursor=pointer]:
+          - /url: /ar/locations/khobar
+        - link "الظهران" [ref=f10e207] [cursor=pointer]:
+          - /url: /ar/locations/dhahran
+        - link "جميع المدن" [ref=f10e208] [cursor=pointer]:
+          - /url: /ar/locations
+      - generic [ref=f10e209]:
+        - paragraph [ref=f10e210]: بيع
+        - link "بِع سيارتك" [ref=f10e211] [cursor=pointer]:
+          - /url: /ar/account/become-seller
+        - link "الباقات" [ref=f10e212] [cursor=pointer]:
+          - /url: /ar/pricing
+        - link "لوحة البائع" [ref=f10e213] [cursor=pointer]:
+          - /url: /ar/dashboard
+        - link "حسابي" [ref=f10e214] [cursor=pointer]:
+          - /url: /ar/account
+    - generic [ref=f10e216]:
+      - paragraph [ref=f10e217]: © 2026 كارسوق، أحد منتجات CodeSudio. جميع الحقوق محفوظة.
+      - navigation [ref=f10e218]:
+        - link "تواصل معنا" [ref=f10e219] [cursor=pointer]:
+          - /url: /ar/contact
+        - link "سياسة الخصوصية" [ref=f10e220] [cursor=pointer]:
+          - /url: /ar/privacy
+        - link "شروط الاستخدام" [ref=f10e221] [cursor=pointer]:
+          - /url: /ar/terms
+  - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=f10e227] [cursor=pointer]
+  - alert [ref=f10e233]
+  - dialog [ref=f10e235]:
+    - combobox "ابحث عن المدينة…" [expanded] [active] [ref=f10e240]
+    - listbox [ref=f10e241]:
+      - option "الكل" [selected] [ref=f10e242] [cursor=pointer]
+      - option "الرياض" [ref=f10e246] [cursor=pointer]
+      - option "جدة" [ref=f10e248] [cursor=pointer]
+      - option "مكة المكرمة" [ref=f10e250] [cursor=pointer]
+      - option "المدينة المنورة" [ref=f10e252] [cursor=pointer]
+      - option "الدمام" [ref=f10e254] [cursor=pointer]
+      - option "الخبر" [ref=f10e256] [cursor=pointer]
+      - option "الظهران" [ref=f10e258] [cursor=pointer]
+      - option "الطائف" [ref=f10e260] [cursor=pointer]
+      - option "تبوك" [ref=f10e262] [cursor=pointer]
+      - option "بريدة" [ref=f10e264] [cursor=pointer]
+      - option "أبها" [ref=f10e266] [cursor=pointer]
+      - option "خميس مشيط" [ref=f10e268] [cursor=pointer]
+      - option "حائل" [ref=f10e270] [cursor=pointer]
+      - option "جازان" [ref=f10e272] [cursor=pointer]
+      - option "نجران" [ref=f10e274] [cursor=pointer]
+      - option "الأحساء" [ref=f10e276] [cursor=pointer]
+      - option "الجبيل" [ref=f10e278] [cursor=pointer]
+      - option "ينبع" [ref=f10e280] [cursor=pointer]
+      - option "بقيق" [ref=f10e282] [cursor=pointer]
+      - option "أبو عريش" [ref=f10e284] [cursor=pointer]
+      - option "عفيف" [ref=f10e286] [cursor=pointer]
+      - option "الباحة" [ref=f10e288] [cursor=pointer]
+      - option "العقيق" [ref=f10e290] [cursor=pointer]
+      - option "البكيرية" [ref=f10e292] [cursor=pointer]
+      - option "الغزالة" [ref=f10e294] [cursor=pointer]
+      - option "الهفوف" [ref=f10e296] [cursor=pointer]
+      - option "الجموم" [ref=f10e298] [cursor=pointer]
+      - option "الخرج" [ref=f10e300] [cursor=pointer]
+      - option "الليث" [ref=f10e302] [cursor=pointer]
+      - option "المجمعة" [ref=f10e304] [cursor=pointer]
+      - option "المخواة" [ref=f10e306] [cursor=pointer]
+      - option "المذنب" [ref=f10e308] [cursor=pointer]
+      - option "المبرز" [ref=f10e310] [cursor=pointer]
+      - option "النماص" [ref=f10e312] [cursor=pointer]
+      - option "القنفذة" [ref=f10e314] [cursor=pointer]
+      - option "السليل" [ref=f10e316] [cursor=pointer]
+      - option "العلا" [ref=f10e318] [cursor=pointer]
+      - option "الوجه" [ref=f10e320] [cursor=pointer]
+      - option "الزلفي" [ref=f10e322] [cursor=pointer]
+      - option "عرعر" [ref=f10e324] [cursor=pointer]
+      - option "الرس" [ref=f10e326] [cursor=pointer]
+      - option "السليمي" [ref=f10e328] [cursor=pointer]
+      - option "بدر" [ref=f10e330] [cursor=pointer]
+      - option "بيش" [ref=f10e332] [cursor=pointer]
+      - option "بلجرشي" [ref=f10e334] [cursor=pointer]
+      - option "بقعاء" [ref=f10e336] [cursor=pointer]
+      - option "بيشة" [ref=f10e338] [cursor=pointer]
+      - option "الدوادمي" [ref=f10e340] [cursor=pointer]
+      - option "ظهران الجنوب" [ref=f10e342] [cursor=pointer]
+      - option "الدرعية" [ref=f10e344] [cursor=pointer]
+      - option "ضباء" [ref=f10e346] [cursor=pointer]
+      - option "دومة الجندل" [ref=f10e348] [cursor=pointer]
+      - option "فرسان" [ref=f10e350] [cursor=pointer]
+      - option "حفر الباطن" [ref=f10e352] [cursor=pointer]
+      - option "حقل" [ref=f10e354] [cursor=pointer]
+      - option "حوطة بني تميم" [ref=f10e356] [cursor=pointer]
+      - option "حبونا" [ref=f10e358] [cursor=pointer]
+      - option "الخفجي" [ref=f10e360] [cursor=pointer]
+      - option "خيبر" [ref=f10e362] [cursor=pointer]
+      - option "خليص" [ref=f10e364] [cursor=pointer]
+      - option "مهد الذهب" [ref=f10e366] [cursor=pointer]
+      - option "محايل عسير" [ref=f10e368] [cursor=pointer]
+      - option "القطيف" [ref=f10e370] [cursor=pointer]
+      - option "القريات" [ref=f10e372] [cursor=pointer]
+      - option "رابغ" [ref=f10e374] [cursor=pointer]
+      - option "رفحاء" [ref=f10e376] [cursor=pointer]
+      - option "رنية" [ref=f10e378] [cursor=pointer]
+      - option "رأس تنورة" [ref=f10e380] [cursor=pointer]
+      - option "صبيا" [ref=f10e382] [cursor=pointer]
+      - option "سكاكا" [ref=f10e384] [cursor=pointer]
+      - option "صامطة" [ref=f10e386] [cursor=pointer]
+      - option "سراة عبيدة" [ref=f10e388] [cursor=pointer]
+      - option "شقراء" [ref=f10e390] [cursor=pointer]
+      - option "شرورة" [ref=f10e392] [cursor=pointer]
+      - option "تيماء" [ref=f10e394] [cursor=pointer]
+      - option "تنومة" [ref=f10e396] [cursor=pointer]
+      - option "طريف" [ref=f10e398] [cursor=pointer]
+      - option "تربة" [ref=f10e400] [cursor=pointer]
+      - option "أملج" [ref=f10e402] [cursor=pointer]
+      - option "عنيزة" [ref=f10e404] [cursor=pointer]
+      - option "عيون الجواء" [ref=f10e406] [cursor=pointer]
+      - option "وادي الدواسر" [ref=f10e408] [cursor=pointer]

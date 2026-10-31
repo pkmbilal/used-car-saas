@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import {
   Bell,
   CalendarClock,
+  CalendarDays,
   Car,
   ChartLine,
   ChevronRight,
@@ -48,13 +49,14 @@ export type SellerSection = {
   description?: string;
 };
 
-export type SellerAlert = { kind: "offers" | "addons" | "plan"; href: string; label: string };
+export type SellerAlert = { kind: "offers" | "bookings" | "addons" | "plan"; href: string; label: string };
 
 const ICONS: Record<string, LucideIcon> = {
   "/dashboard": LayoutDashboard,
   "/dashboard/listings": Car,
   "/dashboard/insights": ChartLine,
   "/dashboard/offers": HandCoins,
+  "/dashboard/bookings": CalendarDays,
   "/dashboard/listings/import": Upload,
   "/dashboard/storefront": Store,
   "/dashboard/plan": CreditCard,
@@ -228,6 +230,7 @@ function SellerTabBar({
 
 const ALERT_STYLES: Record<SellerAlert["kind"], { icon: LucideIcon; tile: string }> = {
   offers: { icon: HandCoins, tile: "bg-mint text-brand ring-brand/15" },
+  bookings: { icon: CalendarDays, tile: "bg-sky-50 text-sky-700 ring-sky-200" },
   addons: { icon: CreditCard, tile: "bg-amber-50 text-amber-700 ring-amber-200" },
   plan: { icon: CalendarClock, tile: "bg-red-50 text-red-600 ring-red-100" },
 };

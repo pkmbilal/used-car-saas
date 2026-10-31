@@ -23,6 +23,20 @@ export function formatKm(km: number, locale: Locale): string {
   return `${formatNumber(locale, km)} ${locale === "ar" ? "كم" : "km"}`;
 }
 
+// Cars show their mileage, equipment its operating hours (if given).
+export function formatUsage(
+  listing: { mileage: number | null; operating_hours: number | null },
+  locale: Locale,
+): string | null {
+  if (listing.mileage !== null) return formatKm(listing.mileage, locale);
+  if (listing.operating_hours !== null) return formatHours(listing.operating_hours, locale);
+  return null;
+}
+
+export function formatHours(hours: number, locale: Locale): string {
+  return `${formatNumber(locale, hours)} ${locale === "ar" ? "ساعة تشغيل" : "hrs"}`;
+}
+
 // Phones are stored as +9665XXXXXXXX; wa.me wants digits only.
 export function whatsappUrl(phone: string, text: string): string {
   return `https://wa.me/${phone.replace(/\D/g, "")}?text=${encodeURIComponent(text)}`;

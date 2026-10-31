@@ -9,6 +9,7 @@ import { getDictionary } from "@/lib/i18n-server";
 import { formatRelativeUntil, formatSAR } from "@/lib/format";
 import { getSellerListings, isFeatured, type Listing } from "@/lib/listings";
 import { getPendingOfferCounts } from "@/lib/offers";
+import { getPendingRentalCounts } from "@/lib/rentals";
 import { addonPrice, getBumpStatus, getListingQuota, isDealerPlan, nextBumpAt } from "@/lib/plans";
 import { noIndex } from "@/lib/seo";
 import { ListingCardItem, ListingListItem } from "../listing-items";
@@ -25,13 +26,16 @@ export default async function ListingsPage({ searchParams }: PageProps<"/[lang]/
   const d = t.dashboard;
   const view = (await searchParams).view === "list" ? "list" : "grid";
   const Item = view === "list" ? ListingListItem : ListingCardItem;
-  const [listings, quota, pendingAddons, pendingOffers, bumps] = await Promise.all([
+  const [listings, quota, pendingAddons, offerCounts, rentalCounts, bumps] = await Promise.all([
     getSellerListings(user.id),
     getListingQuota(),
     getMyPendingAddons(),
     getPendingOfferCounts(user.id),
+    getPendingRentalCounts(user.id),
     getBumpStatus(),
   ]);
+  // A listing is either for sale (offers) or for rent (date requests).
+  const pendingOffers = new Map([...offerCounts, ...rentalCounts]);
   const pendingBoosts = new Set(
     pendingAddons.flatMap((addon) => (addon.kind === "featured_boost" && addon.listingId ? [addon.listingId] : [])),
   );

@@ -1,0 +1,332 @@
+- generic [active] [ref=f7e1]:
+  - generic [ref=f7e89]:
+    - complementary [ref=f7e90]:
+      - link [ref=f7e92] [cursor=pointer]:
+        - /url: /en/dashboard
+        - img "KarSouq" [ref=f7e93]
+        - paragraph [ref=f7e94]: Seller Center
+      - navigation "Seller Center" [ref=f7e99]:
+        - link "Overview" [ref=f7e100] [cursor=pointer]:
+          - /url: /en/dashboard
+        - link "Listings" [ref=f7e107] [cursor=pointer]:
+          - /url: /en/dashboard/listings
+        - link "Insights" [ref=f7e113] [cursor=pointer]:
+          - /url: /en/dashboard/insights
+        - link "Offers" [ref=f7e118] [cursor=pointer]:
+          - /url: /en/dashboard/offers
+        - link "Rental requests" [ref=f7e126] [cursor=pointer]:
+          - /url: /en/dashboard/bookings
+        - link "Import CSV" [ref=f7e130] [cursor=pointer]:
+          - /url: /en/dashboard/listings/import
+        - link "Storefront" [ref=f7e135] [cursor=pointer]:
+          - /url: /en/dashboard/storefront
+        - link "Plan & add-ons" [ref=f7e141] [cursor=pointer]:
+          - /url: /en/dashboard/plan
+      - generic [ref=f7e145]:
+        - generic [ref=f7e146]:
+          - text: Language
+          - group "Language" [ref=f7e150]:
+            - link "العربية" [ref=f7e151] [cursor=pointer]:
+              - /url: /ar/dashboard/listings/new
+              - text: ع
+            - generic "English" [ref=f7e152]: EN
+        - link "View site" [ref=f7e154] [cursor=pointer]:
+          - /url: /en
+    - generic [ref=f7e159]:
+      - banner [ref=f7e161]:
+        - paragraph [ref=f7e164]: Listings
+        - generic [ref=f7e165]:
+          - link "New listing" [ref=f7e166] [cursor=pointer]:
+            - /url: /en/dashboard/listings/new
+          - button "Notifications" [ref=f7e169] [cursor=pointer]
+          - button "Account menu" [ref=f7e174] [cursor=pointer]:
+            - generic [aria-hidden] [ref=f7e176]: DC
+            - generic [ref=f7e361]:
+              - generic [ref=f7e362]: Dammam Cars
+              - generic [ref=f7e363]: Seller · Pro
+      - main [ref=f7e180]:
+        - generic [ref=f7e182]:
+          - link "← Your listings" [ref=f7e183] [cursor=pointer]:
+            - /url: /en/dashboard/listings
+          - generic [ref=f7e186]:
+            - generic [ref=f7e187]: Pro plan until 26 Nov 2026 · 0 of 100 listings published this month
+            - heading "Sell your car" [level=1] [ref=f7e189]
+            - paragraph [ref=f7e191]: Enter the details first. You'll add photos and publish on the next step.
+          - generic [ref=f7e193]:
+            - generic [ref=f7e194]:
+              - group "What do you want to do?" [ref=f7e195]:
+                - paragraph [aria-hidden] [ref=f7e197]: What do you want to do?
+                - paragraph [ref=f7e198]: Sell your car, or rent it out by the day, week or month.
+                - generic [ref=f7e199]:
+                  - generic [ref=f7e200] [cursor=pointer]:
+                    - radio "Sell it One-time sale price" [ref=f7e201]
+                    - generic [ref=f7e206]:
+                      - generic [ref=f7e207]: Sell it
+                      - generic [ref=f7e208]: One-time sale price
+                  - generic [ref=f7e209] [cursor=pointer]:
+                    - radio "Rent it out Daily, weekly and monthly rates" [ref=f7e210]
+                    - generic [ref=f7e216]:
+                      - generic [ref=f7e217]: Rent it out
+                      - generic [ref=f7e218]: Daily, weekly and monthly rates
+                  - generic [ref=f7e219] [cursor=pointer]:
+                    - radio "Rent out equipment Excavators, forklifts, cranes and more" [checked] [ref=f7e220]
+                    - generic [ref=f7e227]:
+                      - generic [ref=f7e228]: Rent out equipment
+                      - generic [ref=f7e229]: Excavators, forklifts, cranes and more
+              - generic [ref=f7e230]:
+                - generic [ref=f7e231]:
+                  - generic [ref=f7e232]: "1"
+                  - generic [ref=f7e233]:
+                    - heading "Equipment details" [level=2] [ref=f7e234]
+                    - paragraph [ref=f7e235]: Type, brand, model and hours
+                - generic [ref=f7e236]:
+                  - generic [ref=f7e237]:
+                    - generic [ref=f7e238]: Equipment type
+                    - combobox "Equipment type" [ref=f7e239]:
+                      - option "Choose type" [disabled]
+                      - option "Excavator" [selected]
+                      - option "Backhoe loader"
+                      - option "Wheel loader"
+                      - option "Bulldozer"
+                      - option "Skid steer"
+                      - option "Forklift"
+                      - option "Mobile crane"
+                      - option "Boom lift"
+                      - option "Scissor lift"
+                      - option "Dump truck"
+                      - option "Roller"
+                      - option "Generator"
+                      - option "Air compressor"
+                      - option "Water tanker"
+                      - option "Other equipment"
+                  - generic [ref=f7e240]:
+                    - generic [ref=f7e241]: Brand
+                    - combobox "Brand" [ref=f7e242]:
+                      - option "Choose brand" [disabled]
+                      - option "Caterpillar" [selected]
+                      - option "Komatsu"
+                      - option "JCB"
+                      - option "Volvo"
+                      - option "Hitachi"
+                      - option "Doosan"
+                      - option "Hyundai"
+                      - option "Liebherr"
+                      - option "SANY"
+                      - option "XCMG"
+                      - option "Toyota"
+                      - option "Manitou"
+                      - option "Genie"
+                      - option "JLG"
+                      - option "Other"
+                  - generic [ref=f7e243]:
+                    - generic [ref=f7e244]: Model
+                    - textbox "Model" [ref=f7e245]:
+                      - /placeholder: 320D, 3CX, 8FD25…
+                      - text: 320D TEST
+                  - generic [ref=f7e246]:
+                    - generic [ref=f7e247]: Year
+                    - spinbutton "Year" [ref=f7e248]: "2018"
+              - generic [ref=f7e249]:
+                - generic [ref=f7e250]:
+                  - generic [ref=f7e251]: "2"
+                  - generic [ref=f7e252]:
+                    - heading "Condition & specs" [level=2] [ref=f7e253]
+                    - paragraph [ref=f7e254]: Type, brand, model and hours
+                - generic [ref=f7e255]:
+                  - generic [ref=f7e256]:
+                    - generic [ref=f7e257]: Operating hours (optional)
+                    - spinbutton "Operating hours (optional)" [ref=f7e258]: "4200"
+                    - paragraph [ref=f7e259]: Engine hours on the meter, if known.
+                  - generic [ref=f7e260]:
+                    - generic [ref=f7e261]: Condition
+                    - combobox "Condition" [ref=f7e262]:
+                      - option "Choose the condition" [disabled]
+                      - option "Excellent"
+                      - option "Good" [selected]
+                      - option "Fair"
+                  - generic [ref=f7e263]:
+                    - generic [ref=f7e264]: Fuel type
+                    - combobox "Fuel type" [ref=f7e265]:
+                      - option "Choose the fuel type" [disabled]
+                      - option "Petrol"
+                      - option "Diesel" [selected]
+                      - option "Hybrid"
+                      - option "Electric"
+                  - generic [ref=f7e266] [cursor=pointer]:
+                    - checkbox "Operator included Tick if a trained operator comes with the equipment." [checked] [ref=f7e267]
+                    - generic [ref=f7e268]:
+                      - generic [ref=f7e269]: Operator included
+                      - generic [ref=f7e270]: Tick if a trained operator comes with the equipment.
+              - generic [ref=f7e271]:
+                - generic [ref=f7e272]:
+                  - generic [ref=f7e273]: "3"
+                  - generic [ref=f7e274]:
+                    - heading "Price & location" [level=2] [ref=f7e275]
+                    - paragraph [ref=f7e276]: Your asking price and where the car is
+                - generic [ref=f7e277]:
+                  - generic [ref=f7e278]:
+                    - generic [ref=f7e279]: Daily rate
+                    - spinbutton "Daily rate" [ref=f7e281]: "900"
+                  - generic [ref=f7e282]:
+                    - generic [ref=f7e283]: City
+                    - combobox "City" [ref=f7e284]:
+                      - option "Choose a city" [disabled]
+                      - option "Riyadh" [selected]
+                      - option "Jeddah"
+                      - option "Mecca"
+                      - option "Medina"
+                      - option "Dammam"
+                      - option "Khobar"
+                      - option "Dhahran"
+                      - option "Taif"
+                      - option "Tabuk"
+                      - option "Buraidah"
+                      - option "Abha"
+                      - option "Khamis Mushait"
+                      - option "Hail"
+                      - option "Jazan"
+                      - option "Najran"
+                      - option "Al Ahsa"
+                      - option "Jubail"
+                      - option "Yanbu"
+                      - option "Abqaiq"
+                      - option "Abu Arish"
+                      - option "Afif"
+                      - option "Al Bahah"
+                      - option "Al-Aqiq"
+                      - option "Al-Bukayriyah"
+                      - option "Al-Ghazalah"
+                      - option "Al-Hofuf"
+                      - option "Al-Jumum"
+                      - option "Al-Kharj"
+                      - option "Al-Lith"
+                      - option "Al-Majma'ah"
+                      - option "Al-Mikhwah"
+                      - option "Al-Mithnab"
+                      - option "Al-Mubarraz"
+                      - option "Al-Namas"
+                      - option "Al-Qunfudhah"
+                      - option "Al-Sulayyil"
+                      - option "Al-Ula"
+                      - option "Al-Wajh"
+                      - option "Al-Zulfi"
+                      - option "Arar"
+                      - option "Ar-Rass"
+                      - option "As-Sulaymi"
+                      - option "Badr"
+                      - option "Baish"
+                      - option "Baljurashi"
+                      - option "Baqa'a"
+                      - option "Bisha"
+                      - option "Dawadmi"
+                      - option "Dhahran Al-Janub"
+                      - option "Diriyah"
+                      - option "Duba"
+                      - option "Dumat Al-Jandal"
+                      - option "Farasan"
+                      - option "Hafr Al-Batin"
+                      - option "Haql"
+                      - option "Hotat Bani Tamim"
+                      - option "Hubuna"
+                      - option "Khafji"
+                      - option "Khaybar"
+                      - option "Khulais"
+                      - option "Mahd ad-Dhahab"
+                      - option "Muhayil Asir"
+                      - option "Qatif"
+                      - option "Qurayyat"
+                      - option "Rabigh"
+                      - option "Rafha"
+                      - option "Ranyah"
+                      - option "Ras Tanura"
+                      - option "Sabya"
+                      - option "Sakaka"
+                      - option "Samtah"
+                      - option "Sarat Abidah"
+                      - option "Shaqra"
+                      - option "Sharurah"
+                      - option "Taima"
+                      - option "Tanomah"
+                      - option "Turaif"
+                      - option "Turubah"
+                      - option "Umluj"
+                      - option "Unaizah"
+                      - option "Uyun Al-Jawa"
+                      - option "Wadi ad-Dawasir"
+                  - generic [ref=f7e285]:
+                    - generic [ref=f7e286]: Weekly rate (optional)
+                    - spinbutton "Weekly rate (optional)" [ref=f7e288]: "5000"
+                    - paragraph [ref=f7e289]: Less than 7 days at the daily rate.
+                  - generic [ref=f7e290]:
+                    - generic [ref=f7e291]: Monthly rate (optional)
+                    - spinbutton "Monthly rate (optional)" [ref=f7e293]: "18000"
+                    - paragraph [ref=f7e294]: Less than 30 days at the daily rate.
+              - generic [ref=f7e295]:
+                - generic [ref=f7e296]:
+                  - generic [ref=f7e297]: "4"
+                  - generic [ref=f7e298]:
+                    - heading "Rental terms" [level=2] [ref=f7e299]
+                    - paragraph [ref=f7e300]: Renters see these before they ask for dates.
+                - generic [ref=f7e301]:
+                  - generic [ref=f7e302]:
+                    - generic [ref=f7e303]: Minimum rental (days)
+                    - spinbutton "Minimum rental (days)" [ref=f7e304]: "2"
+                  - generic [ref=f7e305]:
+                    - generic [ref=f7e306]: Security deposit (optional)
+                    - spinbutton "Security deposit (optional)" [ref=f7e308]: "3000"
+              - generic [ref=f7e309]:
+                - generic [ref=f7e310]:
+                  - generic [ref=f7e311]: "5"
+                  - generic [ref=f7e312]:
+                    - heading "Description & features" [level=2] [ref=f7e313]
+                    - paragraph [ref=f7e314]: Detailed listings get more calls
+                - generic [ref=f7e317]:
+                  - generic [ref=f7e318]: Description (optional)
+                  - textbox "Description (optional)" [ref=f7e319]:
+                    - /placeholder: Service history, recent repairs, anything a buyer should know
+                    - text: Playwright test listing - safe to delete.
+                  - paragraph [ref=f7e320]:
+                    - generic [ref=f7e321]: 41 / 4000
+              - button "Saving…" [disabled] [ref=f7e364]
+            - complementary [ref=f7e367]:
+              - generic [ref=f7e368]:
+                - generic [ref=f7e369]:
+                  - paragraph [ref=f7e370]: Live preview
+                  - paragraph [ref=f7e371]: This is how buyers will see your listing.
+                - generic [ref=f7e372]:
+                  - generic [ref=f7e373]: Photos are added after saving
+                  - generic [ref=f7e378]:
+                    - paragraph [ref=f7e379]: Excavator Caterpillar 320D TEST
+                    - paragraph [ref=f7e380]:
+                      - generic [ref=f7e381]: "2018"
+                      - generic [aria-hidden] [ref=f7e382]: ·
+                      - generic [ref=f7e383]: 4,200 hrs
+                      - generic [aria-hidden] [ref=f7e384]: ·
+                      - generic [ref=f7e385]: With operator
+                    - paragraph [ref=f7e386]:
+                      - generic [ref=f7e387]:
+                        - generic [ref=f7e389]: SAR
+                        - text: "900"
+                        - generic [ref=f7e390]: / day
+                    - generic [ref=f7e391]:
+                      - generic [ref=f7e392]: Excavator
+                      - generic [ref=f7e398]: Diesel
+                      - generic [ref=f7e402]: Riyadh
+                - generic [ref=f7e406]:
+                  - generic [ref=f7e407]:
+                    - generic [ref=f7e408]: Listing strength
+                    - generic [ref=f7e409]: 1 / 2
+                  - list [ref=f7e412]:
+                    - listitem [ref=f7e413]:
+                      - generic [ref=f7e415]: A detailed description
+                    - listitem [ref=f7e416]:
+                      - generic [ref=f7e420]: Operating hours
+  - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=f7e421] [cursor=pointer]:
+    - generic [ref=f7e424]:
+      - text: Compiling
+      - generic [ref=f7e425]:
+        - generic [ref=f7e426]: .
+        - generic [ref=f7e427]: .
+        - generic [ref=f7e428]: .
+  - alert [ref=f7e360]

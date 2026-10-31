@@ -13,6 +13,8 @@ import type { ListingFilters } from "@/lib/listings";
 import { cn } from "@/lib/utils";
 
 const MAX_PRICES = [50_000, 100_000, 150_000, 200_000, 300_000, 500_000];
+// Daily rates, for the rentals tab.
+export const MAX_DAILY_PRICES = [100, 150, 200, 300, 500, 1_000];
 
 function minYears(): number[] {
   const year = new Date().getFullYear();
@@ -20,14 +22,14 @@ function minYears(): number[] {
 }
 
 // Keep a custom value (e.g. typed in the sidebar filters) instead of dropping it.
-function withCurrent(options: FormSelectOption[], value: number | undefined, label: (v: number) => string) {
+export function withCurrent(options: FormSelectOption[], value: number | undefined, label: (v: number) => string) {
   if (value === undefined || options.some((option) => option.value === String(value))) return options;
   return [{ value: String(value), label: label(value) }, ...options];
 }
 
-type Variant = "default" | "hero";
+export type Variant = "default" | "hero";
 
-const styles = {
+export const styles = {
   default: {
     form: "grid gap-4 p-5 sm:grid-cols-2 lg:grid-cols-[repeat(5,minmax(0,1fr))_auto] lg:items-end lg:gap-3 lg:ps-7",
     field: "flex min-w-0 flex-col gap-2 lg:border-e lg:border-line lg:pe-3",
@@ -56,7 +58,7 @@ function FieldLabel({ icon: Icon, children }: { icon: React.ComponentType<{ clas
   );
 }
 
-function Field({
+export function Field({
   id,
   label,
   variant,
@@ -94,7 +96,7 @@ export async function SearchBar({
   const hero = variant === "hero";
   const style = styles[variant];
   const { t, locale } = await getDictionary();
-  const action = localizePath(locale, "/listings");
+  const action = localizePath(locale, filters?.type === "rent" ? "/rentals" : "/listings");
   const priceLabel = (price: number) => fmt(t.search.upTo, { price: formatSAR(price, locale) });
   const yearLabel = (year: number) => fmt(t.search.yearAndNewer, { year });
 
@@ -142,7 +144,7 @@ export async function SearchBar({
             defaultValue={filters?.maxPrice?.toString()}
             placeholder={t.search.anyPrice}
             options={withCurrent(
-              MAX_PRICES.map((price) => ({ value: String(price), label: priceLabel(price) })),
+              (filters?.type === "rent" ? MAX_DAILY_PRICES : MAX_PRICES).map((price) => ({ value: String(price), label: priceLabel(price) })),
               filters?.maxPrice,
               priceLabel,
             )}
@@ -178,6 +180,7 @@ export async function SearchBar({
             name="city"
             defaultValue={filters?.city}
             placeholder={t.search.anyLocation}
+            search={{ placeholder: t.select.searchCities, emptyText: t.select.noMatches }}
             options={CITIES.map((city) => ({ value: city, label: cityName(t, city) }))}
             icon={hero ? undefined : <MapPin className="size-3.5 text-muted-foreground" />}
             className={style.trigger}

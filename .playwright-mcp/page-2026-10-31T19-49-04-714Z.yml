@@ -1,0 +1,206 @@
+- generic [ref=f15e1]:
+  - generic [ref=f15e2]:
+    - complementary [ref=f15e3]:
+      - link [ref=f15e5] [cursor=pointer]:
+        - /url: /en/dashboard
+        - img "KarSouq" [ref=f15e6]
+        - paragraph [ref=f15e7]: Seller Center
+      - navigation "Seller Center" [ref=f15e8]:
+        - link "Overview" [ref=f15e9] [cursor=pointer]:
+          - /url: /en/dashboard
+        - link "Listings" [ref=f15e16] [cursor=pointer]:
+          - /url: /en/dashboard/listings
+        - link "Insights" [ref=f15e22] [cursor=pointer]:
+          - /url: /en/dashboard/insights
+        - link "Offers" [ref=f15e27] [cursor=pointer]:
+          - /url: /en/dashboard/offers
+        - link "Rental requests" [ref=f15e35] [cursor=pointer]:
+          - /url: /en/dashboard/bookings
+        - link "Import CSV" [ref=f15e39] [cursor=pointer]:
+          - /url: /en/dashboard/listings/import
+        - link "Storefront" [ref=f15e44] [cursor=pointer]:
+          - /url: /en/dashboard/storefront
+        - link "Plan & add-ons" [ref=f15e50] [cursor=pointer]:
+          - /url: /en/dashboard/plan
+      - generic [ref=f15e54]:
+        - generic [ref=f15e55]:
+          - text: Language
+          - group "Language" [ref=f15e59]:
+            - link "العربية" [ref=f15e60] [cursor=pointer]:
+              - /url: /ar/dashboard/listings/new
+              - text: ع
+            - generic "English" [ref=f15e61]: EN
+        - link "View site" [ref=f15e63] [cursor=pointer]:
+          - /url: /en
+    - generic [ref=f15e68]:
+      - banner [ref=f15e70]:
+        - paragraph [ref=f15e71]: Listings
+        - generic [ref=f15e72]:
+          - link "New listing" [ref=f15e73] [cursor=pointer]:
+            - /url: /en/dashboard/listings/new
+          - button "Notifications" [ref=f15e76] [cursor=pointer]
+          - button "Account menu" [ref=f15e81] [cursor=pointer]:
+            - generic [aria-hidden] [ref=f15e83]: DC
+            - generic [ref=f15e85]:
+              - generic [ref=f15e86]: Dammam Cars
+              - generic [ref=f15e87]: Seller · Pro
+      - main [ref=f15e90]:
+        - generic [ref=f15e92]:
+          - link "← Your listings" [ref=f15e93] [cursor=pointer]:
+            - /url: /en/dashboard/listings
+          - generic [ref=f15e96]:
+            - generic [ref=f15e97]: Pro plan until 26 Nov 2026 · 1 of 100 listings published this month
+            - heading "Sell your car" [level=1] [ref=f15e99]
+            - paragraph [ref=f15e101]: Enter the details first. You'll add photos and publish on the next step.
+          - generic [ref=f15e103]:
+            - generic [ref=f15e104]:
+              - group "What do you want to do?" [ref=f15e105]:
+                - paragraph [aria-hidden] [ref=f15e107]: What do you want to do?
+                - paragraph [ref=f15e108]: Sell or rent out a car, or rent out equipment by the day, week or month.
+                - generic [ref=f15e109]:
+                  - generic [ref=f15e110] [cursor=pointer]:
+                    - radio "Sell it One-time sale price" [ref=f15e111]
+                    - generic [ref=f15e116]:
+                      - generic [ref=f15e117]: Sell it
+                      - generic [ref=f15e118]: One-time sale price
+                  - generic [ref=f15e119] [cursor=pointer]:
+                    - radio "Rent it out Daily, weekly and monthly rates" [ref=f15e120]
+                    - generic [ref=f15e126]:
+                      - generic [ref=f15e127]: Rent it out
+                      - generic [ref=f15e128]: Daily, weekly and monthly rates
+                  - generic [ref=f15e129] [cursor=pointer]:
+                    - radio "Rent out equipment Excavators, forklifts, cranes and more" [checked] [active] [ref=f15e130]
+                    - generic [ref=f15e137]:
+                      - generic [ref=f15e138]: Rent out equipment
+                      - generic [ref=f15e139]: Excavators, forklifts, cranes and more
+              - generic [ref=f15e480]:
+                - generic [ref=f15e481]:
+                  - generic [ref=f15e482]: "1"
+                  - generic [ref=f15e483]:
+                    - heading "Equipment details" [level=2] [ref=f15e484]
+                    - paragraph [ref=f15e485]: Type, brand, model and hours
+                - generic [ref=f15e486]:
+                  - generic [ref=f15e487]:
+                    - generic [ref=f15e488]: Equipment type
+                    - generic [ref=f15e489]:
+                      - button "Equipment type" [ref=f15e490] [cursor=pointer]:
+                        - generic [ref=f15e491]: Choose type
+                      - textbox [aria-hidden]
+                  - generic [ref=f15e495]:
+                    - generic [ref=f15e496]: Brand
+                    - generic [ref=f15e497]:
+                      - button "Brand" [ref=f15e498] [cursor=pointer]:
+                        - generic [ref=f15e499]: Choose brand
+                      - textbox [aria-hidden]
+                  - generic [ref=f15e503]:
+                    - generic [ref=f15e504]: Model
+                    - textbox "Model" [ref=f15e505]:
+                      - /placeholder: 320D, 3CX, 8FD25…
+                  - generic [ref=f15e506]:
+                    - generic [ref=f15e507]: Year
+                    - spinbutton "Year" [ref=f15e508]
+              - generic [ref=f15e509]:
+                - generic [ref=f15e510]:
+                  - generic [ref=f15e511]: "2"
+                  - generic [ref=f15e512]:
+                    - heading "Condition & specs" [level=2] [ref=f15e513]
+                    - paragraph [ref=f15e514]: Type, brand, model and hours
+                - generic [ref=f15e515]:
+                  - generic [ref=f15e516]:
+                    - generic [ref=f15e517]: Operating hours (optional)
+                    - spinbutton "Operating hours (optional)" [ref=f15e518]
+                    - paragraph [ref=f15e519]: Engine hours on the meter, if known.
+                  - generic [ref=f15e520]:
+                    - generic [ref=f15e521]: Condition
+                    - combobox "Condition" [ref=f15e522]:
+                      - option "Choose the condition" [disabled] [selected]
+                      - option "Excellent"
+                      - option "Good"
+                      - option "Fair"
+                  - generic [ref=f15e523]:
+                    - generic [ref=f15e524]: Fuel type
+                    - combobox "Fuel type" [ref=f15e525]:
+                      - option "Choose the fuel type" [disabled] [selected]
+                      - option "Petrol"
+                      - option "Diesel"
+                      - option "Hybrid"
+                      - option "Electric"
+                  - generic [ref=f15e526] [cursor=pointer]:
+                    - checkbox "Operator included Tick if a trained operator comes with the equipment." [ref=f15e527]
+                    - generic [ref=f15e528]:
+                      - generic [ref=f15e529]: Operator included
+                      - generic [ref=f15e530]: Tick if a trained operator comes with the equipment.
+              - generic [ref=f15e192]:
+                - generic [ref=f15e193]:
+                  - generic [ref=f15e194]: "3"
+                  - generic [ref=f15e195]:
+                    - heading "Price & location" [level=2] [ref=f15e196]
+                    - paragraph [ref=f15e197]: Your asking price and where the car is
+                - generic [ref=f15e198]:
+                  - generic [ref=f15e199]:
+                    - generic [ref=f15e200]: Daily rate
+                    - spinbutton "Daily rate" [ref=f15e531]
+                  - generic [ref=f15e203]:
+                    - generic [ref=f15e204]: City
+                    - generic [ref=f15e205]:
+                      - button "City" [ref=f15e206] [cursor=pointer]:
+                        - generic [ref=f15e207]: Jeddah
+                      - textbox [aria-hidden]: Jeddah
+                  - generic [ref=f15e532]:
+                    - generic [ref=f15e533]: Weekly rate (optional)
+                    - spinbutton "Weekly rate (optional)" [ref=f15e535]
+                    - paragraph [ref=f15e536]: Less than 7 days at the daily rate.
+                  - generic [ref=f15e537]:
+                    - generic [ref=f15e538]: Monthly rate (optional)
+                    - spinbutton "Monthly rate (optional)" [ref=f15e540]
+                    - paragraph [ref=f15e541]: Less than 30 days at the daily rate.
+              - generic [ref=f15e542]:
+                - generic [ref=f15e543]:
+                  - generic [ref=f15e544]: "4"
+                  - generic [ref=f15e545]:
+                    - heading "Rental terms" [level=2] [ref=f15e546]
+                    - paragraph [ref=f15e547]: Renters see these before they ask for dates.
+                - generic [ref=f15e548]:
+                  - generic [ref=f15e549]:
+                    - generic [ref=f15e550]: Minimum rental (days)
+                    - spinbutton "Minimum rental (days)" [ref=f15e551]: "1"
+                  - generic [ref=f15e552]:
+                    - generic [ref=f15e553]: Security deposit (optional)
+                    - spinbutton "Security deposit (optional)" [ref=f15e555]
+              - generic [ref=f15e211]:
+                - generic [ref=f15e212]:
+                  - generic [ref=f15e213]: "5"
+                  - generic [ref=f15e214]:
+                    - heading "Description & features" [level=2] [ref=f15e215]
+                    - paragraph [ref=f15e216]: Detailed listings get more calls
+                - generic [ref=f15e219]:
+                  - generic [ref=f15e220]: Description (optional)
+                  - textbox "Description (optional)" [ref=f15e221]:
+                    - /placeholder: Service history, recent repairs, anything a buyer should know
+                  - paragraph [ref=f15e222]:
+                    - generic [ref=f15e223]: 0 / 4000
+              - button "Continue to photos" [ref=f15e252] [cursor=pointer]
+            - complementary [ref=f15e253]:
+              - generic [ref=f15e254]:
+                - generic [ref=f15e255]:
+                  - paragraph [ref=f15e256]: Live preview
+                  - paragraph [ref=f15e257]: This is how buyers will see your listing.
+                - generic [ref=f15e258]:
+                  - generic [ref=f15e259]: Photos are added after saving
+                  - generic [ref=f15e264]:
+                    - paragraph [ref=f15e265]
+                    - paragraph [ref=f15e267]
+                    - paragraph [ref=f15e271]
+                    - generic [ref=f15e273]: Jeddah
+                - generic [ref=f15e275]:
+                  - generic [ref=f15e276]:
+                    - generic [ref=f15e277]: Listing strength
+                    - generic [ref=f15e278]: 0 / 2
+                  - list [ref=f15e280]:
+                    - listitem [ref=f15e281]:
+                      - generic [ref=f15e283]: A detailed description
+                    - listitem [ref=f15e560]:
+                      - generic [ref=f15e562]: Operating hours
+  - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=f15e303] [cursor=pointer]
+  - alert [ref=f15e307]

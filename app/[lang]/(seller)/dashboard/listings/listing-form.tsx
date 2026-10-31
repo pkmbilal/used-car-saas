@@ -1,8 +1,9 @@
 "use client";
 
-import { useActionState, useState } from "react";
-import { AlertCircle, Check, CheckCircle2, Loader2 } from "lucide-react";
+import { useActionState, useRef, useState } from "react";
+import { AlertCircle, CalendarClock, Check, CheckCircle2, Construction, Loader2, Tag } from "lucide-react";
 import { useDictionary } from "@/components/i18n-provider";
+import { SearchableSelect } from "@/components/searchable-select";
 import { CITIES } from "@/lib/cities";
 import { cityName, fmt, optionLabel, translateMessage } from "@/lib/dictionary";
 import {
@@ -14,14 +15,21 @@ import {
   MAX_DESCRIPTION_LENGTH,
   TRANSMISSIONS,
 } from "@/lib/listing-options";
-import type { ListingInput } from "@/lib/listings";
+import type { EquipmentInput, ListingInput, RentalInput } from "@/lib/listings";
 import type { ListingFormState } from "./actions";
+import { EquipmentFields } from "./equipment-fields";
 import { Field, inputClass, Section, selectClass } from "./form-fields";
 import { ListingPreview, previewFromForm, previewFromListing } from "./listing-preview";
 import { MakeModelFields } from "./make-model-fields";
 
+// What the seller is listing: a car for sale, a car for rent, or equipment
+// (always for rent). Sent as listing_type + category.
+export type ListingKind = "sale" | "rent" | "equipment";
+
 type Props = {
-  listing?: ListingInput;
+  listing?: ListingInput & Partial<RentalInput> & Partial<EquipmentInput>;
+  // For new listings: preselects the kind (e.g. from ?type=rent&category=equipment).
+  defaultKind?: ListingKind;
   // The first photo, for the preview. New listings have none yet.
   cover?: string;
   action: (prev: ListingFormState, formData: FormData) => Promise<ListingFormState>;
@@ -64,17 +72,42 @@ function RiyalSymbol() {
   );
 }
 
-export function ListingForm({ listing, cover, action, submitLabel }: Props) {
+function kindOf(listing: Props["listing"]): ListingKind | null {
+  if (!listing) return null;
+  if (listing.category === "equipment") return "equipment";
+  return listing.listing_type === "rent" ? "rent" : "sale";
+}
+
+export function ListingForm({ listing, cover, action, submitLabel, defaultKind = "sale" }: Props) {
   const [state, formAction, pending] = useActionState(action, {});
   const [preview, setPreview] = useState(() => previewFromListing(listing));
+  const [city, setCity] = useState(listing?.city ?? "");
+  const formRef = useRef<HTMLFormElement>(null);
+  const refreshPreview = () =>
+    requestAnimationFrame(() => {
+      if (formRef.current) setPreview(previewFromForm(formRef.current));
+    });
+  const [kind, setKind] = useState<ListingKind>(kindOf(listing) ?? defaultKind);
   const { t } = useDictionary();
   const f = t.dashboard.form;
   const s = f.sections;
+  const r = t.rentals;
+  const isEquipment = kind === "equipment";
+  const isRent = kind !== "sale";
+  // A listing can't switch between car and equipment once created.
+  const kinds = (
+    [
+      { value: "sale", label: r.sellOption, hint: r.sellHint, Icon: Tag },
+      { value: "rent", label: r.rentOption, hint: r.rentHint, Icon: CalendarClock },
+      { value: "equipment", label: t.equipment.rentOption, hint: t.equipment.rentHint, Icon: Construction },
+    ] as const
+  ).filter(({ value }) => !listing || (value === "equipment") === (listing.category === "equipment"));
   const maxYear = new Date().getFullYear() + 1;
 
   return (
     <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_340px] lg:items-start lg:gap-8">
       <form
+        ref={formRef}
         action={formAction}
         // Inputs stay uncontrolled; the preview re-reads the form on every
         // change. A frame later, so MakeModelFields has cleared the model when
@@ -85,8 +118,47 @@ export function ListingForm({ listing, cover, action, submitLabel }: Props) {
         }}
         className="flex flex-col gap-5"
       >
+        <fieldset className="rounded-2xl border border-line bg-white p-5 shadow-[0_2px_10px_rgba(20,30,25,.05)] sm:p-6 dark:border-zinc-800 dark:bg-zinc-950">
+          <legend className="sr-only">{r.typeTitle}</legend>
+          <p className="font-semibold tracking-tight" aria-hidden>
+            {r.typeTitle}
+          </p>
+          <p className="text-sm text-zinc-500 dark:text-zinc-400">{r.typeSubtitle}</p>
+          <input type="hidden" name="listing_type" value={isRent ? "rent" : "sale"} />
+          <input type="hidden" name="category" value={isEquipment ? "equipment" : "car"} />
+          <div className={`mt-4 grid gap-3 ${kinds.length === 3 ? "sm:grid-cols-3" : kinds.length === 2 ? "sm:grid-cols-2" : ""}`}>
+            {kinds.map(({ value, label, hint, Icon }) => (
+              <label
+                key={value}
+                className="flex cursor-pointer items-center gap-3 rounded-xl border border-line bg-white px-4 py-3 shadow-sm transition select-none hover:border-forest/30 has-[:checked]:border-brand has-[:checked]:bg-forest/5 has-[:focus-visible]:ring-4 has-[:focus-visible]:ring-brand/20 dark:border-zinc-700 dark:bg-zinc-900 dark:has-[:checked]:border-lime dark:has-[:checked]:bg-lime/10"
+              >
+                <input
+                  type="radio"
+                  name="kind"
+                  value={value}
+                  checked={kind === value}
+                  onChange={() => setKind(value)}
+                  className="sr-only"
+                />
+                <span className="grid size-9 shrink-0 place-items-center rounded-full bg-mint text-forest dark:bg-zinc-800 dark:text-lime">
+                  <Icon className="size-4.5" aria-hidden />
+                </span>
+                <span className="flex flex-col">
+                  <span className="text-sm font-semibold">{label}</span>
+                  <span className="text-xs text-zinc-500 dark:text-zinc-400">{hint}</span>
+                </span>
+              </label>
+            ))}
+          </div>
+        </fieldset>
+
+        {isEquipment ? (
+          // Keyed so switching kinds remounts fresh, uncontrolled inputs.
+          <EquipmentFields key="equipment" listing={listing} onChange={refreshPreview} />
+        ) : (
+        <>
         <Section step={1} title={s.car.title} subtitle={s.car.subtitle}>
-          <MakeModelFields make={listing?.make} model={listing?.model} />
+          <MakeModelFields make={listing?.make} model={listing?.model} onChange={refreshPreview} />
           <Field id="year" label={f.year}>
             <input
               id="year"
@@ -120,7 +192,7 @@ export function ListingForm({ listing, cover, action, submitLabel }: Props) {
               inputMode="numeric"
               required
               min={0}
-              defaultValue={listing?.mileage}
+              defaultValue={listing?.mileage ?? undefined}
               className={`${inputClass} pe-12`}
             />
           </Field>
@@ -162,9 +234,11 @@ export function ListingForm({ listing, cover, action, submitLabel }: Props) {
             />
           </Field>
         </Section>
+        </>
+        )}
 
         <Section step={3} title={s.price.title} subtitle={s.price.subtitle}>
-          <Field id="price" label={f.price} suffix={<RiyalSymbol />}>
+          <Field id="price" label={isRent ? r.dailyRate : f.price} suffix={<RiyalSymbol />}>
             <input
               id="price"
               name="price"
@@ -177,17 +251,94 @@ export function ListingForm({ listing, cover, action, submitLabel }: Props) {
             />
           </Field>
           <Field id="city" label={f.city}>
-            <Select
+            <SearchableSelect
               id="city"
-              options={CITIES}
-              defaultValue={listing?.city}
+              name="city"
+              required
+              value={city}
+              onValueChange={(next) => {
+                setCity(next);
+                refreshPreview();
+              }}
               placeholder={f.chooseCity}
-              format={(city) => cityName(t, city)}
+              searchPlaceholder={t.select.searchCities}
+              emptyText={t.select.noMatches}
+              options={CITIES.map((value) => ({ value, label: cityName(t, value) }))}
+              triggerClassName={inputClass}
             />
           </Field>
+          {isRent && (
+            <>
+              <Field id="weekly_price" label={r.weeklyRate} hint={r.weeklyHint} suffix={<RiyalSymbol />}>
+                <input
+                  id="weekly_price"
+                  name="weekly_price"
+                  type="number"
+                  inputMode="numeric"
+                  min={1}
+                  defaultValue={listing?.weekly_price ?? undefined}
+                  className={`${inputClass} pe-12`}
+                />
+              </Field>
+              <Field id="monthly_price" label={r.monthlyRate} hint={r.monthlyHint} suffix={<RiyalSymbol />}>
+                <input
+                  id="monthly_price"
+                  name="monthly_price"
+                  type="number"
+                  inputMode="numeric"
+                  min={1}
+                  defaultValue={listing?.monthly_price ?? undefined}
+                  className={`${inputClass} pe-12`}
+                />
+              </Field>
+            </>
+          )}
         </Section>
 
-        <Section step={4} title={s.details.title} subtitle={s.details.subtitle}>
+        {isRent && (
+          <Section step={4} title={r.termsTitle} subtitle={r.termsSubtitle}>
+            <Field id="min_rental_days" label={r.minDays}>
+              <input
+                id="min_rental_days"
+                name="min_rental_days"
+                type="number"
+                inputMode="numeric"
+                required
+                min={1}
+                max={90}
+                defaultValue={listing?.min_rental_days ?? 1}
+                className={inputClass}
+              />
+            </Field>
+            <Field id="deposit" label={r.deposit} suffix={<RiyalSymbol />}>
+              <input
+                id="deposit"
+                name="deposit"
+                type="number"
+                inputMode="numeric"
+                min={0}
+                defaultValue={listing?.deposit ?? undefined}
+                className={`${inputClass} pe-12`}
+              />
+            </Field>
+            {!isEquipment && (
+            <Field id="daily_km_limit" label={r.kmLimit} hint={r.kmLimitHint} suffix={f.km}>
+              <input
+                id="daily_km_limit"
+                name="daily_km_limit"
+                type="number"
+                inputMode="numeric"
+                min={1}
+                max={10000}
+                defaultValue={listing?.daily_km_limit ?? undefined}
+                className={`${inputClass} pe-12`}
+              />
+            </Field>
+            )}
+          </Section>
+        )}
+
+        <Section step={isRent ? 5 : 4} title={s.details.title} subtitle={s.details.subtitle}>
           <div className="sm:col-span-2">
             <Field
               id="description"
@@ -209,6 +360,7 @@ export function ListingForm({ listing, cover, action, submitLabel }: Props) {
               />
             </Field>
           </div>
+          {!isEquipment && (
           <fieldset className="sm:col-span-2">
             <legend className="text-sm font-medium text-zinc-800 dark:text-zinc-200">{f.features}</legend>
             <div className="mt-2 flex flex-wrap gap-2">
@@ -234,6 +386,7 @@ export function ListingForm({ listing, cover, action, submitLabel }: Props) {
               ))}
             </div>
           </fieldset>
+          )}
         </Section>
 
         <div className="sticky bottom-0 z-10 -mx-4 flex flex-wrap items-center gap-3 border-t border-line bg-white/85 px-4 py-3 backdrop-blur sm:static sm:mx-0 sm:border-0 sm:bg-transparent sm:p-0 sm:backdrop-blur-none dark:border-zinc-800 dark:bg-zinc-950/85 sm:dark:bg-transparent">
@@ -261,7 +414,7 @@ export function ListingForm({ listing, cover, action, submitLabel }: Props) {
       </form>
 
       <aside className="hidden lg:sticky lg:top-24 lg:block">
-        <ListingPreview data={preview} cover={cover} />
+        <ListingPreview data={preview} cover={cover} rent={isRent} equipment={isEquipment} />
       </aside>
     </div>
   );

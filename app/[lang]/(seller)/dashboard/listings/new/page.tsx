@@ -22,8 +22,15 @@ export async function generateMetadata(): Promise<Metadata> {
 const noticeClass =
   "mt-6 flex items-start gap-3 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900 dark:border-amber-900/60 dark:bg-amber-950 dark:text-amber-200";
 
-export default async function NewListingPage() {
+export default async function NewListingPage({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
   const { user, profile } = await requireSeller("/dashboard/listings/new");
+  const query = await searchParams;
+  const defaultKind =
+    query.category === "equipment" ? "equipment" : query.type === "rent" ? "rent" : "sale";
   const [quota, drafts] = await Promise.all([
     getListingQuota(),
     getDraftUsage(user.id, profile.plan),
@@ -48,7 +55,7 @@ export default async function NewListingPage() {
             {quotaSummary(t, locale, quota)}
           </span>
         )}
-        <h1 className="mt-2.5 text-3xl font-bold tracking-tight sm:text-4xl">{p.title}</h1>
+        <h1 className="mt-2.5 text-3xl font-bold tracking-tight sm:text-4xl">{defaultKind === "equipment" ? t.equipment.newTitle : p.title}</h1>
         <span
           aria-hidden
           className="mt-3 block h-1 w-12 rounded-full bg-gradient-to-r from-brand to-lime rtl:bg-gradient-to-l"
@@ -84,7 +91,7 @@ export default async function NewListingPage() {
       )}
 
       <div className="mt-8">
-        <ListingForm action={createListing} submitLabel={p.submit} />
+        <ListingForm action={createListing} submitLabel={p.submit} defaultKind={defaultKind} />
       </div>
     </div>
   );

@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "@/components/locale-link";
 import { getMyPendingAddons } from "@/lib/addons";
 import { requireSeller } from "@/lib/auth";
-import { carName } from "@/lib/car-names";
+import { listingName } from "@/lib/car-names";
 import { count, fmt, formatNumber } from "@/lib/dictionary";
 import type { Dictionary } from "@/lib/dictionaries";
 import type { Locale } from "@/lib/i18n";
@@ -217,7 +217,7 @@ function TopListings({ rows, t, locale }: { rows: ListingInsight[]; t: Dictionar
                   </span>
                   <span className="min-w-0 flex-1">
                     <span className="block truncate text-sm font-semibold group-hover:text-brand dark:group-hover:text-lime">
-                      {carName(locale, listing.make, listing.model, listing.year)}
+                      {listingName(locale, listing, listing.year)}
                     </span>
                     <span className="mt-1.5 block h-1.5 rounded-full bg-zinc-100 dark:bg-zinc-800" aria-hidden>
                       <span

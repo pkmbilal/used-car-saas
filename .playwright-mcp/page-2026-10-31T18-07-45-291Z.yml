@@ -1,0 +1,94 @@
+- generic [active] [ref=f4e1]:
+  - banner [ref=f4e2]:
+    - navigation [ref=f4e3]:
+      - link [ref=f4e4] [cursor=pointer]:
+        - /url: /ar
+        - img "KarSouq" [ref=f4e5]
+      - generic [ref=f4e6]:
+        - link "شراء سيارة" [ref=f4e7] [cursor=pointer]:
+          - /url: /ar/listings
+        - link "الإيجار" [ref=f4e8] [cursor=pointer]:
+          - /url: /ar/rentals
+        - link "المعارض" [ref=f4e10] [cursor=pointer]:
+          - /url: /ar/dealers
+        - link "الباقات" [ref=f4e11] [cursor=pointer]:
+          - /url: /ar/pricing
+        - link "بيع" [ref=f4e12] [cursor=pointer]:
+          - /url: /ar/account/become-seller
+      - generic [ref=f4e13]:
+        - link "English" [ref=f4e14] [cursor=pointer]:
+          - /url: /en/rentals
+          - text: EN
+        - link "تسجيل الدخول" [ref=f4e18] [cursor=pointer]:
+          - /url: /ar/login
+  - main [ref=f4e20]:
+    - generic [ref=f4e23]:
+      - navigation [ref=f4e24]:
+        - link "سيارات" [ref=f4e25] [cursor=pointer]:
+          - /url: /ar/rentals
+        - link "معدات" [ref=f4e26] [cursor=pointer]:
+          - /url: /ar/rentals?category=equipment
+      - heading "معدات للإيجار" [level=1] [ref=f4e27]
+      - paragraph [ref=f4e28]: استأجر الحفارات والشيولات والرافعات الشوكية والكرينات والمولدات باليوم أو الأسبوع أو الشهر.
+    - generic [ref=f4e29]:
+      - button "الفلاتر" [ref=f4e30] [cursor=pointer]
+      - generic [ref=f4e31]:
+        - generic [ref=f4e32]:
+          - paragraph [ref=f4e33]: لا توجد معدات للإيجار
+          - generic [ref=f4e35]:
+            - generic [ref=f4e36]: ترتيب حسب
+            - combobox "ترتيب حسب" [ref=f4e37] [cursor=pointer]
+            - combobox [aria-hidden] [ref=f4e38]
+        - generic [ref=f4e39]:
+          - paragraph [ref=f4e45]: لا توجد سيارات تطابق هذه الفلاتر
+          - paragraph [ref=f4e46]: لا توجد معدات للإيجار حالياً. تابعنا قريباً.
+  - contentinfo [ref=f4e47]:
+    - generic [ref=f4e48]:
+      - generic [ref=f4e49]:
+        - link [ref=f4e50] [cursor=pointer]:
+          - /url: /ar
+          - img "KarSouq" [ref=f4e51]
+        - paragraph [ref=f4e52]: سوق السيارات المستعملة في المملكة العربية السعودية. اشترِ وبِع مباشرة مع البائعين.
+      - generic [ref=f4e53]:
+        - paragraph [ref=f4e54]: شراء
+        - link "تصفح السيارات" [ref=f4e55] [cursor=pointer]:
+          - /url: /ar/listings
+        - link "السيارات المحفوظة" [ref=f4e56] [cursor=pointer]:
+          - /url: /ar/favorites
+        - link "عمليات البحث المحفوظة" [ref=f4e57] [cursor=pointer]:
+          - /url: /ar/saved-searches
+      - generic [ref=f4e58]:
+        - paragraph [ref=f4e59]: الماركات الأكثر طلبًا
+        - link "تويوتا" [ref=f4e60] [cursor=pointer]:
+          - /url: /ar/brands/toyota
+        - link "هيونداي" [ref=f4e61] [cursor=pointer]:
+          - /url: /ar/brands/hyundai
+        - link "نيسان" [ref=f4e62] [cursor=pointer]:
+          - /url: /ar/brands/nissan
+        - link "لكزس" [ref=f4e63] [cursor=pointer]:
+          - /url: /ar/brands/lexus
+      - generic [ref=f4e64]:
+        - paragraph [ref=f4e65]: المدن
+        - link "جميع المدن" [ref=f4e66] [cursor=pointer]:
+          - /url: /ar/locations
+      - generic [ref=f4e67]:
+        - paragraph [ref=f4e68]: بيع
+        - link "بِع سيارتك" [ref=f4e69] [cursor=pointer]:
+          - /url: /ar/account/become-seller
+        - link "الباقات" [ref=f4e70] [cursor=pointer]:
+          - /url: /ar/pricing
+        - link "لوحة البائع" [ref=f4e71] [cursor=pointer]:
+          - /url: /ar/dashboard
+        - link "حسابي" [ref=f4e72] [cursor=pointer]:
+          - /url: /ar/account
+    - generic [ref=f4e74]:
+      - paragraph [ref=f4e75]: © 2026 كارسوق، أحد منتجات CodeSudio. جميع الحقوق محفوظة.
+      - navigation [ref=f4e76]:
+        - link "تواصل معنا" [ref=f4e77] [cursor=pointer]:
+          - /url: /ar/contact
+        - link "سياسة الخصوصية" [ref=f4e78] [cursor=pointer]:
+          - /url: /ar/privacy
+        - link "شروط الاستخدام" [ref=f4e79] [cursor=pointer]:
+          - /url: /ar/terms
+  - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=f4e85] [cursor=pointer]

@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 import { LOCALES } from "@/lib/i18n";
 import { siteUrl } from "@/lib/site";
 
-const PRIVATE = ["/dashboard", "/account", "/favorites", "/offers", "/saved-searches"];
+const PRIVATE = ["/dashboard", "/account", "/favorites", "/offers", "/bookings", "/saved-searches"];
 
 export default function robots(): MetadataRoute.Robots {
   return {

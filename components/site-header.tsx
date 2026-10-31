@@ -23,6 +23,7 @@ export async function SiteHeader() {
   // Locations in the footer.
   const mainLinks: HeaderLink[] = [
     { href: "/listings", label: t.nav.buyCars },
+    { href: "/rentals", label: t.nav.rentCars },
     { href: "/dealers", label: t.nav.dealers },
     { href: "/pricing", label: t.nav.pricing },
   ];
@@ -33,6 +34,7 @@ export async function SiteHeader() {
           ? [{ href: "/dashboard", label: t.nav.myListings, hint: t.nav.hints.myListings, icon: "listings" as const }]
           : []),
         { href: "/offers", label: t.nav.offers, hint: t.nav.hints.offers, icon: "offers", badge: offersWaiting },
+        { href: "/bookings", label: t.nav.bookings, hint: t.nav.hints.bookings, icon: "bookings" },
         { href: "/favorites", label: t.nav.savedCars, hint: t.nav.hints.savedCars, icon: "saved" },
         { href: "/saved-searches", label: t.nav.savedSearches, hint: t.nav.hints.savedSearches, icon: "searches" },
         ...(current.profile.is_admin

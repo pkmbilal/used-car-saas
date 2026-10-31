@@ -1,12 +1,13 @@
 "use client";
 
 import Image from "next/image";
-import { Camera, Car, Check, Fuel, MapPin } from "lucide-react";
+import { Camera, Car, Check, Construction, Fuel, MapPin } from "lucide-react";
 import { useDictionary } from "@/components/i18n-provider";
-import { carName } from "@/lib/car-names";
+import { listingName } from "@/lib/car-names";
+import { equipmentTypeName } from "@/lib/equipment";
 import { cityName, optionLabel } from "@/lib/dictionary";
-import { formatAmount, formatKm } from "@/lib/format";
-import type { ListingInput } from "@/lib/listings";
+import { formatAmount, formatHours, formatKm } from "@/lib/format";
+import type { EquipmentInput, ListingInput } from "@/lib/listings";
 
 export type PreviewData = {
   make: string;
@@ -21,12 +22,15 @@ export type PreviewData = {
   color: string;
   description: string;
   features: string[];
+  equipment_type: string;
+  operating_hours: string;
+  operator_included: boolean;
 };
 
 const DETAILED_DESCRIPTION = 80;
 const ENOUGH_FEATURES = 3;
 
-export function previewFromListing(listing?: ListingInput): PreviewData {
+export function previewFromListing(listing?: ListingInput & Partial<EquipmentInput>): PreviewData {
   return {
     make: listing?.make ?? "",
     model: listing?.model ?? "",
@@ -40,6 +44,9 @@ export function previewFromListing(listing?: ListingInput): PreviewData {
     color: listing?.color ?? "",
     description: listing?.description ?? "",
     features: listing?.features ?? [],
+    equipment_type: listing?.equipment_type ?? "",
+    operating_hours: listing?.operating_hours?.toString() ?? "",
+    operator_included: listing?.operator_included ?? false,
   };
 }
 
@@ -62,6 +69,9 @@ export function previewFromForm(form: HTMLFormElement): PreviewData {
     color: text("color"),
     description: text("description"),
     features: data.getAll("features").filter((value): value is string => typeof value === "string"),
+    equipment_type: text("equipment_type"),
+    operating_hours: text("operating_hours"),
+    operator_included: data.get("operator_included") === "on",
   };
 }
 
@@ -76,19 +86,42 @@ function Skeleton({ className }: { className: string }) {
 
 // A client-side copy of components/listing-card.tsx (a server component), fed
 // from the form as the seller types.
-export function ListingPreview({ data, cover }: { data: PreviewData; cover?: string }) {
+export function ListingPreview({
+  data,
+  cover,
+  rent = false,
+  equipment = false,
+}: {
+  data: PreviewData;
+  cover?: string;
+  rent?: boolean;
+  equipment?: boolean;
+}) {
   const { t, locale } = useDictionary();
   const f = t.dashboard.form;
   const year = positive(data.year);
   const mileage = positive(data.mileage);
   const price = positive(data.price);
-  const name = data.make ? carName(locale, data.make, data.model) : "";
+  const hours = positive(data.operating_hours);
+  const name = data.make
+    ? listingName(locale, {
+        category: equipment ? "equipment" : "car",
+        make: data.make,
+        model: data.model,
+        equipment_type: data.equipment_type || null,
+      })
+    : "";
 
-  const checks = [
-    { label: f.strength.description, done: data.description.length >= DETAILED_DESCRIPTION },
-    { label: f.strength.features, done: data.features.length >= ENOUGH_FEATURES },
-    { label: f.strength.color, done: data.color !== "" },
-  ];
+  const checks = equipment
+    ? [
+        { label: f.strength.description, done: data.description.length >= DETAILED_DESCRIPTION },
+        { label: t.equipment.hours, done: hours !== null },
+      ]
+    : [
+        { label: f.strength.description, done: data.description.length >= DETAILED_DESCRIPTION },
+        { label: f.strength.features, done: data.features.length >= ENOUGH_FEATURES },
+        { label: f.strength.color, done: data.color !== "" },
+      ];
   const done = checks.filter((check) => check.done).length;
 
   return (
@@ -113,8 +146,27 @@ export function ListingPreview({ data, cover }: { data: PreviewData; cover?: str
           <p className="truncate text-sm font-semibold">{name || <Skeleton className="h-3.5 w-36" />}</p>
           <p className="mt-2 flex flex-wrap items-center gap-x-2 text-caption text-muted-foreground">
             {year !== null ? <span>{year}</span> : <Skeleton className="h-2.5 w-8" />}
-            <span aria-hidden>·</span>
-            {mileage !== null ? <span>{formatKm(mileage, locale)}</span> : <Skeleton className="h-2.5 w-14" />}
+            {equipment ? (
+              <>
+                {hours !== null && (
+                  <>
+                    <span aria-hidden>·</span>
+                    <span>{formatHours(hours, locale)}</span>
+                  </>
+                )}
+                {data.operator_included && (
+                  <>
+                    <span aria-hidden>·</span>
+                    <span>{t.equipment.withOperator}</span>
+                  </>
+                )}
+              </>
+            ) : (
+              <>
+                <span aria-hidden>·</span>
+                {mileage !== null ? <span>{formatKm(mileage, locale)}</span> : <Skeleton className="h-2.5 w-14" />}
+              </>
+            )}
             {data.transmission && (
               <>
                 <span aria-hidden>·</span>
@@ -131,13 +183,20 @@ export function ListingPreview({ data, cover }: { data: PreviewData; cover?: str
                 />
                 <span className="sr-only">{t.common.sarSr}</span>
                 {formatAmount(price)}
+                {rent && <span className="ms-1 text-xs font-medium text-muted-foreground">{t.rentals.perDay}</span>}
               </span>
             ) : (
               <Skeleton className="h-4 w-20" />
             )}
           </p>
           <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-caption text-muted-foreground">
-            {data.body_type && (
+            {equipment && data.equipment_type && (
+              <span className="flex items-center gap-1.5">
+                <Construction className="size-3" aria-hidden />
+                {equipmentTypeName(locale, data.equipment_type)}
+              </span>
+            )}
+            {!equipment && data.body_type && (
               <span className="flex items-center gap-1.5">
                 <Car className="size-3" aria-hidden />
                 {optionLabel(t.options.bodyType, data.body_type)}
