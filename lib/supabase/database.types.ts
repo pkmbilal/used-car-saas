@@ -693,6 +693,7 @@ export type Database = {
           days: number;
           quoted_total: number;
           note: string | null;
+          decline_reason: string | null;
           status: "pending" | "accepted" | "declined" | "cancelled" | "expired";
           responded_at: string | null;
           created_at: string;
@@ -708,6 +709,7 @@ export type Database = {
           days: number;
           quoted_total: number;
           note?: string | null;
+          decline_reason?: string | null;
           status?: "pending" | "accepted" | "declined" | "cancelled" | "expired";
           responded_at?: string | null;
           created_at?: string;
@@ -723,6 +725,7 @@ export type Database = {
           days?: number;
           quoted_total?: number;
           note?: string | null;
+          decline_reason?: string | null;
           status?: "pending" | "accepted" | "declined" | "cancelled" | "expired";
           responded_at?: string | null;
           created_at?: string;
@@ -1121,7 +1124,7 @@ export type Database = {
         Returns: string;
       };
       owner_respond_rental: {
-        Args: { p_request_id: string; p_action: "accept" | "decline" };
+        Args: { p_request_id: string; p_action: "accept" | "decline"; p_reason?: string };
         Returns: undefined;
       };
       renter_cancel_rental: {

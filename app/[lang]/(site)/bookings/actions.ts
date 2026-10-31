@@ -8,6 +8,7 @@ import {
   type OwnerRentalAction,
   type RentalError,
 } from "@/lib/rentals";
+import { MAX_RENTAL_NOTE } from "@/lib/rental-quote";
 
 export type RentalActionState = { error?: RentalError };
 
@@ -28,7 +29,10 @@ export async function respondToRental(
   if (side === "owner") {
     const action = OWNER_ACTIONS.find((a) => a === formData.get("action"));
     if (!action) return { error: "failed" };
-    result = await ownerRespondRental(requestId, action);
+    const raw = formData.get("reason");
+    const reason = action === "decline" && typeof raw === "string" ? raw.trim() : "";
+    if (reason.length > MAX_RENTAL_NOTE) return { error: "note_too_long" };
+    result = await ownerRespondRental(requestId, action, reason || null);
   } else {
     if (formData.get("action") !== "cancel") return { error: "failed" };
     result = await renterCancelRental(requestId);

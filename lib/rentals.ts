@@ -53,11 +53,13 @@ export async function requestRental(
 export async function ownerRespondRental(
   requestId: string,
   action: OwnerRentalAction,
+  reason?: string | null,
 ): Promise<{ error?: RentalError }> {
   const supabase = await createClient();
   const { error } = await supabase.rpc("owner_respond_rental", {
     p_request_id: requestId,
     p_action: action,
+    p_reason: reason ?? undefined,
   });
   return error ? { error: toRentalError(error.message) } : {};
 }
@@ -107,6 +109,8 @@ export type RentalRequest = {
   days: number;
   quotedTotal: number;
   note: string | null;
+  // The owner's optional message when declining.
+  declineReason: string | null;
   status: RentalRequestStatus;
   createdAt: string;
   respondedAt: string | null;
@@ -142,6 +146,7 @@ function toRequest(row: RequestQueryRow): RentalRequest {
     days: row.days,
     quotedTotal: Number(row.quoted_total),
     note: row.note,
+    declineReason: row.decline_reason,
     status: row.status,
     createdAt: row.created_at,
     respondedAt: row.responded_at,
@@ -186,7 +191,7 @@ export async function getSentRentalRequests(userId: string): Promise<RentalReque
   return (data ?? []).map(toRequest);
 }
 
-export type MyRentalRequest = Pick<RentalRequest, "id" | "startDate" | "endDate" | "days" | "quotedTotal" | "status">;
+export type MyRentalRequest = Pick<RentalRequest, "id" | "startDate" | "endDate" | "days" | "quotedTotal" | "status" | "declineReason">;
 
 // The renter's latest request on a listing, if any.
 export async function getMyRequestForListing(
@@ -196,7 +201,7 @@ export async function getMyRequestForListing(
   const supabase = await createClient();
   const { data } = await supabase
     .from("rental_requests")
-    .select("id, start_date, end_date, days, quoted_total, status")
+    .select("id, start_date, end_date, days, quoted_total, status, decline_reason")
     .eq("renter_id", userId)
     .eq("listing_id", listingId)
     .order("created_at", { ascending: false })
@@ -210,6 +215,7 @@ export async function getMyRequestForListing(
       days: data.days,
       quotedTotal: Number(data.quoted_total),
       status: data.status,
+      declineReason: data.decline_reason,
     }
   );
 }

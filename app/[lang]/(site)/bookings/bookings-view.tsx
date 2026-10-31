@@ -192,6 +192,17 @@ function RequestItem({
             </p>
           )}
 
+          {request.status === "declined" && request.declineReason && (
+            <div className="mt-3">
+              <p className="text-xs font-medium text-muted-foreground">
+                {side === "owner" ? r.yourReason : r.ownerReason}
+              </p>
+              <p className="mt-1 border-s-2 border-line ps-3 text-sm whitespace-pre-line text-ink/80 italic dark:border-zinc-700 dark:text-zinc-300">
+                {request.declineReason}
+              </p>
+            </div>
+          )}
+
           {live && request.status === "pending" && side === "owner" && (
             <BookingActions requestId={request.id} side="owner" />
           )}
