@@ -28,6 +28,7 @@ export function SearchableSelect({
   required,
   disabled,
   customOption,
+  icon,
   triggerClassName,
   contentClassName,
 }: {
@@ -43,6 +44,8 @@ export function SearchableSelect({
   disabled?: boolean;
   // Label for a "use what I typed" row, or undefined to hide it.
   customOption?: (query: string) => string | undefined;
+  // Shown in the trigger before the selected label.
+  icon?: React.ReactNode;
   triggerClassName?: string;
   contentClassName?: string;
 }) {
@@ -101,7 +104,10 @@ export function SearchableSelect({
               triggerClassName,
             )}
           >
-            <span className={cn("truncate", !value && "text-zinc-500 dark:text-zinc-400")}>{display}</span>
+            <span className="flex min-w-0 items-center gap-2">
+              {icon}
+              <span className={cn("truncate", !value && "text-zinc-500 dark:text-zinc-400")}>{display}</span>
+            </span>
             <ChevronDownIcon className="size-4 shrink-0 opacity-50" aria-hidden />
           </button>
         </Popover.Trigger>

@@ -1,0 +1,687 @@
+- generic [active] [ref=f11e1]:
+  - banner [ref=f11e2]:
+    - navigation [ref=f11e3]:
+      - link [ref=f11e4] [cursor=pointer]:
+        - /url: /en
+        - img "KarSouq" [ref=f11e5]
+      - generic [ref=f11e6]:
+        - link "Buy Cars" [ref=f11e7] [cursor=pointer]:
+          - /url: /en/listings
+        - link "Rentals" [ref=f11e9] [cursor=pointer]:
+          - /url: /en/rentals
+        - link "Dealers" [ref=f11e10] [cursor=pointer]:
+          - /url: /en/dealers
+        - link "Pricing" [ref=f11e11] [cursor=pointer]:
+          - /url: /en/pricing
+        - link "Sell" [ref=f11e12] [cursor=pointer]:
+          - /url: /en/dashboard/listings/new
+      - generic [ref=f11e13]:
+        - link "العربية" [ref=f11e14] [cursor=pointer]:
+          - /url: /ar/listings
+          - text: ع
+        - button "Account menu" [ref=f11e18] [cursor=pointer]:
+          - generic [aria-hidden] [ref=f11e20]: DU
+          - generic [ref=f11e22]:
+            - generic [ref=f11e23]: Demo User
+            - generic [ref=f11e24]: Seller · Pro
+  - main [ref=f11e28]:
+    - generic [ref=f11e31]:
+      - paragraph [ref=f11e32]: USED CARS FOR SALE
+      - heading "Find Your Perfect Car With Easy Filters" [level=1] [ref=f11e33]
+      - paragraph [ref=f11e34]: Set your preferences, find the right match, and contact the seller directly.
+    - generic [ref=f11e37]:
+      - generic [ref=f11e38]:
+        - generic [ref=f11e39]: Make
+        - button "Make" [ref=f11e41] [cursor=pointer]:
+          - generic [ref=f11e42]: Any Make
+      - generic [ref=f11e46]:
+        - generic [ref=f11e47]: Model
+        - button "Model" [disabled] [ref=f11e49]:
+          - generic [ref=f11e50]: Any Model
+      - generic [ref=f11e54]:
+        - generic [ref=f11e55]: Max Price
+        - combobox "Max Price" [ref=f11e56] [cursor=pointer]
+        - combobox [aria-hidden] [ref=f11e57]
+      - generic [ref=f11e58]:
+        - generic [ref=f11e59]: Year
+        - combobox "Year" [ref=f11e60] [cursor=pointer]
+        - combobox [aria-hidden] [ref=f11e61]
+      - generic [ref=f11e62]:
+        - generic [ref=f11e63]: Location
+        - combobox "Location" [ref=f11e64] [cursor=pointer]
+        - combobox [aria-hidden] [ref=f11e66]
+      - button "Search Cars" [ref=f11e67] [cursor=pointer]
+    - generic [ref=f11e68]:
+      - generic [ref=f11e70]:
+        - generic [ref=f11e71]:
+          - generic [ref=f11e73]: Filters
+          - link "Clear All" [ref=f11e74] [cursor=pointer]:
+            - /url: /en/listings
+        - generic [ref=f11e75]:
+          - generic [ref=f11e76]: Keyword
+          - searchbox "Keyword" [ref=f11e77]
+        - generic [ref=f11e78]:
+          - generic [ref=f11e79]: Make
+          - button "Make" [ref=f11e81] [cursor=pointer]:
+            - generic [ref=f11e82]: Any
+        - generic [ref=f11e86]:
+          - generic [ref=f11e87]: Model
+          - button "Model" [disabled] [ref=f11e89]:
+            - generic [ref=f11e90]: Any
+        - generic [ref=f11e94]:
+          - generic [ref=f11e95]: City
+          - combobox "City" [ref=f11e96] [cursor=pointer]
+          - combobox [aria-hidden] [ref=f11e97]
+        - group "Price Range SAR" [ref=f11e98]:
+          - generic [ref=f11e99]:
+            - generic [ref=f11e100]: Price Range
+            - generic [ref=f11e101]: SAR
+          - generic [ref=f11e102]:
+            - spinbutton "Price Range min" [ref=f11e103]
+            - generic [ref=f11e104]: –
+            - spinbutton "Price Range max" [ref=f11e105]
+        - group "Year" [ref=f11e106]:
+          - generic [ref=f11e109]:
+            - spinbutton "Year min" [ref=f11e110]
+            - generic [ref=f11e111]: –
+            - spinbutton "Year max" [ref=f11e112]
+        - generic [ref=f11e113]:
+          - generic [ref=f11e114]: Mileage
+          - combobox "Mileage" [ref=f11e115] [cursor=pointer]
+          - combobox [aria-hidden] [ref=f11e116]
+        - group "Condition" [ref=f11e117]:
+          - generic [ref=f11e119]:
+            - generic [ref=f11e120] [cursor=pointer]:
+              - checkbox "Excellent (10)" [ref=f11e121]
+              - text: Excellent
+              - generic [ref=f11e122]: (10)
+            - generic [ref=f11e123] [cursor=pointer]:
+              - checkbox "Good (7)" [ref=f11e124]
+              - text: Good
+              - generic [ref=f11e125]: (7)
+            - generic [ref=f11e126] [cursor=pointer]:
+              - checkbox "Fair (1)" [ref=f11e127]
+              - text: Fair
+              - generic [ref=f11e128]: (1)
+        - group "Body Style" [ref=f11e129]:
+          - generic [ref=f11e131]:
+            - generic [ref=f11e132] [cursor=pointer]:
+              - checkbox "Sedan (6)" [ref=f11e133]
+              - text: Sedan
+              - generic [ref=f11e134]: (6)
+            - generic [ref=f11e135] [cursor=pointer]:
+              - checkbox "SUV (10)" [ref=f11e136]
+              - text: SUV
+              - generic [ref=f11e137]: (10)
+            - generic [ref=f11e138] [cursor=pointer]:
+              - checkbox "Hatchback (0)" [ref=f11e139]
+              - text: Hatchback
+              - generic [ref=f11e140]: (0)
+            - generic [ref=f11e141] [cursor=pointer]:
+              - checkbox "Coupe (0)" [ref=f11e142]
+              - text: Coupe
+              - generic [ref=f11e143]: (0)
+            - generic [ref=f11e144] [cursor=pointer]:
+              - checkbox "Pickup (2)" [ref=f11e145]
+              - text: Pickup
+              - generic [ref=f11e146]: (2)
+            - generic [ref=f11e147] [cursor=pointer]:
+              - checkbox "Van (0)" [ref=f11e148]
+              - text: Van
+              - generic [ref=f11e149]: (0)
+        - group "Fuel Type" [ref=f11e150]:
+          - generic [ref=f11e152]:
+            - generic [ref=f11e153] [cursor=pointer]:
+              - checkbox "Petrol (15)" [ref=f11e154]
+              - text: Petrol
+              - generic [ref=f11e155]: (15)
+            - generic [ref=f11e156] [cursor=pointer]:
+              - checkbox "Diesel (1)" [ref=f11e157]
+              - text: Diesel
+              - generic [ref=f11e158]: (1)
+            - generic [ref=f11e159] [cursor=pointer]:
+              - checkbox "Hybrid (1)" [ref=f11e160]
+              - text: Hybrid
+              - generic [ref=f11e161]: (1)
+            - generic [ref=f11e162] [cursor=pointer]:
+              - checkbox "Electric (1)" [ref=f11e163]
+              - text: Electric
+              - generic [ref=f11e164]: (1)
+        - group "Transmission" [ref=f11e165]:
+          - generic [ref=f11e167]:
+            - generic [ref=f11e168] [cursor=pointer]:
+              - checkbox "Automatic (17)" [ref=f11e169]
+              - text: Automatic
+              - generic [ref=f11e170]: (17)
+            - generic [ref=f11e171] [cursor=pointer]:
+              - checkbox "Manual (1)" [ref=f11e172]
+              - text: Manual
+              - generic [ref=f11e173]: (1)
+        - group "Features" [ref=f11e174]:
+          - generic [ref=f11e176]:
+            - generic [ref=f11e177] [cursor=pointer]:
+              - checkbox "Sunroof" [ref=f11e178]
+              - text: Sunroof
+            - generic [ref=f11e179] [cursor=pointer]:
+              - checkbox "Leather Seats" [ref=f11e180]
+              - text: Leather Seats
+            - generic [ref=f11e181] [cursor=pointer]:
+              - checkbox "Navigation" [ref=f11e182]
+              - text: Navigation
+            - generic [ref=f11e183] [cursor=pointer]:
+              - checkbox "Rear Camera" [ref=f11e184]
+              - text: Rear Camera
+            - generic [ref=f11e185] [cursor=pointer]:
+              - checkbox "Bluetooth" [ref=f11e186]
+              - text: Bluetooth
+            - generic [ref=f11e187] [cursor=pointer]:
+              - checkbox "Parking Sensors" [ref=f11e188]
+              - text: Parking Sensors
+            - generic [ref=f11e189] [cursor=pointer]:
+              - checkbox "Cruise Control" [ref=f11e190]
+              - text: Cruise Control
+            - generic [ref=f11e191] [cursor=pointer]:
+              - checkbox "Apple CarPlay" [ref=f11e192]
+              - text: Apple CarPlay
+            - generic [ref=f11e193] [cursor=pointer]:
+              - checkbox "Android Auto" [ref=f11e194]
+              - text: Android Auto
+            - generic [ref=f11e195] [cursor=pointer]:
+              - checkbox "Keyless Entry" [ref=f11e196]
+              - text: Keyless Entry
+            - generic [ref=f11e197] [cursor=pointer]:
+              - checkbox "Climate Control" [ref=f11e198]
+              - text: Climate Control
+            - generic [ref=f11e199] [cursor=pointer]:
+              - checkbox "Alloy Wheels" [ref=f11e200]
+              - text: Alloy Wheels
+        - button "Apply Filters" [ref=f11e201] [cursor=pointer]
+      - generic [ref=f11e202]:
+        - generic [ref=f11e203]:
+          - paragraph [ref=f11e204]: 17 Cars Found
+          - generic [ref=f11e206]:
+            - generic [ref=f11e207]: Sort by
+            - combobox "Sort by" [ref=f11e208] [cursor=pointer]
+            - combobox [aria-hidden] [ref=f11e209]
+        - generic [ref=f11e210]:
+          - paragraph [ref=f11e211]: FEATURED
+          - list [ref=f11e212]:
+            - listitem [ref=f11e213]:
+              - generic [ref=f11e214]:
+                - link "2020 Hyundai Elantra Private seller ID verified Featured Hyundai Elantra 2020 98,000 km Automatic SAR 46,500 Sedan Petrol Khobar" [ref=f11e216] [cursor=pointer]:
+                  - /url: /en/listings/be70b3c4-6ccd-4829-9e28-63e26407420d
+                  - generic [ref=f11e217]:
+                    - img "2020 Hyundai Elantra" [ref=f11e218]
+                    - generic [ref=f11e219]:
+                      - generic [ref=f11e220]: Private seller
+                      - generic "Identity checked by our team" [ref=f11e221]: ID verified
+                    - generic [ref=f11e222]: Featured
+                  - generic [ref=f11e224]:
+                    - paragraph [ref=f11e225]: Hyundai Elantra
+                    - paragraph [ref=f11e226]:
+                      - generic [ref=f11e227]: "2020"
+                      - generic [aria-hidden] [ref=f11e228]: ·
+                      - generic [ref=f11e229]: 98,000 km
+                      - generic [aria-hidden] [ref=f11e230]: ·
+                      - generic [ref=f11e231]: Automatic
+                    - paragraph [ref=f11e232]:
+                      - generic [ref=f11e233]:
+                        - generic [ref=f11e235]: SAR
+                        - text: 46,500
+                    - generic [ref=f11e236]:
+                      - generic [ref=f11e237]: Sedan
+                      - generic [ref=f11e242]: Petrol
+                      - generic [ref=f11e246]: Khobar
+                - button "Save this car" [ref=f11e253] [cursor=pointer]
+            - listitem [ref=f11e254]:
+              - generic [ref=f11e255]:
+                - link "2019 Toyota Camry Private seller ID verified Featured Toyota Camry 2019 142,000 km Automatic SAR 58,000 Sedan Petrol Dammam" [ref=f11e257] [cursor=pointer]:
+                  - /url: /en/listings/49b92fab-c94a-4de1-947f-308845acd0c8
+                  - generic [ref=f11e258]:
+                    - img "2019 Toyota Camry" [ref=f11e259]
+                    - generic [ref=f11e260]:
+                      - generic [ref=f11e261]: Private seller
+                      - generic "Identity checked by our team" [ref=f11e262]: ID verified
+                    - generic [ref=f11e263]: Featured
+                  - generic [ref=f11e265]:
+                    - paragraph [ref=f11e266]: Toyota Camry
+                    - paragraph [ref=f11e267]:
+                      - generic [ref=f11e268]: "2019"
+                      - generic [aria-hidden] [ref=f11e269]: ·
+                      - generic [ref=f11e270]: 142,000 km
+                      - generic [aria-hidden] [ref=f11e271]: ·
+                      - generic [ref=f11e272]: Automatic
+                    - paragraph [ref=f11e273]:
+                      - generic [ref=f11e274]:
+                        - generic [ref=f11e276]: SAR
+                        - text: 58,000
+                    - generic [ref=f11e277]:
+                      - generic [ref=f11e278]: Sedan
+                      - generic [ref=f11e283]: Petrol
+                      - generic [ref=f11e287]: Dammam
+                - button "Save this car" [ref=f11e294] [cursor=pointer]
+        - list [ref=f11e296]:
+          - listitem [ref=f11e297]:
+            - generic [ref=f11e298]:
+              - link "2023 Toyota Yaris Dealer Toyota Yaris 2023 110,000 km Automatic SAR 47,000 Sedan Petrol Jubail" [ref=f11e300] [cursor=pointer]:
+                - /url: /en/listings/98bdba56-f372-4f09-ae90-12e0ca26e51a
+                - generic [ref=f11e301]:
+                  - img "2023 Toyota Yaris" [ref=f11e302]
+                  - generic [ref=f11e303]: Dealer
+                - generic [ref=f11e305]:
+                  - paragraph [ref=f11e306]: Toyota Yaris
+                  - paragraph [ref=f11e307]:
+                    - generic [ref=f11e308]: "2023"
+                    - generic [aria-hidden] [ref=f11e309]: ·
+                    - generic [ref=f11e310]: 110,000 km
+                    - generic [aria-hidden] [ref=f11e311]: ·
+                    - generic [ref=f11e312]: Automatic
+                  - paragraph [ref=f11e313]:
+                    - generic [ref=f11e314]:
+                      - generic [ref=f11e316]: SAR
+                      - text: 47,000
+                  - generic [ref=f11e317]:
+                    - generic [ref=f11e318]: Sedan
+                    - generic [ref=f11e323]: Petrol
+                    - generic [ref=f11e327]: Jubail
+              - button "Save this car" [ref=f11e334] [cursor=pointer]
+          - listitem [ref=f11e335]:
+            - generic [ref=f11e336]:
+              - link "2017 Nissan Sunny Private seller ID verified Nissan Sunny 2017 186,000 km Automatic SAR 24,000 Sedan Petrol Dammam" [ref=f11e338] [cursor=pointer]:
+                - /url: /en/listings/f1fcc5b2-ce56-4df7-a699-410c2d3c07ed
+                - generic [ref=f11e339]:
+                  - img "2017 Nissan Sunny" [ref=f11e340]
+                  - generic [ref=f11e341]:
+                    - generic [ref=f11e342]: Private seller
+                    - generic "Identity checked by our team" [ref=f11e343]: ID verified
+                - generic [ref=f11e344]:
+                  - paragraph [ref=f11e345]: Nissan Sunny
+                  - paragraph [ref=f11e346]:
+                    - generic [ref=f11e347]: "2017"
+                    - generic [aria-hidden] [ref=f11e348]: ·
+                    - generic [ref=f11e349]: 186,000 km
+                    - generic [aria-hidden] [ref=f11e350]: ·
+                    - generic [ref=f11e351]: Automatic
+                  - paragraph [ref=f11e352]:
+                    - generic [ref=f11e353]:
+                      - generic [ref=f11e355]: SAR
+                      - text: 24,000
+                  - generic [ref=f11e356]:
+                    - generic [ref=f11e357]: Sedan
+                    - generic [ref=f11e362]: Petrol
+                    - generic [ref=f11e366]: Dammam
+              - button "Save this car" [ref=f11e373] [cursor=pointer]
+          - listitem [ref=f11e374]:
+            - generic [ref=f11e375]:
+              - link "2018 Toyota Hilux Private seller ID verified Toyota Hilux 2018 210,000 km Manual SAR 62,000 Pickup Diesel Al Ahsa" [ref=f11e377] [cursor=pointer]:
+                - /url: /en/listings/f0c27368-5897-4515-9df3-cc3f23e23ff7
+                - generic [ref=f11e378]:
+                  - img "2018 Toyota Hilux" [ref=f11e379]
+                  - generic [ref=f11e380]:
+                    - generic [ref=f11e381]: Private seller
+                    - generic "Identity checked by our team" [ref=f11e382]: ID verified
+                - generic [ref=f11e383]:
+                  - paragraph [ref=f11e384]: Toyota Hilux
+                  - paragraph [ref=f11e385]:
+                    - generic [ref=f11e386]: "2018"
+                    - generic [aria-hidden] [ref=f11e387]: ·
+                    - generic [ref=f11e388]: 210,000 km
+                    - generic [aria-hidden] [ref=f11e389]: ·
+                    - generic [ref=f11e390]: Manual
+                  - paragraph [ref=f11e391]:
+                    - generic [ref=f11e392]:
+                      - generic [ref=f11e394]: SAR
+                      - text: 62,000
+                  - generic [ref=f11e395]:
+                    - generic [ref=f11e396]: Pickup
+                    - generic [ref=f11e401]: Diesel
+                    - generic [ref=f11e405]: Al Ahsa
+              - button "Save this car" [ref=f11e412] [cursor=pointer]
+          - listitem [ref=f11e413]:
+            - generic [ref=f11e414]:
+              - link "2021 Kia Sportage Private seller ID verified Kia Sportage 2021 64,000 km Automatic SAR 79,000 SUV Petrol Dhahran" [ref=f11e416] [cursor=pointer]:
+                - /url: /en/listings/6bd17bdc-2ec7-4331-933b-2cd5143511b2
+                - generic [ref=f11e417]:
+                  - img "2021 Kia Sportage" [ref=f11e418]
+                  - generic [ref=f11e419]:
+                    - generic [ref=f11e420]: Private seller
+                    - generic "Identity checked by our team" [ref=f11e421]: ID verified
+                - generic [ref=f11e422]:
+                  - paragraph [ref=f11e423]: Kia Sportage
+                  - paragraph [ref=f11e424]:
+                    - generic [ref=f11e425]: "2021"
+                    - generic [aria-hidden] [ref=f11e426]: ·
+                    - generic [ref=f11e427]: 64,000 km
+                    - generic [aria-hidden] [ref=f11e428]: ·
+                    - generic [ref=f11e429]: Automatic
+                  - paragraph [ref=f11e430]:
+                    - generic [ref=f11e431]:
+                      - generic [ref=f11e433]: SAR
+                      - text: 79,000
+                  - generic [ref=f11e434]:
+                    - generic [ref=f11e435]: SUV
+                    - generic [ref=f11e440]: Petrol
+                    - generic [ref=f11e444]: Dhahran
+              - button "Save this car" [ref=f11e451] [cursor=pointer]
+          - listitem [ref=f11e452]:
+            - generic [ref=f11e453]:
+              - link "2022 Toyota Land Cruiser Dealer Toyota Land Cruiser 2022 45,000 km Automatic SAR 335,000 SUV Petrol Jubail" [ref=f11e455] [cursor=pointer]:
+                - /url: /en/listings/ea953000-8b7b-45d1-b13e-31ea447dca45
+                - generic [ref=f11e456]:
+                  - img "2022 Toyota Land Cruiser" [ref=f11e457]
+                  - generic [ref=f11e458]: Dealer
+                - generic [ref=f11e460]:
+                  - paragraph [ref=f11e461]: Toyota Land Cruiser
+                  - paragraph [ref=f11e462]:
+                    - generic [ref=f11e463]: "2022"
+                    - generic [aria-hidden] [ref=f11e464]: ·
+                    - generic [ref=f11e465]: 45,000 km
+                    - generic [aria-hidden] [ref=f11e466]: ·
+                    - generic [ref=f11e467]: Automatic
+                  - paragraph [ref=f11e468]:
+                    - generic [ref=f11e469]:
+                      - generic [ref=f11e471]: SAR
+                      - text: 335,000
+                  - generic [ref=f11e472]:
+                    - generic [ref=f11e473]: SUV
+                    - generic [ref=f11e478]: Petrol
+                    - generic [ref=f11e482]: Jubail
+              - button "Save this car" [ref=f11e489] [cursor=pointer]
+          - listitem [ref=f11e490]:
+            - generic [ref=f11e491]:
+              - link "2021 Nissan Patrol Dealer Nissan Patrol 2021 72,000 km Automatic SAR 245,000 SUV Petrol Jubail" [ref=f11e493] [cursor=pointer]:
+                - /url: /en/listings/ba568aa6-22e0-41ea-b176-6942edf9d7a1
+                - generic [ref=f11e494]:
+                  - img "2021 Nissan Patrol" [ref=f11e495]
+                  - generic [ref=f11e496]: Dealer
+                - generic [ref=f11e498]:
+                  - paragraph [ref=f11e499]: Nissan Patrol
+                  - paragraph [ref=f11e500]:
+                    - generic [ref=f11e501]: "2021"
+                    - generic [aria-hidden] [ref=f11e502]: ·
+                    - generic [ref=f11e503]: 72,000 km
+                    - generic [aria-hidden] [ref=f11e504]: ·
+                    - generic [ref=f11e505]: Automatic
+                  - paragraph [ref=f11e506]:
+                    - generic [ref=f11e507]:
+                      - generic [ref=f11e509]: SAR
+                      - text: 245,000
+                  - generic [ref=f11e510]:
+                    - generic [ref=f11e511]: SUV
+                    - generic [ref=f11e516]: Petrol
+                    - generic [ref=f11e520]: Jubail
+              - button "Save this car" [ref=f11e527] [cursor=pointer]
+          - listitem [ref=f11e528]:
+            - generic [ref=f11e529]:
+              - link "2020 GMC Yukon Dealer GMC Yukon 2020 98,000 km Automatic SAR 189,000 SUV Petrol Dammam" [ref=f11e531] [cursor=pointer]:
+                - /url: /en/listings/0c502bfb-2b07-4884-9a3d-d72b599bc586
+                - generic [ref=f11e532]:
+                  - img "2020 GMC Yukon" [ref=f11e533]
+                  - generic [ref=f11e534]: Dealer
+                - generic [ref=f11e536]:
+                  - paragraph [ref=f11e537]: GMC Yukon
+                  - paragraph [ref=f11e538]:
+                    - generic [ref=f11e539]: "2020"
+                    - generic [aria-hidden] [ref=f11e540]: ·
+                    - generic [ref=f11e541]: 98,000 km
+                    - generic [aria-hidden] [ref=f11e542]: ·
+                    - generic [ref=f11e543]: Automatic
+                  - paragraph [ref=f11e544]:
+                    - generic [ref=f11e545]:
+                      - generic [ref=f11e547]: SAR
+                      - text: 189,000
+                  - generic [ref=f11e548]:
+                    - generic [ref=f11e549]: SUV
+                    - generic [ref=f11e554]: Petrol
+                    - generic [ref=f11e558]: Dammam
+              - button "Save this car" [ref=f11e565] [cursor=pointer]
+          - listitem [ref=f11e566]:
+            - generic [ref=f11e567]:
+              - link "2019 Chevrolet Tahoe Dealer Chevrolet Tahoe 2019 121,000 km Automatic SAR 139,000 SUV Petrol Jubail" [ref=f11e569] [cursor=pointer]:
+                - /url: /en/listings/41274159-5362-426e-9339-322bc9a5211c
+                - generic [ref=f11e570]:
+                  - img "2019 Chevrolet Tahoe" [ref=f11e571]
+                  - generic [ref=f11e572]: Dealer
+                - generic [ref=f11e574]:
+                  - paragraph [ref=f11e575]: Chevrolet Tahoe
+                  - paragraph [ref=f11e576]:
+                    - generic [ref=f11e577]: "2019"
+                    - generic [aria-hidden] [ref=f11e578]: ·
+                    - generic [ref=f11e579]: 121,000 km
+                    - generic [aria-hidden] [ref=f11e580]: ·
+                    - generic [ref=f11e581]: Automatic
+                  - paragraph [ref=f11e582]:
+                    - generic [ref=f11e583]:
+                      - generic [ref=f11e585]: SAR
+                      - text: 139,000
+                  - generic [ref=f11e586]:
+                    - generic [ref=f11e587]: SUV
+                    - generic [ref=f11e592]: Petrol
+                    - generic [ref=f11e596]: Jubail
+              - button "Save this car" [ref=f11e603] [cursor=pointer]
+          - listitem [ref=f11e604]:
+            - generic [ref=f11e605]:
+              - link "2021 Ford F-150 Dealer Ford F-150 2021 66,000 km Automatic SAR 175,000 Pickup Petrol Khobar" [ref=f11e607] [cursor=pointer]:
+                - /url: /en/listings/eabe247d-563a-4d88-ab2c-e6292b6770d5
+                - generic [ref=f11e608]:
+                  - img "2021 Ford F-150" [ref=f11e609]
+                  - generic [ref=f11e610]: Dealer
+                - generic [ref=f11e612]:
+                  - paragraph [ref=f11e613]: Ford F-150
+                  - paragraph [ref=f11e614]:
+                    - generic [ref=f11e615]: "2021"
+                    - generic [aria-hidden] [ref=f11e616]: ·
+                    - generic [ref=f11e617]: 66,000 km
+                    - generic [aria-hidden] [ref=f11e618]: ·
+                    - generic [ref=f11e619]: Automatic
+                  - paragraph [ref=f11e620]:
+                    - generic [ref=f11e621]:
+                      - generic [ref=f11e623]: SAR
+                      - text: 175,000
+                  - generic [ref=f11e624]:
+                    - generic [ref=f11e625]: Pickup
+                    - generic [ref=f11e630]: Petrol
+                    - generic [ref=f11e634]: Khobar
+              - button "Save this car" [ref=f11e641] [cursor=pointer]
+          - listitem [ref=f11e642]:
+            - generic [ref=f11e643]:
+              - link "2023 Hyundai Tucson Dealer Hyundai Tucson 2023 21,000 km Automatic SAR 104,000 SUV Hybrid Jubail" [ref=f11e645] [cursor=pointer]:
+                - /url: /en/listings/8c955fec-d51b-43d7-99c8-6fc0b63ed052
+                - generic [ref=f11e646]:
+                  - img "2023 Hyundai Tucson" [ref=f11e647]
+                  - generic [ref=f11e648]: Dealer
+                - generic [ref=f11e650]:
+                  - paragraph [ref=f11e651]: Hyundai Tucson
+                  - paragraph [ref=f11e652]:
+                    - generic [ref=f11e653]: "2023"
+                    - generic [aria-hidden] [ref=f11e654]: ·
+                    - generic [ref=f11e655]: 21,000 km
+                    - generic [aria-hidden] [ref=f11e656]: ·
+                    - generic [ref=f11e657]: Automatic
+                  - paragraph [ref=f11e658]:
+                    - generic [ref=f11e659]:
+                      - generic [ref=f11e661]: SAR
+                      - text: 104,000
+                  - generic [ref=f11e662]:
+                    - generic [ref=f11e663]: SUV
+                    - generic [ref=f11e668]: Hybrid
+                    - generic [ref=f11e672]: Jubail
+              - button "Save this car" [ref=f11e679] [cursor=pointer]
+          - listitem [ref=f11e680]:
+            - generic [ref=f11e681]:
+              - link "2023 Lexus LX 600 Dealer Lexus LX 600 2023 18,000 km Automatic SAR 520,000 SUV Petrol Dammam" [ref=f11e683] [cursor=pointer]:
+                - /url: /en/listings/73ca6cd7-a3e7-44a7-b8a2-0a826b26da4d
+                - generic [ref=f11e684]:
+                  - img "2023 Lexus LX 600" [ref=f11e685]
+                  - generic [ref=f11e686]: Dealer
+                - generic [ref=f11e688]:
+                  - paragraph [ref=f11e689]: Lexus LX 600
+                  - paragraph [ref=f11e690]:
+                    - generic [ref=f11e691]: "2023"
+                    - generic [aria-hidden] [ref=f11e692]: ·
+                    - generic [ref=f11e693]: 18,000 km
+                    - generic [aria-hidden] [ref=f11e694]: ·
+                    - generic [ref=f11e695]: Automatic
+                  - paragraph [ref=f11e696]:
+                    - generic [ref=f11e697]:
+                      - generic [ref=f11e699]: SAR
+                      - text: 520,000
+                  - generic [ref=f11e700]:
+                    - generic [ref=f11e701]: SUV
+                    - generic [ref=f11e706]: Petrol
+                    - generic [ref=f11e710]: Dammam
+              - button "Save this car" [ref=f11e717] [cursor=pointer]
+          - listitem [ref=f11e718]:
+            - generic [ref=f11e719]:
+              - link "2021 Mercedes-Benz E-Class Dealer Mercedes-Benz E-Class 2021 52,000 km Automatic SAR 215,000 Sedan Petrol Khobar" [ref=f11e721] [cursor=pointer]:
+                - /url: /en/listings/c78218e3-fc57-472b-82c0-a741681481f3
+                - generic [ref=f11e722]:
+                  - img "2021 Mercedes-Benz E-Class" [ref=f11e723]
+                  - generic [ref=f11e724]: Dealer
+                - generic [ref=f11e726]:
+                  - paragraph [ref=f11e727]: Mercedes-Benz E-Class
+                  - paragraph [ref=f11e728]:
+                    - generic [ref=f11e729]: "2021"
+                    - generic [aria-hidden] [ref=f11e730]: ·
+                    - generic [ref=f11e731]: 52,000 km
+                    - generic [aria-hidden] [ref=f11e732]: ·
+                    - generic [ref=f11e733]: Automatic
+                  - paragraph [ref=f11e734]:
+                    - generic [ref=f11e735]:
+                      - generic [ref=f11e737]: SAR
+                      - text: 215,000
+                  - generic [ref=f11e738]:
+                    - generic [ref=f11e739]: Sedan
+                    - generic [ref=f11e744]: Petrol
+                    - generic [ref=f11e748]: Khobar
+              - button "Save this car" [ref=f11e755] [cursor=pointer]
+          - listitem [ref=f11e756]:
+            - generic [ref=f11e757]:
+              - link "2020 BMW X5 Dealer BMW X5 2020 79,000 km Automatic SAR 229,000 SUV Petrol Dammam" [ref=f11e759] [cursor=pointer]:
+                - /url: /en/listings/b1254979-2128-4fec-a739-d221ff20235b
+                - generic [ref=f11e760]:
+                  - img "2020 BMW X5" [ref=f11e761]
+                  - generic [ref=f11e762]: Dealer
+                - generic [ref=f11e764]:
+                  - paragraph [ref=f11e765]: BMW X5
+                  - paragraph [ref=f11e766]:
+                    - generic [ref=f11e767]: "2020"
+                    - generic [aria-hidden] [ref=f11e768]: ·
+                    - generic [ref=f11e769]: 79,000 km
+                    - generic [aria-hidden] [ref=f11e770]: ·
+                    - generic [ref=f11e771]: Automatic
+                  - paragraph [ref=f11e772]:
+                    - generic [ref=f11e773]:
+                      - generic [ref=f11e775]: SAR
+                      - text: 229,000
+                  - generic [ref=f11e776]:
+                    - generic [ref=f11e777]: SUV
+                    - generic [ref=f11e782]: Petrol
+                    - generic [ref=f11e786]: Dammam
+              - button "Save this car" [ref=f11e793] [cursor=pointer]
+          - listitem [ref=f11e794]:
+            - generic [ref=f11e795]:
+              - link "2022 Tesla Model 3 Dealer Tesla Model 3 2022 34,000 km Automatic SAR 149,000 Sedan Electric Dammam" [ref=f11e797] [cursor=pointer]:
+                - /url: /en/listings/8c40bc0f-2fbb-4d88-b6bc-d7385feaf06b
+                - generic [ref=f11e798]:
+                  - img "2022 Tesla Model 3" [ref=f11e799]
+                  - generic [ref=f11e800]: Dealer
+                - generic [ref=f11e802]:
+                  - paragraph [ref=f11e803]: Tesla Model 3
+                  - paragraph [ref=f11e804]:
+                    - generic [ref=f11e805]: "2022"
+                    - generic [aria-hidden] [ref=f11e806]: ·
+                    - generic [ref=f11e807]: 34,000 km
+                    - generic [aria-hidden] [ref=f11e808]: ·
+                    - generic [ref=f11e809]: Automatic
+                  - paragraph [ref=f11e810]:
+                    - generic [ref=f11e811]:
+                      - generic [ref=f11e813]: SAR
+                      - text: 149,000
+                  - generic [ref=f11e814]:
+                    - generic [ref=f11e815]: Sedan
+                    - generic [ref=f11e820]: Electric
+                    - generic [ref=f11e824]: Dammam
+              - button "Save this car" [ref=f11e831] [cursor=pointer]
+          - listitem [ref=f11e832]:
+            - generic [ref=f11e833]:
+              - link "2019 Land Rover Range Rover Sport Dealer Land Rover Range Rover Sport 2019 88,000 km Automatic SAR 198,000 SUV Petrol Khobar" [ref=f11e835] [cursor=pointer]:
+                - /url: /en/listings/5e787c83-552d-4d05-91d8-2c5c2694ca32
+                - generic [ref=f11e836]:
+                  - img "2019 Land Rover Range Rover Sport" [ref=f11e837]
+                  - generic [ref=f11e838]: Dealer
+                - generic [ref=f11e840]:
+                  - paragraph [ref=f11e841]: Land Rover Range Rover Sport
+                  - paragraph [ref=f11e842]:
+                    - generic [ref=f11e843]: "2019"
+                    - generic [aria-hidden] [ref=f11e844]: ·
+                    - generic [ref=f11e845]: 88,000 km
+                    - generic [aria-hidden] [ref=f11e846]: ·
+                    - generic [ref=f11e847]: Automatic
+                  - paragraph [ref=f11e848]:
+                    - generic [ref=f11e849]:
+                      - generic [ref=f11e851]: SAR
+                      - text: 198,000
+                  - generic [ref=f11e852]:
+                    - generic [ref=f11e853]: SUV
+                    - generic [ref=f11e858]: Petrol
+                    - generic [ref=f11e862]: Khobar
+              - button "Save this car" [ref=f11e869] [cursor=pointer]
+  - contentinfo [ref=f11e870]:
+    - generic [ref=f11e871]:
+      - generic [ref=f11e872]:
+        - link [ref=f11e873] [cursor=pointer]:
+          - /url: /en
+          - img "KarSouq" [ref=f11e874]
+        - paragraph [ref=f11e875]: Saudi Arabia's marketplace for used cars. Buy and sell directly with sellers.
+      - generic [ref=f11e876]:
+        - paragraph [ref=f11e877]: BUY
+        - link "Browse Cars" [ref=f11e878] [cursor=pointer]:
+          - /url: /en/listings
+        - link "Saved Cars" [ref=f11e879] [cursor=pointer]:
+          - /url: /en/favorites
+        - link "Saved Searches" [ref=f11e880] [cursor=pointer]:
+          - /url: /en/saved-searches
+      - generic [ref=f11e881]:
+        - paragraph [ref=f11e882]: POPULAR MAKES
+        - link "Toyota" [ref=f11e883] [cursor=pointer]:
+          - /url: /en/brands/toyota
+        - link "Hyundai" [ref=f11e884] [cursor=pointer]:
+          - /url: /en/brands/hyundai
+        - link "Nissan" [ref=f11e885] [cursor=pointer]:
+          - /url: /en/brands/nissan
+        - link "Lexus" [ref=f11e886] [cursor=pointer]:
+          - /url: /en/brands/lexus
+      - generic [ref=f11e887]:
+        - paragraph [ref=f11e888]: CITIES
+        - link "Dammam" [ref=f11e889] [cursor=pointer]:
+          - /url: /en/locations/dammam
+        - link "Jubail" [ref=f11e890] [cursor=pointer]:
+          - /url: /en/locations/jubail
+        - link "Khobar" [ref=f11e891] [cursor=pointer]:
+          - /url: /en/locations/khobar
+        - link "Dhahran" [ref=f11e892] [cursor=pointer]:
+          - /url: /en/locations/dhahran
+        - link "All Cities" [ref=f11e893] [cursor=pointer]:
+          - /url: /en/locations
+      - generic [ref=f11e894]:
+        - paragraph [ref=f11e895]: SELL
+        - link "Sell Your Car" [ref=f11e896] [cursor=pointer]:
+          - /url: /en/account/become-seller
+        - link "Pricing" [ref=f11e897] [cursor=pointer]:
+          - /url: /en/pricing
+        - link "Seller Dashboard" [ref=f11e898] [cursor=pointer]:
+          - /url: /en/dashboard
+        - link "My Account" [ref=f11e899] [cursor=pointer]:
+          - /url: /en/account
+    - generic [ref=f11e901]:
+      - paragraph [ref=f11e902]: © 2026 KarSouq, a CodeSudio product. All rights reserved.
+      - navigation [ref=f11e903]:
+        - link "Contact" [ref=f11e904] [cursor=pointer]:
+          - /url: /en/contact
+        - link "Privacy Policy" [ref=f11e905] [cursor=pointer]:
+          - /url: /en/privacy
+        - link "Terms of Use" [ref=f11e906] [cursor=pointer]:
+          - /url: /en/terms
+  - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=f11e912] [cursor=pointer]

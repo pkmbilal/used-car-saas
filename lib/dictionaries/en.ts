@@ -151,6 +151,7 @@ export const en = {
     useTyped: "Use “{value}”",
     searchTypes: "Search types…",
     searchBrands: "Search brands…",
+    searchCities: "Search cities…",
   },
   options: {
     condition: { excellent: "Excellent", good: "Good", fair: "Fair" },

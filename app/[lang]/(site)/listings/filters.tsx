@@ -179,6 +179,7 @@ export function Filters({
           name="city"
           defaultValue={filters.city}
           placeholder={t.common.any}
+          search={{ placeholder: t.select.searchCities, emptyText: t.select.noMatches }}
           options={CITIES.map((city) => ({ value: city, label: cityName(t, city) }))}
         />
       </div>

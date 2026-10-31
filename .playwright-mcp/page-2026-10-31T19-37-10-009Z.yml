@@ -1,0 +1,559 @@
+- generic [ref=f14e1]:
+  - banner [ref=f14e2]:
+    - navigation [ref=f14e3]:
+      - link [ref=f14e4] [cursor=pointer]:
+        - /url: /en
+        - img "KarSouq" [ref=f14e5]
+      - generic [ref=f14e6]:
+        - link "Buy Cars" [ref=f14e7] [cursor=pointer]:
+          - /url: /en/listings
+        - link "Rentals" [ref=f14e8] [cursor=pointer]:
+          - /url: /en/rentals
+        - link "Dealers" [ref=f14e9] [cursor=pointer]:
+          - /url: /en/dealers
+        - link "Pricing" [ref=f14e10] [cursor=pointer]:
+          - /url: /en/pricing
+        - link "Sell" [ref=f14e11] [cursor=pointer]:
+          - /url: /en/dashboard/listings/new
+      - generic [ref=f14e12]:
+        - link "العربية" [ref=f14e13] [cursor=pointer]:
+          - /url: /ar
+          - text: ع
+        - button "Account menu" [ref=f14e17] [cursor=pointer]:
+          - generic [aria-hidden] [ref=f14e19]: DU
+          - generic [ref=f14e21]:
+            - generic [ref=f14e22]: Demo User
+            - generic [ref=f14e23]: Seller · Pro
+  - main [ref=f14e27]:
+    - generic [ref=f14e32]:
+      - paragraph [ref=f14e33]: USED CARS IN SAUDI ARABIA
+      - heading "Find your next ride with confidence" [level=1] [ref=f14e35]
+      - paragraph [ref=f14e36]: Browse used cars from private sellers and dealers across the Kingdom, and talk to them directly.
+      - generic [ref=f14e37]:
+        - link "Browse Cars" [ref=f14e38] [cursor=pointer]:
+          - /url: /en/listings
+        - link "Sell Your Car" [ref=f14e40] [cursor=pointer]:
+          - /url: /en/account/become-seller
+      - list [ref=f14e42]:
+        - listitem [ref=f14e44]:
+          - generic [ref=f14e49]:
+            - generic [ref=f14e50]: Verified Sellers
+            - generic [ref=f14e51]: ID-verified seller badges
+        - listitem [ref=f14e52]:
+          - generic [ref=f14e56]:
+            - generic [ref=f14e57]: Direct on WhatsApp
+            - generic [ref=f14e58]: Talk to sellers, no middlemen
+    - generic [ref=f14e60]:
+      - generic [ref=f14e61]: FIND YOUR CAR
+      - generic [ref=f14e64]:
+        - generic [ref=f14e65]:
+          - generic [ref=f14e66]: Make
+          - button "Make" [ref=f14e71] [cursor=pointer]:
+            - generic [ref=f14e72]: Any Make
+        - generic [ref=f14e76]:
+          - generic [ref=f14e77]: Model
+          - button "Model" [disabled] [ref=f14e83]:
+            - generic [ref=f14e84]: Any Model
+        - generic [ref=f14e88]:
+          - generic [ref=f14e89]: Max Price
+          - combobox "Max Price" [ref=f14e93] [cursor=pointer]:
+            - generic [ref=f14e610]: Any Price
+          - combobox [aria-hidden] [ref=f14e611]
+        - generic [ref=f14e95]:
+          - generic [ref=f14e96]: Year
+          - combobox "Year" [ref=f14e99] [cursor=pointer]:
+            - generic [ref=f14e612]: Any Year
+          - combobox [aria-hidden] [ref=f14e613]
+        - generic [ref=f14e101]:
+          - generic [ref=f14e102]: Location
+          - button "Location" [expanded] [ref=f14e107] [cursor=pointer]:
+            - generic [ref=f14e108]: Any Location
+        - button "Search Cars" [ref=f14e113] [cursor=pointer]
+    - generic [ref=f14e114]:
+      - generic [ref=f14e115]:
+        - generic [ref=f14e116]:
+          - paragraph [ref=f14e117]: QUICK BROWSE
+          - heading "Popular Brands" [level=2] [ref=f14e119]
+        - link "All Brands" [ref=f14e120] [cursor=pointer]:
+          - /url: /en/brands
+      - generic [ref=f14e124]:
+        - link "Toyota 5 cars" [ref=f14e125] [cursor=pointer]:
+          - /url: /en/brands/toyota
+          - generic [ref=f14e127]:
+            - generic [ref=f14e128]: Toyota
+            - generic [ref=f14e129]: 5 cars
+        - link "Hyundai 2 cars" [ref=f14e130] [cursor=pointer]:
+          - /url: /en/brands/hyundai
+          - generic [ref=f14e132]:
+            - generic [ref=f14e133]: Hyundai
+            - generic [ref=f14e134]: 2 cars
+        - link "Nissan 2 cars" [ref=f14e135] [cursor=pointer]:
+          - /url: /en/brands/nissan
+          - generic [ref=f14e137]:
+            - generic [ref=f14e138]: Nissan
+            - generic [ref=f14e139]: 2 cars
+        - link "Kia 1 car" [ref=f14e140] [cursor=pointer]:
+          - /url: /en/brands/kia
+          - generic [ref=f14e142]:
+            - generic [ref=f14e143]: Kia
+            - generic [ref=f14e144]: 1 car
+        - link "GMC 1 car" [ref=f14e145] [cursor=pointer]:
+          - /url: /en/brands/gmc
+          - generic [ref=f14e147]:
+            - generic [ref=f14e148]: GMC
+            - generic [ref=f14e149]: 1 car
+        - link "Chevrolet 1 car" [ref=f14e150] [cursor=pointer]:
+          - /url: /en/brands/chevrolet
+          - generic [ref=f14e152]:
+            - generic [ref=f14e153]: Chevrolet
+            - generic [ref=f14e154]: 1 car
+        - link "Ford 1 car" [ref=f14e155] [cursor=pointer]:
+          - /url: /en/brands/ford
+          - generic [ref=f14e157]:
+            - generic [ref=f14e158]: Ford
+            - generic [ref=f14e159]: 1 car
+        - link "Lexus 1 car" [ref=f14e160] [cursor=pointer]:
+          - /url: /en/brands/lexus
+          - generic [ref=f14e162]:
+            - generic [ref=f14e163]: Lexus
+            - generic [ref=f14e164]: 1 car
+      - generic [ref=f14e165]:
+        - generic [ref=f14e166]: FUEL TYPE
+        - link "Petrol 15" [ref=f14e167] [cursor=pointer]:
+          - /url: /en/listings?fuel_type=petrol
+          - text: Petrol
+          - generic [ref=f14e168]: "15"
+        - link "Diesel 1" [ref=f14e169] [cursor=pointer]:
+          - /url: /en/listings?fuel_type=diesel
+          - text: Diesel
+          - generic [ref=f14e170]: "1"
+        - link "Hybrid 1" [ref=f14e171] [cursor=pointer]:
+          - /url: /en/listings?fuel_type=hybrid
+          - text: Hybrid
+          - generic [ref=f14e172]: "1"
+        - link "Electric 1" [ref=f14e173] [cursor=pointer]:
+          - /url: /en/listings?fuel_type=electric
+          - text: Electric
+          - generic [ref=f14e174]: "1"
+    - generic [ref=f14e176]:
+      - generic [ref=f14e177]:
+        - generic [ref=f14e178]:
+          - paragraph [ref=f14e179]: FEATURED CARS
+          - heading "Handpicked for You" [level=2] [ref=f14e181]
+        - link "View All Cars" [ref=f14e182] [cursor=pointer]:
+          - /url: /en/listings
+      - list [ref=f14e187]:
+        - listitem [ref=f14e188]:
+          - generic [ref=f14e189]:
+            - link "2020 Hyundai Elantra Private seller ID verified Featured Hyundai Elantra 2020 98,000 km Automatic SAR 46,500 Sedan Petrol Khobar" [ref=f14e191] [cursor=pointer]:
+              - /url: /en/listings/be70b3c4-6ccd-4829-9e28-63e26407420d
+              - generic [ref=f14e192]:
+                - img "2020 Hyundai Elantra" [ref=f14e193]
+                - generic [ref=f14e194]:
+                  - generic [ref=f14e195]: Private seller
+                  - generic "Identity checked by our team" [ref=f14e196]: ID verified
+                - generic [ref=f14e197]: Featured
+              - generic [ref=f14e199]:
+                - paragraph [ref=f14e200]: Hyundai Elantra
+                - paragraph [ref=f14e201]:
+                  - generic [ref=f14e202]: "2020"
+                  - generic [aria-hidden] [ref=f14e203]: ·
+                  - generic [ref=f14e204]: 98,000 km
+                  - generic [aria-hidden] [ref=f14e205]: ·
+                  - generic [ref=f14e206]: Automatic
+                - paragraph [ref=f14e207]:
+                  - generic [ref=f14e208]:
+                    - generic [ref=f14e210]: SAR
+                    - text: 46,500
+                - generic [ref=f14e211]:
+                  - generic [ref=f14e212]: Sedan
+                  - generic [ref=f14e217]: Petrol
+                  - generic [ref=f14e221]: Khobar
+            - button "Save this car" [ref=f14e228] [cursor=pointer]
+        - listitem [ref=f14e229]:
+          - generic [ref=f14e230]:
+            - link "2019 Toyota Camry Private seller ID verified Featured Toyota Camry 2019 142,000 km Automatic SAR 58,000 Sedan Petrol Dammam" [ref=f14e232] [cursor=pointer]:
+              - /url: /en/listings/49b92fab-c94a-4de1-947f-308845acd0c8
+              - generic [ref=f14e233]:
+                - img "2019 Toyota Camry" [ref=f14e234]
+                - generic [ref=f14e235]:
+                  - generic [ref=f14e236]: Private seller
+                  - generic "Identity checked by our team" [ref=f14e237]: ID verified
+                - generic [ref=f14e238]: Featured
+              - generic [ref=f14e240]:
+                - paragraph [ref=f14e241]: Toyota Camry
+                - paragraph [ref=f14e242]:
+                  - generic [ref=f14e243]: "2019"
+                  - generic [aria-hidden] [ref=f14e244]: ·
+                  - generic [ref=f14e245]: 142,000 km
+                  - generic [aria-hidden] [ref=f14e246]: ·
+                  - generic [ref=f14e247]: Automatic
+                - paragraph [ref=f14e248]:
+                  - generic [ref=f14e249]:
+                    - generic [ref=f14e251]: SAR
+                    - text: 58,000
+                - generic [ref=f14e252]:
+                  - generic [ref=f14e253]: Sedan
+                  - generic [ref=f14e258]: Petrol
+                  - generic [ref=f14e262]: Dammam
+            - button "Save this car" [ref=f14e269] [cursor=pointer]
+    - generic [ref=f14e270]:
+      - generic [ref=f14e271]:
+        - generic [ref=f14e272]:
+          - paragraph [ref=f14e273]: For rent
+          - heading "Cars for rent" [level=2] [ref=f14e275]
+        - link "View all rentals" [ref=f14e276] [cursor=pointer]:
+          - /url: /en/rentals
+      - list [ref=f14e281]:
+        - listitem [ref=f14e282]:
+          - generic [ref=f14e283]:
+            - link "2025 Toyota Fortuner Dealer FOR RENT Toyota Fortuner 2025 100,000 km Automatic SAR 250 / day SUV Petrol Jubail" [ref=f14e285] [cursor=pointer]:
+              - /url: /en/listings/8bd2eee4-6b3d-4bd6-a450-758dac5ac047
+              - generic [ref=f14e286]:
+                - img "2025 Toyota Fortuner" [ref=f14e287]
+                - generic [ref=f14e288]: Dealer
+                - generic [ref=f14e290]: FOR RENT
+              - generic [ref=f14e292]:
+                - paragraph [ref=f14e293]: Toyota Fortuner
+                - paragraph [ref=f14e294]:
+                  - generic [ref=f14e295]: "2025"
+                  - generic [aria-hidden] [ref=f14e296]: ·
+                  - generic [ref=f14e297]: 100,000 km
+                  - generic [aria-hidden] [ref=f14e298]: ·
+                  - generic [ref=f14e299]: Automatic
+                - paragraph [ref=f14e300]:
+                  - generic [ref=f14e301]:
+                    - generic [ref=f14e303]: SAR
+                    - text: "250"
+                  - text: / day
+                - generic [ref=f14e304]:
+                  - generic [ref=f14e305]: SUV
+                  - generic [ref=f14e310]: Petrol
+                  - generic [ref=f14e314]: Jubail
+            - button "Save this car" [ref=f14e321] [cursor=pointer]
+    - generic [ref=f14e322]:
+      - generic [ref=f14e323]:
+        - generic [ref=f14e324]:
+          - paragraph [ref=f14e325]: BROWSE BY LOCATION
+          - heading "Cars Near You" [level=2] [ref=f14e327]
+        - link "View All in Jubail" [ref=f14e328] [cursor=pointer]:
+          - /url: /en/locations/jubail
+      - tablist "Cities" [ref=f14e332]:
+        - tab "Jubail 6" [selected] [ref=f14e333] [cursor=pointer]:
+          - text: Jubail
+          - generic [ref=f14e334]: "6"
+        - tab "Dammam 6" [ref=f14e335] [cursor=pointer]:
+          - text: Dammam
+          - generic [ref=f14e336]: "6"
+        - tab "Khobar 4" [ref=f14e337] [cursor=pointer]:
+          - text: Khobar
+          - generic [ref=f14e338]: "4"
+        - tab "Al Ahsa 1" [ref=f14e339] [cursor=pointer]:
+          - text: Al Ahsa
+          - generic [ref=f14e340]: "1"
+        - tab "Dhahran 1" [ref=f14e341] [cursor=pointer]:
+          - text: Dhahran
+          - generic [ref=f14e342]: "1"
+      - tabpanel "Jubail 6" [ref=f14e343]:
+        - list [ref=f14e344]:
+          - listitem [ref=f14e345]:
+            - generic [ref=f14e346]:
+              - link "2025 Toyota Fortuner Dealer FOR RENT Toyota Fortuner 2025 100,000 km Automatic SAR 250 / day SUV Petrol Jubail" [ref=f14e348] [cursor=pointer]:
+                - /url: /en/listings/8bd2eee4-6b3d-4bd6-a450-758dac5ac047
+                - generic [ref=f14e349]:
+                  - img "2025 Toyota Fortuner" [ref=f14e350]
+                  - generic [ref=f14e351]: Dealer
+                  - generic [ref=f14e353]: FOR RENT
+                - generic [ref=f14e355]:
+                  - paragraph [ref=f14e356]: Toyota Fortuner
+                  - paragraph [ref=f14e357]:
+                    - generic [ref=f14e358]: "2025"
+                    - generic [aria-hidden] [ref=f14e359]: ·
+                    - generic [ref=f14e360]: 100,000 km
+                    - generic [aria-hidden] [ref=f14e361]: ·
+                    - generic [ref=f14e362]: Automatic
+                  - paragraph [ref=f14e363]:
+                    - generic [ref=f14e364]:
+                      - generic [ref=f14e366]: SAR
+                      - text: "250"
+                    - text: / day
+                  - generic [ref=f14e367]:
+                    - generic [ref=f14e368]: SUV
+                    - generic [ref=f14e373]: Petrol
+                    - generic [ref=f14e377]: Jubail
+              - button "Save this car" [ref=f14e384] [cursor=pointer]
+          - listitem [ref=f14e385]:
+            - generic [ref=f14e386]:
+              - link "2023 Toyota Yaris Dealer Toyota Yaris 2023 110,000 km Automatic SAR 47,000 Sedan Petrol Jubail" [ref=f14e388] [cursor=pointer]:
+                - /url: /en/listings/98bdba56-f372-4f09-ae90-12e0ca26e51a
+                - generic [ref=f14e389]:
+                  - img "2023 Toyota Yaris" [ref=f14e390]
+                  - generic [ref=f14e391]: Dealer
+                - generic [ref=f14e393]:
+                  - paragraph [ref=f14e394]: Toyota Yaris
+                  - paragraph [ref=f14e395]:
+                    - generic [ref=f14e396]: "2023"
+                    - generic [aria-hidden] [ref=f14e397]: ·
+                    - generic [ref=f14e398]: 110,000 km
+                    - generic [aria-hidden] [ref=f14e399]: ·
+                    - generic [ref=f14e400]: Automatic
+                  - paragraph [ref=f14e401]:
+                    - generic [ref=f14e402]:
+                      - generic [ref=f14e404]: SAR
+                      - text: 47,000
+                  - generic [ref=f14e405]:
+                    - generic [ref=f14e406]: Sedan
+                    - generic [ref=f14e411]: Petrol
+                    - generic [ref=f14e415]: Jubail
+              - button "Save this car" [ref=f14e422] [cursor=pointer]
+          - listitem [ref=f14e423]:
+            - generic [ref=f14e424]:
+              - link "2022 Toyota Land Cruiser Dealer Toyota Land Cruiser 2022 45,000 km Automatic SAR 335,000 SUV Petrol Jubail" [ref=f14e426] [cursor=pointer]:
+                - /url: /en/listings/ea953000-8b7b-45d1-b13e-31ea447dca45
+                - generic [ref=f14e427]:
+                  - img "2022 Toyota Land Cruiser" [ref=f14e428]
+                  - generic [ref=f14e429]: Dealer
+                - generic [ref=f14e431]:
+                  - paragraph [ref=f14e432]: Toyota Land Cruiser
+                  - paragraph [ref=f14e433]:
+                    - generic [ref=f14e434]: "2022"
+                    - generic [aria-hidden] [ref=f14e435]: ·
+                    - generic [ref=f14e436]: 45,000 km
+                    - generic [aria-hidden] [ref=f14e437]: ·
+                    - generic [ref=f14e438]: Automatic
+                  - paragraph [ref=f14e439]:
+                    - generic [ref=f14e440]:
+                      - generic [ref=f14e442]: SAR
+                      - text: 335,000
+                  - generic [ref=f14e443]:
+                    - generic [ref=f14e444]: SUV
+                    - generic [ref=f14e449]: Petrol
+                    - generic [ref=f14e453]: Jubail
+              - button "Save this car" [ref=f14e460] [cursor=pointer]
+          - listitem [ref=f14e461]:
+            - generic [ref=f14e462]:
+              - link "2021 Nissan Patrol Dealer Nissan Patrol 2021 72,000 km Automatic SAR 245,000 SUV Petrol Jubail" [ref=f14e464] [cursor=pointer]:
+                - /url: /en/listings/ba568aa6-22e0-41ea-b176-6942edf9d7a1
+                - generic [ref=f14e465]:
+                  - img "2021 Nissan Patrol" [ref=f14e466]
+                  - generic [ref=f14e467]: Dealer
+                - generic [ref=f14e469]:
+                  - paragraph [ref=f14e470]: Nissan Patrol
+                  - paragraph [ref=f14e471]:
+                    - generic [ref=f14e472]: "2021"
+                    - generic [aria-hidden] [ref=f14e473]: ·
+                    - generic [ref=f14e474]: 72,000 km
+                    - generic [aria-hidden] [ref=f14e475]: ·
+                    - generic [ref=f14e476]: Automatic
+                  - paragraph [ref=f14e477]:
+                    - generic [ref=f14e478]:
+                      - generic [ref=f14e480]: SAR
+                      - text: 245,000
+                  - generic [ref=f14e481]:
+                    - generic [ref=f14e482]: SUV
+                    - generic [ref=f14e487]: Petrol
+                    - generic [ref=f14e491]: Jubail
+              - button "Save this car" [ref=f14e498] [cursor=pointer]
+    - generic [ref=f14e499]:
+      - generic [ref=f14e501]:
+        - paragraph [ref=f14e502]: HOW IT WORKS
+        - heading "Simple Steps, Either Way" [level=2] [ref=f14e504]
+      - generic [ref=f14e505]:
+        - generic [ref=f14e506]:
+          - paragraph [ref=f14e507]: FOR BUYERS
+          - paragraph [ref=f14e509]: Find and buy a used car without the guesswork.
+          - list [ref=f14e510]:
+            - listitem [ref=f14e511]:
+              - generic [ref=f14e512]: "01"
+              - paragraph [ref=f14e513]: Search
+              - paragraph [ref=f14e514]: Filter listings by make, price, year, fuel type and city.
+            - listitem [ref=f14e515]:
+              - generic [ref=f14e516]: "02"
+              - paragraph [ref=f14e517]: Shortlist
+              - paragraph [ref=f14e518]: Save cars you like to your favorites and come back to them anytime.
+            - listitem [ref=f14e519]:
+              - generic [ref=f14e520]: "03"
+              - paragraph [ref=f14e521]: Contact Seller
+              - paragraph [ref=f14e522]: Message the seller on WhatsApp or call them to arrange a viewing.
+            - listitem [ref=f14e523]:
+              - generic [ref=f14e524]: "04"
+              - paragraph [ref=f14e525]: Buy Your Car
+              - paragraph [ref=f14e526]: Inspect the car, agree on a price and drive away.
+          - link "Browse Cars" [ref=f14e528] [cursor=pointer]:
+            - /url: /en/listings
+        - generic [ref=f14e529]:
+          - paragraph [ref=f14e530]: FOR SELLERS
+          - paragraph [ref=f14e532]: List your car in minutes and reach buyers across Saudi Arabia.
+          - list [ref=f14e533]:
+            - listitem [ref=f14e534]:
+              - generic [ref=f14e535]: "01"
+              - paragraph [ref=f14e536]: Create Listing
+              - paragraph [ref=f14e537]: Sign up as a seller and start a listing.
+            - listitem [ref=f14e538]:
+              - generic [ref=f14e539]: "02"
+              - paragraph [ref=f14e540]: Add Details
+              - paragraph [ref=f14e541]: Upload photos and add mileage, condition and your asking price.
+            - listitem [ref=f14e542]:
+              - generic [ref=f14e543]: "03"
+              - paragraph [ref=f14e544]: Get Buyer Leads
+              - paragraph [ref=f14e545]: Buyers contact you directly by WhatsApp or phone.
+            - listitem [ref=f14e546]:
+              - generic [ref=f14e547]: "04"
+              - paragraph [ref=f14e548]: Sell Your Car
+              - paragraph [ref=f14e549]: Agree on a price, hand over the keys and mark it as sold.
+          - generic [ref=f14e550]:
+            - generic [ref=f14e551]: Free plan available. Dealer plans for bigger inventories.
+            - link "Start Listing" [ref=f14e552] [cursor=pointer]:
+              - /url: /en/account/become-seller
+    - generic [ref=f14e556]:
+      - generic [ref=f14e557]:
+        - paragraph [ref=f14e558]: READY TO SELL?
+        - paragraph [ref=f14e560]: Turn your car into cash
+        - paragraph [ref=f14e561]: List your car in minutes and reach buyers in Jubail, Dammam, Khobar and beyond.
+      - link "Sell Your Car" [ref=f14e562] [cursor=pointer]:
+        - /url: /en/account/become-seller
+  - contentinfo [ref=f14e564]:
+    - generic [ref=f14e565]:
+      - generic [ref=f14e566]:
+        - link [ref=f14e567] [cursor=pointer]:
+          - /url: /en
+          - img "KarSouq" [ref=f14e568]
+        - paragraph [ref=f14e569]: Saudi Arabia's marketplace for used cars. Buy and sell directly with sellers.
+      - generic [ref=f14e570]:
+        - paragraph [ref=f14e571]: BUY
+        - link "Browse Cars" [ref=f14e572] [cursor=pointer]:
+          - /url: /en/listings
+        - link "Saved Cars" [ref=f14e573] [cursor=pointer]:
+          - /url: /en/favorites
+        - link "Saved Searches" [ref=f14e574] [cursor=pointer]:
+          - /url: /en/saved-searches
+      - generic [ref=f14e575]:
+        - paragraph [ref=f14e576]: POPULAR MAKES
+        - link "Toyota" [ref=f14e577] [cursor=pointer]:
+          - /url: /en/brands/toyota
+        - link "Hyundai" [ref=f14e578] [cursor=pointer]:
+          - /url: /en/brands/hyundai
+        - link "Nissan" [ref=f14e579] [cursor=pointer]:
+          - /url: /en/brands/nissan
+        - link "Lexus" [ref=f14e580] [cursor=pointer]:
+          - /url: /en/brands/lexus
+      - generic [ref=f14e581]:
+        - paragraph [ref=f14e582]: CITIES
+        - link "Dammam" [ref=f14e583] [cursor=pointer]:
+          - /url: /en/locations/dammam
+        - link "Jubail" [ref=f14e584] [cursor=pointer]:
+          - /url: /en/locations/jubail
+        - link "Khobar" [ref=f14e585] [cursor=pointer]:
+          - /url: /en/locations/khobar
+        - link "Dhahran" [ref=f14e586] [cursor=pointer]:
+          - /url: /en/locations/dhahran
+        - link "All Cities" [ref=f14e587] [cursor=pointer]:
+          - /url: /en/locations
+      - generic [ref=f14e588]:
+        - paragraph [ref=f14e589]: SELL
+        - link "Sell Your Car" [ref=f14e590] [cursor=pointer]:
+          - /url: /en/account/become-seller
+        - link "Pricing" [ref=f14e591] [cursor=pointer]:
+          - /url: /en/pricing
+        - link "Seller Dashboard" [ref=f14e592] [cursor=pointer]:
+          - /url: /en/dashboard
+        - link "My Account" [ref=f14e593] [cursor=pointer]:
+          - /url: /en/account
+    - generic [ref=f14e595]:
+      - paragraph [ref=f14e596]: © 2026 KarSouq, a CodeSudio product. All rights reserved.
+      - navigation [ref=f14e597]:
+        - link "Contact" [ref=f14e598] [cursor=pointer]:
+          - /url: /en/contact
+        - link "Privacy Policy" [ref=f14e599] [cursor=pointer]:
+          - /url: /en/privacy
+        - link "Terms of Use" [ref=f14e600] [cursor=pointer]:
+          - /url: /en/terms
+  - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=f14e606] [cursor=pointer]
+  - alert [ref=f14e614]
+  - dialog [ref=f14e616]:
+    - combobox "Search cities…" [expanded] [active] [ref=f14e621]
+    - listbox [ref=f14e622]:
+      - option "Any Location" [selected] [ref=f14e623] [cursor=pointer]
+      - option "Riyadh" [ref=f14e627] [cursor=pointer]
+      - option "Jeddah" [ref=f14e629] [cursor=pointer]
+      - option "Mecca" [ref=f14e631] [cursor=pointer]
+      - option "Medina" [ref=f14e633] [cursor=pointer]
+      - option "Dammam" [ref=f14e635] [cursor=pointer]
+      - option "Khobar" [ref=f14e637] [cursor=pointer]
+      - option "Dhahran" [ref=f14e639] [cursor=pointer]
+      - option "Taif" [ref=f14e641] [cursor=pointer]
+      - option "Tabuk" [ref=f14e643] [cursor=pointer]
+      - option "Buraidah" [ref=f14e645] [cursor=pointer]
+      - option "Abha" [ref=f14e647] [cursor=pointer]
+      - option "Khamis Mushait" [ref=f14e649] [cursor=pointer]
+      - option "Hail" [ref=f14e651] [cursor=pointer]
+      - option "Jazan" [ref=f14e653] [cursor=pointer]
+      - option "Najran" [ref=f14e655] [cursor=pointer]
+      - option "Al Ahsa" [ref=f14e657] [cursor=pointer]
+      - option "Jubail" [ref=f14e659] [cursor=pointer]
+      - option "Yanbu" [ref=f14e661] [cursor=pointer]
+      - option "Abqaiq" [ref=f14e663] [cursor=pointer]
+      - option "Abu Arish" [ref=f14e665] [cursor=pointer]
+      - option "Afif" [ref=f14e667] [cursor=pointer]
+      - option "Al Bahah" [ref=f14e669] [cursor=pointer]
+      - option "Al-Aqiq" [ref=f14e671] [cursor=pointer]
+      - option "Al-Bukayriyah" [ref=f14e673] [cursor=pointer]
+      - option "Al-Ghazalah" [ref=f14e675] [cursor=pointer]
+      - option "Al-Hofuf" [ref=f14e677] [cursor=pointer]
+      - option "Al-Jumum" [ref=f14e679] [cursor=pointer]
+      - option "Al-Kharj" [ref=f14e681] [cursor=pointer]
+      - option "Al-Lith" [ref=f14e683] [cursor=pointer]
+      - option "Al-Majma'ah" [ref=f14e685] [cursor=pointer]
+      - option "Al-Mikhwah" [ref=f14e687] [cursor=pointer]
+      - option "Al-Mithnab" [ref=f14e689] [cursor=pointer]
+      - option "Al-Mubarraz" [ref=f14e691] [cursor=pointer]
+      - option "Al-Namas" [ref=f14e693] [cursor=pointer]
+      - option "Al-Qunfudhah" [ref=f14e695] [cursor=pointer]
+      - option "Al-Sulayyil" [ref=f14e697] [cursor=pointer]
+      - option "Al-Ula" [ref=f14e699] [cursor=pointer]
+      - option "Al-Wajh" [ref=f14e701] [cursor=pointer]
+      - option "Al-Zulfi" [ref=f14e703] [cursor=pointer]
+      - option "Arar" [ref=f14e705] [cursor=pointer]
+      - option "Ar-Rass" [ref=f14e707] [cursor=pointer]
+      - option "As-Sulaymi" [ref=f14e709] [cursor=pointer]
+      - option "Badr" [ref=f14e711] [cursor=pointer]
+      - option "Baish" [ref=f14e713] [cursor=pointer]
+      - option "Baljurashi" [ref=f14e715] [cursor=pointer]
+      - option "Baqa'a" [ref=f14e717] [cursor=pointer]
+      - option "Bisha" [ref=f14e719] [cursor=pointer]
+      - option "Dawadmi" [ref=f14e721] [cursor=pointer]
+      - option "Dhahran Al-Janub" [ref=f14e723] [cursor=pointer]
+      - option "Diriyah" [ref=f14e725] [cursor=pointer]
+      - option "Duba" [ref=f14e727] [cursor=pointer]
+      - option "Dumat Al-Jandal" [ref=f14e729] [cursor=pointer]
+      - option "Farasan" [ref=f14e731] [cursor=pointer]
+      - option "Hafr Al-Batin" [ref=f14e733] [cursor=pointer]
+      - option "Haql" [ref=f14e735] [cursor=pointer]
+      - option "Hotat Bani Tamim" [ref=f14e737] [cursor=pointer]
+      - option "Hubuna" [ref=f14e739] [cursor=pointer]
+      - option "Khafji" [ref=f14e741] [cursor=pointer]
+      - option "Khaybar" [ref=f14e743] [cursor=pointer]
+      - option "Khulais" [ref=f14e745] [cursor=pointer]
+      - option "Mahd ad-Dhahab" [ref=f14e747] [cursor=pointer]
+      - option "Muhayil Asir" [ref=f14e749] [cursor=pointer]
+      - option "Qatif" [ref=f14e751] [cursor=pointer]
+      - option "Qurayyat" [ref=f14e753] [cursor=pointer]
+      - option "Rabigh" [ref=f14e755] [cursor=pointer]
+      - option "Rafha" [ref=f14e757] [cursor=pointer]
+      - option "Ranyah" [ref=f14e759] [cursor=pointer]
+      - option "Ras Tanura" [ref=f14e761] [cursor=pointer]
+      - option "Sabya" [ref=f14e763] [cursor=pointer]
+      - option "Sakaka" [ref=f14e765] [cursor=pointer]
+      - option "Samtah" [ref=f14e767] [cursor=pointer]
+      - option "Sarat Abidah" [ref=f14e769] [cursor=pointer]
+      - option "Shaqra" [ref=f14e771] [cursor=pointer]
+      - option "Sharurah" [ref=f14e773] [cursor=pointer]
+      - option "Taima" [ref=f14e775] [cursor=pointer]
+      - option "Tanomah" [ref=f14e777] [cursor=pointer]
+      - option "Turaif" [ref=f14e779] [cursor=pointer]
+      - option "Turubah" [ref=f14e781] [cursor=pointer]
+      - option "Umluj" [ref=f14e783] [cursor=pointer]
+      - option "Unaizah" [ref=f14e785] [cursor=pointer]
+      - option "Uyun Al-Jawa" [ref=f14e787] [cursor=pointer]
+      - option "Wadi ad-Dawasir" [ref=f14e789] [cursor=pointer]

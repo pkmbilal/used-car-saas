@@ -51,6 +51,7 @@ export function FormSelect({
         searchPlaceholder={search.placeholder}
         emptyText={search.emptyText}
         options={[{ value: "", label: placeholder }, ...options]}
+        icon={icon}
         triggerClassName={cn(filterTriggerClass, className)}
       />
     );

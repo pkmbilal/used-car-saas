@@ -180,6 +180,7 @@ export async function SearchBar({
             name="city"
             defaultValue={filters?.city}
             placeholder={t.search.anyLocation}
+            search={{ placeholder: t.select.searchCities, emptyText: t.select.noMatches }}
             options={CITIES.map((city) => ({ value: city, label: cityName(t, city) }))}
             icon={hero ? undefined : <MapPin className="size-3.5 text-muted-foreground" />}
             className={style.trigger}

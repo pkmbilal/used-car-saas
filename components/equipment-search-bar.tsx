@@ -69,6 +69,7 @@ export async function EquipmentSearchBar({ filters, className }: { filters: List
             name="city"
             defaultValue={filters.city}
             placeholder={t.search.anyLocation}
+            search={search(t.select.searchCities)}
             options={CITIES.map((city) => ({ value: city, label: cityName(t, city) }))}
             icon={<MapPin className="size-3.5 text-muted-foreground" />}
           />

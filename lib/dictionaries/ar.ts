@@ -178,6 +178,7 @@ export const ar: DictionaryShape<typeof en> = {
     useTyped: "استخدم “{value}”",
     searchTypes: "ابحث عن النوع…",
     searchBrands: "ابحث عن العلامة التجارية…",
+    searchCities: "ابحث عن المدينة…",
   },
   options: {
     condition: { excellent: "ممتازة", good: "جيدة", fair: "مقبولة" },
