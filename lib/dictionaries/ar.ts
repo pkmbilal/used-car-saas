@@ -872,6 +872,10 @@ export const ar: DictionaryShape<typeof en> = {
     detailsSubtitle: "النوع والماركة والموديل وساعات التشغيل",
     browseTitle: "معدات للإيجار",
     browseIntro: "استأجر الحفارات والشيولات والرافعات الشوكية والكرينات والمولدات باليوم أو الأسبوع أو الشهر.",
+    eyebrow: "معدات للإيجار",
+    titleStart: "استأجر",
+    titleHighlight: "المعدات المناسبة",
+    titleEnd: "لكل مشروع",
     found: plural({
       zero: "لا توجد معدات للإيجار",
       one: "معدة واحدة للإيجار",
@@ -922,6 +926,10 @@ export const ar: DictionaryShape<typeof en> = {
     kmLimitHint: "اتركه فارغًا لكيلومترات غير محدودة.",
     browseTitle: "سيارات للإيجار",
     browseIntro: "استأجر سيارة باليوم أو الأسبوع أو الشهر من الملاك والمعارض القريبة منك.",
+    eyebrow: "سيارات للإيجار",
+    titleStart: "استأجر",
+    titleHighlight: "السيارة المثالية",
+    titleEnd: "لكل مشوار",
     found: plural({
       zero: "لا توجد سيارات للإيجار",
       one: "سيارة واحدة للإيجار",

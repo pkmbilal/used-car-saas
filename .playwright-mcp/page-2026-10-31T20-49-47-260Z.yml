@@ -1,0 +1,67 @@
+- generic [active] [ref=f1e1]:
+  - banner [ref=f1e2]:
+    - navigation [ref=f1e3]:
+      - link [ref=f1e4] [cursor=pointer]:
+        - /url: /en
+        - img "KarSouq" [ref=f1e5]
+      - button "Menu" [ref=f1e7] [cursor=pointer]
+  - navigation "Main" [ref=f1e8]:
+    - list [ref=f1e9]:
+      - listitem [ref=f1e10]:
+        - link "Home" [ref=f1e11] [cursor=pointer]:
+          - /url: /en
+      - listitem [ref=f1e15]:
+        - link "Buy" [ref=f1e16] [cursor=pointer]:
+          - /url: /en/listings
+      - listitem [ref=f1e20]:
+        - link "My cars" [ref=f1e21] [cursor=pointer]:
+          - /url: /en/dashboard
+      - listitem [ref=f1e27]:
+        - link "Saved" [ref=f1e28] [cursor=pointer]:
+          - /url: /en/favorites
+      - listitem [ref=f1e31]:
+        - button "Account menu" [ref=f1e32] [cursor=pointer]:
+          - generic [aria-hidden] [ref=f1e34]: DU
+          - generic [ref=f1e36]: Demo
+  - main [ref=f1e38]:
+    - generic [ref=f1e41]:
+      - heading "Equipment for rent" [level=1] [ref=f1e42]
+      - paragraph [ref=f1e43]: Rent excavators, loaders, forklifts, cranes and generators by the day, week or month.
+    - generic [ref=f1e44]:
+      - navigation [ref=f1e45]:
+        - link "Cars" [ref=f1e46] [cursor=pointer]:
+          - /url: /en/rentals
+        - link "Equipment" [ref=f1e50] [cursor=pointer]:
+          - /url: /en/rentals?category=equipment
+      - generic [ref=f1e57]:
+        - generic [ref=f1e58]:
+          - generic [ref=f1e59]: Equipment type
+          - button "Equipment type" [ref=f1e61] [cursor=pointer]:
+            - generic [ref=f1e62]: Any type
+        - generic [ref=f1e66]:
+          - generic [ref=f1e67]: Brand
+          - button "Brand" [ref=f1e69] [cursor=pointer]:
+            - generic [ref=f1e70]: Any brand
+        - generic [ref=f1e74]:
+          - generic [ref=f1e75]: Max Price
+          - combobox "Max Price" [ref=f1e76] [cursor=pointer]
+          - combobox [aria-hidden] [ref=f1e77]
+        - generic [ref=f1e78]:
+          - generic [ref=f1e79]: Location
+          - button "Location" [ref=f1e81] [cursor=pointer]:
+            - generic [ref=f1e82]: Any Location
+        - button "Search equipment" [ref=f1e89] [cursor=pointer]
+    - generic [ref=f1e90]:
+      - button "Filters" [ref=f1e91] [cursor=pointer]
+      - generic [ref=f1e92]:
+        - generic [ref=f1e93]:
+          - paragraph [ref=f1e94]: 0 Machines for Rent
+          - generic [ref=f1e96]:
+            - generic [ref=f1e97]: Sort by
+            - combobox "Sort by" [ref=f1e98] [cursor=pointer]
+            - combobox [aria-hidden] [ref=f1e99]
+        - generic [ref=f1e100]:
+          - paragraph [ref=f1e106]: No equipment matches these filters
+          - paragraph [ref=f1e107]: There is no equipment for rent right now. Check back soon.
+  - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=f1e113] [cursor=pointer]

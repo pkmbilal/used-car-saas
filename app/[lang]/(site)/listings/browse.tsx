@@ -37,10 +37,13 @@ export async function Browse({
   filters,
   params,
   hero,
+  tabs,
 }: {
   filters: ListingFilters;
   params: Record<string, string | string[] | undefined>;
   hero: React.ReactNode;
+  // Folder tabs on top of the search card (pair with <BrowseHero withTabs>).
+  tabs?: React.ReactNode;
 }) {
   const { t, locale } = await getDictionary();
   const rent = filters.type === "rent";
@@ -94,11 +97,12 @@ export async function Browse({
       {hero}
 
       {/* Cars search by make/model; equipment has its own type/brand bar. */}
-      <div className="relative mx-auto -mt-10 w-full max-w-6xl px-4 sm:px-6">
+      <div className={`relative mx-auto w-full max-w-6xl px-4 sm:px-6 ${tabs ? "-mt-20" : "-mt-10"}`}>
+        {tabs}
         {equipment ? (
-          <EquipmentSearchBar key={searchHref} filters={filters} />
+          <EquipmentSearchBar key={searchHref} filters={filters} className={tabs ? "rounded-ss-none" : undefined} />
         ) : (
-          <SearchBar key={searchHref} filters={filters} />
+          <SearchBar key={searchHref} filters={filters} className={tabs ? "rounded-ss-none" : undefined} />
         )}
       </div>
 
@@ -168,11 +172,11 @@ export async function Browse({
 }
 
 // The dark band at the top of a browse page.
-export function BrowseHero({ children }: { children: React.ReactNode }) {
+export function BrowseHero({ children, withTabs = false }: { children: React.ReactNode; withTabs?: boolean }) {
   return (
     <section className="relative overflow-hidden bg-charcoal">
       <div className="absolute inset-y-0 end-0 w-2/3 bg-[radial-gradient(ellipse_at_70%_60%,rgba(111,224,124,.16),transparent_60%)] rtl:bg-[radial-gradient(ellipse_at_30%_60%,rgba(111,224,124,.16),transparent_60%)]" />
-      <div className="relative mx-auto w-full max-w-6xl px-4 pt-10 pb-20 sm:px-6">{children}</div>
+      <div className={`relative mx-auto w-full max-w-6xl px-4 pt-10 sm:px-6 ${withTabs ? "pb-28" : "pb-20"}`}>{children}</div>
     </section>
   );
 }
