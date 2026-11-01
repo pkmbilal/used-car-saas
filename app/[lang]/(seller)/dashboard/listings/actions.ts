@@ -33,6 +33,18 @@ export type ActionResult = { error?: string };
 const SUSPENDED_ERROR = "Your account is suspended, so you can't publish listings.";
 const NOT_PUBLISHED_ERROR = "Publish this listing before marking it sold.";
 
+// Keys the presign step issues for a listing's photos.
+function listingKeyPattern(listingId: string): RegExp {
+  return new RegExp(`^listings/${listingId}/[0-9a-f-]{36}\\.(jpg|png|webp)$`);
+}
+
+// Rows can be written outside these actions, so only delete objects that sit
+// under this listing's own folder.
+function ownedKeys(listingId: string, keys: string[]): string[] {
+  const pattern = listingKeyPattern(listingId);
+  return keys.filter((key) => pattern.test(key));
+}
+
 function photoLimitError(max: number): string {
   return `A listing can have up to ${max} photos.`;
 }
@@ -205,7 +217,12 @@ export async function deleteListing(listingId: string): Promise<ActionResult> {
     .eq("seller_id", user.id);
   if (error) return { error: "Could not delete the listing. Try again." };
 
-  await deleteObjects(listing.images.map((image) => image.r2_key)).catch((err) =>
+  await deleteObjects(
+    ownedKeys(
+      listingId,
+      listing.images.map((image) => image.r2_key),
+    ),
+  ).catch((err) =>
     console.error("Failed to delete R2 objects for listing", listingId, err),
   );
 
@@ -250,8 +267,7 @@ export async function confirmImageUpload(
   if (!listing) return { error: "Listing not found." };
 
   // Only accept keys this listing's presign step could have issued.
-  const keyPattern = new RegExp(`^listings/${listing.id}/[0-9a-f-]{36}\\.(jpg|png|webp)$`);
-  if (!keyPattern.test(key)) return { error: "Invalid upload." };
+  if (!listingKeyPattern(listing.id).test(key)) return { error: "Invalid upload." };
   const maxPhotos = PHOTO_LIMIT[profile.plan];
   if (listing.images.length >= maxPhotos) return { error: photoLimitError(maxPhotos) };
 
@@ -281,7 +297,7 @@ export async function deleteImage(listingId: string, imageId: string): Promise<A
   const { error } = await supabase.from("listing_images").delete().eq("id", imageId);
   if (error) return { error: "Could not delete the photo. Try again." };
 
-  await deleteObjects([image.r2_key]).catch((err) =>
+  await deleteObjects(ownedKeys(listingId, [image.r2_key])).catch((err) =>
     console.error("Failed to delete R2 object", image.r2_key, err),
   );
 

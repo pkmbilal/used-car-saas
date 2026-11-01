@@ -170,7 +170,7 @@ export async function confirmAvatarUpload(key: string): Promise<AvatarActionResu
     .eq("id", current.user.id);
   if (error) return { error: "Could not save the photo. Try again." };
 
-  await removeOldAvatar(current.profile.avatar_key);
+  await removeOldAvatar(current.user.id, current.profile.avatar_key);
   revalidatePath("/", "layout");
   return {};
 }
@@ -186,14 +186,15 @@ export async function removeAvatar(): Promise<AvatarActionResult> {
     .eq("id", current.user.id);
   if (error) return { error: "Could not remove the photo. Try again." };
 
-  await removeOldAvatar(current.profile.avatar_key);
+  await removeOldAvatar(current.user.id, current.profile.avatar_key);
   revalidatePath("/", "layout");
   return {};
 }
 
 // Best effort: the profile no longer points at it, so a failed delete only
-// leaves an orphaned object behind.
-async function removeOldAvatar(key: string | null) {
-  if (!key) return;
+// leaves an orphaned object behind. Only keys under the user's own folder are
+// deleted, since the column can be written outside these actions.
+async function removeOldAvatar(userId: string, key: string | null) {
+  if (!key || !avatarKeyPattern(userId).test(key)) return;
   await deleteObjects([key]).catch(() => {});
 }

@@ -89,7 +89,7 @@ export async function confirmLogoUpload(key: string): Promise<ActionResult> {
     .eq("id", current.user.id);
   if (error) return { error: "Could not save the logo. Try again." };
 
-  await removeOldLogo(current.profile.logo_key);
+  await removeOldLogo(current.user.id, current.profile.logo_key);
   revalidateStorefront(current.user.id);
   return {};
 }
@@ -105,14 +105,15 @@ export async function removeLogo(): Promise<ActionResult> {
     .eq("id", current.user.id);
   if (error) return { error: "Could not remove the logo. Try again." };
 
-  await removeOldLogo(current.profile.logo_key);
+  await removeOldLogo(current.user.id, current.profile.logo_key);
   revalidateStorefront(current.user.id);
   return {};
 }
 
 // Best effort: the profile no longer points at it, so a failed delete only
-// leaves an orphaned object behind.
-async function removeOldLogo(key: string | null) {
-  if (!key) return;
+// leaves an orphaned object behind. Only keys under the user's own folder are
+// deleted, since the column can be written outside these actions.
+async function removeOldLogo(userId: string, key: string | null) {
+  if (!key || !logoKeyPattern(userId).test(key)) return;
   await deleteObjects([key]).catch(() => {});
 }
