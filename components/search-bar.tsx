@@ -49,7 +49,7 @@ export const styles = {
   },
 } satisfies Record<Variant, { form: string; field: string; label: string; trigger: string | undefined }>;
 
-function FieldLabel({ icon: Icon, children }: { icon: React.ComponentType<{ className?: string }>; children: string }) {
+export function FieldLabel({ icon: Icon, children }: { icon: React.ComponentType<{ className?: string }>; children: string }) {
   return (
     <>
       <Icon className="size-3.5 text-brand" />
@@ -82,35 +82,80 @@ export function Field({
 }
 
 
+// The card around a search form, shared with the equipment bar.
+// `tabbed` squares the top-start corner so it joins the active folder tab.
+export function SearchCard({
+  variant,
+  tabbed = false,
+  className,
+  children,
+}: {
+  variant: Variant;
+  tabbed?: boolean;
+  className?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <Card
+      className={cn(
+        "gap-0 py-0 ring-0",
+        variant === "hero"
+          ? "overflow-hidden rounded-2xl shadow-[0_1px_2px_rgba(15,34,25,.06),0_30px_60px_-20px_rgba(15,34,25,.3)] ring-1 ring-black/5"
+          : "rounded-xl shadow-[0_10px_30px_rgba(20,30,25,.08)]",
+        tabbed && "rounded-ss-none",
+        className,
+      )}
+    >
+      {children}
+    </Card>
+  );
+}
+
+export function SubmitButton({ variant, children }: { variant: Variant; children: React.ReactNode }) {
+  return variant === "hero" ? (
+    <div className="bg-white p-3 sm:col-span-2 lg:col-span-1">
+      <Button
+        type="submit"
+        size="lg"
+        className="h-12 w-full rounded-xl bg-forest-dark px-7 text-sm font-semibold text-white hover:bg-brand lg:h-full lg:min-h-14"
+      >
+        <Search className="size-4 text-lime" strokeWidth={2.4} />
+        {children}
+      </Button>
+    </div>
+  ) : (
+    <Button type="submit" size="lg" className="h-11 px-6 text-xs max-sm:text-sm font-semibold sm:col-span-2 lg:col-span-1">
+      <Search className="size-4" />
+      {children}
+    </Button>
+  );
+}
+
 // Quick search card. A GET form, so the results page stays shareable.
 // The "hero" variant is the larger, segmented version on the home page.
 export async function SearchBar({
   filters,
   className,
   variant = "default",
+  tabbed = false,
 }: {
   filters?: ListingFilters;
   className?: string;
   variant?: Variant;
+  // Sits under folder tabs, which replace the hero's "Find your car" strip.
+  tabbed?: boolean;
 }) {
   const hero = variant === "hero";
+  const rent = filters?.type === "rent";
   const style = styles[variant];
   const { t, locale } = await getDictionary();
-  const action = localizePath(locale, filters?.type === "rent" ? "/rentals" : "/listings");
+  const action = localizePath(locale, rent ? "/rentals" : "/listings");
   const priceLabel = (price: number) => fmt(t.search.upTo, { price: formatSAR(price, locale) });
   const yearLabel = (year: number) => fmt(t.search.yearAndNewer, { year });
 
   return (
-    <Card
-      className={cn(
-        "gap-0 py-0 ring-0",
-        hero
-          ? "overflow-hidden rounded-2xl shadow-[0_1px_2px_rgba(15,34,25,.06),0_30px_60px_-20px_rgba(15,34,25,.3)] ring-1 ring-black/5"
-          : "rounded-xl shadow-[0_10px_30px_rgba(20,30,25,.08)]",
-        className,
-      )}
-    >
-      {hero && (
+    <SearchCard variant={variant} tabbed={tabbed} className={className}>
+      {hero && !tabbed && (
         <div className="flex items-center justify-between gap-4 border-b border-line px-5 py-3.5">
           <span className="flex items-center gap-2 text-eyebrow font-semibold tracking-[0.2em] text-ink">
             <span aria-hidden className="size-1.5 rounded-full bg-lime" />
@@ -144,7 +189,7 @@ export async function SearchBar({
             defaultValue={filters?.maxPrice?.toString()}
             placeholder={t.search.anyPrice}
             options={withCurrent(
-              (filters?.type === "rent" ? MAX_DAILY_PRICES : MAX_PRICES).map((price) => ({ value: String(price), label: priceLabel(price) })),
+              (rent ? MAX_DAILY_PRICES : MAX_PRICES).map((price) => ({ value: String(price), label: priceLabel(price) })),
               filters?.maxPrice,
               priceLabel,
             )}
@@ -186,24 +231,8 @@ export async function SearchBar({
             className={style.trigger}
           />
         </Field>
-        {hero ? (
-          <div className="bg-white p-3 sm:col-span-2 lg:col-span-1">
-            <Button
-              type="submit"
-              size="lg"
-              className="h-12 w-full rounded-xl bg-forest-dark px-7 text-sm font-semibold text-white hover:bg-brand lg:h-full lg:min-h-14"
-            >
-              <Search className="size-4 text-lime" strokeWidth={2.4} />
-              {t.search.searchCars}
-            </Button>
-          </div>
-        ) : (
-          <Button type="submit" size="lg" className="h-11 px-6 text-xs max-sm:text-sm font-semibold sm:col-span-2 lg:col-span-1">
-            <Search className="size-4" />
-            {t.search.searchCars}
-          </Button>
-        )}
+        <SubmitButton variant={variant}>{rent ? t.search.searchRentals : t.search.searchCars}</SubmitButton>
       </form>
-    </Card>
+    </SearchCard>
   );
 }

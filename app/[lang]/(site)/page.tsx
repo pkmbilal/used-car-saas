@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "@/components/locale-link";
-import { ArrowRight, MessageCircle, Plus, ShieldCheck, type LucideIcon } from "lucide-react";
+import { ArrowRight, CarFront, KeyRound, MessageCircle, Plus, ShieldCheck, Truck, type LucideIcon } from "lucide-react";
+import { EquipmentSearchBar } from "@/components/equipment-search-bar";
+import { HomeSearchTabs } from "@/components/home-search-tabs";
 import { JsonLd } from "@/components/json-ld";
 import { ListingGrid } from "@/components/listing-card";
 import { SearchBar } from "@/components/search-bar";
@@ -76,7 +78,8 @@ export default async function Home() {
         <div className="absolute inset-0 -z-10 bg-forest-dark/75 md:hidden" />
         <div className="absolute inset-0 -z-10 hidden bg-[linear-gradient(90deg,rgba(15,34,25,.97)_0%,rgba(15,34,25,.88)_35%,rgba(15,34,25,.4)_68%,rgba(15,34,25,.15)_100%)] rtl:bg-[linear-gradient(270deg,rgba(15,34,25,.97)_0%,rgba(15,34,25,.88)_35%,rgba(15,34,25,.4)_68%,rgba(15,34,25,.15)_100%)] md:block" />
         <div className="absolute inset-x-0 bottom-0 -z-10 h-48 bg-gradient-to-t from-forest-dark to-transparent" />
-        <div className="mx-auto flex min-h-[34rem] w-full max-w-6xl flex-col justify-end px-4 pt-16 pb-30 sm:px-6 md:min-h-[40rem]">
+        <div className="mx-auto flex min-h-[34rem] w-full max-w-6xl flex-col justify-end px-4 pt-16 pb-41 sm:px-6 md:min-h-[40rem]">
+          {/* pb-41 leaves room for the search tabs (-mt-31 below). */}
           <Eyebrow tone="dark">{t.home.eyebrow}</Eyebrow>
           <h1 className="mt-5 max-w-2xl font-display text-5xl leading-[1.05] font-medium tracking-tight text-white md:text-7xl">
             {t.home.titleStart} <span className="font-bold text-lime">{t.home.titleHighlight}</span>
@@ -112,8 +115,30 @@ export default async function Home() {
         </div>
       </section>
 
-      <div className="relative mx-auto -mt-20 w-full max-w-6xl px-4 sm:px-6">
-        <SearchBar variant="hero" />
+      <div className="relative mx-auto -mt-31 w-full max-w-6xl px-4 sm:px-6">
+        <HomeSearchTabs
+          label={t.home.searchTabs}
+          tabs={[
+            {
+              key: "sale",
+              label: t.home.tabBuyCar,
+              icon: <CarFront strokeWidth={1.8} />,
+              panel: <SearchBar variant="hero" tabbed />,
+            },
+            {
+              key: "rent",
+              label: t.home.tabCarRental,
+              icon: <KeyRound strokeWidth={1.8} />,
+              panel: <SearchBar variant="hero" tabbed filters={parseListingFilters({ type: "rent" })} />,
+            },
+            {
+              key: "equipment",
+              label: t.home.tabEquipmentRental,
+              icon: <Truck strokeWidth={1.8} />,
+              panel: <EquipmentSearchBar variant="hero" tabbed />,
+            },
+          ]}
+        />
       </div>
 
       {/* Popular brands */}
