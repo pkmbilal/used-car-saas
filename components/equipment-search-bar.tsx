@@ -27,12 +27,10 @@ export async function EquipmentSearchBar({
   filters,
   className,
   variant = "default",
-  tabbed = false,
 }: {
   filters?: ListingFilters;
   className?: string;
   variant?: Variant;
-  tabbed?: boolean;
 }) {
   const hero = variant === "hero";
   const style = styles[variant];
@@ -43,7 +41,7 @@ export async function EquipmentSearchBar({
   const equipmentTypes = filters?.equipmentTypes ?? [];
 
   return (
-    <SearchCard variant={variant} tabbed={tabbed} className={className}>
+    <SearchCard variant={variant} className={className}>
       <form
         method="get"
         action={localizePath(locale, "/rentals")}
@@ -76,6 +74,7 @@ export async function EquipmentSearchBar({
         <Field id="search-price" label={label(Wallet, t.search.maxPrice)} variant={variant}>
           <FormSelect
             id="search-price"
+            popover={hero}
             name="max_price"
             defaultValue={filters?.maxPrice?.toString()}
             placeholder={t.search.anyPrice}

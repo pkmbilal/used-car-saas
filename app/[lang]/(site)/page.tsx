@@ -135,7 +135,7 @@ export default async function Home() {
               key: "equipment",
               label: t.home.tabEquipmentRental,
               icon: <Truck strokeWidth={1.8} />,
-              panel: <EquipmentSearchBar variant="hero" tabbed />,
+              panel: <EquipmentSearchBar variant="hero" />,
             },
           ]}
         />

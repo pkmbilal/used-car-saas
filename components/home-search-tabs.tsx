@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useRef, useState } from "react";
+import { useId, useLayoutEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 
 export type SearchTab = {
@@ -16,7 +16,40 @@ export type SearchTab = {
 export function HomeSearchTabs({ tabs, label }: { tabs: SearchTab[]; label: string }) {
   const [active, setActive] = useState(0);
   const refs = useRef<(HTMLButtonElement | null)[]>([]);
+  const listRef = useRef<HTMLDivElement>(null);
   const id = useId();
+  // Which top corners of the card the active tab sits over; those get squared
+  // so the tab joins the card without a curved gap.
+  const [corners, setCorners] = useState({ start: true, end: false });
+
+  useLayoutEffect(() => {
+    const list = listRef.current;
+    if (!list) return;
+    function measure() {
+      const tab = refs.current[active];
+      if (!list || !tab) return;
+      const l = list.getBoundingClientRect();
+      const b = tab.getBoundingClientRect();
+      const rtl = getComputedStyle(list).direction === "rtl";
+      const left = b.left <= l.left + 1;
+      const right = b.right >= l.right - 1;
+      const next = { start: rtl ? right : left, end: rtl ? left : right };
+      setCorners((prev) => (prev.start === next.start && prev.end === next.end ? prev : next));
+    }
+    measure();
+    list.addEventListener("scroll", measure, { passive: true });
+    window.addEventListener("resize", measure);
+    return () => {
+      list.removeEventListener("scroll", measure);
+      window.removeEventListener("resize", measure);
+    };
+  }, [active]);
+
+  function select(index: number) {
+    setActive(index);
+    // Bring a part-hidden tab (e.g. the last one on phones) fully into view.
+    refs.current[index]?.scrollIntoView({ block: "nearest", inline: "nearest" });
+  }
 
   function onKeyDown(event: React.KeyboardEvent) {
     const rtl = document.documentElement.dir === "rtl";
@@ -27,13 +60,16 @@ export function HomeSearchTabs({ tabs, label }: { tabs: SearchTab[]; label: stri
     else if (event.key === "End") next = tabs.length - 1;
     if (next === undefined) return;
     event.preventDefault();
-    setActive(next);
+    select(next);
     refs.current[next]?.focus();
   }
 
   return (
     <>
-      <div role="tablist" aria-label={label} onKeyDown={onKeyDown} className="relative flex gap-1 overflow-x-auto">
+      <div role="tablist" aria-label={label} ref={listRef}
+        onKeyDown={onKeyDown}
+        className="relative flex gap-1 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+      >
         {tabs.map((tab, index) => {
           const current = index === active;
           return (
@@ -48,7 +84,7 @@ export function HomeSearchTabs({ tabs, label }: { tabs: SearchTab[]; label: stri
               aria-selected={current}
               aria-controls={`${id}-panel`}
               tabIndex={current ? 0 : -1}
-              onClick={() => setActive(index)}
+              onClick={() => select(index)}
               className={cn(
                 "flex shrink-0 items-center gap-2 rounded-t-xl px-3.5 py-2.5 text-xs font-semibold whitespace-nowrap transition outline-none focus-visible:ring-2 focus-visible:ring-lime/60 focus-visible:ring-inset sm:px-5 sm:text-sm [&_svg]:size-4",
                 current ? "bg-white text-ink [&_svg]:text-brand" : "bg-white/10 text-white/80 hover:bg-white/15 hover:text-white",
@@ -60,7 +96,14 @@ export function HomeSearchTabs({ tabs, label }: { tabs: SearchTab[]; label: stri
           );
         })}
       </div>
-      <div role="tabpanel" id={`${id}-panel`} aria-labelledby={`${id}-tab-${tabs[active].key}`}>
+      <div
+        role="tabpanel"
+        id={`${id}-panel`}
+        aria-labelledby={`${id}-tab-${tabs[active].key}`}
+        data-start={corners.start || undefined}
+        data-end={corners.end || undefined}
+        className="[&[data-end]>*]:rounded-se-none [&[data-start]>*]:rounded-ss-none"
+      >
         {tabs[active].panel}
       </div>
     </>

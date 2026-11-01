@@ -6,3 +6,131 @@
 [   42055ms] [LOG] [Fast Refresh] done in 151ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:776
 [   44897ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:776
 [   44916ms] [LOG] [Fast Refresh] done in 120ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:776
+[ 1009216ms] [ERROR] WebSocket connection to 'ws://localhost:3000/_next/hmr?id=U9-hJeACsPBcMoiHqUP1-' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_0_90u2t._.js:16348
+[ 1010223ms] [ERROR] WebSocket connection to 'ws://localhost:3000/_next/hmr?id=U9-hJeACsPBcMoiHqUP1-' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_0_90u2t._.js:16348
+[ 1011237ms] [ERROR] WebSocket connection to 'ws://localhost:3000/_next/hmr?id=U9-hJeACsPBcMoiHqUP1-' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_0_90u2t._.js:16348
+[ 1017377ms] [LOG] [HMR] connected @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:776
+[ 1020386ms] [WARNING] The resource http://localhost:3000/_next/static/chunks/app_globals_0yg4wg8.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3000/ar:0
+[ 1035083ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:776
+[ 1035168ms] [LOG] [HMR] connected @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:776
+[ 1035851ms] [LOG] %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:776
+[ 1035855ms] [LOG] %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {route: /[lang], path: /ar} @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:776
+[ 1035861ms] [LOG] %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {route: /[lang], path: /ar} @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:776
+[ 1035861ms] [LOG] %c[Vercel Web Analytics]%c [view] http://localhost:3000/ar color: rgb(120, 120, 120) color: inherit {o: http://localhost:3000/ar, sv: 0.1.3, sdkn: @vercel/analytics/next, sdkv: 2.0.1, dp: /[lang]} /_vercel/insights/view @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:776
+[ 1035862ms] [LOG] %c[Vercel Web Analytics]%c [view] http://localhost:3000/ar color: rgb(120, 120, 120) color: inherit {o: http://localhost:3000/ar, sv: 0.1.3, sdkn: @vercel/analytics/next, sdkv: 2.0.1, dp: /[lang]} /_vercel/insights/view @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:776
+[ 1036922ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:776
+[ 1037163ms] [LOG] [Fast Refresh] done in 347ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:776
+[ 1040025ms] [WARNING] The resource http://localhost:3000/_next/static/chunks/app_globals_0yg4wg8.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3000/ar:0
+[ 1098643ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:776
+[ 1098661ms] [LOG] [Fast Refresh] done in 125ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:776
+[ 1098878ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:776
+[ 1098939ms] [LOG] [Fast Refresh] done in 173ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:776
+[ 1099283ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:776
+[ 1099345ms] [LOG] [Fast Refresh] done in 167ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:776
+[ 1100491ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:776
+[ 1100566ms] [LOG] [Fast Refresh] done in 179ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:776
+[ 1225050ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:776
+[ 1225087ms] [LOG] [Fast Refresh] done in 159ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:776
+[ 1225687ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:776
+[ 1225755ms] [LOG] [Fast Refresh] done in 184ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:776
+[ 1226127ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:776
+[ 1226144ms] [LOG] [Fast Refresh] done in 118ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:776
+[ 1331405ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:776
+[ 1334509ms] [WARNING] The resource http://localhost:3000/_next/static/chunks/app_globals_0yg4wg8.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3000/ar:0
+[ 1359789ms] [LOG] [Fast Refresh] done in 21040ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:776
+[ 1359790ms] [LOG] [Fast Refresh] done in 21040ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:776
+[ 1359791ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:776
+[ 1368821ms] [LOG] [Fast Refresh] done in 9016ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:776
+[ 1368824ms] [LOG] [Fast Refresh] done in 9016ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:776
+[ 1374035ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:776
+[ 1384744ms] [LOG] [Fast Refresh] done in 6058ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:776
+[ 1387914ms] [ERROR] ./components/searchable-select.tsx:191:16
+Error: Expected '</', got 'ident'
+  189 |             />
+  190 |           </div>
+> 191 |           <div ref={listRef} id={listId} role="listbox" className="max-h-64 overflow-y-auto p-1">
+      |                ^^^
+  192 |             {items.length === 0 ? (
+  193 |               <p className="px-3 py-6 text-center text-zinc-500">{emptyText}</p>
+  194 |             ) : (
+
+Parsing ecmascript source code failed
+
+Generated code of loaders [next/dist/build/babel/loader] transform of file content of components/searchable-select.tsx:
+./components/searchable-select.tsx:191:16
+  189 |             />
+  190 |           </div>
+> 191 |           <div ref={listRef} id={listId} role="listbox" className="max-h-64 overflow-y-auto p-1">
+      |                ^^^
+  192 |             {items.length === 0 ? (
+  193 |               <p className="px-3 py-6 text-center text-zinc-500">{emptyText}</p>
+  194 |             ) : (
+
+Import traces:
+  Client Component Browser:
+    ./components/searchable-select.tsx [Client Component Browser]
+    ./components/make-model-selects.tsx [Client Component Browser]
+    ./components/make-model-selects.tsx [Server Component]
+    ./components/search-bar.tsx [Server Component]
+    ./app/[lang]/(site)/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/searchable-select.tsx [Client Component SSR]
+    ./components/make-model-selects.tsx [Client Component SSR]
+    ./components/make-model-selects.tsx [Server Component]
+    ./components/search-bar.tsx [Server Component]
+    ./app/[lang]/(site)/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:1052
+[ 1387946ms] [ERROR] ./components/searchable-select.tsx:191:16
+Error: Expected '</', got 'ident'
+  189 |             />
+  190 |           </div>
+> 191 |           <div ref={listRef} id={listId} role="listbox" className="max-h-64 overflow-y-auto p-1">
+      |                ^^^
+  192 |             {items.length === 0 ? (
+  193 |               <p className="px-3 py-6 text-center text-zinc-500">{emptyText}</p>
+  194 |             ) : (
+
+Parsing ecmascript source code failed
+
+Generated code of loaders [next/dist/build/babel/loader] transform of file content of components/searchable-select.tsx:
+./components/searchable-select.tsx:191:16
+  189 |             />
+  190 |           </div>
+> 191 |           <div ref={listRef} id={listId} role="listbox" className="max-h-64 overflow-y-auto p-1">
+      |                ^^^
+  192 |             {items.length === 0 ? (
+  193 |               <p className="px-3 py-6 text-center text-zinc-500">{emptyText}</p>
+  194 |             ) : (
+
+Import traces:
+  Client Component Browser:
+    ./components/searchable-select.tsx [Client Component Browser]
+    ./components/make-model-selects.tsx [Client Component Browser]
+    ./components/make-model-selects.tsx [Server Component]
+    ./components/search-bar.tsx [Server Component]
+    ./app/[lang]/(site)/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/searchable-select.tsx [Client Component SSR]
+    ./components/make-model-selects.tsx [Client Component SSR]
+    ./components/make-model-selects.tsx [Server Component]
+    ./components/search-bar.tsx [Server Component]
+    ./app/[lang]/(site)/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:1052
+[ 1389237ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:776
+[ 1389408ms] [LOG] [Fast Refresh] done in 1448ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:776
+[ 1389459ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:776
+[ 1389603ms] [LOG] [Fast Refresh] done in 40ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:776
+[ 1389611ms] [LOG] [Fast Refresh] done in 40ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:776
+[ 1389615ms] [LOG] [Fast Refresh] done in 40ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:776
+[ 1389735ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:776
+[ 1389932ms] [LOG] [Fast Refresh] done in 175ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:776
+[ 1389942ms] [LOG] [Fast Refresh] done in 175ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:776
+[ 1390161ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:776
+[ 1390273ms] [LOG] [Fast Refresh] done in 206ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:776
+[ 1390280ms] [LOG] [Fast Refresh] done in 206ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:776
+[ 1390296ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:776
+[ 1390386ms] [LOG] [Fast Refresh] done in 17ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:776
+[ 1394714ms] [LOG] [Fast Refresh] done in 17ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:776
+[ 1394795ms] [WARNING] The resource http://localhost:3000/_next/static/chunks/app_globals_0yg4wg8.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3000/ar:0
+[ 1394796ms] [LOG] [Fast Refresh] done in 17ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:776
+[ 1403547ms] [WARNING] The resource http://localhost:3000/_next/static/chunks/app_globals_0yg4wg8.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3000/ar:0

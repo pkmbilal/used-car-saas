@@ -82,16 +82,14 @@ export function Field({
 }
 
 
-// The card around a search form, shared with the equipment bar.
-// `tabbed` squares the top-start corner so it joins the active folder tab.
+// The card around a search form, shared with the equipment bar. Under the home
+// folder tabs, HomeSearchTabs squares the corner below the active tab.
 export function SearchCard({
   variant,
-  tabbed = false,
   className,
   children,
 }: {
   variant: Variant;
-  tabbed?: boolean;
   className?: string;
   children: React.ReactNode;
 }) {
@@ -102,7 +100,6 @@ export function SearchCard({
         variant === "hero"
           ? "overflow-hidden rounded-2xl shadow-[0_1px_2px_rgba(15,34,25,.06),0_30px_60px_-20px_rgba(15,34,25,.3)] ring-1 ring-black/5"
           : "rounded-xl shadow-[0_10px_30px_rgba(20,30,25,.08)]",
-        tabbed && "rounded-ss-none",
         className,
       )}
     >
@@ -154,7 +151,7 @@ export async function SearchBar({
   const yearLabel = (year: number) => fmt(t.search.yearAndNewer, { year });
 
   return (
-    <SearchCard variant={variant} tabbed={tabbed} className={className}>
+    <SearchCard variant={variant} className={className}>
       {hero && !tabbed && (
         <div className="flex items-center justify-between gap-4 border-b border-line px-5 py-3.5">
           <span className="flex items-center gap-2 text-eyebrow font-semibold tracking-[0.2em] text-ink">
@@ -185,6 +182,7 @@ export async function SearchBar({
         >
           <FormSelect
             id="search-price"
+            popover={hero}
             name="max_price"
             defaultValue={filters?.maxPrice?.toString()}
             placeholder={t.search.anyPrice}
@@ -203,6 +201,7 @@ export async function SearchBar({
         >
           <FormSelect
             id="search-year"
+            popover={hero}
             name="min_year"
             defaultValue={filters?.minYear?.toString()}
             placeholder={t.search.anyYear}
