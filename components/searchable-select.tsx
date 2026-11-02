@@ -25,6 +25,7 @@ export function SearchableSelect({
   placeholder,
   searchPlaceholder,
   emptyText,
+  searchable = true,
   required,
   disabled,
   customOption,
@@ -38,8 +39,10 @@ export function SearchableSelect({
   onValueChange: (value: string) => void;
   options: readonly SearchableOption[];
   placeholder: string;
-  searchPlaceholder: string;
-  emptyText: string;
+  searchPlaceholder?: string;
+  emptyText?: string;
+  // False hides the search box (a plain dropdown with the same look).
+  searchable?: boolean;
   required?: boolean;
   disabled?: boolean;
   // Label for a "use what I typed" row, or undefined to hide it.
@@ -79,6 +82,20 @@ export function SearchableSelect({
     const next = (active + delta + items.length) % items.length;
     setActive(next);
     listRef.current?.querySelector<HTMLElement>(`[data-index="${next}"]`)?.scrollIntoView({ block: "nearest" });
+  }
+
+  function onKeyDown(event: React.KeyboardEvent) {
+    if (event.key === "ArrowDown") {
+      event.preventDefault();
+      move(1);
+    } else if (event.key === "ArrowUp") {
+      event.preventDefault();
+      move(-1);
+    } else if (event.key === "Enter" || (!searchable && event.key === " ")) {
+      event.preventDefault();
+      const item = items[active];
+      if (item) choose(item.value);
+    }
   }
 
   return (
@@ -137,9 +154,11 @@ export function SearchableSelect({
           )}
           onOpenAutoFocus={(event) => {
             event.preventDefault();
-            (event.currentTarget as HTMLElement).querySelector("input")?.focus();
+            if (searchable) (event.currentTarget as HTMLElement).querySelector("input")?.focus();
+            else listRef.current?.focus();
           }}
         >
+          {searchable && (
           <div className="flex items-center gap-2 border-b border-line px-3 dark:border-zinc-700">
             <SearchIcon className="size-4 shrink-0 text-zinc-400" aria-hidden />
             <input
@@ -153,23 +172,20 @@ export function SearchableSelect({
                 setQuery(event.target.value);
                 setActive(0);
               }}
-              onKeyDown={(event) => {
-                if (event.key === "ArrowDown") {
-                  event.preventDefault();
-                  move(1);
-                } else if (event.key === "ArrowUp") {
-                  event.preventDefault();
-                  move(-1);
-                } else if (event.key === "Enter") {
-                  event.preventDefault();
-                  const item = items[active];
-                  if (item) choose(item.value);
-                }
-              }}
+              onKeyDown={onKeyDown}
               className="h-10 w-full bg-transparent text-base outline-none placeholder:text-zinc-400 sm:text-sm"
             />
           </div>
-          <div ref={listRef} id={listId} role="listbox" className="max-h-64 overflow-y-auto p-1">
+          )}
+          <div
+            ref={listRef}
+            id={listId}
+            role="listbox"
+            tabIndex={searchable ? undefined : -1}
+            aria-activedescendant={!searchable && items[active] ? `${listId}-${active}` : undefined}
+            onKeyDown={searchable ? undefined : onKeyDown}
+            className="max-h-64 overflow-y-auto p-1 outline-none"
+          >
             {items.length === 0 ? (
               <p className="px-3 py-6 text-center text-zinc-500">{emptyText}</p>
             ) : (

@@ -22,6 +22,7 @@ export function FormSelect({
   className,
   onValueChange,
   search,
+  popover,
 }: {
   id?: string;
   name: string;
@@ -34,10 +35,12 @@ export function FormSelect({
   onValueChange?: (value: string | undefined) => void;
   // Adds a search box that filters the options as you type.
   search?: { placeholder: string; emptyText: string };
+  // Use the searchable dropdown's look (popover panel) without the search box.
+  popover?: boolean;
 }) {
   const [value, setValue] = useState(defaultValue || ANY);
 
-  if (search) {
+  if (search || popover) {
     return (
       <SearchableSelect
         id={id}
@@ -48,8 +51,9 @@ export function FormSelect({
           onValueChange?.(next || undefined);
         }}
         placeholder={placeholder}
-        searchPlaceholder={search.placeholder}
-        emptyText={search.emptyText}
+        searchable={!!search}
+        searchPlaceholder={search?.placeholder}
+        emptyText={search?.emptyText}
         options={[{ value: "", label: placeholder }, ...options]}
         icon={icon}
         triggerClassName={cn(filterTriggerClass, className)}
