@@ -92,6 +92,13 @@ export const en = {
     privacy: "Privacy Policy",
     terms: "Terms of Use",
   },
+  pwa: {
+    install: "Install app",
+    iosTitle: "Install KarSouq",
+    iosIntro: "Add KarSouq to your Home Screen to open it like an app.",
+    iosStepShare: "Tap the Share button in Safari's toolbar.",
+    iosStepAdd: "Choose “Add to Home Screen”, then tap Add.",
+  },
   pagination: {
     label: "pagination",
     previous: "Previous",

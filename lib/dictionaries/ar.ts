@@ -119,6 +119,13 @@ export const ar: DictionaryShape<typeof en> = {
     privacy: "سياسة الخصوصية",
     terms: "شروط الاستخدام",
   },
+  pwa: {
+    install: "ثبّت التطبيق",
+    iosTitle: "تثبيت كارسوق",
+    iosIntro: "أضف كارسوق إلى الشاشة الرئيسية لفتحه كتطبيق.",
+    iosStepShare: "اضغط على زر المشاركة في شريط أدوات Safari.",
+    iosStepAdd: "اختر «إضافة إلى الشاشة الرئيسية» ثم اضغط إضافة.",
+  },
   pagination: {
     label: "التنقل بين الصفحات",
     previous: "السابق",

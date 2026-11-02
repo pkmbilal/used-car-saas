@@ -19,6 +19,7 @@ import { Avatar } from "@/components/avatar";
 import { BrandLink } from "@/components/brand";
 import { limeButton, outlineButton } from "@/components/header-styles";
 import { LanguageSwitcher } from "@/components/language-switcher";
+import { InstallAppButton } from "@/components/pwa/install-app-button";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -247,6 +248,7 @@ export function MobileNav({ links, signedIn }: { links: HeaderLink[]; signedIn: 
             </SheetClose>
           ))}
           <LanguageSwitcher variant="row" />
+          <InstallAppButton className={`${linkClass} flex items-center gap-2 text-start`} />
         </nav>
         <Separator className="bg-white/10" />
         <div className="flex gap-3 px-4">

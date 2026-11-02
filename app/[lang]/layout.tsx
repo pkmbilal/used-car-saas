@@ -4,6 +4,7 @@ import { Analytics } from "@vercel/analytics/next";
 import { notFound } from "next/navigation";
 import { DirectionProvider } from "@/components/direction-provider";
 import { I18nProvider } from "@/components/i18n-provider";
+import { ServiceWorkerRegister } from "@/components/pwa/service-worker-register";
 import { Toaster } from "@/components/ui/sonner";
 import { dictionaries } from "@/lib/dictionaries";
 import { figtree, plexArabic, poppins } from "@/lib/fonts";
@@ -19,6 +20,8 @@ export async function generateMetadata({ params }: LayoutProps<"/[lang]">): Prom
     metadataBase: siteUrl(),
     title: t.meta.siteTitle,
     description: t.meta.siteDescription,
+    manifest: "/manifest.webmanifest",
+    appleWebApp: { capable: true, title: "KarSouq", statusBarStyle: "default" },
   };
 }
 
@@ -54,6 +57,7 @@ export default async function RootLayout({ children, params }: LayoutProps<"/[la
           </I18nProvider>
         </DirectionProvider>
         <Analytics />
+        <ServiceWorkerRegister />
       </body>
       {/* Only set in production, so dev/preview traffic stays out of GA. */}
       {process.env.NEXT_PUBLIC_GA_ID && <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID} />}
