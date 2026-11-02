@@ -86,7 +86,9 @@ export function HomeSearchTabs({ tabs, label }: { tabs: SearchTab[]; label: stri
               tabIndex={current ? 0 : -1}
               onClick={() => select(index)}
               className={cn(
-                "flex shrink-0 items-center gap-2 rounded-t-xl px-3.5 py-2.5 text-xs font-semibold whitespace-nowrap transition outline-none focus-visible:ring-2 focus-visible:ring-lime/60 focus-visible:ring-inset sm:px-5 sm:text-sm [&_svg]:size-4",
+                // Phones: three equal columns, icon over a label that may wrap, so no
+                // tab is cut off. sm+: natural-width row.
+                "flex min-w-0 flex-1 flex-col items-center justify-center gap-1 rounded-t-xl px-2 py-2 text-center text-[11px] leading-tight font-semibold transition outline-none focus-visible:ring-2 focus-visible:ring-lime/60 focus-visible:ring-inset sm:flex-none sm:shrink-0 sm:flex-row sm:gap-2 sm:px-5 sm:py-2.5 sm:text-sm sm:whitespace-nowrap [&_svg]:size-4 [&_svg]:shrink-0",
                 current ? "bg-white text-ink [&_svg]:text-brand" : "bg-white/10 text-white/80 hover:bg-white/15 hover:text-white",
               )}
             >
