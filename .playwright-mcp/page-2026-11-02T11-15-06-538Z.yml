@@ -1,0 +1,202 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - navigation [ref=e3]:
+      - link [ref=e4] [cursor=pointer]:
+        - /url: /en
+        - img "KarSouq" [ref=e5]
+      - button "Menu" [ref=e7] [cursor=pointer]
+  - navigation "Main" [ref=e8]:
+    - list [ref=e9]:
+      - listitem [ref=e10]:
+        - link "Home" [ref=e11] [cursor=pointer]:
+          - /url: /en
+      - listitem [ref=e15]:
+        - link "Buy" [ref=e16] [cursor=pointer]:
+          - /url: /en/listings
+      - listitem [ref=e20]:
+        - link "Sell" [ref=e21] [cursor=pointer]:
+          - /url: /en/account/become-seller
+      - listitem [ref=e24]:
+        - link "Saved" [ref=e25] [cursor=pointer]:
+          - /url: /en/favorites
+      - listitem [ref=e28]:
+        - link "Sign in" [ref=e29] [cursor=pointer]:
+          - /url: /en/login
+  - main [ref=e34]:
+    - generic [ref=e39]:
+      - paragraph [ref=e40]: USED CARS IN SAUDI ARABIA
+      - heading "Find your next ride with confidence" [level=1] [ref=e42]
+      - paragraph [ref=e43]: Browse used cars from private sellers and dealers across the Kingdom, and talk to them directly.
+      - generic [ref=e44]:
+        - link "Browse Cars" [ref=e45] [cursor=pointer]:
+          - /url: /en/listings
+        - link "Sell Your Car" [ref=e47] [cursor=pointer]:
+          - /url: /en/account/become-seller
+      - list [ref=e49]:
+        - listitem [ref=e51]:
+          - generic [ref=e56]: Verified Sellers
+        - listitem [ref=e58]:
+          - generic [ref=e62]: Direct on WhatsApp
+    - generic [ref=e64]:
+      - tablist "Search type" [ref=e65]:
+        - tab "Buy Car" [selected] [ref=e66] [cursor=pointer]
+        - tab "Car Rental" [ref=e70] [cursor=pointer]
+        - tab "Equipment Rental" [ref=e74] [cursor=pointer]
+      - tabpanel "Buy Car" [ref=e80]:
+        - generic [ref=e82]:
+          - generic [ref=e83]:
+            - generic [ref=e84]: Make
+            - button "Make" [ref=e89] [cursor=pointer]:
+              - generic [ref=e90]: Any Make
+          - generic [ref=e94]:
+            - generic [ref=e95]: Model
+            - button "Model" [disabled] [ref=e101]:
+              - generic [ref=e102]: Any Model
+          - generic [ref=e106]:
+            - generic [ref=e107]: Max Price
+            - button "Max Price" [ref=e112] [cursor=pointer]:
+              - generic [ref=e113]: Any Price
+          - generic [ref=e117]:
+            - generic [ref=e118]: Year
+            - button "Year" [ref=e122] [cursor=pointer]:
+              - generic [ref=e123]: Any Year
+          - generic [ref=e127]:
+            - generic [ref=e128]: Location
+            - button "Location" [ref=e133] [cursor=pointer]:
+              - generic [ref=e134]: Any Location
+          - button "Search Cars" [ref=e139] [cursor=pointer]
+    - generic [ref=e140]:
+      - generic [ref=e141]:
+        - generic [ref=e142]:
+          - paragraph [ref=e143]: QUICK BROWSE
+          - heading "Popular Brands" [level=2] [ref=e145]
+        - link "All Brands" [ref=e146] [cursor=pointer]:
+          - /url: /en/brands
+          - generic [ref=e147]: See all
+      - generic [ref=e150]:
+        - link "Toyota 0 cars" [ref=e151] [cursor=pointer]:
+          - /url: /en/brands/toyota
+          - generic [ref=e153]:
+            - generic [ref=e154]: Toyota
+            - generic [ref=e155]: 0 cars
+        - link "Hyundai 0 cars" [ref=e156] [cursor=pointer]:
+          - /url: /en/brands/hyundai
+          - generic [ref=e158]:
+            - generic [ref=e159]: Hyundai
+            - generic [ref=e160]: 0 cars
+        - link "Nissan 0 cars" [ref=e161] [cursor=pointer]:
+          - /url: /en/brands/nissan
+          - generic [ref=e163]:
+            - generic [ref=e164]: Nissan
+            - generic [ref=e165]: 0 cars
+        - link "Lexus 0 cars" [ref=e166] [cursor=pointer]:
+          - /url: /en/brands/lexus
+          - generic [ref=e168]:
+            - generic [ref=e169]: Lexus
+            - generic [ref=e170]: 0 cars
+        - link "Mercedes-Benz 0 cars" [ref=e171] [cursor=pointer]:
+          - /url: /en/brands/mercedes-benz
+          - generic [ref=e173]:
+            - generic [ref=e174]: Mercedes-Benz
+            - generic [ref=e175]: 0 cars
+        - link "BMW 0 cars" [ref=e176] [cursor=pointer]:
+          - /url: /en/brands/bmw
+          - generic [ref=e178]:
+            - generic [ref=e179]: BMW
+            - generic [ref=e180]: 0 cars
+        - link "Ford 0 cars" [ref=e181] [cursor=pointer]:
+          - /url: /en/brands/ford
+          - generic [ref=e183]:
+            - generic [ref=e184]: Ford
+            - generic [ref=e185]: 0 cars
+        - link "Kia 0 cars" [ref=e186] [cursor=pointer]:
+          - /url: /en/brands/kia
+          - generic [ref=e188]:
+            - generic [ref=e189]: Kia
+            - generic [ref=e190]: 0 cars
+      - generic [ref=e191]:
+        - generic [ref=e192]: FUEL TYPE
+        - link "Petrol 0" [ref=e193] [cursor=pointer]:
+          - /url: /en/listings?fuel_type=petrol
+          - text: Petrol
+          - generic [ref=e194]: "0"
+        - link "Diesel 0" [ref=e195] [cursor=pointer]:
+          - /url: /en/listings?fuel_type=diesel
+          - text: Diesel
+          - generic [ref=e196]: "0"
+        - link "Hybrid 0" [ref=e197] [cursor=pointer]:
+          - /url: /en/listings?fuel_type=hybrid
+          - text: Hybrid
+          - generic [ref=e198]: "0"
+        - link "Electric 0" [ref=e199] [cursor=pointer]:
+          - /url: /en/listings?fuel_type=electric
+          - text: Electric
+          - generic [ref=e200]: "0"
+    - generic [ref=e202]:
+      - generic [ref=e203]:
+        - generic [ref=e204]:
+          - paragraph [ref=e205]: JUST LISTED
+          - heading "Latest Cars" [level=2] [ref=e207]
+        - link "View All Cars" [ref=e208] [cursor=pointer]:
+          - /url: /en/listings
+          - generic [ref=e209]: See all
+      - paragraph [ref=e213]: No cars listed yet.
+    - generic [ref=e214]:
+      - generic [ref=e216]:
+        - paragraph [ref=e217]: HOW IT WORKS
+        - heading "Simple Steps, Either Way" [level=2] [ref=e219]
+      - generic [ref=e220]:
+        - generic [ref=e221]:
+          - paragraph [ref=e222]: FOR BUYERS
+          - paragraph [ref=e224]: Find and buy a used car without the guesswork.
+          - list [ref=e225]:
+            - listitem [ref=e226]:
+              - generic [ref=e227]: "01"
+              - paragraph [ref=e228]: Search
+              - paragraph [ref=e229]: Filter listings by make, price, year, fuel type and city.
+            - listitem [ref=e230]:
+              - generic [ref=e231]: "02"
+              - paragraph [ref=e232]: Shortlist
+              - paragraph [ref=e233]: Save cars you like to your favorites and come back to them anytime.
+            - listitem [ref=e234]:
+              - generic [ref=e235]: "03"
+              - paragraph [ref=e236]: Contact Seller
+              - paragraph [ref=e237]: Message the seller on WhatsApp or call them to arrange a viewing.
+            - listitem [ref=e238]:
+              - generic [ref=e239]: "04"
+              - paragraph [ref=e240]: Buy Your Car
+              - paragraph [ref=e241]: Inspect the car, agree on a price and drive away.
+          - link "Browse Cars" [ref=e243] [cursor=pointer]:
+            - /url: /en/listings
+        - generic [ref=e244]:
+          - paragraph [ref=e245]: FOR SELLERS
+          - paragraph [ref=e247]: List your car in minutes and reach buyers across Saudi Arabia.
+          - list [ref=e248]:
+            - listitem [ref=e249]:
+              - generic [ref=e250]: "01"
+              - paragraph [ref=e251]: Create Listing
+              - paragraph [ref=e252]: Sign up as a seller and start a listing.
+            - listitem [ref=e253]:
+              - generic [ref=e254]: "02"
+              - paragraph [ref=e255]: Add Details
+              - paragraph [ref=e256]: Upload photos and add mileage, condition and your asking price.
+            - listitem [ref=e257]:
+              - generic [ref=e258]: "03"
+              - paragraph [ref=e259]: Get Buyer Leads
+              - paragraph [ref=e260]: Buyers contact you directly by WhatsApp or phone.
+            - listitem [ref=e261]:
+              - generic [ref=e262]: "04"
+              - paragraph [ref=e263]: Sell Your Car
+              - paragraph [ref=e264]: Agree on a price, hand over the keys and mark it as sold.
+          - generic [ref=e265]:
+            - generic [ref=e266]: Free plan available. Dealer plans for bigger inventories.
+            - link "Start Listing" [ref=e267] [cursor=pointer]:
+              - /url: /en/account/become-seller
+    - generic [ref=e271]:
+      - generic [ref=e272]:
+        - paragraph [ref=e273]: READY TO SELL?
+        - paragraph [ref=e275]: Turn your car into cash
+        - paragraph [ref=e276]: List your car in minutes and reach buyers in Riyadh, Jeddah, Mecca and beyond.
+      - link "Sell Your Car" [ref=e277] [cursor=pointer]:
+        - /url: /en/account/become-seller
+  - region "Notifications alt+T"

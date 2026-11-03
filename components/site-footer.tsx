@@ -1,5 +1,6 @@
 import Link from "@/components/locale-link";
 import { BrandLink } from "@/components/brand";
+import { InstallAppButton } from "@/components/pwa/install-app-button";
 import { makeName } from "@/lib/car-names";
 import { citiesByCount, cityHref } from "@/lib/cities";
 import { COMPANY_NAME } from "@/lib/contact";
@@ -60,6 +61,7 @@ export async function SiteFooter() {
         <div className="col-span-2 flex flex-col gap-4 md:col-span-1">
           <BrandLink />
           <p className="max-w-64 text-xs leading-relaxed max-sm:text-sm text-white/70">{t.footer.blurb}</p>
+          <InstallAppButton className="flex w-fit items-center gap-2 rounded-full px-3 py-1.5 text-xs font-medium text-white ring-1 ring-white/25 hover:text-lime hover:ring-lime/50" />
         </div>
         {columns.map((column) => (
           <div key={column.title} className="flex flex-col gap-3">
