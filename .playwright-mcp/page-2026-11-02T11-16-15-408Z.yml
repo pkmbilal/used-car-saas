@@ -1,0 +1,200 @@
+- generic [ref=f1e1]:
+  - banner [ref=f1e2]:
+    - navigation [ref=f1e3]:
+      - link [ref=f1e4] [cursor=pointer]:
+        - /url: /ar
+        - img "KarSouq" [ref=f1e5]
+      - button "القائمة" [ref=f1e7] [cursor=pointer]
+  - navigation "التنقل الرئيسي" [ref=f1e8]:
+    - list [ref=f1e9]:
+      - listitem [ref=f1e10]:
+        - link "الرئيسية" [ref=f1e11] [cursor=pointer]:
+          - /url: /ar
+      - listitem [ref=f1e15]:
+        - link "شراء" [ref=f1e16] [cursor=pointer]:
+          - /url: /ar/listings
+      - listitem [ref=f1e20]:
+        - link "بيع" [ref=f1e21] [cursor=pointer]:
+          - /url: /ar/account/become-seller
+      - listitem [ref=f1e24]:
+        - link "المحفوظة" [ref=f1e25] [cursor=pointer]:
+          - /url: /ar/favorites
+      - listitem [ref=f1e28]:
+        - link "دخول" [ref=f1e29] [cursor=pointer]:
+          - /url: /ar/login
+  - main [ref=f1e34]:
+    - generic [ref=f1e39]:
+      - paragraph [ref=f1e40]: سيارات مستعملة في السعودية
+      - heading "ابحث عن سيارتك القادمة بثقة" [level=1] [ref=f1e42]
+      - paragraph [ref=f1e43]: تصفّح السيارات المستعملة من البائعين الأفراد والمعارض في جميع أنحاء المملكة، وتواصل معهم مباشرة.
+      - generic [ref=f1e44]:
+        - link "تصفّح السيارات" [ref=f1e45] [cursor=pointer]:
+          - /url: /ar/listings
+        - link "بِع سيارتك" [ref=f1e47] [cursor=pointer]:
+          - /url: /ar/account/become-seller
+      - list [ref=f1e49]:
+        - listitem [ref=f1e51]:
+          - generic [ref=f1e56]: بائعون موثوقون
+        - listitem [ref=f1e58]:
+          - generic [ref=f1e62]: مباشرة عبر واتساب
+    - generic [ref=f1e64]:
+      - tablist "نوع البحث" [ref=f1e65]:
+        - tab "شراء سيارة" [ref=f1e66] [cursor=pointer]
+        - tab "تأجير سيارات" [ref=f1e70] [cursor=pointer]
+        - tab "تأجير معدات" [active] [selected] [ref=f1e74] [cursor=pointer]
+      - tabpanel "تأجير معدات" [ref=f1e289]:
+        - generic [ref=f1e82]:
+          - generic [ref=f1e106]:
+            - generic [ref=f1e107]: نوع المعدة
+            - button "نوع المعدة" [ref=f1e294] [cursor=pointer]:
+              - generic [ref=f1e113]: كل الأنواع
+          - generic [ref=f1e117]:
+            - generic [ref=f1e118]: العلامة التجارية
+            - button "العلامة التجارية" [ref=f1e297] [cursor=pointer]:
+              - generic [ref=f1e123]: كل العلامات
+          - generic [ref=f1e127]:
+            - generic [ref=f1e128]: أعلى سعر
+            - button "أعلى سعر" [ref=f1e300] [cursor=pointer]:
+              - generic [ref=f1e134]: أي سعر
+          - generic [ref=f1e138]:
+            - generic [ref=f1e301]: المدينة
+            - button "المدينة" [ref=f1e306] [cursor=pointer]:
+              - generic [ref=f1e307]: كل المدن
+          - button "ابحث عن المعدات" [ref=f1e312] [cursor=pointer]
+    - generic [ref=f1e140]:
+      - generic [ref=f1e141]:
+        - generic [ref=f1e142]:
+          - paragraph [ref=f1e143]: تصفّح سريع
+          - heading "الماركات الأكثر طلبًا" [level=2] [ref=f1e145]
+        - link "جميع الماركات" [ref=f1e146] [cursor=pointer]:
+          - /url: /ar/brands
+          - generic [ref=f1e147]: عرض الكل
+      - generic [ref=f1e150]:
+        - link "تويوتا لا توجد سيارات" [ref=f1e151] [cursor=pointer]:
+          - /url: /ar/brands/toyota
+          - generic [ref=f1e153]:
+            - generic [ref=f1e154]: تويوتا
+            - generic [ref=f1e155]: لا توجد سيارات
+        - link "هيونداي لا توجد سيارات" [ref=f1e156] [cursor=pointer]:
+          - /url: /ar/brands/hyundai
+          - generic [ref=f1e158]:
+            - generic [ref=f1e159]: هيونداي
+            - generic [ref=f1e160]: لا توجد سيارات
+        - link "نيسان لا توجد سيارات" [ref=f1e161] [cursor=pointer]:
+          - /url: /ar/brands/nissan
+          - generic [ref=f1e163]:
+            - generic [ref=f1e164]: نيسان
+            - generic [ref=f1e165]: لا توجد سيارات
+        - link "لكزس لا توجد سيارات" [ref=f1e166] [cursor=pointer]:
+          - /url: /ar/brands/lexus
+          - generic [ref=f1e168]:
+            - generic [ref=f1e169]: لكزس
+            - generic [ref=f1e170]: لا توجد سيارات
+        - link "مرسيدس-بنز لا توجد سيارات" [ref=f1e171] [cursor=pointer]:
+          - /url: /ar/brands/mercedes-benz
+          - generic [ref=f1e173]:
+            - generic [ref=f1e174]: مرسيدس-بنز
+            - generic [ref=f1e175]: لا توجد سيارات
+        - link "بي إم دبليو لا توجد سيارات" [ref=f1e176] [cursor=pointer]:
+          - /url: /ar/brands/bmw
+          - generic [ref=f1e178]:
+            - generic [ref=f1e179]: بي إم دبليو
+            - generic [ref=f1e180]: لا توجد سيارات
+        - link "فورد لا توجد سيارات" [ref=f1e181] [cursor=pointer]:
+          - /url: /ar/brands/ford
+          - generic [ref=f1e183]:
+            - generic [ref=f1e184]: فورد
+            - generic [ref=f1e185]: لا توجد سيارات
+        - link "كيا لا توجد سيارات" [ref=f1e186] [cursor=pointer]:
+          - /url: /ar/brands/kia
+          - generic [ref=f1e188]:
+            - generic [ref=f1e189]: كيا
+            - generic [ref=f1e190]: لا توجد سيارات
+      - generic [ref=f1e191]:
+        - generic [ref=f1e192]: نوع الوقود
+        - link "بنزين 0" [ref=f1e193] [cursor=pointer]:
+          - /url: /ar/listings?fuel_type=petrol
+          - text: بنزين
+          - generic [ref=f1e194]: "0"
+        - link "ديزل 0" [ref=f1e195] [cursor=pointer]:
+          - /url: /ar/listings?fuel_type=diesel
+          - text: ديزل
+          - generic [ref=f1e196]: "0"
+        - link "هجين 0" [ref=f1e197] [cursor=pointer]:
+          - /url: /ar/listings?fuel_type=hybrid
+          - text: هجين
+          - generic [ref=f1e198]: "0"
+        - link "كهربائي 0" [ref=f1e199] [cursor=pointer]:
+          - /url: /ar/listings?fuel_type=electric
+          - text: كهربائي
+          - generic [ref=f1e200]: "0"
+    - generic [ref=f1e202]:
+      - generic [ref=f1e203]:
+        - generic [ref=f1e204]:
+          - paragraph [ref=f1e205]: أضيفت حديثًا
+          - heading "أحدث السيارات" [level=2] [ref=f1e207]
+        - link "عرض جميع السيارات" [ref=f1e208] [cursor=pointer]:
+          - /url: /ar/listings
+          - generic [ref=f1e209]: عرض الكل
+      - paragraph [ref=f1e213]: لا توجد سيارات معروضة بعد.
+    - generic [ref=f1e214]:
+      - generic [ref=f1e216]:
+        - paragraph [ref=f1e217]: كيف يعمل
+        - heading "خطوات بسيطة للشراء والبيع" [level=2] [ref=f1e219]
+      - generic [ref=f1e220]:
+        - generic [ref=f1e221]:
+          - paragraph [ref=f1e222]: للمشترين
+          - paragraph [ref=f1e224]: ابحث عن سيارة مستعملة واشترِها دون عناء.
+          - list [ref=f1e225]:
+            - listitem [ref=f1e226]:
+              - generic [ref=f1e227]: "01"
+              - paragraph [ref=f1e228]: ابحث
+              - paragraph [ref=f1e229]: صفِّ الإعلانات حسب الماركة والسعر وسنة الصنع ونوع الوقود والمدينة.
+            - listitem [ref=f1e230]:
+              - generic [ref=f1e231]: "02"
+              - paragraph [ref=f1e232]: احفظ
+              - paragraph [ref=f1e233]: احفظ السيارات التي تعجبك في المفضلة وارجع إليها متى شئت.
+            - listitem [ref=f1e234]:
+              - generic [ref=f1e235]: "03"
+              - paragraph [ref=f1e236]: تواصل مع البائع
+              - paragraph [ref=f1e237]: راسل البائع عبر واتساب أو اتصل به لترتيب موعد للمعاينة.
+            - listitem [ref=f1e238]:
+              - generic [ref=f1e239]: "04"
+              - paragraph [ref=f1e240]: اشترِ سيارتك
+              - paragraph [ref=f1e241]: افحص السيارة واتفق على السعر وانطلق بها.
+          - link "تصفّح السيارات" [ref=f1e243] [cursor=pointer]:
+            - /url: /ar/listings
+        - generic [ref=f1e244]:
+          - paragraph [ref=f1e245]: للبائعين
+          - paragraph [ref=f1e247]: اعرض سيارتك في دقائق ووصل إلى المشترين في جميع أنحاء المملكة.
+          - list [ref=f1e248]:
+            - listitem [ref=f1e249]:
+              - generic [ref=f1e250]: "01"
+              - paragraph [ref=f1e251]: أنشئ إعلانًا
+              - paragraph [ref=f1e252]: سجّل كبائع وابدأ إعلانك.
+            - listitem [ref=f1e253]:
+              - generic [ref=f1e254]: "02"
+              - paragraph [ref=f1e255]: أضف التفاصيل
+              - paragraph [ref=f1e256]: ارفع الصور وأضف الممشى والحالة والسعر المطلوب.
+            - listitem [ref=f1e257]:
+              - generic [ref=f1e258]: "03"
+              - paragraph [ref=f1e259]: استقبل المشترين
+              - paragraph [ref=f1e260]: يتواصل معك المشترون مباشرة عبر واتساب أو الهاتف.
+            - listitem [ref=f1e261]:
+              - generic [ref=f1e262]: "04"
+              - paragraph [ref=f1e263]: بِع سيارتك
+              - paragraph [ref=f1e264]: اتفق على السعر وسلّم المفاتيح وحدّد الإعلان كمباع.
+          - generic [ref=f1e265]:
+            - generic [ref=f1e266]: باقة مجانية متاحة، وباقات للمعارض ذات المخزون الأكبر.
+            - link "ابدأ الإعلان" [ref=f1e267] [cursor=pointer]:
+              - /url: /ar/account/become-seller
+    - generic [ref=f1e271]:
+      - generic [ref=f1e272]:
+        - paragraph [ref=f1e273]: جاهز للبيع؟
+        - paragraph [ref=f1e275]: حوّل سيارتك إلى نقد
+        - paragraph [ref=f1e276]: اعرض سيارتك في دقائق ووصل إلى المشترين في الرياض، جدة، مكة المكرمة وغيرها.
+      - link "بِع سيارتك" [ref=f1e277] [cursor=pointer]:
+        - /url: /ar/account/become-seller
+  - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=f1e284] [cursor=pointer]
+  - alert [ref=f1e288]

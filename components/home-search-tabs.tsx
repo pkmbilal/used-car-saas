@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useLayoutEffect, useRef, useState } from "react";
+import { useId, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 
 export type SearchTab = {
@@ -16,34 +16,7 @@ export type SearchTab = {
 export function HomeSearchTabs({ tabs, label }: { tabs: SearchTab[]; label: string }) {
   const [active, setActive] = useState(0);
   const refs = useRef<(HTMLButtonElement | null)[]>([]);
-  const listRef = useRef<HTMLDivElement>(null);
   const id = useId();
-  // Which top corners of the card the active tab sits over; those get squared
-  // so the tab joins the card without a curved gap.
-  const [corners, setCorners] = useState({ start: true, end: false });
-
-  useLayoutEffect(() => {
-    const list = listRef.current;
-    if (!list) return;
-    function measure() {
-      const tab = refs.current[active];
-      if (!list || !tab) return;
-      const l = list.getBoundingClientRect();
-      const b = tab.getBoundingClientRect();
-      const rtl = getComputedStyle(list).direction === "rtl";
-      const left = b.left <= l.left + 1;
-      const right = b.right >= l.right - 1;
-      const next = { start: rtl ? right : left, end: rtl ? left : right };
-      setCorners((prev) => (prev.start === next.start && prev.end === next.end ? prev : next));
-    }
-    measure();
-    list.addEventListener("scroll", measure, { passive: true });
-    window.addEventListener("resize", measure);
-    return () => {
-      list.removeEventListener("scroll", measure);
-      window.removeEventListener("resize", measure);
-    };
-  }, [active]);
 
   function select(index: number) {
     setActive(index);
@@ -66,7 +39,7 @@ export function HomeSearchTabs({ tabs, label }: { tabs: SearchTab[]; label: stri
 
   return (
     <>
-      <div role="tablist" aria-label={label} ref={listRef}
+      <div role="tablist" aria-label={label}
         onKeyDown={onKeyDown}
         className="relative flex gap-1 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
@@ -102,9 +75,9 @@ export function HomeSearchTabs({ tabs, label }: { tabs: SearchTab[]; label: stri
         role="tabpanel"
         id={`${id}-panel`}
         aria-labelledby={`${id}-tab-${tabs[active].key}`}
-        data-start={corners.start || undefined}
-        data-end={corners.end || undefined}
-        className="[&[data-end]>*]:rounded-se-none [&[data-start]>*]:rounded-ss-none"
+        // Flat top corners, so every tab joins the card the same way. From sm up
+        // the tabs never reach the far (end) corner, so it stays rounded.
+        className="[&>*]:rounded-t-none sm:[&>*]:rounded-se-2xl"
       >
         {tabs[active].panel}
       </div>

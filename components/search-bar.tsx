@@ -83,7 +83,7 @@ export function Field({
 
 
 // The card around a search form, shared with the equipment bar. Under the home
-// folder tabs, HomeSearchTabs squares the corner below the active tab.
+// folder tabs, HomeSearchTabs flattens its top corners (sm+: only the start one).
 export function SearchCard({
   variant,
   className,
