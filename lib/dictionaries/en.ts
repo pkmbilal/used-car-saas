@@ -1374,6 +1374,12 @@ export const en = {
     closeMenu: "Close menu",
     viewSite: "View site",
     tutorials: "Video tutorials",
+    tutorialsPrompt: {
+      title: "New to Seller Center?",
+      body: "Short videos walk you through adding listings, CSV import, offers, bookings, your storefront and more.",
+      watch: "Watch tutorials",
+      later: "Maybe later",
+    },
     newListing: "New listing",
     notifications: {
       label: "Notifications",
