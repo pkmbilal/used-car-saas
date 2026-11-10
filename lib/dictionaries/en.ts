@@ -86,6 +86,7 @@ export const en = {
     sellYourCar: "Sell Your Car",
     pricing: "Pricing",
     sellerDashboard: "Seller Dashboard",
+    tutorials: "Dealer Tutorials",
     myAccount: "My Account",
     copyright: "© {year} KarSouq, a {company} product. All rights reserved.",
     contact: "Contact",
@@ -1038,6 +1039,27 @@ export const en = {
     whatsapp: "WhatsApp",
     chat: "Chat with our team",
   },
+  tutorials: {
+    metaTitle: "Dealer Tutorials | KarSouq",
+    metaDescription:
+      "Short video guides to the KarSouq dealer dashboard: add cars, import listings by CSV, handle offers and rental requests, and track your performance.",
+    eyebrow: "Video guides",
+    title: "Dealer tutorials",
+    intro:
+      "Short videos that walk you through every part of your dealer dashboard, from adding your first car to reading your insights.",
+    cta: "Become a dealer",
+    items: {
+      overview: { title: "Your dashboard at a glance", description: "Your plan, the menu, and your views and contacts for the last 7 days." },
+      listings: { title: "Manage your listings", description: "Card and list views, mark as sold, feature a car, refresh to top, and edit photos." },
+      "new-listing": { title: "Add a new car", description: "Fill in the make, model, specs, price and city, then continue to photos." },
+      import: { title: "Bulk import with CSV", description: "Download the template, add one car per row and import them as drafts." },
+      offers: { title: "Price offers", description: "See offers on your cars and accept, decline or counter them." },
+      bookings: { title: "Rental requests", description: "Accept or decline rental dates and reach the renter on WhatsApp." },
+      storefront: { title: "Your showroom page", description: "Add your logo, name, address and description for your public storefront." },
+      plan: { title: "Plan and add-ons", description: "Check your plan, its end date and how many listings you have left." },
+      insights: { title: "Insights", description: "Views, calls, WhatsApp clicks and saves per car over 7 or 30 days." },
+    },
+  },
   authPages: {
     email: "Email",
     password: "Password",
@@ -1351,6 +1373,7 @@ export const en = {
     openMenu: "Open menu",
     closeMenu: "Close menu",
     viewSite: "View site",
+    tutorials: "Video tutorials",
     newListing: "New listing",
     notifications: {
       label: "Notifications",

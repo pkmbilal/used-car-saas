@@ -49,6 +49,7 @@ export async function SiteFooter() {
       links: [
         [t.footer.sellYourCar, "/account/become-seller"],
         [t.footer.pricing, "/pricing"],
+        [t.footer.tutorials, "/tutorials"],
         [t.footer.sellerDashboard, "/dashboard"],
         [t.footer.myAccount, "/account"],
       ],
