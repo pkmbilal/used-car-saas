@@ -16,6 +16,7 @@ import {
   LayoutDashboard,
   Lock,
   Menu,
+  PlayCircle,
   Plus,
   Store,
   Upload,
@@ -157,6 +158,13 @@ function Sidebar({
         >
           <ExternalLink className="size-5 shrink-0" aria-hidden />
           {s.viewSite}
+        </Link>
+        <Link
+          href="/tutorials"
+          className="flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-white/80 hover:bg-white/10 hover:text-white"
+        >
+          <PlayCircle className="size-5 shrink-0" aria-hidden />
+          {s.tutorials}
         </Link>
       </div>
     </aside>
