@@ -86,7 +86,8 @@ export default async function SellerCenterLayout({ children }: LayoutProps<"/[la
   return (
     <SellerShell sections={sections} alerts={alerts} user={shellUser} accountLinks={accountLinks}>
       {children}
-      {dealer && !profile.tutorials_prompt_seen_at && <TutorialsPrompt />}
+      {/* === null, not falsy: before the migration the field is undefined, so no popup. */}
+      {dealer && profile.tutorials_prompt_seen_at === null && <TutorialsPrompt />}
     </SellerShell>
   );
 }
