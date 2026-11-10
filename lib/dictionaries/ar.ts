@@ -1626,6 +1626,12 @@ export const ar: DictionaryShape<typeof en> = {
     closeMenu: "إغلاق القائمة",
     viewSite: "عرض الموقع",
     tutorials: "شروحات بالفيديو",
+    tutorialsPrompt: {
+      title: "جديد على مركز البائع؟",
+      body: "فيديوهات قصيرة تشرح لك إضافة الإعلانات، والاستيراد عبر CSV، والعروض، والحجوزات، وصفحة معرضك، وغيرها.",
+      watch: "شاهد الشروحات",
+      later: "لاحقًا",
+    },
     newListing: "إعلان جديد",
     notifications: {
       label: "التنبيهات",

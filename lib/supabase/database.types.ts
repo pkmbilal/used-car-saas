@@ -36,6 +36,7 @@ export type Database = {
           has_phone: boolean | null;
           listing_credits: number;
           is_demo: boolean;
+          tutorials_prompt_seen_at: string | null;
           created_at: string;
         };
         Insert: {
@@ -58,6 +59,7 @@ export type Database = {
           has_phone?: never;
           listing_credits?: number;
           is_demo?: boolean;
+          tutorials_prompt_seen_at?: string | null;
           created_at?: string;
         };
         Update: {
@@ -80,6 +82,7 @@ export type Database = {
           has_phone?: never;
           listing_credits?: number;
           is_demo?: boolean;
+          tutorials_prompt_seen_at?: string | null;
           created_at?: string;
         };
         Relationships: [];
