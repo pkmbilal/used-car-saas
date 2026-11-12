@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { DealerCard } from "@/components/dealer-card";
 import { count } from "@/lib/dictionary";
 import { getDictionary } from "@/lib/i18n-server";
+import { getResponseStats, responsiveness } from "@/lib/responsiveness";
 import { getDealerStorefronts } from "@/lib/storefront";
 import { pageMetadata } from "@/lib/seo";
 
@@ -12,6 +13,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function DealersPage() {
   const dealers = await getDealerStorefronts();
+  const responseStats = await getResponseStats(dealers.map((dealer) => dealer.id));
   const { t, locale } = await getDictionary();
   const d = t.dealers;
 
@@ -40,7 +42,7 @@ export default async function DealersPage() {
           <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-5">
             {dealers.map((dealer) => (
               <li key={dealer.id}>
-                <DealerCard dealer={dealer} />
+                <DealerCard dealer={dealer} responsive={responsiveness(responseStats.get(dealer.id))} />
               </li>
             ))}
           </ul>

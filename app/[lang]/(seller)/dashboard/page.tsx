@@ -1,4 +1,4 @@
-import { ArrowUpRight, ChartLine, ChevronRight, Crown, Lock, Plus, Store, Upload, type LucideIcon } from "lucide-react";
+import { ArrowUpRight, ChartLine, ChevronRight, Crown, Lock, Plus, Store, Upload, Zap, type LucideIcon } from "lucide-react";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "@/components/locale-link";
@@ -13,6 +13,13 @@ import { buildAttentionItems, getSellerInsights, sortListingInsights, type Listi
 import { getSellerListings } from "@/lib/listings";
 import { getPendingOfferCounts } from "@/lib/offers";
 import { getListingQuota, hasInsights, isDealerPlan } from "@/lib/plans";
+import {
+  getSellerResponsiveness,
+  RESPONSE_MAX_MEDIAN_MINUTES,
+  RESPONSE_MIN_ANSWERED,
+  RESPONSE_MIN_REQUESTS,
+  type Responsiveness,
+} from "@/lib/responsiveness";
 import { noIndex } from "@/lib/seo";
 import { AttentionList } from "./insights/attention-list";
 import { KpiTiles } from "./insights/kpi-tiles";
@@ -43,11 +50,12 @@ export default async function OverviewPage() {
   const { t, locale } = await getDictionary();
   const s = t.sellerCenter;
   const o = s.overview;
-  const [listings, quota, pendingAddons, pendingOffers] = await Promise.all([
+  const [listings, quota, pendingAddons, pendingOffers, responsive] = await Promise.all([
     getSellerListings(user.id),
     getListingQuota(),
     getMyPendingAddons(),
     getPendingOfferCounts(user.id),
+    getSellerResponsiveness(user.id),
   ]);
   const insights = hasInsights(profile.plan) ? await getSellerInsights(listings, OVERVIEW_DAYS) : null;
   const attention = buildAttentionItems(
@@ -114,6 +122,10 @@ export default async function OverviewPage() {
 
       <div className="mt-6">
         <AttentionList items={attention} t={t} locale={locale} />
+      </div>
+
+      <div className="mt-6">
+        <ResponseCard responsive={responsive} t={t} locale={locale} />
       </div>
 
       {insights && (
@@ -235,6 +247,49 @@ function TopListings({ rows, t, locale }: { rows: ListingInsight[]; t: Dictionar
           })}
         </ol>
       )}
+    </section>
+  );
+}
+
+// How fast the seller answers offers and rental requests, and how to earn
+// the "Responds quickly" badge.
+function ResponseCard({ responsive, t, locale }: { responsive: Responsiveness; t: Dictionary; locale: Locale }) {
+  const r = t.sellerCenter.overview.response;
+  const typical = responsive.bucket ? t.verification.repliesWithin[responsive.bucket] : r.slow;
+  return (
+    <section className={cardClass}>
+      <h2 className="flex items-center gap-2 text-lg font-semibold">
+        <Zap className="size-4 text-amber-500" aria-hidden />
+        {r.title}
+      </h2>
+      {responsive.total === 0 ? (
+        <p className="mt-2 text-sm text-muted-foreground">{r.none}</p>
+      ) : (
+        <>
+          <p className="mt-1 text-sm text-muted-foreground">{count(locale, responsive.total, r.requests)}</p>
+          <dl className="mt-4 grid grid-cols-2 gap-3">
+            <div className="rounded-xl bg-canvas px-3 py-2.5 ring-1 ring-line/60 dark:bg-zinc-900 dark:ring-zinc-800">
+              <dt className="text-xs text-muted-foreground">{r.answered}</dt>
+              <dd className="mt-1 text-2xl font-bold tracking-tight tabular-nums">
+                {formatNumber(locale, responsive.answeredPct)}%
+              </dd>
+            </div>
+            <div className="rounded-xl bg-canvas px-3 py-2.5 ring-1 ring-line/60 dark:bg-zinc-900 dark:ring-zinc-800">
+              <dt className="text-xs text-muted-foreground">{r.typical}</dt>
+              <dd className="mt-1 text-sm font-semibold">{typical}</dd>
+            </div>
+          </dl>
+        </>
+      )}
+      <p className="mt-4 text-sm text-zinc-600 dark:text-zinc-400">
+        {responsive.badge
+          ? r.earned
+          : fmt(r.howTo, {
+              minPct: formatNumber(locale, RESPONSE_MIN_ANSWERED * 100),
+              minRequests: formatNumber(locale, RESPONSE_MIN_REQUESTS),
+              hours: formatNumber(locale, RESPONSE_MAX_MEDIAN_MINUTES / 60),
+            })}
+      </p>
     </section>
   );
 }

@@ -148,6 +148,12 @@ export const en = {
     idVerified: "ID verified",
     idVerifiedTitle: "Identity checked by our team",
     emailVerified: "Email verified",
+    responsive: "Responds quickly",
+    repliesWithin: {
+      hour: "Usually replies within an hour",
+      hours: "Usually replies within a few hours",
+      day: "Usually replies within a day",
+    },
   },
   select: {
     make: "Make",
@@ -1411,6 +1417,20 @@ export const en = {
       topTitle: "Top listings this week",
       topEmpty: "Views will show here once buyers find your listings.",
       views: plural({ one: "{count} view", other: "{count} views" }),
+      response: {
+        title: "Your response rate",
+        requests: plural({
+          one: "{count} offer or rental request in the last 90 days",
+          other: "{count} offers and rental requests in the last 90 days",
+        }),
+        answered: "Answered",
+        typical: "Typical reply",
+        none: "No offers or rental requests yet.",
+        slow: "Over a day",
+        earned: "You have the “Responds quickly” badge on your listings and seller page.",
+        howTo:
+          "Reply to at least {minPct}% of offers and rental requests (with {minRequests} or more in 90 days), typically within {hours} hours, to show buyers a “Responds quickly” badge.",
+      },
       quickActions: "Quick actions",
       actions: {
         newListing: "List a car",

@@ -27,6 +27,7 @@ import { ListingGrid } from "@/components/listing-card";
 import { ReportListingButton } from "@/components/report-listing-button";
 import { SafetyTips } from "@/components/safety-tips";
 import { VerificationBadges } from "@/components/verification-badges";
+import { getSellerResponsiveness } from "@/lib/responsiveness";
 import { RiyalPrice } from "@/components/riyal-price";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -127,7 +128,7 @@ export default async function ListingPage({ params }: PageProps<"/[lang]/listing
   const rent = isRental(listing);
   const canOffer = !rent && !isOwner && listing.status === "active";
   const canRequest = rent && !isOwner && listing.status === "active";
-  const [stats, quota, pendingAddons, favoriteIds, similar, myOffer, myRequest, booked] = await Promise.all([
+  const [stats, quota, pendingAddons, favoriteIds, similar, myOffer, myRequest, booked, responsive] = await Promise.all([
     isOwner ? getListingStats(listing.id) : null,
     isOwner ? getListingQuota() : null,
     isOwner ? getMyPendingAddons(listing.id) : [],
@@ -136,6 +137,7 @@ export default async function ListingPage({ params }: PageProps<"/[lang]/listing
     canOffer && current ? getMyOfferForListing(current.user.id, listing.id) : null,
     canRequest && current ? getMyRequestForListing(current.user.id, listing.id) : null,
     canRequest ? getBookedRanges(listing.id) : [],
+    seller ? getSellerResponsiveness(seller.id) : undefined,
   ]);
   const whatsappText = fmt(rent ? t.rentals.whatsappText : p.whatsappText, {
     title,
@@ -436,7 +438,7 @@ export default async function ListingPage({ params }: PageProps<"/[lang]/listing
                     </p>
                     <div className="mt-1 flex flex-wrap items-center gap-1.5">
                       {storefront ? <DealerBadge /> : <Badge variant="outline">{t.common.privateSeller}</Badge>}
-                      <VerificationBadges profile={seller} />
+                      <VerificationBadges profile={seller} responsive={responsive} />
                     </div>
                   </div>
                 </div>
