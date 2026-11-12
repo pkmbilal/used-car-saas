@@ -14,6 +14,7 @@ import { formatMonthYear } from "@/lib/format";
 import { getDictionary } from "@/lib/i18n-server";
 import { getSellerProfile, isFeatured } from "@/lib/listings";
 import { publicUrl } from "@/lib/r2";
+import { getSellerResponsiveness } from "@/lib/responsiveness";
 import { absoluteUrl, pageMetadata } from "@/lib/seo";
 import { getStorefront } from "@/lib/storefront";
 
@@ -44,7 +45,11 @@ export default async function SellerPage({ params }: PageProps<"/[lang]/sellers/
   const { id } = await params;
   const { t, locale } = await getDictionary();
   const s = t.seller;
-  const [seller, favoriteIds] = await Promise.all([getSeller(id), getViewerFavoriteIds()]);
+  const [seller, favoriteIds, responsive] = await Promise.all([
+    getSeller(id),
+    getViewerFavoriteIds(),
+    getSellerResponsiveness(id),
+  ]);
   if (!seller) notFound();
 
   const { profile, listings } = seller;
@@ -84,7 +89,7 @@ export default async function SellerPage({ params }: PageProps<"/[lang]/sellers/
               <div className="flex flex-wrap items-center gap-3">
                 <h1 className="text-2xl font-semibold tracking-tight">{storefront.name}</h1>
                 <DealerBadge />
-                <VerificationBadges profile={profile} />
+                <VerificationBadges profile={profile} responsive={responsive} />
               </div>
               <p className="mt-1 text-sm text-muted-foreground">{memberSince}</p>
               {storefront.showroomAddress && (
@@ -114,7 +119,7 @@ export default async function SellerPage({ params }: PageProps<"/[lang]/sellers/
             <div className="min-w-0">
               <div className="flex flex-wrap items-center gap-3">
                 <h1 className="text-2xl font-semibold tracking-tight">{profile.full_name ?? s.seller}</h1>
-                <VerificationBadges profile={profile} />
+                <VerificationBadges profile={profile} responsive={responsive} />
               </div>
               <p className="mt-1 text-sm text-muted-foreground">{memberSince}</p>
             </div>

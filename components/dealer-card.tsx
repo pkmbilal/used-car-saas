@@ -6,9 +6,10 @@ import { Card } from "@/components/ui/card";
 import { cityName, count, fmt } from "@/lib/dictionary";
 import { formatMonthYear } from "@/lib/format";
 import { getDictionary } from "@/lib/i18n-server";
+import type { Responsiveness } from "@/lib/responsiveness";
 import type { DealerSummary } from "@/lib/storefront";
 
-export async function DealerCard({ dealer }: { dealer: DealerSummary }) {
+export async function DealerCard({ dealer, responsive }: { dealer: DealerSummary; responsive?: Responsiveness }) {
   const { t, locale } = await getDictionary();
   const { storefront, profile, activeListings } = dealer;
 
@@ -21,7 +22,7 @@ export async function DealerCard({ dealer }: { dealer: DealerSummary }) {
             <p className="truncate text-sm font-semibold">{storefront.name}</p>
             <div className="mt-2 flex flex-wrap gap-1.5">
               <DealerBadge />
-              <VerificationBadges profile={profile} />
+              <VerificationBadges profile={profile} responsive={responsive} />
             </div>
           </div>
         </div>

@@ -1142,6 +1142,10 @@ export type Database = {
         Args: { p_listing_id: string };
         Returns: { start_date: string; end_date: string }[];
       };
+      seller_response_stats: {
+        Args: { p_seller_ids: string[] };
+        Returns: { seller_id: string; total: number; answered: number; median_minutes: number | null }[];
+      };
       rental_quote: {
         Args: { p_daily: number; p_weekly: number | null; p_monthly: number | null; p_days: number };
         Returns: number;

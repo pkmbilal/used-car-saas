@@ -175,6 +175,12 @@ export const ar: DictionaryShape<typeof en> = {
     idVerified: "هوية موثقة",
     idVerifiedTitle: "تحقق فريقنا من الهوية",
     emailVerified: "بريد موثق",
+    responsive: "سريع الرد",
+    repliesWithin: {
+      hour: "يرد عادةً خلال ساعة",
+      hours: "يرد عادةً خلال ساعات قليلة",
+      day: "يرد عادةً خلال يوم",
+    },
   },
   select: {
     make: "الماركة",
@@ -1698,6 +1704,24 @@ export const ar: DictionaryShape<typeof en> = {
         many: "{count} مشاهدة",
         other: "{count} مشاهدة",
       }),
+      response: {
+        title: "معدل ردك",
+        requests: plural({
+          zero: "لا عروض أو طلبات إيجار في آخر 90 يومًا",
+          one: "عرض أو طلب إيجار واحد في آخر 90 يومًا",
+          two: "عرضان أو طلبا إيجار في آخر 90 يومًا",
+          few: "{count} عروض وطلبات إيجار في آخر 90 يومًا",
+          many: "{count} عرضًا وطلب إيجار في آخر 90 يومًا",
+          other: "{count} عرض وطلب إيجار في آخر 90 يومًا",
+        }),
+        answered: "تم الرد",
+        typical: "مدة الرد المعتادة",
+        none: "لا توجد عروض أو طلبات إيجار بعد.",
+        slow: "أكثر من يوم",
+        earned: "تظهر شارة «سريع الرد» على إعلاناتك وصفحتك.",
+        howTo:
+          "رُد على {minPct}٪ على الأقل من العروض وطلبات الإيجار (مع {minRequests} طلبات أو أكثر خلال 90 يومًا)، وعادةً خلال {hours} ساعة، لتظهر شارة «سريع الرد» للمشترين.",
+      },
       quickActions: "إجراءات سريعة",
       actions: {
         newListing: "أضف سيارة",
