@@ -451,7 +451,18 @@ export async function getUserDetail(userId: string) {
     .maybeSingle();
   if (!profile) return null;
 
-  const [listings, planChanges, payments, featuredGrants, reports, idRequests, dealerApplications, actions, usage] =
+  const [
+    listings,
+    planChanges,
+    payments,
+    featuredGrants,
+    reports,
+    idRequests,
+    dealerApplications,
+    actions,
+    usage,
+    businessDocuments,
+  ] =
     await Promise.all([
       supabase
         .from("listings")
@@ -503,6 +514,8 @@ export async function getUserDetail(userId: string) {
         .limit(USER_HISTORY_LIMIT),
       // This month's featured usage, for the per-listing feature options.
       supabase.from("featured_usage").select("listing_id").eq("seller_id", userId).eq("month", quotaMonth()),
+      // VAT / Muroor details a dealer added from their storefront page.
+      supabase.from("dealer_documents").select("*").eq("user_id", userId).maybeSingle(),
     ]);
 
   const usedThisMonth = usage.data?.length ?? 0;
@@ -537,6 +550,14 @@ export async function getUserDetail(userId: string) {
       })),
     ),
     actions: actions.data ?? [],
+    businessDocuments: businessDocuments.data
+      ? {
+          vatNumber: businessDocuments.data.vat_number,
+          muroorNumber: businessDocuments.data.muroor_number,
+          updatedAt: businessDocuments.data.updated_at,
+          docs: await dealerDocLinks({ cr_doc_key: null, ...businessDocuments.data }),
+        }
+      : null,
   };
 }
 

@@ -954,6 +954,41 @@ export type Database = {
           },
         ];
       };
+      dealer_documents: {
+        Row: {
+          user_id: string;
+          vat_number: string | null;
+          muroor_number: string | null;
+          vat_doc_key: string | null;
+          muroor_doc_key: string | null;
+          updated_at: string;
+        };
+        Insert: {
+          user_id: string;
+          vat_number?: string | null;
+          muroor_number?: string | null;
+          vat_doc_key?: string | null;
+          muroor_doc_key?: string | null;
+          updated_at?: string;
+        };
+        Update: {
+          user_id?: string;
+          vat_number?: string | null;
+          muroor_number?: string | null;
+          vat_doc_key?: string | null;
+          muroor_doc_key?: string | null;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "dealer_documents_user_id_fkey";
+            columns: ["user_id"];
+            isOneToOne: true;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       dealer_applications: {
         Row: {
           id: string;

@@ -674,7 +674,7 @@ export const en = {
     faqs: [
       {
         q: "How do I become a Verified Dealer?",
-        a: "Apply with your Commercial Registration number (VAT and Muroor documents are optional). Our team checks it and activates your dealer features. It's free during launch, with no payment. You can keep listing on the Free plan in the meantime.",
+        a: "Apply with your Commercial Registration number (you can add VAT and Muroor certificates later from your storefront). Our team checks it and activates your dealer features. It's free during launch, with no payment. You can keep listing on the Free plan in the meantime.",
       },
       {
         q: "What do I pay for?",
@@ -1238,7 +1238,9 @@ export const en = {
       businessName: "Business name",
       showroomAddress: "Showroom address",
       registration: "Registration",
-      registrationHint: "Your CR number is required. Documents help us approve you faster. JPEG, PNG, WebP or PDF, up to 10 MB each. Only our team can see them.",
+      registrationHint: "Your CR number is required. Adding the CR document helps us approve you faster (JPEG, PNG, WebP or PDF, up to 10 MB). Only our team can see it. You can add VAT and Muroor certificates later from your storefront.",
+      required: "required",
+      crRequired: "Enter your Commercial Registration number to continue.",
       numbers: {
         cr_number: "CR number",
         vat_number: "VAT number",
@@ -1291,6 +1293,14 @@ export const en = {
       upload: "Upload",
       remove: "Remove",
       logoHint: "Square image, JPEG, PNG or WebP, under 2 MB.",
+      documents: {
+        title: "Business documents",
+        intro: "Add your VAT and Muroor details. They're optional and only KarSouq staff can see them. JPEG, PNG, WebP or PDF, up to 10 MB each.",
+        uploaded: "File on record",
+        replaceHint: "Choose a file to replace it",
+        save: "Save documents",
+        saved: "Business documents saved.",
+      },
     },
     verification: {
       metaTitle: "Verification | KarSouq",

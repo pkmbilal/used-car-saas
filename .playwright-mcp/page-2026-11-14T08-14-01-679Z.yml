@@ -1,0 +1,233 @@
+- generic [ref=f3e1]:
+  - banner [ref=f3e2]:
+    - navigation [ref=f3e3]:
+      - link [ref=f3e4] [cursor=pointer]:
+        - /url: /en
+        - img "KarSouq" [ref=f3e5]
+      - generic [ref=f3e6]:
+        - link "Buy Cars" [ref=f3e7] [cursor=pointer]:
+          - /url: /en/listings
+        - link "Rentals" [ref=f3e8] [cursor=pointer]:
+          - /url: /en/rentals
+        - link "Dealers" [ref=f3e9] [cursor=pointer]:
+          - /url: /en/dealers
+        - link "Pricing" [ref=f3e10] [cursor=pointer]:
+          - /url: /en/pricing
+        - link "Sell" [ref=f3e11] [cursor=pointer]:
+          - /url: /en/account/become-seller
+      - generic [ref=f3e12]:
+        - link "العربية" [ref=f3e13] [cursor=pointer]:
+          - /url: /ar/account/become-seller
+          - text: ع
+        - button "Account menu" [ref=f3e17] [cursor=pointer]:
+          - generic [ref=f3e21]:
+            - generic [ref=f3e22]: Abdul Rasheed
+            - generic [ref=f3e23]: Buyer
+  - main [ref=f3e94]:
+    - link "Seller type" [ref=f3e95] [cursor=pointer]:
+      - /url: /en/account/become-seller
+    - generic [ref=f3e98]:
+      - generic [ref=f3e99]: Dealer / showroom
+      - heading "Sell as a dealer" [level=1] [ref=f3e104]
+      - paragraph [ref=f3e106]: Tell us about your business. Our team reviews your application and upgrades your account once approved.
+    - generic [ref=f3e107]:
+      - generic [ref=f3e109]:
+        - group "Contact person" [ref=f3e110]:
+          - generic [ref=f3e112]:
+            - generic [ref=f3e113]: Full name
+            - textbox "Full name" [ref=f3e114]: Abdul Rasheed
+          - generic [ref=f3e115]:
+            - generic [ref=f3e116]: Mobile number
+            - textbox "Mobile number" [ref=f3e117]:
+              - /placeholder: 05XXXXXXXX
+              - text: "+966531826985"
+          - generic [ref=f3e118]:
+            - generic [ref=f3e119]: City
+            - generic [ref=f3e120]:
+              - button "City" [expanded] [ref=f3e121] [cursor=pointer]:
+                - generic [ref=f3e122]: Jubail
+              - textbox [aria-hidden]: Jubail
+        - group "Business" [ref=f3e129]:
+          - generic [ref=f3e131]:
+            - generic [ref=f3e132]: Business name
+            - textbox "Business name" [ref=f3e133]: Test Motors
+          - generic [ref=f3e134]:
+            - generic [ref=f3e135]: Showroom address (optional)
+            - textbox "Showroom address (optional)" [ref=f3e136]
+        - group "Registration" [ref=f3e137]:
+          - paragraph [ref=f3e139]: Your CR number is required. Adding the CR document helps us approve you faster (JPEG, PNG, WebP or PDF, up to 10 MB). Only our team can see it. You can add VAT and Muroor certificates later from your storefront.
+          - generic [ref=f3e140]:
+            - generic [ref=f3e141]:
+              - generic [ref=f3e142]:
+                - text: CR number *
+                - generic [ref=f3e143]: (required)
+              - textbox "CR number (required)" [invalid] [ref=f3e144]
+              - alert [ref=f3e145]: Enter your Commercial Registration number to continue.
+            - generic [ref=f3e146]:
+              - generic [ref=f3e147]: Commercial Registration (CR) (optional)
+              - button "Commercial Registration (CR) (optional)" [ref=f3e148]
+        - generic [ref=f3e149]:
+          - paragraph [ref=f3e150]: Free during launch
+          - paragraph [ref=f3e151]: Verified Dealer is free until 31 Mar 2027. Our team checks your Commercial Registration and activates your dealer features, with no payment. You can list cars on the free plan in the meantime.
+        - button "Submit dealer application" [ref=f3e152] [cursor=pointer]
+      - complementary [ref=f3e153]:
+        - generic [ref=f3e156]:
+          - paragraph [ref=f3e157]: What you get
+          - generic [ref=f3e158]:
+            - generic [ref=f3e159]: 100 listings a month
+            - generic [ref=f3e164]: Verified dealer badge
+            - generic [ref=f3e169]: Branded storefront and CSV import
+          - generic [ref=f3e174]: Free until 31 Mar 2027
+        - generic [ref=f3e179]:
+          - paragraph [ref=f3e180]: How approval works
+          - list [ref=f3e181]:
+            - listitem [ref=f3e182]:
+              - generic [ref=f3e183]: "1"
+              - generic [ref=f3e184]: Send your business details
+            - listitem [ref=f3e185]:
+              - generic [ref=f3e186]: "2"
+              - generic [ref=f3e187]: Our team checks your Commercial Registration
+            - listitem [ref=f3e188]:
+              - generic [ref=f3e189]: "3"
+              - generic [ref=f3e190]: Get your badge and storefront
+  - contentinfo [ref=f3e50]:
+    - generic [ref=f3e51]:
+      - generic [ref=f3e52]:
+        - link [ref=f3e53] [cursor=pointer]:
+          - /url: /en
+          - img "KarSouq" [ref=f3e54]
+        - paragraph [ref=f3e55]: Saudi Arabia's marketplace for used cars. Buy and sell directly with sellers.
+        - button "Install app" [ref=f3e192] [cursor=pointer]
+      - generic [ref=f3e56]:
+        - paragraph [ref=f3e57]: BUY
+        - link "Browse Cars" [ref=f3e58] [cursor=pointer]:
+          - /url: /en/listings
+        - link "Saved Cars" [ref=f3e59] [cursor=pointer]:
+          - /url: /en/favorites
+        - link "Saved Searches" [ref=f3e60] [cursor=pointer]:
+          - /url: /en/saved-searches
+      - generic [ref=f3e61]:
+        - paragraph [ref=f3e62]: POPULAR MAKES
+        - link "Toyota" [ref=f3e63] [cursor=pointer]:
+          - /url: /en/brands/toyota
+        - link "Hyundai" [ref=f3e64] [cursor=pointer]:
+          - /url: /en/brands/hyundai
+        - link "Nissan" [ref=f3e65] [cursor=pointer]:
+          - /url: /en/brands/nissan
+        - link "Lexus" [ref=f3e66] [cursor=pointer]:
+          - /url: /en/brands/lexus
+      - generic [ref=f3e67]:
+        - paragraph [ref=f3e68]: CITIES
+        - link "Jubail" [ref=f3e69] [cursor=pointer]:
+          - /url: /en/locations/jubail
+        - link "All Cities" [ref=f3e70] [cursor=pointer]:
+          - /url: /en/locations
+      - generic [ref=f3e71]:
+        - paragraph [ref=f3e72]: SELL
+        - link "Sell Your Car" [ref=f3e73] [cursor=pointer]:
+          - /url: /en/account/become-seller
+        - link "Pricing" [ref=f3e74] [cursor=pointer]:
+          - /url: /en/pricing
+        - link "Dealer Tutorials" [ref=f3e75] [cursor=pointer]:
+          - /url: /en/tutorials
+        - link "Seller Dashboard" [ref=f3e76] [cursor=pointer]:
+          - /url: /en/dashboard
+        - link "My Account" [ref=f3e77] [cursor=pointer]:
+          - /url: /en/account
+    - generic [ref=f3e79]:
+      - paragraph [ref=f3e80]: © 2026 KarSouq, a CodeSudio product. All rights reserved.
+      - navigation [ref=f3e81]:
+        - link "Contact" [ref=f3e82] [cursor=pointer]:
+          - /url: /en/contact
+        - link "Privacy Policy" [ref=f3e83] [cursor=pointer]:
+          - /url: /en/privacy
+        - link "Terms of Use" [ref=f3e84] [cursor=pointer]:
+          - /url: /en/terms
+  - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=f3e90] [cursor=pointer]
+  - alert [ref=f3e191]: Sell as a dealer
+  - dialog [ref=f3e197]:
+    - combobox "Search cities…" [expanded] [active] [ref=f3e202]
+    - listbox [ref=f3e203]:
+      - option "Riyadh" [ref=f3e204] [cursor=pointer]
+      - option "Jeddah" [ref=f3e206] [cursor=pointer]
+      - option "Mecca" [ref=f3e208] [cursor=pointer]
+      - option "Medina" [ref=f3e210] [cursor=pointer]
+      - option "Dammam" [ref=f3e212] [cursor=pointer]
+      - option "Khobar" [ref=f3e214] [cursor=pointer]
+      - option "Dhahran" [ref=f3e216] [cursor=pointer]
+      - option "Taif" [ref=f3e218] [cursor=pointer]
+      - option "Tabuk" [ref=f3e220] [cursor=pointer]
+      - option "Buraidah" [ref=f3e222] [cursor=pointer]
+      - option "Abha" [ref=f3e224] [cursor=pointer]
+      - option "Khamis Mushait" [ref=f3e226] [cursor=pointer]
+      - option "Hail" [ref=f3e228] [cursor=pointer]
+      - option "Jazan" [ref=f3e230] [cursor=pointer]
+      - option "Najran" [ref=f3e232] [cursor=pointer]
+      - option "Al Ahsa" [ref=f3e234] [cursor=pointer]
+      - option "Jubail" [selected] [ref=f3e236] [cursor=pointer]
+      - option "Yanbu" [ref=f3e240] [cursor=pointer]
+      - option "Abqaiq" [ref=f3e242] [cursor=pointer]
+      - option "Abu Arish" [ref=f3e244] [cursor=pointer]
+      - option "Afif" [ref=f3e246] [cursor=pointer]
+      - option "Al Bahah" [ref=f3e248] [cursor=pointer]
+      - option "Al-Aqiq" [ref=f3e250] [cursor=pointer]
+      - option "Al-Bukayriyah" [ref=f3e252] [cursor=pointer]
+      - option "Al-Ghazalah" [ref=f3e254] [cursor=pointer]
+      - option "Al-Hofuf" [ref=f3e256] [cursor=pointer]
+      - option "Al-Jumum" [ref=f3e258] [cursor=pointer]
+      - option "Al-Kharj" [ref=f3e260] [cursor=pointer]
+      - option "Al-Lith" [ref=f3e262] [cursor=pointer]
+      - option "Al-Majma'ah" [ref=f3e264] [cursor=pointer]
+      - option "Al-Mikhwah" [ref=f3e266] [cursor=pointer]
+      - option "Al-Mithnab" [ref=f3e268] [cursor=pointer]
+      - option "Al-Mubarraz" [ref=f3e270] [cursor=pointer]
+      - option "Al-Namas" [ref=f3e272] [cursor=pointer]
+      - option "Al-Qunfudhah" [ref=f3e274] [cursor=pointer]
+      - option "Al-Sulayyil" [ref=f3e276] [cursor=pointer]
+      - option "Al-Ula" [ref=f3e278] [cursor=pointer]
+      - option "Al-Wajh" [ref=f3e280] [cursor=pointer]
+      - option "Al-Zulfi" [ref=f3e282] [cursor=pointer]
+      - option "Arar" [ref=f3e284] [cursor=pointer]
+      - option "Ar-Rass" [ref=f3e286] [cursor=pointer]
+      - option "As-Sulaymi" [ref=f3e288] [cursor=pointer]
+      - option "Badr" [ref=f3e290] [cursor=pointer]
+      - option "Baish" [ref=f3e292] [cursor=pointer]
+      - option "Baljurashi" [ref=f3e294] [cursor=pointer]
+      - option "Baqa'a" [ref=f3e296] [cursor=pointer]
+      - option "Bisha" [ref=f3e298] [cursor=pointer]
+      - option "Dawadmi" [ref=f3e300] [cursor=pointer]
+      - option "Dhahran Al-Janub" [ref=f3e302] [cursor=pointer]
+      - option "Diriyah" [ref=f3e304] [cursor=pointer]
+      - option "Duba" [ref=f3e306] [cursor=pointer]
+      - option "Dumat Al-Jandal" [ref=f3e308] [cursor=pointer]
+      - option "Farasan" [ref=f3e310] [cursor=pointer]
+      - option "Hafr Al-Batin" [ref=f3e312] [cursor=pointer]
+      - option "Haql" [ref=f3e314] [cursor=pointer]
+      - option "Hotat Bani Tamim" [ref=f3e316] [cursor=pointer]
+      - option "Hubuna" [ref=f3e318] [cursor=pointer]
+      - option "Khafji" [ref=f3e320] [cursor=pointer]
+      - option "Khaybar" [ref=f3e322] [cursor=pointer]
+      - option "Khulais" [ref=f3e324] [cursor=pointer]
+      - option "Mahd ad-Dhahab" [ref=f3e326] [cursor=pointer]
+      - option "Muhayil Asir" [ref=f3e328] [cursor=pointer]
+      - option "Qatif" [ref=f3e330] [cursor=pointer]
+      - option "Qurayyat" [ref=f3e332] [cursor=pointer]
+      - option "Rabigh" [ref=f3e334] [cursor=pointer]
+      - option "Rafha" [ref=f3e336] [cursor=pointer]
+      - option "Ranyah" [ref=f3e338] [cursor=pointer]
+      - option "Ras Tanura" [ref=f3e340] [cursor=pointer]
+      - option "Sabya" [ref=f3e342] [cursor=pointer]
+      - option "Sakaka" [ref=f3e344] [cursor=pointer]
+      - option "Samtah" [ref=f3e346] [cursor=pointer]
+      - option "Sarat Abidah" [ref=f3e348] [cursor=pointer]
+      - option "Shaqra" [ref=f3e350] [cursor=pointer]
+      - option "Sharurah" [ref=f3e352] [cursor=pointer]
+      - option "Taima" [ref=f3e354] [cursor=pointer]
+      - option "Tanomah" [ref=f3e356] [cursor=pointer]
+      - option "Turaif" [ref=f3e358] [cursor=pointer]
+      - option "Turubah" [ref=f3e360] [cursor=pointer]
+      - option "Umluj" [ref=f3e362] [cursor=pointer]
+      - option "Unaizah" [ref=f3e364] [cursor=pointer]
+      - option "Uyun Al-Jawa" [ref=f3e366] [cursor=pointer]
+      - option "Wadi ad-Dawasir" [ref=f3e368] [cursor=pointer]
