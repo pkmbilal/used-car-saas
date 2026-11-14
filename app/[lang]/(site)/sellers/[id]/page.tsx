@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { cache } from "react";
 import { ContactButtons } from "@/app/[lang]/(site)/listings/[id]/contact-buttons";
 import { Avatar } from "@/components/avatar";
-import { DealerBadge, DealerLogo } from "@/components/dealer-logo";
+import { DealerLogo, VerifiedTick } from "@/components/dealer-logo";
 import { JsonLd } from "@/components/json-ld";
 import { ListingGrid } from "@/components/listing-card";
 import { VerificationBadges } from "@/components/verification-badges";
@@ -87,8 +87,10 @@ export default async function SellerPage({ params }: PageProps<"/[lang]/sellers/
             <DealerLogo name={storefront.name} logoUrl={storefront.logoUrl} size="lg" />
             <div className="min-w-0 flex-1">
               <div className="flex flex-wrap items-center gap-3">
-                <h1 className="text-2xl font-semibold tracking-tight">{storefront.name}</h1>
-                <DealerBadge />
+                <h1 className="flex items-center gap-1.5 text-2xl font-semibold tracking-tight">
+                  {storefront.name}
+                  <VerifiedTick />
+                </h1>
                 <VerificationBadges profile={profile} responsive={responsive} />
               </div>
               <p className="mt-1 text-sm text-muted-foreground">{memberSince}</p>

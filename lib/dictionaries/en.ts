@@ -15,7 +15,7 @@ export const en = {
     loading: "Loading",
     optional: "optional",
     dealer: "Dealer",
-    verifiedShowroom: "Verified showroom",
+    verifiedShowroom: "Verified dealer",
     verifiedShowroomTitle: "KarSouq checked this dealer's Commercial Registration",
     privateSeller: "Private seller",
     featured: "Featured",
@@ -639,7 +639,7 @@ export const en = {
         features: [
           "{listings} listings a month",
           "Up to {photos} photos per listing",
-          "Verified showroom badge on your listings",
+          "Verified dealer badge on your listings",
           "Branded storefront page (your mini-site)",
           "Listed in the dealers directory",
           "Bulk upload from Excel or CSV",
@@ -1182,7 +1182,7 @@ export const en = {
     dealer: {
       metaTitle: "Dealer account | KarSouq",
       title: "Dealer account",
-      intro: "Verified dealers get a branded storefront, a Verified showroom badge, bulk upload and {limit} listings a month.",
+      intro: "Verified dealers get a branded storefront, a Verified dealer badge, bulk upload and {limit} listings a month.",
       onPlan: "You're on {plan}.",
       setUpStorefront: "Set up your storefront",
       pending: "Your application for {business} is under review. We'll contact you on your mobile number. Meanwhile you can {link}.",

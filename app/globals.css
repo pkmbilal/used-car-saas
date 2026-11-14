@@ -277,7 +277,59 @@
   33.33% { color: var(--ks-word); }
 }
 
+/* Dealer listing cards: on card hover a shine sweeps across the verified tick
+   and a "Verified dealer" label fades in under the title. The label always
+   keeps its space, so nothing in the card moves. */
+.ks-tick {
+  position: relative;
+  overflow: hidden;
+  border-radius: 9999px;
+}
+.ks-tick::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(110deg, transparent 25%, rgb(255 255 255 / 0.9) 50%, transparent 75%);
+  transform: translateX(-130%);
+  pointer-events: none;
+}
+.group:hover .ks-tick::after {
+  animation: ks-shine 0.7s ease-out;
+}
+[dir="rtl"] .group:hover .ks-tick::after {
+  animation-direction: reverse;
+}
+@keyframes ks-shine {
+  to { transform: translateX(130%); }
+}
+/* Listing cards (dealers): the details block slides up by the bar's height
+   (h-9) over the bottom of the photo, revealing the full-width "Verified
+   showroom" bar below it; the card's overflow-hidden clips the bar at rest.
+   Touch devices have no hover, so the bar is shown in-flow instead. */
+.ks-dealer-slide {
+  transition: transform 0.3s ease-out;
+}
+.group:hover .ks-dealer-slide,
+.group:focus-within .ks-dealer-slide {
+  transform: translateY(-2.25rem);
+}
+@media (hover: none) {
+  .group:hover .ks-dealer-slide,
+  .group:focus-within .ks-dealer-slide {
+    transform: none;
+  }
+  .ks-dealer-bar {
+    position: static;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
+  .group:hover .ks-tick::after {
+    animation: none;
+  }
+  .ks-dealer-slide {
+    transition: none;
+  }
   .ks-loader-reveal,
   .ks-loader-car,
   .ks-loader-streaks line,

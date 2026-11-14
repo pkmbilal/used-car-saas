@@ -14,7 +14,7 @@ export const ar: DictionaryShape<typeof en> = {
     loading: "جارٍ التحميل",
     optional: "اختياري",
     dealer: "معرض",
-    verifiedShowroom: "معرض موثّق",
+    verifiedShowroom: "تاجر موثّق",
     verifiedShowroomTitle: "تحقّق كارسوق من السجل التجاري لهذا المعرض",
     privateSeller: "بائع فرد",
     featured: "مميز",
@@ -674,7 +674,7 @@ export const ar: DictionaryShape<typeof en> = {
         features: [
           "{listings} إعلان شهريًا",
           "حتى {photos} صورة لكل إعلان",
-          "شارة «معرض موثّق» على إعلاناتك",
+          "شارة «تاجر موثّق» على إعلاناتك",
           "صفحة معرض باسمك (موقعك المصغّر)",
           "الظهور في دليل المعارض",
           "رفع جماعي من ملف Excel أو CSV",
@@ -1426,7 +1426,7 @@ export const ar: DictionaryShape<typeof en> = {
     dealer: {
       metaTitle: "حساب المعرض | كارسوق",
       title: "حساب المعرض",
-      intro: "تحصل المعارض الموثّقة على صفحة معرض باسمها وشارة «معرض موثّق» ورفع جماعي و{limit} إعلان شهريًا.",
+      intro: "تحصل المعارض الموثّقة على صفحة معرض باسمها وشارة «تاجر موثّق» ورفع جماعي و{limit} إعلان شهريًا.",
       onPlan: "أنت مشترك في {plan}.",
       setUpStorefront: "جهّز صفحة معرضك",
       pending: "طلبك لـ {business} قيد المراجعة. سنتواصل معك على رقم جوالك. في هذه الأثناء يمكنك {link}.",

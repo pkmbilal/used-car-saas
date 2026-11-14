@@ -4,7 +4,7 @@ import Link from "@/components/locale-link";
 import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 import { cache } from "react";
-import { DealerBadge, DealerLogo } from "@/components/dealer-logo";
+import { DealerLogo, VerifiedTick } from "@/components/dealer-logo";
 import { FavoriteButton } from "@/components/favorite-button";
 import { JsonLd } from "@/components/json-ld";
 import {
@@ -433,12 +433,13 @@ export default async function ListingPage({ params }: PageProps<"/[lang]/listing
                     </span>
                   )}
                   <div className="min-w-0">
-                    <p className="truncate text-base font-semibold sm:text-[0.9375rem]">
-                      {storefront?.name ?? seller.full_name ?? p.seller}
+                    <p className="flex min-w-0 items-center gap-1 text-base font-semibold sm:text-[0.9375rem]">
+                      <span className="truncate">{storefront?.name ?? seller.full_name ?? p.seller}</span>
+                      {storefront && <VerifiedTick />}
                     </p>
                     <div className="mt-1 flex flex-wrap items-center gap-1.5">
-                      {storefront ? <DealerBadge /> : <Badge variant="outline">{t.common.privateSeller}</Badge>}
-                      <VerificationBadges profile={seller} responsive={responsive} />
+                      {!storefront && <Badge variant="outline">{t.common.privateSeller}</Badge>}
+                      <VerificationBadges profile={seller} responsive={responsive} dealer={!!storefront} />
                     </div>
                   </div>
                 </div>
