@@ -58,6 +58,7 @@ export const ar: DictionaryShape<typeof en> = {
     sarSr: "ريال سعودي ",
     since: "منذ {date}",
     lastUpdated: "آخر تحديث {date}",
+    crNumber: "سجل تجاري رقم {number}",
     logoAlt: "شعار {name}",
     tagline: ["اشترِ", "بِع", "انطلق"],
   },
@@ -121,6 +122,7 @@ export const ar: DictionaryShape<typeof en> = {
     contact: "تواصل معنا",
     privacy: "سياسة الخصوصية",
     terms: "شروط الاستخدام",
+    refunds: "سياسة الاسترداد",
   },
   pwa: {
     install: "ثبّت التطبيق",

@@ -31,6 +31,7 @@ export const en = {
     sarSr: "SAR ",
     since: "Since {date}",
     lastUpdated: "Last updated {date}",
+    crNumber: "CR No. {number}",
     logoAlt: "{name} logo",
     tagline: ["Buy", "Sell", "Drive"],
   },
@@ -94,6 +95,7 @@ export const en = {
     contact: "Contact",
     privacy: "Privacy Policy",
     terms: "Terms of Use",
+    refunds: "Refund Policy",
   },
   pwa: {
     install: "Install app",

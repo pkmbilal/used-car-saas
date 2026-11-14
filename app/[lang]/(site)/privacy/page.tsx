@@ -29,7 +29,7 @@ export default async function PrivacyPage() {
 
 function PrivacyEn() {
   return (
-    <LegalPage title="Privacy Policy" updated="23 October 2026">
+    <LegalPage title="Privacy Policy" updated="14 November 2026">
       <p>
         KarSouq is a marketplace for used cars in the Kingdom of Saudi Arabia, operated by {COMPANY_NAME}{" "}
         (&quot;we&quot;), the controller of your personal data. This policy
@@ -40,26 +40,38 @@ function PrivacyEn() {
       <h2>Data we collect</h2>
       <ul>
         <li>Account details: email address, password (stored hashed), name, phone number and city.</li>
-        <li>Seller and dealer details: business name, showroom address, logo, and dealer application documents.</li>
+        <li>Seller and dealer details: business name, showroom address, logo, and your Commercial Registration, VAT and Muroor numbers and certificates.</li>
         <li>Identity verification: copies of the ID documents you upload to get a verified badge.</li>
-        <li>Listings: vehicle details, photos and prices you publish.</li>
-        <li>Plan payments: amount, method and reference for plans you buy.</li>
-        <li>Usage: listing views and contact taps, saved searches and favorites.</li>
+        <li>Listings: vehicle and equipment details, photos, prices and rental terms you publish.</li>
+        <li>Offers and rental requests: amounts, dates, notes, and when and how you reply to them.</li>
+        <li>Payments: amount, method and reference for services you pay for.</li>
+        <li>Usage: listing views and contact taps, saved searches and favorites, and a one-way hash of your IP address when you reveal a seller&apos;s phone number (to stop abuse).</li>
+        <li>Analytics: anonymous page-view statistics from Vercel Web Analytics, which does not use cookies.</li>
       </ul>
 
       <h2>How we use it</h2>
       <ul>
         <li>To run your account and show your listings to buyers.</li>
-        <li>To let buyers contact sellers by phone or WhatsApp. Your phone number is shown on your active listings.</li>
+        <li>To let buyers contact sellers by phone or WhatsApp. A seller&apos;s phone number is shown to visitors who tap to reveal it on an active listing.</li>
+        <li>To pass on offers and rental requests. When an owner accepts a rental request, the owner&apos;s and renter&apos;s WhatsApp numbers are shared with each other.</li>
+        <li>To show how quickly sellers reply to offers and rental requests, as a public &quot;Responds quickly&quot; badge.</li>
         <li>To verify sellers and dealers and keep the marketplace free of fraud and spam.</li>
         <li>To manage plans, listing limits and featured placements.</li>
         <li>To send account emails such as sign-up codes and password resets.</li>
+        <li>To understand how the site is used and improve it.</li>
       </ul>
 
-      <h2>Identity documents</h2>
+      <h2>Identity and business documents</h2>
       <p>
-        ID documents are stored in private storage that is not publicly accessible. Only KarSouq administrators can
-        view them, and only to review your verification request. You give explicit consent when you upload them.
+        ID documents and dealer documents (Commercial Registration, VAT and Muroor certificates) are stored in private
+        storage that is not publicly accessible. Only KarSouq administrators can view them, and only to review your
+        verification or dealer request. You give explicit consent when you upload ID documents.
+      </p>
+
+      <h2>Cookies and app storage</h2>
+      <p>
+        We use only the cookies needed to keep you signed in and remember your language. If you install KarSouq as an
+        app, your device stores some pages so the app can open offline. We do not use advertising cookies.
       </p>
 
       <h2>Who we share data with</h2>
@@ -89,7 +101,7 @@ function PrivacyEn() {
 
 function PrivacyAr() {
   return (
-    <LegalPage title="سياسة الخصوصية" updated="23 أكتوبر 2026">
+    <LegalPage title="سياسة الخصوصية" updated="14 نوفمبر 2026">
       <p>
         كارسوق سوق للسيارات المستعملة في المملكة العربية السعودية، تديره {COMPANY_NAME} (&quot;نحن&quot;) بصفتها
         الجهة المتحكمة في بياناتك الشخصية. توضح هذه السياسة البيانات الشخصية التي نجمعها وسبب جمعها والحقوق التي
@@ -99,26 +111,38 @@ function PrivacyAr() {
       <h2>البيانات التي نجمعها</h2>
       <ul>
         <li>بيانات الحساب: البريد الإلكتروني وكلمة المرور (محفوظة بشكل مشفّر) والاسم ورقم الجوال والمدينة.</li>
-        <li>بيانات البائعين والمعارض: اسم النشاط التجاري وعنوان المعرض والشعار ومستندات طلب حساب المعرض.</li>
+        <li>بيانات البائعين والمعارض: اسم النشاط التجاري وعنوان المعرض والشعار، وأرقام وشهادات السجل التجاري وضريبة القيمة المضافة والمرور.</li>
         <li>توثيق الهوية: نسخ مستندات الهوية التي ترفعها للحصول على شارة التوثيق.</li>
-        <li>الإعلانات: بيانات السيارات وصورها وأسعارها التي تنشرها.</li>
-        <li>مدفوعات الباقات: المبلغ وطريقة الدفع ومرجعه للباقات التي تشتريها.</li>
-        <li>الاستخدام: مشاهدات الإعلانات ونقرات التواصل وعمليات البحث المحفوظة والمفضلة.</li>
+        <li>الإعلانات: بيانات السيارات والمعدات وصورها وأسعارها وشروط تأجيرها التي تنشرها.</li>
+        <li>عروض الأسعار وطلبات الاستئجار: المبالغ والتواريخ والملاحظات، ووقت ردك عليها وطريقته.</li>
+        <li>المدفوعات: المبلغ وطريقة الدفع ومرجعه للخدمات التي تدفع مقابلها.</li>
+        <li>الاستخدام: مشاهدات الإعلانات ونقرات التواصل وعمليات البحث المحفوظة والمفضلة، وبصمة مشفّرة باتجاه واحد لعنوان IP الخاص بك عند إظهار رقم بائع (لمنع إساءة الاستخدام).</li>
+        <li>الإحصاءات: إحصاءات مجهولة الهوية لزيارات الصفحات من Vercel Web Analytics، ولا تستخدم ملفات تعريف الارتباط.</li>
       </ul>
 
       <h2>كيف نستخدمها</h2>
       <ul>
         <li>لإدارة حسابك وعرض إعلاناتك للمشترين.</li>
-        <li>لتمكين المشترين من التواصل مع البائعين عبر الهاتف أو واتساب. يظهر رقم جوالك في إعلاناتك المنشورة.</li>
+        <li>لتمكين المشترين من التواصل مع البائعين عبر الهاتف أو واتساب. يظهر رقم جوال البائع للزائر الذي يضغط لإظهاره في إعلان منشور.</li>
+        <li>لإيصال عروض الأسعار وطلبات الاستئجار. وعند قبول المالك طلب استئجار يُشارك رقم واتساب كلٍّ من المالك والمستأجر مع الآخر.</li>
+        <li>لعرض سرعة رد البائعين على عروض الأسعار وطلبات الاستئجار، من خلال شارة &quot;يرد بسرعة&quot; العامة.</li>
         <li>للتحقق من البائعين والمعارض وحماية السوق من الاحتيال والإعلانات المزعجة.</li>
         <li>لإدارة الباقات وحدود الإعلانات والإعلانات المميزة.</li>
         <li>لإرسال رسائل الحساب مثل رموز التسجيل وإعادة تعيين كلمة المرور.</li>
+        <li>لفهم طريقة استخدام الموقع وتحسينه.</li>
       </ul>
 
-      <h2>مستندات الهوية</h2>
+      <h2>مستندات الهوية والنشاط التجاري</h2>
       <p>
-        تُحفظ مستندات الهوية في مساحة تخزين خاصة غير متاحة للعموم. لا يطّلع عليها إلا مسؤولو كارسوق، ولغرض مراجعة
-        طلب التوثيق فقط. وتمنح موافقتك الصريحة عند رفعها.
+        تُحفظ مستندات الهوية ومستندات المعارض (السجل التجاري وشهادتا ضريبة القيمة المضافة والمرور) في مساحة تخزين خاصة
+        غير متاحة للعموم. لا يطّلع عليها إلا مسؤولو كارسوق، ولغرض مراجعة طلب التوثيق أو طلب حساب المعرض فقط. وتمنح
+        موافقتك الصريحة عند رفع مستندات الهوية.
+      </p>
+
+      <h2>ملفات تعريف الارتباط وتخزين التطبيق</h2>
+      <p>
+        نستخدم فقط ملفات تعريف الارتباط اللازمة لإبقائك مسجّلًا للدخول وتذكّر لغتك. وإذا ثبّتّ كارسوق كتطبيق، يحفظ جهازك
+        بعض الصفحات ليعمل التطبيق دون اتصال. ولا نستخدم ملفات تعريف الارتباط الإعلانية.
       </p>
 
       <h2>مع من نشارك البيانات</h2>
