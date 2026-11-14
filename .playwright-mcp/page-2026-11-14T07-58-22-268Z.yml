@@ -1,0 +1,54 @@
+- generic [active] [ref=f1e1]:
+  - banner [ref=f1e2]:
+    - navigation [ref=f1e3]:
+      - link [ref=f1e4] [cursor=pointer]:
+        - /url: /ar
+        - img "KarSouq" [ref=f1e5]
+      - button "القائمة" [ref=f1e7] [cursor=pointer]
+  - navigation "التنقل الرئيسي" [ref=f1e8]:
+    - list [ref=f1e9]:
+      - listitem [ref=f1e10]:
+        - link "الرئيسية" [ref=f1e11] [cursor=pointer]:
+          - /url: /ar
+      - listitem [ref=f1e15]:
+        - link "شراء" [ref=f1e16] [cursor=pointer]:
+          - /url: /ar/listings
+      - listitem [ref=f1e20]:
+        - link "بيع" [ref=f1e21] [cursor=pointer]:
+          - /url: /ar/account/become-seller
+      - listitem [ref=f1e24]:
+        - link "المحفوظة" [ref=f1e25] [cursor=pointer]:
+          - /url: /ar/favorites
+      - listitem [ref=f1e28]:
+        - button "قائمة الحساب" [ref=f1e29] [cursor=pointer]:
+          - generic [ref=f1e33]: Abdul
+  - main [ref=f1e35]:
+    - generic [ref=f1e37]:
+      - generic [ref=f1e38]: تنبيهاتك
+      - heading "عمليات البحث المحفوظة" [level=1] [ref=f1e41]
+      - paragraph [ref=f1e43]:
+        - text: تظهر هنا السيارات الجديدة المطابقة لعمليات بحثك. احفظ حتى 20 عملية بحث من
+        - link "صفحة التصفح" [ref=f1e44] [cursor=pointer]:
+          - /url: /ar/listings
+        - text: .
+    - generic [ref=f1e45]:
+      - heading "لا توجد عمليات بحث محفوظة بعد" [level=2] [ref=f1e49]
+      - paragraph [ref=f1e50]: احفظ عملية بحث وسنعرض لك هنا كل سيارة جديدة تطابقها.
+      - paragraph [ref=f1e51]: كيف تعمل
+      - list [ref=f1e52]:
+        - listitem [ref=f1e53]:
+          - generic [ref=f1e54]: "1"
+          - generic [ref=f1e57]: صفِّ السيارات حسب الماركة والسعر والمدينة وغيرها
+        - listitem [ref=f1e58]:
+          - generic [ref=f1e59]: "2"
+          - generic [ref=f1e63]: اضغط «احفظ هذا البحث» في صفحة التصفح
+        - listitem [ref=f1e64]:
+          - generic [ref=f1e65]: "3"
+          - generic [ref=f1e70]: تظهر السيارات المطابقة الجديدة هنا
+      - generic [ref=f1e71]:
+        - link "تصفّح السيارات" [ref=f1e72] [cursor=pointer]:
+          - /url: /ar/listings
+        - link "المفضلة" [ref=f1e76] [cursor=pointer]:
+          - /url: /ar/favorites
+  - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=f1e84] [cursor=pointer]
