@@ -1,0 +1,106 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - navigation [ref=e3]:
+      - link [ref=e4] [cursor=pointer]:
+        - /url: /en
+        - img "KarSouq" [ref=e5]
+      - generic [ref=e6]:
+        - link "Buy Cars" [ref=e7] [cursor=pointer]:
+          - /url: /en/listings
+        - link "Rentals" [ref=e8] [cursor=pointer]:
+          - /url: /en/rentals
+        - link "Dealers" [ref=e9] [cursor=pointer]:
+          - /url: /en/dealers
+        - link "Pricing" [ref=e10] [cursor=pointer]:
+          - /url: /en/pricing
+        - link "Sell" [ref=e11] [cursor=pointer]:
+          - /url: /en/account/become-seller
+      - generic [ref=e12]:
+        - link "العربية" [ref=e13] [cursor=pointer]:
+          - /url: /ar/account/become-seller
+          - text: ع
+        - button "Account menu" [ref=e17] [cursor=pointer]
+  - main [ref=e24]:
+    - generic [ref=e25]:
+      - generic [ref=e26]: Start selling
+      - heading "How are you selling?" [level=1] [ref=e31]
+      - paragraph [ref=e33]: Choose the account that fits you. Individuals can apply for a dealer account later.
+    - list [ref=e34]:
+      - listitem [ref=e35]:
+        - link "Individual seller Selling your own car. List up to 3 cars a month for free. 3 listings a month, free Buyers reach you on WhatsApp Ready in under a minute Continue" [ref=e36] [cursor=pointer]:
+          - /url: /en/account/become-seller?type=individual
+          - generic [ref=e41]: Individual seller
+          - generic [ref=e42]: Selling your own car. List up to 3 cars a month for free.
+          - generic [ref=e43]:
+            - generic [ref=e44]: 3 listings a month, free
+            - generic [ref=e49]: Buyers reach you on WhatsApp
+            - generic [ref=e54]: Ready in under a minute
+          - generic [ref=e59]: Continue
+      - listitem [ref=e62]:
+        - link "For showrooms Dealer / showroom Selling as a business. Get a branded storefront, CSV import and higher limits. 100 listings a month Verified dealer badge Branded storefront and CSV import Free until 31 Mar 2027 Continue" [ref=e63] [cursor=pointer]:
+          - /url: /en/account/become-seller?type=dealer
+          - generic [ref=e65]: For showrooms
+          - generic [ref=e75]: Dealer / showroom
+          - generic [ref=e76]: Selling as a business. Get a branded storefront, CSV import and higher limits.
+          - generic [ref=e77]:
+            - generic [ref=e78]:
+              - generic [ref=e79]: 100 listings a month
+              - generic [ref=e84]: Verified dealer badge
+              - generic [ref=e89]: Branded storefront and CSV import
+            - generic [ref=e94]: Free until 31 Mar 2027
+          - generic [ref=e99]: Continue
+    - paragraph [ref=e102]: Start as an individual and switch to a dealer account any time.
+  - contentinfo [ref=e106]:
+    - generic [ref=e107]:
+      - generic [ref=e108]:
+        - link [ref=e109] [cursor=pointer]:
+          - /url: /en
+          - img "KarSouq" [ref=e110]
+        - paragraph [ref=e111]: Saudi Arabia's marketplace for used cars. Buy and sell directly with sellers.
+      - generic [ref=e112]:
+        - paragraph [ref=e113]: BUY
+        - link "Browse Cars" [ref=e114] [cursor=pointer]:
+          - /url: /en/listings
+        - link "Saved Cars" [ref=e115] [cursor=pointer]:
+          - /url: /en/favorites
+        - link "Saved Searches" [ref=e116] [cursor=pointer]:
+          - /url: /en/saved-searches
+      - generic [ref=e117]:
+        - paragraph [ref=e118]: POPULAR MAKES
+        - link "Toyota" [ref=e119] [cursor=pointer]:
+          - /url: /en/brands/toyota
+        - link "Hyundai" [ref=e120] [cursor=pointer]:
+          - /url: /en/brands/hyundai
+        - link "Nissan" [ref=e121] [cursor=pointer]:
+          - /url: /en/brands/nissan
+        - link "Lexus" [ref=e122] [cursor=pointer]:
+          - /url: /en/brands/lexus
+      - generic [ref=e123]:
+        - paragraph [ref=e124]: CITIES
+        - link "Jubail" [ref=e125] [cursor=pointer]:
+          - /url: /en/locations/jubail
+        - link "All Cities" [ref=e126] [cursor=pointer]:
+          - /url: /en/locations
+      - generic [ref=e127]:
+        - paragraph [ref=e128]: SELL
+        - link "Sell Your Car" [ref=e129] [cursor=pointer]:
+          - /url: /en/account/become-seller
+        - link "Pricing" [ref=e130] [cursor=pointer]:
+          - /url: /en/pricing
+        - link "Dealer Tutorials" [ref=e131] [cursor=pointer]:
+          - /url: /en/tutorials
+        - link "Seller Dashboard" [ref=e132] [cursor=pointer]:
+          - /url: /en/dashboard
+        - link "My Account" [ref=e133] [cursor=pointer]:
+          - /url: /en/account
+    - generic [ref=e135]:
+      - paragraph [ref=e136]: © 2026 KarSouq, a CodeSudio product. All rights reserved.
+      - navigation [ref=e137]:
+        - link "Contact" [ref=e138] [cursor=pointer]:
+          - /url: /en/contact
+        - link "Privacy Policy" [ref=e139] [cursor=pointer]:
+          - /url: /en/privacy
+        - link "Terms of Use" [ref=e140] [cursor=pointer]:
+          - /url: /en/terms
+  - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=e146] [cursor=pointer]

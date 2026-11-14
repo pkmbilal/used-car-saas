@@ -1,0 +1,56 @@
+- generic [active] [ref=f2e1]:
+  - banner [ref=f2e2]:
+    - navigation [ref=f2e3]:
+      - link [ref=f2e4] [cursor=pointer]:
+        - /url: /ar
+        - img "KarSouq" [ref=f2e5]
+      - button "القائمة" [ref=f2e7] [cursor=pointer]
+  - navigation "التنقل الرئيسي" [ref=f2e8]:
+    - list [ref=f2e9]:
+      - listitem [ref=f2e10]:
+        - link "الرئيسية" [ref=f2e11] [cursor=pointer]:
+          - /url: /ar
+      - listitem [ref=f2e15]:
+        - link "شراء" [ref=f2e16] [cursor=pointer]:
+          - /url: /ar/listings
+      - listitem [ref=f2e20]:
+        - link "بيع" [ref=f2e21] [cursor=pointer]:
+          - /url: /ar/account/become-seller
+      - listitem [ref=f2e24]:
+        - link "المحفوظة" [ref=f2e25] [cursor=pointer]:
+          - /url: /ar/favorites
+      - listitem [ref=f2e28]:
+        - button "قائمة الحساب" [ref=f2e29] [cursor=pointer]:
+          - generic [ref=f2e33]: Abdul
+  - main [ref=f2e35]:
+    - generic [ref=f2e36]:
+      - generic [ref=f2e37]: ابدأ البيع
+      - heading "كيف تبيع؟" [level=1] [ref=f2e42]
+      - paragraph [ref=f2e44]: اختر الحساب المناسب لك. يمكن للأفراد التقديم على حساب معرض لاحقًا.
+    - list [ref=f2e45]:
+      - listitem [ref=f2e46]:
+        - link "بائع فرد تبيع سيارتك الخاصة. اعرض حتى 3 سيارات شهريًا مجانًا. 3 إعلانات شهريًا مجانًا يتواصل معك المشترون عبر واتساب جاهز في أقل من دقيقة متابعة" [ref=f2e47] [cursor=pointer]:
+          - /url: /ar/account/become-seller?type=individual
+          - generic [ref=f2e52]: بائع فرد
+          - generic [ref=f2e53]: تبيع سيارتك الخاصة. اعرض حتى 3 سيارات شهريًا مجانًا.
+          - generic [ref=f2e54]:
+            - generic [ref=f2e55]: 3 إعلانات شهريًا مجانًا
+            - generic [ref=f2e60]: يتواصل معك المشترون عبر واتساب
+            - generic [ref=f2e65]: جاهز في أقل من دقيقة
+          - generic [ref=f2e70]: متابعة
+      - listitem [ref=f2e73]:
+        - link "للمعارض معرض / صالة عرض تبيع كنشاط تجاري. احصل على صفحة معرض باسمك واستيراد من CSV وحدود أعلى. 100 إعلان شهريًا شارة «تاجر موثّق» صفحة معرض باسمك واستيراد من CSV مجانًا حتى 31 مارس 2027 متابعة" [ref=f2e74] [cursor=pointer]:
+          - /url: /ar/account/become-seller?type=dealer
+          - generic [ref=f2e76]: للمعارض
+          - generic [ref=f2e86]: معرض / صالة عرض
+          - generic [ref=f2e87]: تبيع كنشاط تجاري. احصل على صفحة معرض باسمك واستيراد من CSV وحدود أعلى.
+          - generic [ref=f2e88]:
+            - generic [ref=f2e89]:
+              - generic [ref=f2e90]: 100 إعلان شهريًا
+              - generic [ref=f2e95]: شارة «تاجر موثّق»
+              - generic [ref=f2e100]: صفحة معرض باسمك واستيراد من CSV
+            - generic [ref=f2e105]: مجانًا حتى 31 مارس 2027
+          - generic [ref=f2e110]: متابعة
+    - paragraph [ref=f2e113]: ابدأ كبائع فرد وانتقل إلى حساب معرض في أي وقت.
+  - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=f2e122] [cursor=pointer]
