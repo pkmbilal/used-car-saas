@@ -530,16 +530,18 @@ export function ApproveDealerButton({
   plan,
   plans,
   durations,
+  defaultDuration,
   action,
 }: {
   plan: string;
   plans: Option[];
   durations: Option[];
+  defaultDuration?: string;
   action: (plan: string, months: number | null) => Promise<AdminResult>;
 }) {
   const { pending, error, run } = useAdminAction();
   const [value, setValue] = useState(plan);
-  const [duration, setDuration] = useState(durations[0]?.value ?? "");
+  const [duration, setDuration] = useState(defaultDuration ?? durations[0]?.value ?? "");
 
   return (
     <div className="flex w-full flex-col gap-2 sm:w-auto">

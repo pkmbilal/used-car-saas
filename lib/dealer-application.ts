@@ -2,7 +2,6 @@ import "server-only";
 import { randomUUID } from "node:crypto";
 import {
   DEALER_DOC_TYPES,
-  isDealerPlanChoice,
   REGISTRATION_NUMBER_MAX,
   type DealerDoc,
 } from "@/lib/dealer-application-options";
@@ -72,7 +71,6 @@ export function parseDealerApplication(
 ): { data: DealerApplicationInput } | { error: string } {
   const businessName = String(formData.get("business_name") ?? "").trim();
   const address = String(formData.get("showroom_address") ?? "").trim();
-  const plan = formData.get("requested_plan");
 
   if (businessName.length < 2 || businessName.length > BUSINESS_NAME_MAX) {
     return { error: `Business name must be 2–${BUSINESS_NAME_MAX} characters.` };
@@ -81,15 +79,16 @@ export function parseDealerApplication(
     return { error: `Showroom address must be at most ${SHOWROOM_ADDRESS_MAX} characters.` };
   }
 
+  // The CR is what an admin verifies, so it's required (the column stays
+  // nullable for older applications).
   const cr = registrationNumber(formData, "cr_number");
-  if (cr === undefined) return { error: "Enter a valid CR number." };
+  if (!cr) return { error: "Enter a valid CR number." };
   const vat = registrationNumber(formData, "vat_number");
   if (vat === undefined) return { error: "Enter a valid VAT number." };
   const muroor = registrationNumber(formData, "muroor_number");
   if (muroor === undefined) return { error: "Enter a valid Muroor certificate number." };
 
-  if (!isDealerPlanChoice(plan)) return { error: "Choose a dealer plan." };
-
+  // Free launch: everyone applies for Verified Dealer ('dealer').
   return {
     data: {
       business_name: businessName,
@@ -97,7 +96,7 @@ export function parseDealerApplication(
       cr_number: cr,
       vat_number: vat,
       muroor_number: muroor,
-      requested_plan: plan,
+      requested_plan: "dealer",
     },
   };
 }

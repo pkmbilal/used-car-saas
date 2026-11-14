@@ -408,7 +408,7 @@ export default async function ListingPage({ params }: PageProps<"/[lang]/listing
                 rent={rent}
                 featureSlots={featured ? 0 : (quota?.featuredRemaining ?? 0)}
                 featureDays={SELF_FEATURE_DAYS}
-                canUpgrade={!featured && !!quota && quota.plan !== "showroom"}
+                canUpgrade={false} // free launch: no paid plans with featured slots on sale
                 boost={featured ? null : boostOffer(pendingAddons[0]?.id)}
               />
             )}

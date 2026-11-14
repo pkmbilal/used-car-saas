@@ -7,10 +7,8 @@ import { CITIES } from "@/lib/cities";
 import { cityName, fmt, translateMessage } from "@/lib/dictionary";
 import {
   DEALER_DOC_TYPES,
-  DEALER_PLANS,
   REGISTRATION_NUMBER_MAX,
   type DealerDoc,
-  type DealerPlan,
 } from "@/lib/dealer-application-options";
 import { BUSINESS_NAME_MAX, SHOWROOM_ADDRESS_MAX } from "@/lib/storefront-options";
 import { ID_DOC_TYPES, isIdDocType, MAX_ID_DOC_BYTES } from "@/lib/verification-options";
@@ -18,17 +16,18 @@ import { requestDealerDocUploadAction, submitDealerApplicationAction } from "../
 
 type Props = {
   profile: Pick<Profile, "full_name" | "phone" | "city" | "business_name" | "showroom_address">;
-  defaultPlan?: DealerPlan;
+  freeUntil: string; // formatted end of the free launch
 };
 
 const inputClass =
   "rounded-md border border-zinc-300 px-3 py-2 dark:border-zinc-700 dark:bg-zinc-900";
 
+// The CR number is required; it's what an admin checks to verify a dealer.
 const NUMBER_FIELDS = [
-  { name: "cr_number", doc: "cr" },
-  { name: "vat_number", doc: "vat" },
-  { name: "muroor_number", doc: "muroor" },
-] as const satisfies readonly { name: string; doc: DealerDoc }[];
+  { name: "cr_number", doc: "cr", required: true },
+  { name: "vat_number", doc: "vat", required: false },
+  { name: "muroor_number", doc: "muroor", required: false },
+] as const satisfies readonly { name: string; doc: DealerDoc; required: boolean }[];
 
 function Field({
   id,
@@ -49,7 +48,7 @@ function Field({
   );
 }
 
-export function DealerApplicationForm({ profile, defaultPlan = "dealer" }: Props) {
+export function DealerApplicationForm({ profile, freeUntil }: Props) {
   const { t } = useDictionary();
   const d = t.account.dealer;
   const f = t.account.form;
@@ -190,21 +189,22 @@ export function DealerApplicationForm({ profile, defaultPlan = "dealer" }: Props
       </fieldset>
 
       <fieldset className="flex flex-col gap-4" disabled={pending}>
-        <legend className="mb-1 text-lg font-medium">{d.registration} {optional}</legend>
+        <legend className="mb-1 text-lg font-medium">{d.registration}</legend>
         <p className="text-sm text-zinc-600 dark:text-zinc-400">
           {d.registrationHint}
         </p>
-        {NUMBER_FIELDS.map(({ name, doc }) => (
+        {NUMBER_FIELDS.map(({ name, doc, required }) => (
           <div key={name} className="flex flex-col gap-3 rounded-md border border-zinc-200 p-4 dark:border-zinc-800">
-            <Field id={name} label={d.numbers[name]}>
+            <Field id={name} label={required ? d.numbers[name] : <>{d.numbers[name]} {optional}</>}>
               <input
                 id={name}
                 name={name}
+                required={required}
                 maxLength={REGISTRATION_NUMBER_MAX}
                 className={inputClass}
               />
             </Field>
-            <Field id={`${doc}_doc`} label={d.docs[doc]}>
+            <Field id={`${doc}_doc`} label={<>{d.docs[doc]} {optional}</>}>
               <input
                 id={`${doc}_doc`}
                 type="file"
@@ -217,30 +217,10 @@ export function DealerApplicationForm({ profile, defaultPlan = "dealer" }: Props
         ))}
       </fieldset>
 
-      <fieldset className="flex flex-col gap-3" disabled={pending}>
-        <legend className="mb-4 text-lg font-medium">{d.plan}</legend>
-        {DEALER_PLANS.map((plan) => (
-          <label
-            key={plan}
-            className="flex cursor-pointer items-start gap-3 rounded-md border border-zinc-200 p-4 has-[:checked]:border-zinc-900 dark:border-zinc-800 dark:has-[:checked]:border-zinc-100"
-          >
-            <input
-              type="radio"
-              name="requested_plan"
-              value={plan}
-              defaultChecked={plan === defaultPlan}
-              className="mt-1"
-            />
-            <span>
-              <span className="block text-sm font-medium">{t.plans.labels[plan]}</span>
-              <span className="block text-sm text-zinc-600 dark:text-zinc-400">{d.planNotes[plan]}</span>
-            </span>
-          </label>
-        ))}
-        <p className="text-xs text-zinc-600 dark:text-zinc-400">
-          {d.planHint}
-        </p>
-      </fieldset>
+      <div className="rounded-md border border-green-200 bg-green-50 p-4 text-sm text-green-900 dark:border-green-900 dark:bg-green-950 dark:text-green-200">
+        <p className="font-medium">{d.freeTitle}</p>
+        <p className="mt-1">{fmt(d.freeHint, { date: freeUntil })}</p>
+      </div>
 
       {error && <p className="text-sm text-red-600">{error}</p>}
       <button

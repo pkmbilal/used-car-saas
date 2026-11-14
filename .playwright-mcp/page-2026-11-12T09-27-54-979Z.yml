@@ -1,0 +1,114 @@
+- generic [active] [ref=f2e1]:
+  - banner [ref=f2e2]:
+    - navigation [ref=f2e3]:
+      - link [ref=f2e4] [cursor=pointer]:
+        - /url: /en
+        - img "KarSouq" [ref=f2e5]
+      - generic [ref=f2e6]:
+        - link "Buy Cars" [ref=f2e7] [cursor=pointer]:
+          - /url: /en/listings
+        - link "Rentals" [ref=f2e8] [cursor=pointer]:
+          - /url: /en/rentals
+        - link "Dealers" [ref=f2e9] [cursor=pointer]:
+          - /url: /en/dealers
+        - link "Pricing" [ref=f2e11] [cursor=pointer]:
+          - /url: /en/pricing
+        - link "Sell" [ref=f2e12] [cursor=pointer]:
+          - /url: /en/account/become-seller
+      - generic [ref=f2e13]:
+        - link "العربية" [ref=f2e14] [cursor=pointer]:
+          - /url: /ar/dealers
+          - text: ع
+        - link "Sign in" [ref=f2e18] [cursor=pointer]:
+          - /url: /en/login
+  - main [ref=f2e20]:
+    - generic [ref=f2e23]:
+      - paragraph [ref=f2e24]: DEALERS
+      - heading "Buy From Trusted Dealers" [level=1] [ref=f2e25]
+      - paragraph [ref=f2e26]: Browse dealer showrooms and see every car they have for sale.
+    - generic [ref=f2e27]:
+      - paragraph [ref=f2e28]: 2 Dealers
+      - list [ref=f2e29]:
+        - listitem [ref=f2e30]:
+          - link "المطرفية Dealer Email verified Jubail Since November 2026 0 cars" [ref=f2e32] [cursor=pointer]:
+            - /url: /en/sellers/4a2c52b9-4ec7-4c62-b309-b1e87edb89fc
+            - generic [ref=f2e33]:
+              - generic [aria-hidden] [ref=f2e35]: ا
+              - generic [ref=f2e36]:
+                - paragraph [ref=f2e37]: المطرفية
+                - generic [ref=f2e38]:
+                  - generic [ref=f2e39]: Dealer
+                  - generic [ref=f2e40]: Email verified
+            - generic [ref=f2e42]:
+              - generic [ref=f2e43]: Jubail
+              - generic [ref=f2e47]: Since November 2026
+              - generic [ref=f2e48]: 0 cars
+        - listitem [ref=f2e52]:
+          - link "معرض علي جارالله المري Dealer Email verified Jubail Since November 2026 1 car" [ref=f2e54] [cursor=pointer]:
+            - /url: /en/sellers/64188d5b-f12d-43c3-8d8c-dccd56eb7c83
+            - generic [ref=f2e55]:
+              - generic [aria-hidden] [ref=f2e57]: مع
+              - generic [ref=f2e58]:
+                - paragraph [ref=f2e59]: معرض علي جارالله المري
+                - generic [ref=f2e60]:
+                  - generic [ref=f2e61]: Dealer
+                  - generic [ref=f2e62]: Email verified
+            - generic [ref=f2e64]:
+              - generic [ref=f2e65]: Jubail
+              - generic [ref=f2e69]: Since November 2026
+              - generic [ref=f2e70]: 1 car
+  - contentinfo [ref=f2e74]:
+    - generic [ref=f2e75]:
+      - generic [ref=f2e76]:
+        - link [ref=f2e77] [cursor=pointer]:
+          - /url: /en
+          - img "KarSouq" [ref=f2e78]
+        - paragraph [ref=f2e79]: Saudi Arabia's marketplace for used cars. Buy and sell directly with sellers.
+      - generic [ref=f2e80]:
+        - paragraph [ref=f2e81]: BUY
+        - link "Browse Cars" [ref=f2e82] [cursor=pointer]:
+          - /url: /en/listings
+        - link "Saved Cars" [ref=f2e83] [cursor=pointer]:
+          - /url: /en/favorites
+        - link "Saved Searches" [ref=f2e84] [cursor=pointer]:
+          - /url: /en/saved-searches
+      - generic [ref=f2e85]:
+        - paragraph [ref=f2e86]: POPULAR MAKES
+        - link "Toyota" [ref=f2e87] [cursor=pointer]:
+          - /url: /en/brands/toyota
+        - link "Hyundai" [ref=f2e88] [cursor=pointer]:
+          - /url: /en/brands/hyundai
+        - link "Nissan" [ref=f2e89] [cursor=pointer]:
+          - /url: /en/brands/nissan
+        - link "Lexus" [ref=f2e90] [cursor=pointer]:
+          - /url: /en/brands/lexus
+      - generic [ref=f2e91]:
+        - paragraph [ref=f2e92]: CITIES
+        - link "Jubail" [ref=f2e93] [cursor=pointer]:
+          - /url: /en/locations/jubail
+        - link "All Cities" [ref=f2e94] [cursor=pointer]:
+          - /url: /en/locations
+      - generic [ref=f2e95]:
+        - paragraph [ref=f2e96]: SELL
+        - link "Sell Your Car" [ref=f2e97] [cursor=pointer]:
+          - /url: /en/account/become-seller
+        - link "Pricing" [ref=f2e98] [cursor=pointer]:
+          - /url: /en/pricing
+        - link "Dealer Tutorials" [ref=f2e99] [cursor=pointer]:
+          - /url: /en/tutorials
+        - link "Seller Dashboard" [ref=f2e100] [cursor=pointer]:
+          - /url: /en/dashboard
+        - link "My Account" [ref=f2e101] [cursor=pointer]:
+          - /url: /en/account
+    - generic [ref=f2e103]:
+      - paragraph [ref=f2e104]: © 2026 KarSouq, a CodeSudio product. All rights reserved.
+      - navigation [ref=f2e105]:
+        - link "Contact" [ref=f2e106] [cursor=pointer]:
+          - /url: /en/contact
+        - link "Privacy Policy" [ref=f2e107] [cursor=pointer]:
+          - /url: /en/privacy
+        - link "Terms of Use" [ref=f2e108] [cursor=pointer]:
+          - /url: /en/terms
+  - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=f2e114] [cursor=pointer]
+  - alert [ref=f2e118]

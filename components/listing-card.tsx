@@ -45,14 +45,17 @@ export async function ListingCard({ listing, favorited, sizes }: CardProps) {
             )}
             {(listing.sellerType || listing.sellerIdVerified) && (
               <div className="absolute bottom-3 start-3 flex flex-wrap gap-1.5">
-                {listing.sellerType && (
+                {listing.sellerType === "dealer" && (
                   <Badge
-                    className={`text-caption font-semibold ${
-                      listing.sellerType === "dealer" ? "bg-charcoal text-lime" : "bg-white/90 text-ink"
-                    }`}
+                    title={t.common.verifiedShowroomTitle}
+                    className="bg-charcoal text-caption font-semibold text-lime"
                   >
-                    {listing.sellerType === "dealer" ? t.common.dealer : t.common.privateSeller}
+                    <BadgeCheck />
+                    {t.common.verifiedShowroom}
                   </Badge>
+                )}
+                {listing.sellerType === "private" && (
+                  <Badge className="bg-white/90 text-caption font-semibold text-ink">{t.common.privateSeller}</Badge>
                 )}
                 {listing.sellerIdVerified && (
                   <Badge title={t.verification.idVerifiedTitle} className="bg-mint text-caption font-semibold text-brand">

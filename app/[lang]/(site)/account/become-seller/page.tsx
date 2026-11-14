@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Link from "@/components/locale-link";
 import { requireUser } from "@/lib/auth";
-import { isDealerPlanChoice } from "@/lib/dealer-application-options";
+import { formatDay } from "@/lib/format";
+import { launchFreeUntil } from "@/lib/launch";
 import { becomeSeller } from "../actions";
 import { DealerApplicationForm } from "../dealer-application/dealer-application-form";
 import { ProfileForm } from "../profile-form";
@@ -18,8 +19,8 @@ export default async function BecomeSellerPage({
 }: PageProps<"/[lang]/account/become-seller">) {
   const { profile } = await requireUser("/account/become-seller");
   if (profile.role === "seller") return localeRedirect("/dashboard");
-  const { type, plan } = await searchParams;
-  const { t } = await getDictionary();
+  const { type } = await searchParams;
+  const { t, locale } = await getDictionary();
   const p = t.account.becomeSellerPage;
   const sellerTypes = [
     { type: "individual", title: p.individualTitle, description: p.individualDescription },
@@ -39,7 +40,7 @@ export default async function BecomeSellerPage({
         <div className="mt-8">
           <DealerApplicationForm
             profile={profile}
-            defaultPlan={isDealerPlanChoice(plan) ? plan : undefined}
+            freeUntil={formatDay(launchFreeUntil(), locale)}
           />
         </div>
       </main>

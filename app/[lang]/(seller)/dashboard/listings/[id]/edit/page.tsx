@@ -49,7 +49,7 @@ export default async function EditListingPage({
           listingId={listing.id}
           photos={listing.images.map(({ id, url }) => ({ id, url }))}
           maxPhotos={PHOTO_LIMIT[profile.plan]}
-          canUpgrade={profile.plan !== "showroom"}
+          canUpgrade={false} // free launch: every plan has the same photo limit
         />
       </section>
 

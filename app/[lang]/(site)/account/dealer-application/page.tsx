@@ -2,11 +2,12 @@ import type { Metadata } from "next";
 import Link from "@/components/locale-link";
 import { requireUser } from "@/lib/auth";
 import { getLatestDealerApplication } from "@/lib/dealer-application";
-import { isDealerPlanChoice } from "@/lib/dealer-application-options";
 import { rich } from "@/components/rich-text";
 import { fmt } from "@/lib/dictionary";
+import { formatDay } from "@/lib/format";
 import { getDictionary } from "@/lib/i18n-server";
-import { isDealerPlan } from "@/lib/plans";
+import { launchFreeUntil } from "@/lib/launch";
+import { DEALER_MONTHLY_LISTING_LIMIT, isDealerPlan } from "@/lib/plans";
 import { DealerApplicationForm } from "./dealer-application-form";
 import { noIndex } from "@/lib/seo";
 
@@ -17,13 +18,10 @@ export async function generateMetadata(): Promise<Metadata> {
 
 const noticeClass = "rounded-md px-4 py-3 text-sm";
 
-export default async function DealerApplicationPage({
-  searchParams,
-}: PageProps<"/[lang]/account/dealer-application">) {
+export default async function DealerApplicationPage() {
   const { user, profile } = await requireUser("/account/dealer-application");
-  const { plan } = await searchParams;
   const latest = await getLatestDealerApplication(user.id);
-  const { t } = await getDictionary();
+  const { t, locale } = await getDictionary();
   const d = t.account.dealer;
 
   return (
@@ -33,7 +31,7 @@ export default async function DealerApplicationPage({
       </Link>
       <h1 className="mt-4 text-2xl font-semibold tracking-tight">{d.title}</h1>
       <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-        {d.intro}
+        {fmt(d.intro, { limit: DEALER_MONTHLY_LISTING_LIMIT })}
       </p>
 
       <div className="mt-8 flex flex-col gap-6">
@@ -68,7 +66,7 @@ export default async function DealerApplicationPage({
             )}
             <DealerApplicationForm
               profile={profile}
-              defaultPlan={isDealerPlanChoice(plan) ? plan : undefined}
+              freeUntil={formatDay(launchFreeUntil(), locale)}
             />
           </>
         )}

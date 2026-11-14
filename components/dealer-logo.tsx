@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { BadgeCheck } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { fmt } from "@/lib/dictionary";
 import { getDictionary } from "@/lib/i18n-server";
@@ -45,7 +46,14 @@ export async function DealerLogo({ name, logoUrl, size }: Props) {
   );
 }
 
+// Every seller on a dealer plan was approved by an admin after a Commercial
+// Registration check, so dealers show as a verified showroom.
 export async function DealerBadge() {
   const { t } = await getDictionary();
-  return <Badge className="bg-charcoal text-lime">{t.common.dealer}</Badge>;
+  return (
+    <Badge title={t.common.verifiedShowroomTitle} className="bg-charcoal text-lime">
+      <BadgeCheck />
+      {t.common.verifiedShowroom}
+    </Badge>
+  );
 }

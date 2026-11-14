@@ -40,7 +40,8 @@ export function PlanCard({ quota, openDrafts, t, locale, extraListings }: Props)
             </p>
           )}
         </div>
-        {quota.plan !== "showroom" && (
+        {/* Free launch: only free sellers have something to move up to (Verified Dealer). */}
+        {quota.plan === "free" && (
           <Link
             href="/pricing"
             className={`${linkClass} shrink-0 bg-gradient-to-b from-lime-light to-lime text-on-lime shadow-[inset_0_1px_0_rgba(255,255,255,.45)] hover:text-on-lime`}

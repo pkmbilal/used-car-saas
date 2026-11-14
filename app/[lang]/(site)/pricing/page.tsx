@@ -1,16 +1,24 @@
 import type { Metadata } from "next";
-import { PlusCircle, Sparkles, type LucideIcon } from "lucide-react";
+import { CalendarClock, Sparkles } from "lucide-react";
 import { getCurrentUser, type Profile } from "@/lib/auth";
 import { getLatestDealerApplication } from "@/lib/dealer-application";
 import { salesWhatsappUrl } from "@/lib/contact";
 import type { Dictionary } from "@/lib/dictionaries";
 import { getDictionary } from "@/lib/i18n-server";
 import { fmt } from "@/lib/dictionary";
-import { formatSAR } from "@/lib/format";
+import { formatDay, formatSAR } from "@/lib/format";
 import type { Locale } from "@/lib/i18n";
-import { addonPrice, getListingQuota, PLAN_DETAILS, PLANS, type Plan } from "@/lib/plans";
+import { launchFreeUntil } from "@/lib/launch";
+import {
+  addonPrice,
+  DEALER_MONTHLY_LISTING_LIMIT,
+  FREE_MONTHLY_LISTING_LIMIT,
+  getListingQuota,
+  isDealerPlan,
+  PHOTO_LIMIT_PER_LISTING,
+} from "@/lib/plans";
 import { PricingFaq } from "./faq";
-import { PlanCard, type PlanCta } from "./plan-card";
+import { PlanCard, type PlanCardProps, type PlanCta } from "./plan-card";
 import { UsageBanner } from "./usage-banner";
 import { pageMetadata } from "@/lib/seo";
 
@@ -23,37 +31,68 @@ function signupHref(next: string): string {
   return `/signup?next=${encodeURIComponent(next)}`;
 }
 
-// Billing isn't wired up, so upgrades go through the dealer application and a
-// moderator grants the plan.
-function planCta(
-  t: Dictionary,
-  plan: Plan,
-  profile: Pick<Profile, "role" | "plan"> | null,
-  applicationPending: boolean,
-): PlanCta {
-  const isFree = plan === "free";
+type ViewerProfile = Pick<Profile, "role" | "plan"> | null;
 
-  if (!profile) {
-    return {
-      label: t.pricing.signUp,
-      href: signupHref(isFree ? "/account/become-seller" : `/account/become-seller?type=dealer&plan=${plan}`),
-    };
-  }
-
-  const isSeller = profile.role === "seller";
-  if (isFree && !isSeller) {
+function freeCta(t: Dictionary, profile: ViewerProfile): PlanCta {
+  if (!profile) return { label: t.pricing.signUp, href: signupHref("/account/become-seller") };
+  if (profile.role !== "seller") {
     return { label: t.pricing.startSelling, href: "/account/become-seller?type=individual" };
   }
-  if (plan === profile.plan) return { label: t.pricing.currentPlan, disabled: true };
-  if (PLANS.indexOf(plan) < PLANS.indexOf(profile.plan)) return null;
-  if (applicationPending) return { label: t.pricing.underReview, disabled: true };
+  return profile.plan === "free" ? { label: t.pricing.currentPlan, disabled: true } : null;
+}
 
+// Free during launch: an admin approves the CR and grants 'dealer', no payment.
+function dealerCta(t: Dictionary, profile: ViewerProfile, applicationPending: boolean): PlanCta {
+  if (!profile) return { label: t.pricing.signUp, href: signupHref("/account/become-seller?type=dealer") };
+  if (isDealerPlan(profile.plan)) return { label: t.pricing.currentPlan, disabled: true };
+  if (applicationPending) return { label: t.pricing.underReview, disabled: true };
   return {
-    label: t.pricing.upgrade,
-    href: isSeller
-      ? `/account/dealer-application?plan=${plan}`
-      : `/account/become-seller?type=dealer&plan=${plan}`,
+    label: t.pricing.applyDealer,
+    href: profile.role === "seller" ? "/account/dealer-application" : "/account/become-seller?type=dealer",
   };
+}
+
+function tiers(
+  t: Dictionary,
+  freeUntil: string,
+  profile: ViewerProfile,
+  applicationPending: boolean,
+): (PlanCardProps & { key: string })[] {
+  const p = t.pricing.tiers;
+  const limits = (listings: number) => (feature: string) =>
+    fmt(feature, { listings, photos: PHOTO_LIMIT_PER_LISTING });
+
+  return [
+    {
+      key: "free",
+      name: p.free.name,
+      tagline: p.free.tagline,
+      price: p.free.price,
+      features: p.free.features.map(limits(FREE_MONTHLY_LISTING_LIMIT)),
+      cta: freeCta(t, profile),
+    },
+    {
+      key: "dealer",
+      name: p.dealer.name,
+      tagline: p.dealer.tagline,
+      price: p.dealer.price,
+      priceNote: fmt(p.dealer.priceNote, { date: freeUntil }),
+      badge: p.dealer.badge,
+      features: p.dealer.features.map(limits(DEALER_MONTHLY_LISTING_LIMIT)),
+      highlighted: true,
+      cta: dealerCta(t, profile, applicationPending),
+    },
+    {
+      key: "tools",
+      name: p.tools.name,
+      tagline: p.tools.tagline,
+      price: p.tools.price,
+      badge: t.pricing.comingSoon,
+      features: p.tools.features,
+      comingSoon: true,
+      cta: null,
+    },
+  ];
 }
 
 export default async function PricingPage() {
@@ -67,6 +106,7 @@ export default async function PricingPage() {
     : [null, null];
   const applicationPending = latest?.status === "pending";
   const salesUrl = salesWhatsappUrl(t.pricing.salesMessage);
+  const freeUntil = formatDay(launchFreeUntil(), locale);
 
   return (
     <main className="light bg-canvas text-ink">
@@ -89,14 +129,14 @@ export default async function PricingPage() {
             <UsageBanner quota={quota} applicationPending={applicationPending} />
           </div>
         )}
-        <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-5">
-          {PLANS.map((plan) => (
-            <li key={plan}>
-              <PlanCard
-                plan={plan}
-                details={PLAN_DETAILS[plan]}
-                cta={planCta(t, plan, current?.profile ?? null, applicationPending)}
-              />
+        <p className="mb-6 flex items-start gap-2.5 rounded-lg bg-mint px-4 py-3 text-label font-medium text-forest">
+          <CalendarClock className="mt-0.5 size-4 shrink-0" aria-hidden />
+          {fmt(t.pricing.launchNote, { date: freeUntil })}
+        </p>
+        <ul className="grid gap-4 md:grid-cols-3 lg:gap-5">
+          {tiers(t, freeUntil, current?.profile ?? null, applicationPending).map(({ key, ...tier }) => (
+            <li key={key}>
+              <PlanCard {...tier} />
             </li>
           ))}
         </ul>
@@ -119,38 +159,28 @@ export default async function PricingPage() {
   );
 }
 
-// One-off purchases for sellers who don't need a whole plan.
+// The Featured Boost: the only paid item during launch. Extra listings are
+// still in the database (addon_requests) but no longer sold.
 function Addons({ t, locale }: { t: Dictionary; locale: Locale }) {
   const a = t.addons;
-  const items: { icon: LucideIcon; title: string; text: string; price: number }[] = [
-    { icon: Sparkles, title: a.boostTitle, text: a.boostText, price: addonPrice("featured_boost") },
-    { icon: PlusCircle, title: a.extraTitle, text: a.extraText, price: addonPrice("extra_listings") },
-  ];
 
   return (
     <section className="mt-10">
       <h2 className="text-xl font-semibold tracking-tight">{a.pricingTitle}</h2>
       <p className="mt-1 max-w-2xl text-label text-muted-foreground">{a.pricingIntro}</p>
-      <ul className="mt-4 grid gap-4 sm:grid-cols-2">
-        {items.map(({ icon: Icon, title, text, price }) => (
-          <li
-            key={title}
-            className="flex gap-4 rounded-lg bg-white p-5 shadow-[0_2px_10px_rgba(20,30,25,.05)]"
-          >
-            <span className="grid size-10 shrink-0 place-items-center rounded-lg bg-mint text-brand">
-              <Icon className="size-5" aria-hidden />
-            </span>
-            <div className="min-w-0">
-              <p className="font-semibold">{title}</p>
-              <p className="mt-1 text-label text-muted-foreground">{text}</p>
-              <p className="mt-2 text-sm font-semibold text-brand">
-                {fmt(a.perListing, { price: formatSAR(price, locale) })}{" "}
-                <span className="font-normal text-muted-foreground">{a.plusVat}</span>
-              </p>
-            </div>
-          </li>
-        ))}
-      </ul>
+      <div className="mt-4 flex max-w-xl gap-4 rounded-lg bg-white p-5 shadow-[0_2px_10px_rgba(20,30,25,.05)]">
+        <span className="grid size-10 shrink-0 place-items-center rounded-lg bg-mint text-brand">
+          <Sparkles className="size-5" aria-hidden />
+        </span>
+        <div className="min-w-0">
+          <p className="font-semibold">{a.boostTitle}</p>
+          <p className="mt-1 text-label text-muted-foreground">{a.boostText}</p>
+          <p className="mt-2 text-sm font-semibold text-brand">
+            {fmt(a.perListing, { price: formatSAR(addonPrice("featured_boost"), locale) })}{" "}
+            <span className="font-normal text-muted-foreground">{a.plusVat}</span>
+          </p>
+        </div>
+      </div>
     </section>
   );
 }

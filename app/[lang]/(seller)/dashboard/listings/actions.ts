@@ -84,9 +84,12 @@ export async function requestFeaturedBoost(listingId: string): Promise<ActionRes
   return addonResult(await requestAddon("featured_boost", listingId, 1));
 }
 
+// Free launch: extra listings aren't sold any more (the UI no longer offers
+// them). Kept so old clients get a clear error instead of a missing action.
 export async function requestExtraListings(quantity: number): Promise<ActionResult> {
+  void quantity;
   await requireSeller();
-  return addonResult(await requestAddon("extra_listings", null, quantity));
+  return { error: "Extra listings aren't available during the free launch." };
 }
 
 async function addonResult(result: Awaited<ReturnType<typeof requestAddon>>): Promise<ActionResult> {
