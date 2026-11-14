@@ -103,6 +103,15 @@ export const ar: DictionaryShape<typeof en> = {
       signIn: "دخول",
     },
   },
+  legal: {
+    eyebrow: "قانوني",
+    documents: "المستندات القانونية",
+    onThisPage: "في هذه الصفحة",
+    questionsTitle: "لديك سؤال عن هذه السياسة؟",
+    questionsText: "راسلنا وسنرد عليك.",
+    emailUs: "راسلنا",
+    backToTop: "العودة للأعلى",
+  },
   footer: {
     blurb: "سوق السيارات المستعملة في المملكة العربية السعودية. اشترِ وبِع مباشرة مع البائعين.",
     buy: "شراء",

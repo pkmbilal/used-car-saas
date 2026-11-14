@@ -76,6 +76,15 @@ export const en = {
       signIn: "Sign in",
     },
   },
+  legal: {
+    eyebrow: "Legal",
+    documents: "Legal documents",
+    onThisPage: "On this page",
+    questionsTitle: "Questions about this policy?",
+    questionsText: "Write to us and we'll get back to you.",
+    emailUs: "Email us",
+    backToTop: "Back to top",
+  },
   footer: {
     blurb: "Saudi Arabia's marketplace for used cars. Buy and sell directly with sellers.",
     buy: "BUY",
