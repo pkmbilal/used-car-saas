@@ -1,11 +1,6 @@
 import "server-only";
 import { randomUUID } from "node:crypto";
-import {
-  DEALER_DOC_TYPES,
-  isDealerPlanChoice,
-  REGISTRATION_NUMBER_MAX,
-  type DealerDoc,
-} from "@/lib/dealer-application-options";
+import { REGISTRATION_NUMBER_MAX, type DealerDoc } from "@/lib/dealer-application-options";
 import { presignPut, PRIVATE_BUCKET } from "@/lib/r2";
 import { BUSINESS_NAME_MAX, SHOWROOM_ADDRESS_MAX } from "@/lib/storefront-options";
 import { createClient } from "@/lib/supabase/server";
@@ -20,9 +15,11 @@ type DealerApplicationInsert = Database["public"]["Tables"]["dealer_applications
 
 export type DealerApplicationInput = Pick<
   DealerApplicationInsert,
-  "business_name" | "showroom_address" | "cr_number" | "vat_number" | "muroor_number" | "requested_plan"
+  "business_name" | "showroom_address" | "cr_number" | "requested_plan"
 >;
 
+// Sign-up only takes the CR document; VAT and Muroor are added later from the
+// storefront page (lib/dealer-documents.ts).
 export type DealerDocKeys = Partial<Record<DealerDoc, string>>;
 
 export async function getLatestDealerApplication(
@@ -40,7 +37,7 @@ export async function getLatestDealerApplication(
   return data;
 }
 
-function docKeyPattern(userId: string) {
+export function docKeyPattern(userId: string) {
   return new RegExp(`^dealer-docs/${userId}/[0-9a-f-]{36}\\.(jpg|png|webp|pdf)$`);
 }
 
@@ -59,8 +56,9 @@ export async function requestDealerDocUpload(
   return { url, key };
 }
 
-// Registration numbers are optional; keep digits and letters only.
-function registrationNumber(formData: FormData, name: string): string | null | undefined {
+// Registration numbers: keep digits and letters only. null = left blank,
+// undefined = invalid.
+export function registrationNumber(formData: FormData, name: string): string | null | undefined {
   const value = String(formData.get(name) ?? "").replace(/[\s-]/g, "").toUpperCase();
   if (!value) return null;
   if (value.length > REGISTRATION_NUMBER_MAX || !/^[0-9A-Z]+$/.test(value)) return undefined;
@@ -72,7 +70,6 @@ export function parseDealerApplication(
 ): { data: DealerApplicationInput } | { error: string } {
   const businessName = String(formData.get("business_name") ?? "").trim();
   const address = String(formData.get("showroom_address") ?? "").trim();
-  const plan = formData.get("requested_plan");
 
   if (businessName.length < 2 || businessName.length > BUSINESS_NAME_MAX) {
     return { error: `Business name must be 2–${BUSINESS_NAME_MAX} characters.` };
@@ -81,23 +78,18 @@ export function parseDealerApplication(
     return { error: `Showroom address must be at most ${SHOWROOM_ADDRESS_MAX} characters.` };
   }
 
+  // The CR is what an admin verifies, so it's required (the column stays
+  // nullable for older applications).
   const cr = registrationNumber(formData, "cr_number");
-  if (cr === undefined) return { error: "Enter a valid CR number." };
-  const vat = registrationNumber(formData, "vat_number");
-  if (vat === undefined) return { error: "Enter a valid VAT number." };
-  const muroor = registrationNumber(formData, "muroor_number");
-  if (muroor === undefined) return { error: "Enter a valid Muroor certificate number." };
+  if (!cr) return { error: "Enter a valid CR number." };
 
-  if (!isDealerPlanChoice(plan)) return { error: "Choose a dealer plan." };
-
+  // Free launch: everyone applies for Verified Dealer ('dealer').
   return {
     data: {
       business_name: businessName,
       showroom_address: address || null,
       cr_number: cr,
-      vat_number: vat,
-      muroor_number: muroor,
-      requested_plan: plan,
+      requested_plan: "dealer",
     },
   };
 }
@@ -108,14 +100,10 @@ export async function submitDealerApplication(
   data: DealerApplicationInput,
   docKeys: DealerDocKeys,
 ): Promise<string | undefined> {
-  // Documents are optional, but any key given must be one we issued this user.
-  const pattern = docKeyPattern(userId);
-  const keys: Record<DealerDoc, string | null> = { cr: null, vat: null, muroor: null };
-  for (const doc of DEALER_DOC_TYPES) {
-    const key = docKeys[doc];
-    if (key === undefined || key === null) continue;
-    if (typeof key !== "string" || !pattern.test(key)) return "Invalid upload.";
-    keys[doc] = key;
+  // The CR document is optional, but a key given must be one we issued this user.
+  const crKey = docKeys.cr ?? null;
+  if (crKey !== null && (typeof crKey !== "string" || !docKeyPattern(userId).test(crKey))) {
+    return "Invalid upload.";
   }
 
   // The insert policy rejects buyers, suspended sellers and sellers already on
@@ -124,9 +112,7 @@ export async function submitDealerApplication(
   const { error } = await supabase.from("dealer_applications").insert({
     ...data,
     user_id: userId,
-    cr_doc_key: keys.cr,
-    vat_doc_key: keys.vat,
-    muroor_doc_key: keys.muroor,
+    cr_doc_key: crKey,
   });
   if (!error) return undefined;
   return error.code === "23505"

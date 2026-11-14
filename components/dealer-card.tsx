@@ -1,6 +1,6 @@
 import Link from "@/components/locale-link";
 import { ArrowRight, MapPin } from "lucide-react";
-import { DealerBadge, DealerLogo } from "@/components/dealer-logo";
+import { DealerLogo, VerifiedTick } from "@/components/dealer-logo";
 import { VerificationBadges } from "@/components/verification-badges";
 import { Card } from "@/components/ui/card";
 import { cityName, count, fmt } from "@/lib/dictionary";
@@ -19,9 +19,11 @@ export async function DealerCard({ dealer, responsive }: { dealer: DealerSummary
         <div className="flex items-start gap-4">
           <DealerLogo name={storefront.name} logoUrl={storefront.logoUrl} size="lg" />
           <div className="min-w-0 flex-1">
-            <p className="truncate text-sm font-semibold">{storefront.name}</p>
+            <p className="flex min-w-0 items-center gap-1 text-sm font-semibold">
+              <span className="truncate">{storefront.name}</span>
+              <VerifiedTick />
+            </p>
             <div className="mt-2 flex flex-wrap gap-1.5">
-              <DealerBadge />
               <VerificationBadges profile={profile} responsive={responsive} />
             </div>
           </div>

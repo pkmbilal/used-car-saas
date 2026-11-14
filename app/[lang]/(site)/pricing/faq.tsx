@@ -4,8 +4,8 @@ import { rich } from "@/components/rich-text";
 import { getDictionary } from "@/lib/i18n-server";
 
 // The answers live in the dictionaries (pricing.faqs). Keep them in sync with
-// how plans work: admin-granted dealer plans, the enforce_listing_quota
-// trigger, feature_listing's allowance and Riyadh-time quota months.
+// how plans work: the free launch (Verified Dealer granted on CR approval),
+// the enforce_listing_quota trigger, paid boosts and Riyadh-time quota months.
 export async function PricingFaq({ salesUrl }: { salesUrl: string | null }) {
   const { t } = await getDictionary();
   const contact = salesUrl ? (

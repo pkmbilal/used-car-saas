@@ -7,16 +7,25 @@ type Props = {
   profile: { email_verified_at: string | null; id_verified_at: string | null };
   // From getResponseStats(); the badge shows only when it is earned.
   responsive?: Responsiveness;
+  // Approved dealer (CR checked): shows "Verified dealer" in place of the
+  // weaker "Email verified" pill.
+  dealer?: boolean;
 };
 
-export async function VerificationBadges({ profile, responsive }: Props) {
+export async function VerificationBadges({ profile, responsive, dealer = false }: Props) {
   const showResponsive = !!responsive?.badge;
-  if (!profile.email_verified_at && !profile.id_verified_at && !showResponsive) return null;
+  if (!dealer && !profile.email_verified_at && !profile.id_verified_at && !showResponsive) return null;
   const { t } = await getDictionary();
   const v = t.verification;
 
   return (
     <span className="inline-flex flex-wrap gap-1.5">
+      {dealer && (
+        <Badge title={t.common.verifiedShowroomTitle} className="bg-brand text-white">
+          <BadgeCheck />
+          {t.common.verifiedShowroom}
+        </Badge>
+      )}
       {profile.id_verified_at && (
         <Badge variant="secondary" title={v.idVerifiedTitle} className="bg-mint text-brand">
           <BadgeCheck />
@@ -33,7 +42,7 @@ export async function VerificationBadges({ profile, responsive }: Props) {
           {v.responsive}
         </Badge>
       )}
-      {profile.email_verified_at && (
+      {!dealer && profile.email_verified_at && (
         <Badge variant="outline" className="text-muted-foreground">
           <Mail />
           {v.emailVerified}

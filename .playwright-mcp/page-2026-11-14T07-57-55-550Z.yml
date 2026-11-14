@@ -1,0 +1,104 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - navigation [ref=e3]:
+      - link [ref=e4] [cursor=pointer]:
+        - /url: /en
+        - img "KarSouq" [ref=e5]
+      - generic [ref=e6]:
+        - link "Buy Cars" [ref=e7] [cursor=pointer]:
+          - /url: /en/listings
+        - link "Rentals" [ref=e8] [cursor=pointer]:
+          - /url: /en/rentals
+        - link "Dealers" [ref=e9] [cursor=pointer]:
+          - /url: /en/dealers
+        - link "Pricing" [ref=e10] [cursor=pointer]:
+          - /url: /en/pricing
+        - link "Sell" [ref=e11] [cursor=pointer]:
+          - /url: /en/account/become-seller
+      - generic [ref=e12]:
+        - link "العربية" [ref=e13] [cursor=pointer]:
+          - /url: /ar/saved-searches
+          - text: ع
+        - button "Account menu" [ref=e17] [cursor=pointer]
+  - main [ref=e24]:
+    - generic [ref=e26]:
+      - generic [ref=e27]: Your alerts
+      - heading "Saved searches" [level=1] [ref=e30]
+      - paragraph [ref=e32]:
+        - text: New cars matching your searches show up here. Save up to 20 from the
+        - link "browse page" [ref=e33] [cursor=pointer]:
+          - /url: /en/listings
+        - text: .
+    - generic [ref=e34]:
+      - heading "No saved searches yet" [level=2] [ref=e38]
+      - paragraph [ref=e39]: Save a search and we'll show you every new car that matches it, right here.
+      - paragraph [ref=e40]: How it works
+      - list [ref=e41]:
+        - listitem [ref=e42]:
+          - generic [ref=e43]: "1"
+          - generic [ref=e46]: Filter cars by make, price, city and more
+        - listitem [ref=e47]:
+          - generic [ref=e48]: "2"
+          - generic [ref=e52]: Tap “Save this search” on the browse page
+        - listitem [ref=e53]:
+          - generic [ref=e54]: "3"
+          - generic [ref=e59]: New matches show up here
+      - generic [ref=e60]:
+        - link "Browse cars" [ref=e61] [cursor=pointer]:
+          - /url: /en/listings
+        - link "Favorites" [ref=e65] [cursor=pointer]:
+          - /url: /en/favorites
+  - contentinfo [ref=e68]:
+    - generic [ref=e69]:
+      - generic [ref=e70]:
+        - link [ref=e71] [cursor=pointer]:
+          - /url: /en
+          - img "KarSouq" [ref=e72]
+        - paragraph [ref=e73]: Saudi Arabia's marketplace for used cars. Buy and sell directly with sellers.
+      - generic [ref=e74]:
+        - paragraph [ref=e75]: BUY
+        - link "Browse Cars" [ref=e76] [cursor=pointer]:
+          - /url: /en/listings
+        - link "Saved Cars" [ref=e77] [cursor=pointer]:
+          - /url: /en/favorites
+        - link "Saved Searches" [ref=e78] [cursor=pointer]:
+          - /url: /en/saved-searches
+      - generic [ref=e79]:
+        - paragraph [ref=e80]: POPULAR MAKES
+        - link "Toyota" [ref=e81] [cursor=pointer]:
+          - /url: /en/brands/toyota
+        - link "Hyundai" [ref=e82] [cursor=pointer]:
+          - /url: /en/brands/hyundai
+        - link "Nissan" [ref=e83] [cursor=pointer]:
+          - /url: /en/brands/nissan
+        - link "Lexus" [ref=e84] [cursor=pointer]:
+          - /url: /en/brands/lexus
+      - generic [ref=e85]:
+        - paragraph [ref=e86]: CITIES
+        - link "Jubail" [ref=e87] [cursor=pointer]:
+          - /url: /en/locations/jubail
+        - link "All Cities" [ref=e88] [cursor=pointer]:
+          - /url: /en/locations
+      - generic [ref=e89]:
+        - paragraph [ref=e90]: SELL
+        - link "Sell Your Car" [ref=e91] [cursor=pointer]:
+          - /url: /en/account/become-seller
+        - link "Pricing" [ref=e92] [cursor=pointer]:
+          - /url: /en/pricing
+        - link "Dealer Tutorials" [ref=e93] [cursor=pointer]:
+          - /url: /en/tutorials
+        - link "Seller Dashboard" [ref=e94] [cursor=pointer]:
+          - /url: /en/dashboard
+        - link "My Account" [ref=e95] [cursor=pointer]:
+          - /url: /en/account
+    - generic [ref=e97]:
+      - paragraph [ref=e98]: © 2026 KarSouq, a CodeSudio product. All rights reserved.
+      - navigation [ref=e99]:
+        - link "Contact" [ref=e100] [cursor=pointer]:
+          - /url: /en/contact
+        - link "Privacy Policy" [ref=e101] [cursor=pointer]:
+          - /url: /en/privacy
+        - link "Terms of Use" [ref=e102] [cursor=pointer]:
+          - /url: /en/terms
+  - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=e108] [cursor=pointer]

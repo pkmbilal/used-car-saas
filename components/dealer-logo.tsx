@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { Badge } from "@/components/ui/badge";
+import { BadgeCheck } from "lucide-react";
 import { fmt } from "@/lib/dictionary";
 import { getDictionary } from "@/lib/i18n-server";
 
@@ -45,7 +45,16 @@ export async function DealerLogo({ name, logoUrl, size }: Props) {
   );
 }
 
-export async function DealerBadge() {
+// Every seller on a dealer plan was approved by an admin after a Commercial
+// Registration check, so dealers get a verified tick right after their name
+// (or the car title on listing cards). Sized in em to match the text.
+// `shine` adds the hover shine sweep (listing cards, inside a `group`).
+export async function VerifiedTick({ shine = false }: { shine?: boolean }) {
   const { t } = await getDictionary();
-  return <Badge className="bg-charcoal text-lime">{t.common.dealer}</Badge>;
+  return (
+    <span title={t.common.verifiedShowroom} className={`inline-flex shrink-0 ${shine ? "ks-tick" : ""}`}>
+      <BadgeCheck aria-hidden className="size-[1.1em] fill-brand stroke-white" />
+      <span className="sr-only">{t.common.verifiedShowroom}</span>
+    </span>
+  );
 }

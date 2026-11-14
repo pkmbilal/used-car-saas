@@ -1,10 +1,11 @@
 import Image from "next/image";
 import Link from "@/components/locale-link";
 import { FavoriteButton } from "@/components/favorite-button";
-import { ArrowRight, BadgeCheck, Car, Construction, Fuel, MapPin } from "lucide-react";
+import { BadgeCheck, Car, Construction, Fuel, MapPin } from "lucide-react";
 import { RiyalPrice } from "@/components/riyal-price";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
+import { VerifiedTick } from "@/components/dealer-logo";
 import { listingName } from "@/lib/car-names";
 import { equipmentTypeName } from "@/lib/equipment";
 import { formatHours, formatKm } from "@/lib/format";
@@ -43,16 +44,10 @@ export async function ListingCard({ listing, favorited, sizes }: CardProps) {
                 className="object-cover"
               />
             )}
-            {(listing.sellerType || listing.sellerIdVerified) && (
+            {(listing.sellerType === "private" || listing.sellerIdVerified) && (
               <div className="absolute bottom-3 start-3 flex flex-wrap gap-1.5">
-                {listing.sellerType && (
-                  <Badge
-                    className={`text-caption font-semibold ${
-                      listing.sellerType === "dealer" ? "bg-charcoal text-lime" : "bg-white/90 text-ink"
-                    }`}
-                  >
-                    {listing.sellerType === "dealer" ? t.common.dealer : t.common.privateSeller}
-                  </Badge>
+                {listing.sellerType === "private" && (
+                  <Badge className="bg-white/90 text-caption font-semibold text-ink">{t.common.privateSeller}</Badge>
                 )}
                 {listing.sellerIdVerified && (
                   <Badge title={t.verification.idVerifiedTitle} className="bg-mint text-caption font-semibold text-brand">
@@ -73,9 +68,16 @@ export async function ListingCard({ listing, favorited, sizes }: CardProps) {
               </div>
             )}
           </div>
+          {/* Dealer cards: on hover this whole block slides up over the
+              bottom of the photo, revealing the "Verified showroom" bar
+              underneath, so the car details stay visible. */}
+          <div
+            className={`relative flex flex-1 flex-col bg-card ${listing.sellerType === "dealer" ? "ks-dealer-slide" : ""}`}
+          >
           <div className="flex flex-1 flex-col px-4 pt-3.5 pb-4">
-            <p className="truncate text-sm font-semibold">
-              {listingName(locale, listing)}
+            <p className="flex min-w-0 items-center gap-1 text-sm font-semibold">
+              <span className="truncate">{listingName(locale, listing)}</span>
+              {listing.sellerType === "dealer" && <VerifiedTick shine />}
             </p>
             <p className="mt-2 flex flex-wrap gap-x-2 text-caption text-muted-foreground">
               <span>{listing.year}</span>
@@ -131,10 +133,17 @@ export async function ListingCard({ listing, favorited, sizes }: CardProps) {
                 <MapPin className="size-3.5 sm:size-3" />
                 {cityName(t, listing.city)}
               </span>
-              <span className="ms-auto flex size-5 items-center justify-center rounded-full border border-ink/80 transition group-hover:border-brand group-hover:bg-brand group-hover:text-white">
-                <ArrowRight className="size-2.5" strokeWidth={2.6} />
-              </span>
             </div>
+          </div>
+          {listing.sellerType === "dealer" && (
+            <span
+              aria-hidden
+              className="ks-dealer-bar absolute inset-x-0 top-full flex h-9 items-center justify-center gap-1.5 bg-brand text-caption font-semibold text-white"
+            >
+              <BadgeCheck className="size-4" />
+              {t.common.verifiedShowroom}
+            </span>
+          )}
           </div>
         </Link>
       </Card>

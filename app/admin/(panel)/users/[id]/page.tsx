@@ -203,7 +203,8 @@ export default async function AdminUserPage({ params }: PageProps<"/admin/users/
   const liveListings = detail.listings.filter((listing) => listing.status === "active").length;
   const paidTotal = detail.payments.reduce((sum, payment) => sum + Number(payment.amount), 0);
   const openReports = detail.reports.filter((report) => report.status === "open").length;
-  const requestCount = detail.idRequests.length + detail.dealerApplications.length;
+  const business = detail.businessDocuments;
+  const requestCount = detail.idRequests.length + detail.dealerApplications.length + (business ? 1 : 0);
 
   return (
     <div className="grid items-start gap-6 xl:grid-cols-[minmax(0,1fr)_24rem]">
@@ -546,6 +547,16 @@ export default async function AdminUserPage({ params }: PageProps<"/admin/users/
                   <Documents docs={application.docs.map((doc) => ({ ...doc, label: DEALER_DOCS[doc.doc] }))} />
                 </Row>
               ))}
+              {business && (
+                <Row
+                  icon={FileCheck}
+                  tone="neutral"
+                  title="Business documents"
+                  meta={`VAT ${business.vatNumber ?? "—"} · Muroor ${business.muroorNumber ?? "—"} · updated ${formatDay(business.updatedAt, "en")}`}
+                >
+                  <Documents docs={business.docs.map((doc) => ({ ...doc, label: DEALER_DOCS[doc.doc] }))} />
+                </Row>
+              )}
             </ul>
           )}
         </Panel>

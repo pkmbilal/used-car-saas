@@ -3,10 +3,10 @@ import { addonReference, type PendingAddon } from "@/lib/addons";
 import { salesWhatsappUrl } from "@/lib/contact";
 import { count, fmt } from "@/lib/dictionary";
 import type { Dictionary } from "@/lib/dictionaries";
-import { formatDay, formatSAR } from "@/lib/format";
+import { formatDay } from "@/lib/format";
 import type { Locale } from "@/lib/i18n";
 import type { SellerListing } from "@/lib/insights";
-import { addonPrice, EXTRA_LISTING_PACKS, isDealerPlan, isPlanExpiringSoon, type ListingQuota } from "@/lib/plans";
+import { isPlanExpiringSoon, type ListingQuota } from "@/lib/plans";
 import { PlanCard } from "./plan-card";
 
 // The plan card with the extra-listings offer, plus the expiry and suspension
@@ -32,27 +32,16 @@ export function PlanSummary({
   const d = t.dashboard;
   const pendingExtra = pendingAddons.find((addon) => addon.kind === "extra_listings");
   const pendingRef = pendingExtra ? addonReference(pendingExtra.id) : null;
-  // Paid plans only get the offer once the monthly limit is used up (or while
-  // a request is waiting); free sellers always see it.
-  const offerExtra =
-    quota !== null &&
-    quota.limit !== null &&
-    (!isDealerPlan(quota.plan) || quota.used >= quota.limit || pendingExtra !== undefined);
+  // Free launch: extra listings are no longer sold. A request made before the
+  // switch still shows, so the seller can settle or ask about it.
   const extraListings =
-    offerExtra
+    pendingExtra && pendingRef
       ? {
-          packs: EXTRA_LISTING_PACKS.map((quantity) => ({
-            quantity,
-            label: count(locale, quantity, t.addons.pack),
-            price: formatSAR(addonPrice("extra_listings", quantity), locale),
-          })),
-          pending:
-            pendingExtra && pendingRef
-              ? {
-                  note: count(locale, pendingExtra.quantity, t.addons.extraPending, { ref: pendingRef }),
-                  whatsappUrl: salesWhatsappUrl(fmt(t.addons.whatsappExtra, { ref: pendingRef })),
-                }
-              : null,
+          packs: [],
+          pending: {
+            note: count(locale, pendingExtra.quantity, t.addons.extraPending, { ref: pendingRef }),
+            whatsappUrl: salesWhatsappUrl(fmt(t.addons.whatsappExtra, { ref: pendingRef })),
+          },
         }
       : null;
   const openDrafts = listings.filter(

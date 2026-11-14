@@ -99,7 +99,7 @@ export async function ListingDescription({ text }: { text?: string | null }) {
   return (
     <section>
       <h2 className="text-lg font-semibold">{t.listingPage.description}</h2>
-      <p className="mt-3 max-w-xl text-label leading-relaxed whitespace-pre-line text-ink/75">{text}</p>
+      <p className="mt-3 max-w-2xl text-label leading-relaxed sm:text-[0.9375rem] whitespace-pre-line text-ink/75">{text}</p>
     </section>
   );
 }

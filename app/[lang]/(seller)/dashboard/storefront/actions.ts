@@ -2,6 +2,12 @@
 
 import { randomUUID } from "node:crypto";
 import { getCurrentUser } from "@/lib/auth";
+import { requestDealerDocUpload } from "@/lib/dealer-application";
+import {
+  parseDealerDocuments,
+  saveDealerDocuments,
+  type BusinessDocKeys,
+} from "@/lib/dealer-documents";
 import { IMAGE_TYPES } from "@/lib/listing-options";
 import { isDealerPlan } from "@/lib/plans";
 import { deleteObjects, presignPut } from "@/lib/r2";
@@ -51,6 +57,36 @@ export async function updateStorefront(
 
   revalidateStorefront(current.user.id);
   return { saved: true };
+}
+
+// ---------------------------------------------------------------------------
+// Business documents (VAT, Muroor): private, only moderators see them.
+// ---------------------------------------------------------------------------
+
+export async function requestBusinessDocUpload(
+  contentType: string,
+  size: number,
+): Promise<{ url: string; key: string } | { error: string }> {
+  const current = await requireDealer();
+  if (!current) return { error: NOT_DEALER_ERROR };
+  return requestDealerDocUpload(current.user.id, contentType, size);
+}
+
+export async function saveBusinessDocuments(
+  formData: FormData,
+  keys: BusinessDocKeys,
+): Promise<ActionResult> {
+  const current = await requireDealer();
+  if (!current) return { error: NOT_DEALER_ERROR };
+
+  const parsed = parseDealerDocuments(formData);
+  if ("error" in parsed) return { error: parsed.error };
+
+  const error = await saveDealerDocuments(current.user.id, parsed.data, keys);
+  if (error) return { error };
+
+  revalidateLocalized("/dashboard/storefront");
+  return {};
 }
 
 // ---------------------------------------------------------------------------

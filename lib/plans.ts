@@ -22,20 +22,14 @@ export const PLAN_LABELS: Record<Plan, string> = {
 // Ordered lowest to highest.
 export const PLANS = Object.keys(PLAN_LABELS) as Plan[];
 
-export type PlanDetails = {
-  price: number; // SAR per month; billing isn't wired up, a moderator grants plans
-  highlighted?: boolean;
-};
-
-// Prices for /pricing; the marketing copy is in the dictionaries
-// (plans.details), whose listing limits must match plan_monthly_listing_limit
-// (latest in the showroom_plan migration).
-export const PLAN_DETAILS: Record<Plan, PlanDetails> = {
-  free: { price: 0 },
-  dealer: { price: 199 },
-  dealer_pro: { price: 449, highlighted: true },
-  showroom: { price: 899 },
-};
+// Free launch: listings are free for everyone. A seller whose Commercial
+// Registration an admin approves gets the 'dealer' plan ("Verified Dealer")
+// with no expiry and no payment. dealer_pro/showroom remain valid plans that
+// admins can still grant, but the site no longer offers or prices them. The
+// limits below must match the free_launch_plans migration.
+export const FREE_MONTHLY_LISTING_LIMIT = 3;
+export const DEALER_MONTHLY_LISTING_LIMIT = 100;
+export const PHOTO_LIMIT_PER_LISTING = 15;
 
 // Featured listings included per month; null = none included, admins feature
 // them as paid extras. Must match plan_monthly_featured_allowance in the
@@ -100,11 +94,11 @@ export function isDealerPlan(plan: Plan): boolean {
 }
 
 // Ranges offered on /dashboard/insights, shortest first; empty = no insights.
-// The longest must match plan_insights_days in the listing_daily_stats
-// migration, which enforces it.
+// The longest must match plan_insights_days (latest in the free_launch_plans
+// migration), which enforces it.
 export const INSIGHTS_DAYS: Record<Plan, readonly number[]> = {
   free: [],
-  dealer: [],
+  dealer: [7, 30],
   dealer_pro: [7, 30],
   showroom: [7, 30, 90],
 };
@@ -217,24 +211,24 @@ export async function bumpOwnListing(listingId: string): Promise<{ error?: BumpE
 export const QUOTA_EXCEEDED_DB_MESSAGE = "listing_quota_exceeded";
 
 // Never-published drafts a seller can hold at once, so drafts can't fill R2
-// with photos. Must match plan_draft_limit in the draft_limit migration, which
-// enforces it (and raises these messages).
+// with photos. Must match plan_draft_limit (latest in the free_launch_plans
+// migration), which enforces it (and raises these messages).
 export const DRAFT_LIMIT: Record<Plan, number> = {
   free: 5,
-  dealer: 50,
+  dealer: 200,
   dealer_pro: 200,
   showroom: 500,
 };
 export const DRAFT_LIMIT_DB_MESSAGE = "draft_limit_exceeded";
 
-// Photos per listing. Must match plan_photo_limit in the photo_limit
-// migration, which enforces it. Listings over the limit after a downgrade keep
-// their photos but can't add more.
+// Photos per listing, the same on every plan. Must match plan_photo_limit
+// (latest in the free_launch_plans migration), which enforces it. Listings
+// that already have more keep their photos but can't add more.
 export const PHOTO_LIMIT: Record<Plan, number> = {
-  free: 5,
-  dealer: 10,
-  dealer_pro: 15,
-  showroom: 20,
+  free: PHOTO_LIMIT_PER_LISTING,
+  dealer: PHOTO_LIMIT_PER_LISTING,
+  dealer_pro: PHOTO_LIMIT_PER_LISTING,
+  showroom: PHOTO_LIMIT_PER_LISTING,
 };
 export const PHOTO_LIMIT_DB_MESSAGE = "photo_limit_exceeded";
 export const NOT_PUBLISHED_DB_MESSAGE = "listing_not_published";
@@ -313,10 +307,12 @@ export function addonPriceWithVat(kind: AddonKind, quantity = 1): number {
   return withVat(addonPrice(kind, quantity));
 }
 
-// Monthly SAR price per plan including VAT, for prefilling recorded payments.
+// Admin only: monthly SAR price per plan including VAT, for prefilling a
+// payment an admin records when granting a paid plan by hand. Not shown on the
+// site; 'dealer' is free while the launch lasts (lib/launch.ts).
 export const PLAN_PRICES: Record<Plan, number> = {
-  free: withVat(PLAN_DETAILS.free.price),
-  dealer: withVat(PLAN_DETAILS.dealer.price),
-  dealer_pro: withVat(PLAN_DETAILS.dealer_pro.price),
-  showroom: withVat(PLAN_DETAILS.showroom.price),
+  free: 0,
+  dealer: 0,
+  dealer_pro: withVat(449),
+  showroom: withVat(899),
 };

@@ -2,12 +2,14 @@ import type { Metadata } from "next";
 import { ArrowUpRight, Check, Lock, MapPin, Store } from "lucide-react";
 import Link from "@/components/locale-link";
 import { requireSeller, type Profile } from "@/lib/auth";
+import { getDealerDocuments } from "@/lib/dealer-documents";
 import { fmt } from "@/lib/dictionary";
 import type { Dictionary } from "@/lib/dictionaries";
 import { getDictionary } from "@/lib/i18n-server";
 import { isDealerPlan } from "@/lib/plans";
 import { publicUrl } from "@/lib/r2";
 import { PageHeader } from "../page-header";
+import { BusinessDocumentsForm } from "./business-documents-form";
 import { LogoUploader } from "./logo-uploader";
 import { StorefrontForm } from "./storefront-form";
 import { noIndex } from "@/lib/seo";
@@ -31,6 +33,8 @@ export default async function StorefrontPage() {
     );
   }
 
+  const documents = await getDealerDocuments(user.id);
+
   return (
     <div className="mx-auto w-full max-w-md">
       <PageHeader
@@ -48,6 +52,11 @@ export default async function StorefrontPage() {
       <div className="mt-8 flex flex-col gap-8">
         <LogoUploader logoUrl={profile.logo_key ? publicUrl(profile.logo_key) : null} />
         <StorefrontForm profile={profile} />
+        <BusinessDocumentsForm
+          vatNumber={documents?.vat_number ?? null}
+          muroorNumber={documents?.muroor_number ?? null}
+          hasDoc={{ vat: Boolean(documents?.vat_doc_key), muroor: Boolean(documents?.muroor_doc_key) }}
+        />
       </div>
     </div>
   );

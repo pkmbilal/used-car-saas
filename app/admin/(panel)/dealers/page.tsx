@@ -8,7 +8,10 @@ import { approveDealerApplicationAction, rejectDealerApplicationAction } from ".
 import { ApproveDealerButton, ReasonActionButton } from "../admin-buttons";
 import { DetailGrid, DocumentTile, EmptyState, Hint, linkClass, muted, Panel, Pill } from "../ui";
 
-const planOptions = DEALER_PLANS.map((plan) => ({ value: plan, label: PLAN_LABELS[plan] }));
+const planOptions = DEALER_PLANS.map((plan) => ({
+  value: plan,
+  label: plan === "dealer" ? "Verified Dealer (free)" : PLAN_LABELS[plan],
+}));
 
 export default async function AdminDealersPage() {
   const applications = await getPendingDealerApplications();
@@ -26,8 +29,8 @@ export default async function AdminDealersPage() {
   return (
     <div className="flex flex-col gap-4">
       <Hint icon={Clock}>
-        Check the business details and documents, and confirm payment before approving. Document links expire after 5
-        minutes, so reload for fresh ones.
+        Free launch: check the Commercial Registration, then approve as Dealer with no expiry. That&apos;s the free
+        Verified Dealer tier, so no payment is needed. Document links expire after 5 minutes, so reload for fresh ones.
       </Hint>
 
       {applications.map((application) => (
@@ -104,9 +107,10 @@ export default async function AdminDealersPage() {
 
           <div className="flex flex-wrap items-end justify-between gap-4 border-t border-line bg-canvas/50 px-5 py-4 dark:border-zinc-800 dark:bg-zinc-800/30">
             <ApproveDealerButton
-              plan={application.requested_plan}
+              plan="dealer"
               plans={planOptions}
               durations={PLAN_DURATION_OPTIONS}
+              defaultDuration=""
               action={approveDealerApplicationAction.bind(null, application.id)}
             />
             <ReasonActionButton
