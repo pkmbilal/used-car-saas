@@ -29,6 +29,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { path: "/contact", changeFrequency: "yearly", priority: 0.2 },
     { path: "/privacy", changeFrequency: "yearly", priority: 0.1 },
     { path: "/terms", changeFrequency: "yearly", priority: 0.1 },
+    { path: "/refunds", changeFrequency: "yearly", priority: 0.1 },
     ...CITIES.filter((city) => listedCities.has(city)).map((city) => ({ path: cityHref(city), changeFrequency: "daily" as const, priority: 0.7 })),
     ...MAKES.filter((make) => make !== "Other" && listedMakes.has(make)).map((make) => ({
       path: makeHref(make),

@@ -58,6 +58,7 @@ export const ar: DictionaryShape<typeof en> = {
     sarSr: "ريال سعودي ",
     since: "منذ {date}",
     lastUpdated: "آخر تحديث {date}",
+    crNumber: "سجل تجاري رقم {number}",
     logoAlt: "شعار {name}",
     tagline: ["اشترِ", "بِع", "انطلق"],
   },
@@ -102,6 +103,15 @@ export const ar: DictionaryShape<typeof en> = {
       signIn: "دخول",
     },
   },
+  legal: {
+    eyebrow: "قانوني",
+    documents: "المستندات القانونية",
+    onThisPage: "في هذه الصفحة",
+    questionsTitle: "لديك سؤال عن هذه السياسة؟",
+    questionsText: "راسلنا وسنرد عليك.",
+    emailUs: "راسلنا",
+    backToTop: "العودة للأعلى",
+  },
   footer: {
     blurb: "سوق السيارات المستعملة في المملكة العربية السعودية. اشترِ وبِع مباشرة مع البائعين.",
     buy: "شراء",
@@ -121,6 +131,7 @@ export const ar: DictionaryShape<typeof en> = {
     contact: "تواصل معنا",
     privacy: "سياسة الخصوصية",
     terms: "شروط الاستخدام",
+    refunds: "سياسة الاسترداد",
   },
   pwa: {
     install: "ثبّت التطبيق",

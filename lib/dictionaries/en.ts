@@ -31,6 +31,7 @@ export const en = {
     sarSr: "SAR ",
     since: "Since {date}",
     lastUpdated: "Last updated {date}",
+    crNumber: "CR No. {number}",
     logoAlt: "{name} logo",
     tagline: ["Buy", "Sell", "Drive"],
   },
@@ -75,6 +76,15 @@ export const en = {
       signIn: "Sign in",
     },
   },
+  legal: {
+    eyebrow: "Legal",
+    documents: "Legal documents",
+    onThisPage: "On this page",
+    questionsTitle: "Questions about this policy?",
+    questionsText: "Write to us and we'll get back to you.",
+    emailUs: "Email us",
+    backToTop: "Back to top",
+  },
   footer: {
     blurb: "Saudi Arabia's marketplace for used cars. Buy and sell directly with sellers.",
     buy: "BUY",
@@ -94,6 +104,7 @@ export const en = {
     contact: "Contact",
     privacy: "Privacy Policy",
     terms: "Terms of Use",
+    refunds: "Refund Policy",
   },
   pwa: {
     install: "Install app",

@@ -4,6 +4,11 @@ import { whatsappUrl } from "@/lib/format";
 export const COMPANY_NAME = "CodeSudio";
 export const SUPPORT_EMAIL = "hello@codesudio.com";
 
+// TODO(legal): fill in before launch. Shown at the foot of the legal pages
+// once set; hidden while null.
+export const COMPANY_CR_NUMBER: string | null = null;
+export const COMPANY_ADDRESS: { en: string; ar: string } | null = null;
+
 // Sales WhatsApp number in +9665XXXXXXXX format. Sales links are hidden until
 // it's set.
 export const SALES_WHATSAPP: string | null = null;

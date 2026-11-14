@@ -88,6 +88,9 @@ export async function SiteFooter() {
             <Link href="/terms" className="hover:text-lime">
               {t.footer.terms}
             </Link>
+            <Link href="/refunds" className="hover:text-lime">
+              {t.footer.refunds}
+            </Link>
           </nav>
         </div>
       </div>
