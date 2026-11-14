@@ -1,0 +1,423 @@
+[    1795ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[    1974ms] [LOG] [HMR] connected @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[    2217ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[    3002ms] [LOG] [Fast Refresh] done in 949ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[    3624ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[    3682ms] [LOG] [HMR] connected @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[    3960ms] [LOG] %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[    3960ms] [LOG] %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {route: /[lang]/login, path: /en/login} @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[    3961ms] [LOG] %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {route: /[lang]/login, path: /en/login} @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[    3962ms] [LOG] %c[Vercel Web Analytics]%c [view] http://localhost:3000/en/login?next=%2Faccount color: rgb(120, 120, 120) color: inherit {o: http://localhost:3000/en/login?next=%2Faccount, sv: 0.1.3, sdkn: @vercel/analytics/next, sdkv: 2.0.1, dp: /[lang]/login} /_vercel/insights/view @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[    3962ms] [LOG] %c[Vercel Web Analytics]%c [view] http://localhost:3000/en/login?next=%2Faccount color: rgb(120, 120, 120) color: inherit {o: http://localhost:3000/en/login?next=%2Faccount, sv: 0.1.3, sdkn: @vercel/analytics/next, sdkv: 2.0.1, dp: /[lang]/login} /_vercel/insights/view @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[    6965ms] [WARNING] The resource http://localhost:3000/_next/static/chunks/app_globals_0yg4wg8.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3000/en/login?next=%2Faccount:1
+[   14212ms] [LOG] %c[Vercel Web Analytics]%c [view] http://localhost:3000/en/account color: rgb(120, 120, 120) color: inherit {o: http://localhost:3000/en/account, sv: 0.1.3, sdkn: @vercel/analytics/next, sdkv: 2.0.1, dp: /[lang]/account} /_vercel/insights/view @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[   14295ms] [INFO] Banner not shown: beforeinstallpromptevent.preventDefault() called. The page must call beforeinstallpromptevent.prompt() to show the banner. @ http://localhost:3000/en/account:1
+[   17294ms] [WARNING] The resource http://localhost:3000/_next/static/chunks/app_globals_0yg4wg8.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3000/en/account:1
+[   18957ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[   19179ms] [LOG] [Fast Refresh] done in 323ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[   22065ms] [WARNING] The resource http://localhost:3000/_next/static/chunks/app_globals_0yg4wg8.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3000/en/account:1
+[   49892ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[   50913ms] Error: No link element found for chunk /_next/static/chunks/app_globals_0yg4wg8.css
+    at http://localhost:3000/_next/static/chunks/turbopack-_08bm286._.js:2417:28
+    at new Promise (<anonymous>)
+    at Object.reloadChunk (http://localhost:3000/_next/static/chunks/turbopack-_08bm286._.js:2406:20)
+    at applyChunkListUpdate (http://localhost:3000/_next/static/chunks/turbopack-_08bm286._.js:1940:46)
+    at applyUpdate (http://localhost:3000/_next/static/chunks/turbopack-_08bm286._.js:1914:13)
+    at handleApply (http://localhost:3000/_next/static/chunks/turbopack-_08bm286._.js:1977:17)
+    at triggerUpdate (http://localhost:3000/_next/static/chunks/%5Bturbopack%5D_browser_dev_hmr-client_hmr-client_ts_1mojsay._.js:456:9)
+    at applyAggregatedUpdates (http://localhost:3000/_next/static/chunks/%5Bturbopack%5D_browser_dev_hmr-client_hmr-client_ts_1mojsay._.js:98:9)
+    at http://localhost:3000/_next/static/chunks/%5Bturbopack%5D_browser_dev_hmr-client_hmr-client_ts_1mojsay._.js:32:21
+    at processTurbopackMessage (http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_0_90u2t._.js:16436:13)
+    at processMessage (http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_0_90u2t._.js:16051:17)
+    at WebSocket.handleMessage (http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_0_90u2t._.js:16384:52)
+[   51367ms] [LOG] [Fast Refresh] done in 1273ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[   51369ms] [LOG] [Fast Refresh] done in 1273ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[   51915ms] [INFO] Banner not shown: beforeinstallpromptevent.preventDefault() called. The page must call beforeinstallpromptevent.prompt() to show the banner. @ http://localhost:3000/en/account:1
+[   54788ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[   54950ms] [LOG] [Fast Refresh] done in 265ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[   56416ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[   56461ms] [LOG] [HMR] connected @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[   56565ms] [WARNING] Image with src "/logo-light.png" was detected as the Largest Contentful Paint (LCP). Please add the `loading="eager"` property if this image is above the fold.
+Read more: https://nextjs.org/docs/app/api-reference/components/image#loading @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[   56742ms] [LOG] %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[   56742ms] [LOG] %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {route: /[lang]/account, path: /ar/account} @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[   56743ms] [LOG] %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {route: /[lang]/account, path: /ar/account} @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[   56744ms] [LOG] %c[Vercel Web Analytics]%c [view] http://localhost:3000/ar/account?welcome=1 color: rgb(120, 120, 120) color: inherit {o: http://localhost:3000/ar/account?welcome=1, sv: 0.1.3, sdkn: @vercel/analytics/next, sdkv: 2.0.1, dp: /[lang]/account} /_vercel/insights/view @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[   56745ms] [LOG] %c[Vercel Web Analytics]%c [view] http://localhost:3000/ar/account?welcome=1 color: rgb(120, 120, 120) color: inherit {o: http://localhost:3000/ar/account?welcome=1, sv: 0.1.3, sdkn: @vercel/analytics/next, sdkv: 2.0.1, dp: /[lang]/account} /_vercel/insights/view @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[   57609ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[   57685ms] [LOG] [Fast Refresh] done in 188ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[   59753ms] [WARNING] The resource http://localhost:3000/_next/static/chunks/app_globals_0yg4wg8.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3000/ar/account?welcome=1:1
+[   73943ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[   75503ms] [LOG] [Fast Refresh] done in 1387ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[   75623ms] [LOG] [Fast Refresh] done in 1387ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[   76029ms] [INFO] Banner not shown: beforeinstallpromptevent.preventDefault() called. The page must call beforeinstallpromptevent.prompt() to show the banner. @ http://localhost:3000/ar/account?welcome=1:1
+[   79027ms] [WARNING] The resource http://localhost:3000/_next/static/chunks/app_globals_0yg4wg8.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3000/ar/account?welcome=1:1
+[   80300ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[   80324ms] [LOG] [HMR] connected @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[   80698ms] [LOG] %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[   80698ms] [LOG] %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {route: /[lang]/account, path: /ar/account} @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[   80699ms] [LOG] %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {route: /[lang]/account, path: /ar/account} @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[   80700ms] [LOG] %c[Vercel Web Analytics]%c [view] http://localhost:3000/ar/account?welcome=1 color: rgb(120, 120, 120) color: inherit {o: http://localhost:3000/ar/account?welcome=1, sv: 0.1.3, sdkn: @vercel/analytics/next, sdkv: 2.0.1, dp: /[lang]/account} /_vercel/insights/view @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[   80700ms] [LOG] %c[Vercel Web Analytics]%c [view] http://localhost:3000/ar/account?welcome=1 color: rgb(120, 120, 120) color: inherit {o: http://localhost:3000/ar/account?welcome=1, sv: 0.1.3, sdkn: @vercel/analytics/next, sdkv: 2.0.1, dp: /[lang]/account} /_vercel/insights/view @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[   81643ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[   81844ms] [LOG] [Fast Refresh] done in 303ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[   82822ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[   82856ms] [LOG] [HMR] connected @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[   83093ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[   83118ms] [LOG] %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[   83118ms] [LOG] %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {route: /[lang]/account/become-seller, path: /en/account/become-seller} @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[   83118ms] [LOG] %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {route: /[lang]/account/become-seller, path: /en/account/become-seller} @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[   83119ms] [LOG] %c[Vercel Web Analytics]%c [view] http://localhost:3000/en/account/become-seller color: rgb(120, 120, 120) color: inherit {o: http://localhost:3000/en/account/become-seller, sv: 0.1.3, sdkn: @vercel/analytics/next, sdkv: 2.0.1, dp: /[lang]/account/become-seller} /_vercel/insights/view @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[   83119ms] [LOG] %c[Vercel Web Analytics]%c [view] http://localhost:3000/en/account/become-seller color: rgb(120, 120, 120) color: inherit {o: http://localhost:3000/en/account/become-seller, sv: 0.1.3, sdkn: @vercel/analytics/next, sdkv: 2.0.1, dp: /[lang]/account/become-seller} /_vercel/insights/view @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[   83351ms] [LOG] [Fast Refresh] done in 361ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[   86238ms] [WARNING] The resource http://localhost:3000/_next/static/chunks/app_globals_0yg4wg8.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3000/en/account/become-seller:1
+[  125698ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  125718ms] [LOG] [Fast Refresh] done in 125ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  126215ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  126274ms] [LOG] [Fast Refresh] done in 173ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  216351ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  218807ms] Error: No link element found for chunk /_next/static/chunks/app_globals_0yg4wg8.css
+    at http://localhost:3000/_next/static/chunks/turbopack-_08bm286._.js:2417:28
+    at new Promise (<anonymous>)
+    at Object.reloadChunk (http://localhost:3000/_next/static/chunks/turbopack-_08bm286._.js:2406:20)
+    at applyChunkListUpdate (http://localhost:3000/_next/static/chunks/turbopack-_08bm286._.js:1940:46)
+    at applyUpdate (http://localhost:3000/_next/static/chunks/turbopack-_08bm286._.js:1914:13)
+    at handleApply (http://localhost:3000/_next/static/chunks/turbopack-_08bm286._.js:1977:17)
+    at triggerUpdate (http://localhost:3000/_next/static/chunks/%5Bturbopack%5D_browser_dev_hmr-client_hmr-client_ts_1mojsay._.js:456:9)
+    at applyAggregatedUpdates (http://localhost:3000/_next/static/chunks/%5Bturbopack%5D_browser_dev_hmr-client_hmr-client_ts_1mojsay._.js:98:9)
+    at http://localhost:3000/_next/static/chunks/%5Bturbopack%5D_browser_dev_hmr-client_hmr-client_ts_1mojsay._.js:32:21
+    at processTurbopackMessage (http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_0_90u2t._.js:16436:13)
+    at processMessage (http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_0_90u2t._.js:16051:17)
+    at WebSocket.handleMessage (http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_0_90u2t._.js:16384:52)
+[  219644ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  219827ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  220025ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  220138ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  220214ms] [INFO] Banner not shown: beforeinstallpromptevent.preventDefault() called. The page must call beforeinstallpromptevent.prompt() to show the banner. @ http://localhost:3000/en/account/become-seller:1
+[  220225ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  220329ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  220409ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  220504ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  220601ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  220681ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  220762ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  220845ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  220939ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  221027ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  221113ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  221200ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  221277ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  221361ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  221455ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  221552ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  221635ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  221714ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  221800ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  221924ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  222007ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  222131ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  222216ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  222306ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  222417ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  222498ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  222581ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  222666ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  222746ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  222852ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  222981ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  223111ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  223210ms] [WARNING] The resource http://localhost:3000/_next/static/chunks/app_globals_0yg4wg8.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3000/en/account/become-seller:1
+[  223211ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  223295ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  223362ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  223423ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  223507ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  223584ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  223667ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  223750ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  223823ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  223898ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  223972ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  224052ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  224133ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  224206ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  224282ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  224367ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  224465ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  224549ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  224620ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  224700ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  224782ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  224855ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  224928ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  224994ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  225072ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  225153ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  225232ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  225307ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  225384ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  225469ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  225558ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  225636ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  225719ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  225800ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  225886ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  225968ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  226066ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  226140ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  226218ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  226302ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  226385ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  226469ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  226533ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  226602ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  226678ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  226767ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  226854ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  226945ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  227035ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  227119ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  227188ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  227310ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  227404ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  227485ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  227559ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  227636ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  227719ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  227788ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  227883ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  227966ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  228055ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  228130ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  228215ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  228283ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  228366ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  228446ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  228528ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  228603ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  228670ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  228737ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  228802ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  228872ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  228954ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  229035ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  229124ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  229211ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  229287ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  229362ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  229428ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  229499ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  229571ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  229641ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  229720ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  229789ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  229855ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  229931ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  230011ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  230086ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  230172ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  230238ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  230301ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  230371ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  230441ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  230518ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  230586ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  230654ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  230723ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  230802ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  230869ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  230955ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  231036ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  231106ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  231191ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  231272ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  231340ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  231413ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  231484ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  231565ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  231648ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  231723ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  231796ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  231872ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  231956ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  232028ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  232100ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  232160ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  232229ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  232306ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  232390ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  232469ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  232526ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  232592ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  232671ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  232756ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  232833ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  232899ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  232973ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  233049ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  233123ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  233217ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  233284ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  233345ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  233418ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  233484ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  233567ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  233638ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  233702ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  233770ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  233847ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  233933ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  234019ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  234107ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  234176ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  234244ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  234323ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  234393ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  234472ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  234562ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  234640ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  234711ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  234775ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  234843ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  234925ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  235005ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  235108ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  235172ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  235252ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  235340ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  235416ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  235479ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  235545ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  235622ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  235694ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  235772ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  235843ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  235913ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  235996ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  236059ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  236145ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  236227ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  236299ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  236376ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  236459ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  236527ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  236601ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  236676ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  236763ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  236840ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  236924ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  236987ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  237044ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  237155ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  237264ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  237338ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  237415ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  237492ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  237601ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  237677ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  237747ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  237872ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  237967ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  238046ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  238125ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  238208ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  238279ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  238386ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  238461ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  238552ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  238639ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  238711ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  238799ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  238882ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  238972ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  239049ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  239122ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  239201ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  239298ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  239387ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  239530ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  239596ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  239663ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  239737ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  239813ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  239898ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  239976ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  240042ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  240140ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  240215ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  240286ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  240363ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  240430ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  240497ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  240569ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  240635ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  240701ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  240772ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  240856ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  240931ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  241010ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  241088ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  241155ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  241226ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  241306ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  241394ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  241463ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  241530ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  241610ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  241680ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  241764ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  241831ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  241900ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  241962ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  242045ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  242113ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  242197ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  242277ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  242349ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  242430ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  242513ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  242590ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  242663ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  242734ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  242801ms] [LOG] [Fast Refresh] done in 2804ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  252097ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  252130ms] [LOG] [HMR] connected @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  252408ms] [LOG] %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  252408ms] [LOG] %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {route: /[lang]/account, path: /en/account} @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  252409ms] [LOG] %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {route: /[lang]/account, path: /en/account} @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  252410ms] [LOG] %c[Vercel Web Analytics]%c [view] http://localhost:3000/en/account color: rgb(120, 120, 120) color: inherit {o: http://localhost:3000/en/account, sv: 0.1.3, sdkn: @vercel/analytics/next, sdkv: 2.0.1, dp: /[lang]/account} /_vercel/insights/view @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  252410ms] [LOG] %c[Vercel Web Analytics]%c [view] http://localhost:3000/en/account color: rgb(120, 120, 120) color: inherit {o: http://localhost:3000/en/account, sv: 0.1.3, sdkn: @vercel/analytics/next, sdkv: 2.0.1, dp: /[lang]/account} /_vercel/insights/view @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  252435ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  252686ms] [LOG] [Fast Refresh] done in 351ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  253606ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  253871ms] [LOG] [Fast Refresh] done in 370ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  255181ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  255222ms] [LOG] [HMR] connected @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  255329ms] [WARNING] Image with src "/logo-light.png" was detected as the Largest Contentful Paint (LCP). Please add the `loading="eager"` property if this image is above the fold.
+Read more: https://nextjs.org/docs/app/api-reference/components/image#loading @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  255501ms] [LOG] %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  255501ms] [LOG] %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {route: /[lang]/account, path: /ar/account} @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  255501ms] [LOG] %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {route: /[lang]/account, path: /ar/account} @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  255502ms] [LOG] %c[Vercel Web Analytics]%c [view] http://localhost:3000/ar/account color: rgb(120, 120, 120) color: inherit {o: http://localhost:3000/ar/account, sv: 0.1.3, sdkn: @vercel/analytics/next, sdkv: 2.0.1, dp: /[lang]/account} /_vercel/insights/view @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  255502ms] [LOG] %c[Vercel Web Analytics]%c [view] http://localhost:3000/ar/account color: rgb(120, 120, 120) color: inherit {o: http://localhost:3000/ar/account, sv: 0.1.3, sdkn: @vercel/analytics/next, sdkv: 2.0.1, dp: /[lang]/account} /_vercel/insights/view @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  258510ms] [WARNING] The resource http://localhost:3000/_next/static/chunks/app_globals_0yg4wg8.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3000/ar/account:1
+[  259576ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  259645ms] [LOG] [Fast Refresh] done in 170ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  270318ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  270551ms] [LOG] [Fast Refresh] done in 344ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  271349ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  271601ms] [LOG] [Fast Refresh] done in 355ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  271923ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  272201ms] [LOG] [Fast Refresh] done in 384ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  273461ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  273597ms] [LOG] [Fast Refresh] done in 240ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  273999ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  274229ms] [LOG] [Fast Refresh] done in 332ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  274692ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  274832ms] [LOG] [Fast Refresh] done in 254ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  275089ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  275294ms] [LOG] [Fast Refresh] done in 309ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  277792ms] [WARNING] The resource http://localhost:3000/_next/static/chunks/app_globals_0yg4wg8.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3000/ar/account:1
+[  373141ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
+[  376258ms] [WARNING] The resource http://localhost:3000/_next/static/chunks/app_globals_0yg4wg8.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3000/ar/account:1
+[  379647ms] [LOG] [Fast Refresh] done in 6609ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:777
