@@ -59,9 +59,14 @@ export async function isAdminAccount(userId: string): Promise<boolean> {
   return !!data?.is_admin;
 }
 
-// Only allow same-site relative paths as post-login redirects.
+// Only allow same-site relative paths as post-login redirects. Backslashes and
+// control characters are rejected too: URL parsers treat "/\evil.com" like
+// "//evil.com", which would leave the site.
 export function safeNext(next: unknown): string {
-  return typeof next === "string" && next.startsWith("/") && !next.startsWith("//")
+  return typeof next === "string" &&
+    next.startsWith("/") &&
+    !next.startsWith("//") &&
+    !/[\\\u0000-\u001f\u007f]/.test(next)
     ? next
     : "/";
 }
