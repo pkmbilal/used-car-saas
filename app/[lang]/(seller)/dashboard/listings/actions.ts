@@ -244,7 +244,7 @@ export async function requestImageUpload(
 ): Promise<{ url: string; key: string } | { error: string }> {
   const { user, profile } = await requireSeller();
 
-  if (!(contentType in IMAGE_TYPES)) return { error: "Use a JPEG, PNG or WebP photo." };
+  if (!Object.hasOwn(IMAGE_TYPES, contentType)) return { error: "Use a JPEG, PNG or WebP photo." };
   if (!Number.isInteger(size) || size <= 0 || size > MAX_IMAGE_BYTES) {
     return { error: "Photos must be under 10 MB." };
   }

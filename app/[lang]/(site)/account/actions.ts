@@ -145,7 +145,7 @@ export async function requestAvatarUpload(
   const current = await getCurrentUser();
   if (!current) return { error: "Upload failed." };
 
-  if (!(contentType in IMAGE_TYPES)) return { error: "Use a JPEG, PNG or WebP image." };
+  if (!Object.hasOwn(IMAGE_TYPES, contentType)) return { error: "Use a JPEG, PNG or WebP image." };
   if (!Number.isInteger(size) || size <= 0 || size > MAX_AVATAR_BYTES) {
     return { error: "Profile photos must be under 2 MB." };
   }
